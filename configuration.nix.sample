@@ -1,0 +1,1 @@
+{ imports = [ ./hosts/<HOST>/configuration.nix ]; }
