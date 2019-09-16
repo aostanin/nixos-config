@@ -1,12 +1,12 @@
 { config, pkgs, ... }:
 
 let
-  #nixos-hardware = builtins.fetchTarball {
-  #  url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
-  #};
+  nixos-hardware = builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
+  };
 in {
   imports = [
-    #"${nixos-hardware}/apple/macbook-pro/12-1"
+    "${nixos-hardware}/apple/macbook-pro/12-1"
     ./hardware-configuration.nix
     ../../modules/common
     ../../modules/desktop
