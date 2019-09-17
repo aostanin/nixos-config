@@ -54,6 +54,7 @@ in {
     enable = true;
     qemuPackage = pkgsUnstable.qemu; # TODO: until 4.0 is stable
     qemuVerbatimConfig = ''
+      user = "aostanin"
       cgroup_device_acl = [
         "/dev/null", "/dev/full", "/dev/zero",
         "/dev/random", "/dev/urandom",
