@@ -1,12 +1,16 @@
 { config, pkgs, ... }:
 
 let
-  #nixos-hardware = builtins.fetchTarball {
-  #  url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
-  #};
+  nixos-hardware = builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
+  };
+  pkgsUnstable = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
+  }) {};
 in {
   imports = [
-    #"${nixos-hardware}/apple/macbook-pro/12-1"
+    "${nixos-hardware}/common/cpu/intel"
+    "${nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ../../modules/common
     ../../modules/desktop
@@ -31,8 +35,24 @@ in {
   services.zfs.autoScrub.enable = true;
   services.zfs.autoSnapshot.enable = true;
 
+  systemd.services.iscsid = {
+    wantedBy = [ "multi-user.target" ];
+    before = ["libvirtd.service"];
+    serviceConfig.ExecStart = "${pkgs.openiscsi}/bin/iscsid -f -c ${pkgs.openiscsi}/etc/iscsi/iscsid.conf -i ${pkgs.openiscsi}/etc/iscsi/initiatorname.iscsi";
+    restartIfChanged = false;
+  };
+
+  nixpkgs.overlays = [
+    (self: super: {
+      libvirt = super.libvirt.override {
+        enableIscsi = true;
+      };
+    })
+  ];
+
   virtualisation.libvirtd = {
     enable = true;
+    qemuPackage = pkgsUnstable.qemu; # TODO: until 4.0 is stable
     qemuVerbatimConfig = ''
       cgroup_device_acl = [
         "/dev/null", "/dev/full", "/dev/zero",
