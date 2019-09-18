@@ -49,6 +49,17 @@
     };
   };
 
+  systemd.user.services.sxhkd = {
+    description = "Simple X hotkey daemon";
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.sxhkd}/bin/sxhkd";
+      RestartSec = 3;
+      Restart = "always";
+    };
+  };
+
   sound.enable = true;
 
   hardware = {
