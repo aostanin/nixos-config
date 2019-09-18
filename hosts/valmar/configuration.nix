@@ -30,6 +30,10 @@ in {
 
   services.openssh.forwardX11 = true;
 
+  services.xserver = {
+    xkbOptions = "ctrl:nocaps, shift:both_capslock";
+  };
+
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.extraPools = [ "tank" ];
   services.zfs.autoScrub.enable = true;
