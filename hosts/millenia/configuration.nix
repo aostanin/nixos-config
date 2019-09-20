@@ -16,6 +16,10 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.extraModprobeConfig = ''
+    options hid_apple fnmode=2
+  '';
+
   networking = {
     hostName = "millenia";
     hostId = "6556bbae";
@@ -25,10 +29,9 @@ in {
   services.flatpak.enable = true;
 
   services.xserver = {
-    #xkbOptions = "ctrl:nocaps, shift:both_capslock";
     libinput = {
       enable = true;
-      clickMethod = "clickfinger";
+      tapping = false;
       naturalScrolling = true;
     };
   };
