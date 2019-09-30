@@ -45,13 +45,14 @@ in {
   services.zfs.autoScrub.enable = true;
   services.zfs.autoSnapshot.enable = true;
 
+  environment.etc."iscsi/initiatorname.iscsi".text = "InitiatorName=iqn.2005-03.org.open-iscsi:c1aa1469c14";
   systemd.services.iscsid = {
     wantedBy = [ "multi-user.target" ];
     before = [ "libvirtd.service" ];
     after = [ "network.target" ];
     serviceConfig = {
       Type = "forking";
-      ExecStart = "${pkgs.openiscsi}/bin/iscsid -c ${pkgs.openiscsi}/etc/iscsi/iscsid.conf -i ${pkgs.openiscsi}/etc/iscsi/initiatorname.iscsi";
+      ExecStart = "${pkgs.openiscsi}/bin/iscsid -c ${pkgs.openiscsi}/etc/iscsi/iscsid.conf";
       ExecStop = [
         "${pkgs.openiscsi}/sbin/iscsiadm iscsiadm --mode node --logoutall=all"
         "${pkgs.openiscsi}/sbin/iscsiadm -k 0 2"
