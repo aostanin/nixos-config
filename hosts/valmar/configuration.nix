@@ -17,8 +17,13 @@ in {
     ../../modules/syncthing
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    blacklistedKernelModules = [ "nouveau" ];
+  };
 
   networking = {
     hostName = "valmar";
@@ -32,6 +37,7 @@ in {
 
   services.xserver = {
     xkbOptions = "ctrl:nocaps, shift:both_capslock";
+    videoDrivers = [ "intel" /*"nvidia"*/ ]; # TODO: enabling nvidia disables glx
   };
 
   boot.supportedFilesystems = [ "zfs" ];
@@ -41,9 +47,16 @@ in {
 
   systemd.services.iscsid = {
     wantedBy = [ "multi-user.target" ];
-    before = ["libvirtd.service"];
-    serviceConfig.ExecStart = "${pkgs.openiscsi}/bin/iscsid -f -c ${pkgs.openiscsi}/etc/iscsi/iscsid.conf -i ${pkgs.openiscsi}/etc/iscsi/initiatorname.iscsi";
-    restartIfChanged = false;
+    before = [ "libvirtd.service" ];
+    after = [ "network.target" ];
+    serviceConfig = {
+      Type = "forking";
+      ExecStart = "${pkgs.openiscsi}/bin/iscsid -c ${pkgs.openiscsi}/etc/iscsi/iscsid.conf -i ${pkgs.openiscsi}/etc/iscsi/initiatorname.iscsi";
+      ExecStop = [
+        "${pkgs.openiscsi}/sbin/iscsiadm iscsiadm --mode node --logoutall=all"
+        "${pkgs.openiscsi}/sbin/iscsiadm -k 0 2"
+      ];
+    };
   };
 
   nixpkgs.overlays = [
@@ -73,7 +86,6 @@ in {
   boot.kernelModules = [ "vfio_pci" ];
   boot.kernelParams = [
     "intel_iommu=on"
-    "vfio-pci.ids=10de:1b81,10de:10f0,1b21:1242"
     "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=16"
   ];
 }
