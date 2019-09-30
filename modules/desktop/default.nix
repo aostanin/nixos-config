@@ -12,6 +12,10 @@
     kochi-substitute
   ];
 
+  environment.systemPackages = with pkgs; [
+    kde-gtk-config
+  ];
+
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
 
