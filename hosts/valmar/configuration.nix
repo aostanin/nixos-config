@@ -4,9 +4,6 @@ let
   nixos-hardware = builtins.fetchTarball {
     url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
   };
-  pkgsUnstable = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
-  }) {};
 in {
   imports = [
     "${nixos-hardware}/common/cpu/intel"
@@ -70,7 +67,6 @@ in {
 
   virtualisation.libvirtd = {
     enable = true;
-    qemuPackage = pkgsUnstable.qemu; # TODO: until 4.0 is stable
     qemuVerbatimConfig = ''
       user = "aostanin"
       cgroup_device_acl = [
