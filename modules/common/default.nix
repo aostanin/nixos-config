@@ -21,7 +21,7 @@
 
   nix.autoOptimiseStore = true;
   nixpkgs.config.allowUnfree = true;
-  system.stateVersion = "19.03";
+  system.stateVersion = "19.09";
 
   security.sudo.wheelNeedsPassword = false;
   networking.firewall.enable = false;

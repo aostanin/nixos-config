@@ -17,6 +17,8 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+
   networking = {
     hostName = "roan";
     hostId = "9bc52069";

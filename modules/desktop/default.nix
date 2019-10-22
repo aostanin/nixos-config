@@ -7,6 +7,9 @@
   };
 
   fonts.fonts = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
     dejavu_fonts
     ipafont
     kochi-substitute
@@ -16,6 +19,8 @@
     kde-gtk-config
   ];
 
+  location.provider = "geoclue2";
+
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
 
@@ -23,7 +28,6 @@
 
     redshift = {
       enable = true;
-      provider = "geoclue2";
     };
 
     udev.extraRules = ''
