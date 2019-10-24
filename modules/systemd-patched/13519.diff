@@ -1,0 +1,190 @@
+diff --git a/src/udev/udev-rules.c b/src/udev/udev-rules.c
+index 1642f105354..fdb77d07301 100644
+--- a/src/udev/udev-rules.c
++++ b/src/udev/udev-rules.c
+@@ -43,10 +43,12 @@ typedef enum {
+ } UdevRuleOperatorType;
+ 
+ typedef enum {
+-        MATCH_TYPE_EMPTY,     /* empty string */
+-        MATCH_TYPE_PLAIN,     /* no special characters */
+-        MATCH_TYPE_GLOB,      /* shell globs ?,*,[] */
+-        MATCH_TYPE_SUBSYSTEM, /* "subsystem", "bus", or "class" */
++        MATCH_TYPE_EMPTY,            /* empty string */
++        MATCH_TYPE_PLAIN,            /* no special characters */
++        MATCH_TYPE_PLAIN_WITH_EMPTY, /* no special characters with empty string, e.g., "|foo" */
++        MATCH_TYPE_GLOB,             /* shell globs ?,*,[] */
++        MATCH_TYPE_GLOB_WITH_EMPTY,  /* shell globs ?,*,[] with empty string, e.g., "|foo*" */
++        MATCH_TYPE_SUBSYSTEM,        /* "subsystem", "bus", or "class" */
+         _MATCH_TYPE_MAX,
+         _MATCH_TYPE_INVALID = -1
+ } UdevRuleMatchType;
+@@ -431,35 +433,30 @@ static int rule_line_add_token(UdevRuleLine *rule_line, UdevRuleTokenType type,
+ 
+                 if (type < TK_M_TEST || type == TK_M_RESULT) {
+                         /* Convert value string to nulstr. */
+-                        len = strlen(value);
+-                        if (len > 1 && (value[len - 1] == '|' || strstr(value, "||"))) {
+-                                /* In this case, just replacing '|' -> '\0' does not work... */
+-                                _cleanup_free_ char *tmp = NULL;
+-                                char *i, *j;
+-                                bool v = true;
+-
+-                                tmp = strdup(value);
+-                                if (!tmp)
+-                                        return log_oom();
+-
+-                                for (i = tmp, j = value; *i != '\0'; i++)
+-                                        if (*i == '|')
+-                                                v = true;
+-                                        else {
+-                                                if (v) {
+-                                                        *j++ = '\0';
+-                                                        v = false;
+-                                                }
+-                                                *j++ = *i;
+-                                        }
+-                                j[0] = j[1] = '\0';
+-                        } else {
+-                                /* Simple conversion. */
+-                                char *i;
+-
+-                                for (i = value; *i != '\0'; i++)
+-                                        if (*i == '|')
+-                                                *i = '\0';
++                        bool bar = true, empty = false;
++                        char *a, *b;
++
++                        for (a = b = value; *a != '\0'; a++) {
++                                if (*a != '|') {
++                                        *b++ = *a;
++                                        bar = false;
++                                } else {
++                                        if (bar)
++                                                empty = true;
++                                        else
++                                                *b++ = '\0';
++                                        bar = true;
++                                }
++                        }
++                        *b = '\0';
++                        if (bar)
++                                empty = true;
++
++                        if (empty) {
++                                if (match_type == MATCH_TYPE_GLOB)
++                                        match_type = MATCH_TYPE_GLOB_WITH_EMPTY;
++                                if (match_type == MATCH_TYPE_PLAIN)
++                                        match_type = MATCH_TYPE_PLAIN_WITH_EMPTY;
+                         }
+                 }
+         }
+@@ -1325,7 +1322,17 @@ static bool token_match_string(UdevRuleToken *token, const char *str) {
+                 match = isempty(str);
+                 break;
+         case MATCH_TYPE_SUBSYSTEM:
+-                value = "subsystem\0class\0bus\0";
++                NULSTR_FOREACH(i, "subsystem\0class\0bus\0")
++                        if (streq(i, str)) {
++                                match = true;
++                                break;
++                        }
++                break;
++        case MATCH_TYPE_PLAIN_WITH_EMPTY:
++                if (isempty(str)) {
++                        match = true;
++                        break;
++                }
+                 _fallthrough_;
+         case MATCH_TYPE_PLAIN:
+                 NULSTR_FOREACH(i, value)
+@@ -1334,6 +1341,12 @@ static bool token_match_string(UdevRuleToken *token, const char *str) {
+                                 break;
+                         }
+                 break;
++        case MATCH_TYPE_GLOB_WITH_EMPTY:
++                if (isempty(str)) {
++                        match = true;
++                        break;
++                }
++                _fallthrough_;
+         case MATCH_TYPE_GLOB:
+                 NULSTR_FOREACH(i, value)
+                         if ((fnmatch(i, str, 0) == 0)) {
+diff --git a/test/udev-test.pl b/test/udev-test.pl
+index 85ec41b6413..95013279b8e 100755
+--- a/test/udev-test.pl
++++ b/test/udev-test.pl
+@@ -1256,6 +1256,72 @@
+ KERNEL=="X|attyACM0|dontknow|ttyACM0a|nothing|attyACM0", SYMLINK+="wrong2"
+ KERNEL=="all|dontknow|ttyACM0", SYMLINK+="right"
+ KERNEL=="ttyACM0a|nothing", SYMLINK+="wrong3"
++EOF
++        },
++        {
++                desc            => "test multi matches 5",
++                devpath         => "/devices/pci0000:00/0000:00:1f.2/host0/target0:0:0/0:0:0:0/block/sda",
++                exp_name        => "found",
++                not_exp_name    => "bad",
++                rules           => <<EOF
++KERNEL=="sda", TAG="foo"
++TAGS=="|foo", SYMLINK+="found"
++TAGS=="|aaa", SYMLINK+="bad"
++EOF
++        },
++        {
++                desc            => "test multi matches 6",
++                devpath         => "/devices/pci0000:00/0000:00:1f.2/host0/target0:0:0/0:0:0:0/block/sda",
++                exp_name        => "found",
++                not_exp_name    => "bad",
++                rules           => <<EOF
++KERNEL=="sda", TAG=""
++TAGS=="|foo", SYMLINK+="found"
++TAGS=="aaa|bbb", SYMLINK+="bad"
++EOF
++        },
++        {
++                desc            => "test multi matches 7",
++                devpath         => "/devices/pci0000:00/0000:00:1f.2/host0/target0:0:0/0:0:0:0/block/sda",
++                exp_name        => "found",
++                not_exp_name    => "bad",
++                rules           => <<EOF
++KERNEL=="sda", TAG="foo"
++TAGS=="foo||bar", SYMLINK+="found"
++TAGS=="aaa||bbb", SYMLINK+="bad"
++EOF
++        },
++        {
++                desc            => "test multi matches 8",
++                devpath         => "/devices/pci0000:00/0000:00:1f.2/host0/target0:0:0/0:0:0:0/block/sda",
++                exp_name        => "found",
++                not_exp_name    => "bad",
++                rules           => <<EOF
++KERNEL=="sda", TAG=""
++TAGS=="foo||bar", SYMLINK+="found"
++TAGS=="aaa|bbb", SYMLINK+="bad"
++EOF
++        },
++        {
++                desc            => "test multi matches 9",
++                devpath         => "/devices/pci0000:00/0000:00:1f.2/host0/target0:0:0/0:0:0:0/block/sda",
++                exp_name        => "found",
++                not_exp_name    => "bad",
++                rules           => <<EOF
++KERNEL=="sda", TAG="foo"
++TAGS=="foo|", SYMLINK+="found"
++TAGS=="aaa|", SYMLINK+="bad"
++EOF
++        },
++        {
++                desc            => "test multi matches 10",
++                devpath         => "/devices/pci0000:00/0000:00:1f.2/host0/target0:0:0/0:0:0:0/block/sda",
++                exp_name        => "found",
++                not_exp_name    => "bad",
++                rules           => <<EOF
++KERNEL=="sda", TAG=""
++TAGS=="foo|", SYMLINK+="found"
++TAGS=="aaa|bbb", SYMLINK+="bad"
+ EOF
+         },
+         {

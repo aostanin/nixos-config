@@ -9,6 +9,7 @@ in {
     "${nixos-hardware}/common/cpu/intel"
     "${nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
+    ../../modules/systemd-patched
     ../../modules/common
     ../../modules/desktop
     ../../modules/syncthing
