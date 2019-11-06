@@ -6,7 +6,8 @@ let
   };
 in {
   imports = [
-    "${nixos-hardware}/apple/macbook-pro/12-1"
+    "${nixos-hardware}/lenovo/thinkpad/t440p"
+    "${nixos-hardware}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
     ../../modules/common
     ../../modules/desktop
@@ -16,24 +17,33 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.extraModprobeConfig = ''
-    options hid_apple fnmode=2
-  '';
+  boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
 
   networking = {
-    hostName = "millenia";
-    hostId = "6556bbae";
+    hostName = "mareg";
+    hostId = "393740af";
     networkmanager.enable = true;
   };
 
   services.flatpak.enable = true;
 
   services.xserver = {
+    xkbOptions = "ctrl:nocaps, shift:both_capslock";
     libinput = {
       enable = true;
-      tapping = false;
+      clickMethod = "clickfinger";
       naturalScrolling = true;
     };
+  };
+
+  services.tlp = {
+    enable = true;
+    extraConfig = ''
+      START_CHARGE_THRESH_BAT0=75
+      STOP_CHARGE_THRESH_BAT0=80
+      START_CHARGE_THRESH_BAT1=75
+      STOP_CHARGE_THRESH_BAT1=80
+    '';
   };
 
   virtualisation.libvirtd.enable = true;
