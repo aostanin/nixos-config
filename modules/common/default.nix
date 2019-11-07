@@ -38,6 +38,7 @@
   users.users.aostanin = {
     isNormalUser = true;
     extraGroups = [
+      "cdrom"
       "docker"
       "input"
       "libvirtd"
