@@ -14,10 +14,14 @@ in {
     ../../modules/syncthing
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    blacklistedKernelModules = [ "nouveau" ];
+    extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+  };
 
   networking = {
     hostName = "mareg";
@@ -41,8 +45,6 @@ in {
     extraConfig = ''
       START_CHARGE_THRESH_BAT0=75
       STOP_CHARGE_THRESH_BAT0=80
-      START_CHARGE_THRESH_BAT1=75
-      STOP_CHARGE_THRESH_BAT1=80
     '';
   };
 
