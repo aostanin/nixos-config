@@ -47,4 +47,9 @@ in {
   };
 
   virtualisation.libvirtd.enable = true;
+
+  boot.kernelModules = [ "vfio_pci" ];
+  boot.kernelParams = [
+    "intel_iommu=on"
+  ];
 }
