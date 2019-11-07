@@ -36,6 +36,10 @@ in {
     };
   };
 
+  boot.supportedFilesystems = [ "zfs" ];
+  services.zfs.autoScrub.enable = true;
+  services.zfs.autoSnapshot.enable = true;
+
   services.tlp = {
     enable = true;
     extraConfig = ''
