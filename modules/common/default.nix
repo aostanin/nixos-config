@@ -39,6 +39,7 @@
   users.users.aostanin = {
     isNormalUser = true;
     extraGroups = [
+      "adbusers"
       "cdrom"
       "docker"
       "input"
