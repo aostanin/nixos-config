@@ -39,9 +39,9 @@ in {
   services.tlp = {
     enable = true;
     extraConfig = ''
-      START_CHARGE_THRESH_BAT0=75
+      START_CHARGE_THRESH_BAT0=70
       STOP_CHARGE_THRESH_BAT0=80
-      START_CHARGE_THRESH_BAT1=75
+      START_CHARGE_THRESH_BAT1=70
       STOP_CHARGE_THRESH_BAT1=80
     '';
   };
