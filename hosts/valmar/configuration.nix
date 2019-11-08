@@ -31,8 +31,6 @@ in {
 
   services.flatpak.enable = true;
 
-  services.openssh.forwardX11 = true;
-
   services.xserver = {
     xkbOptions = "ctrl:nocaps, shift:both_capslock";
     videoDrivers = [ "intel" /*"nvidia"*/ ]; # TODO: enabling nvidia disables glx
