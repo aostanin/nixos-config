@@ -14,13 +14,18 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/d4edc16d-0e7c-4297-95c8-2176f1793da9";
-      fsType = "ext4";
+    { device = "rpool/root/nixos";
+      fsType = "zfs";
     };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/77DC-A61A";
       fsType = "vfat";
+    };
+
+  fileSystems."/home" =
+    { device = "rpool/home";
+      fsType = "zfs";
     };
 
   swapDevices =

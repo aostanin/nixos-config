@@ -19,6 +19,7 @@ in {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    supportedFilesystems = [ "zfs" ];
     blacklistedKernelModules = [ "nouveau" ];
     extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
   };
@@ -27,6 +28,14 @@ in {
     hostName = "mareg";
     hostId = "393740af";
     networkmanager.enable = true;
+  };
+
+  services.zfs = {
+    autoScrub.enable = true;
+    autoSnapshot = {
+      enable = true;
+      monthly = 1;
+    };
   };
 
   services.flatpak.enable = true;
