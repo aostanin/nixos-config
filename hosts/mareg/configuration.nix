@@ -36,6 +36,7 @@ in {
       enable = true;
       monthly = 1;
     };
+    trim.enable = true;
   };
 
   services.flatpak.enable = true;
