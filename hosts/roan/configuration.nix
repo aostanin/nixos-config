@@ -25,14 +25,13 @@ in {
     networkmanager.enable = true;
   };
 
-  services.flatpak.enable = true;
-
   services.xserver = {
     xkbOptions = "ctrl:nocaps, shift:both_capslock";
     libinput = {
       enable = true;
       clickMethod = "clickfinger";
       naturalScrolling = true;
+      tapping = false;
     };
   };
 
