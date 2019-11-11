@@ -50,6 +50,7 @@ in {
       enable = true;
       clickMethod = "clickfinger";
       naturalScrolling = true;
+      tapping = false;
     };
   };
 
