@@ -37,7 +37,7 @@ in {
     autoScrub.enable = true;
     autoSnapshot = {
       enable = true;
-      monthly = 1;
+      monthly = 0;
     };
     trim.enable = true;
   };
