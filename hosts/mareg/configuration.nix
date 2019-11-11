@@ -42,8 +42,6 @@ in {
     trim.enable = true;
   };
 
-  services.flatpak.enable = true;
-
   services.xserver = {
     xkbOptions = "ctrl:nocaps, shift:both_capslock";
     libinput = {
