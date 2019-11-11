@@ -22,6 +22,9 @@ in {
     supportedFilesystems = [ "zfs" ];
     blacklistedKernelModules = [ "nouveau" ];
     extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+    extraModprobeConfig = ''
+      options hid_apple fnmode=2
+    '';
   };
 
   networking = {
