@@ -24,7 +24,11 @@
   system.stateVersion = "19.09";
 
   security.sudo.wheelNeedsPassword = false;
-  networking.firewall.enable = false;
+
+  networking = {
+    firewall.enable = false;
+    resolvconf.dnsExtensionMechanism = false; # Disable edns0
+  };
 
   services.openssh = {
     enable = true;
