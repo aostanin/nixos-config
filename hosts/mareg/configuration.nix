@@ -25,6 +25,19 @@ in {
     extraModprobeConfig = ''
       options hid_apple fnmode=2
     '';
+
+    kernelParams = [
+      "zfs.zfs_arc_max=2147483648"
+    ];
+    kernelPatches = [ {
+      # Fix Magic Mouse / Trackpad disconnects
+      # ref: https://bugzilla.kernel.org/show_bug.cgi?id=103631
+      name = "disable-hid-battery-strength";
+      patch = null;
+      extraConfig = ''
+        HID_BATTERY_STRENGTH n
+      '';
+    } ];
   };
 
   networking = {
