@@ -12,6 +12,7 @@ in {
     ../../modules/systemd-patched
     ../../modules/common
     ../../modules/desktop
+    ../../modules/mullvad-vpn
     ../../modules/syncthing
   ];
 

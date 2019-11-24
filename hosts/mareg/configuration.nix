@@ -11,6 +11,7 @@ in {
     ./hardware-configuration.nix
     ../../modules/common
     ../../modules/desktop
+    ../../modules/mullvad-vpn
     ../../modules/syncthing
   ];
 
