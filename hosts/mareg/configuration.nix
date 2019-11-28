@@ -75,6 +75,11 @@ in {
     '';
   };
 
+  services.undervolt = {
+    enable = true;
+    coreOffset = "-60";
+  };
+
   programs.adb.enable = true;
 
   virtualisation.libvirtd.enable = true;
