@@ -22,19 +22,14 @@
   location.provider = "geoclue2";
 
   services = {
-    dbus.packages = [ pkgs.gnome3.dconf ];
-
+    gnome3.gnome-keyring.enable = true;
     printing.enable = true;
-
-    redshift = {
-      enable = true;
-    };
+    redshift.enable = true;
+    xbanish.enable = true;
 
     udev.extraRules = ''
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="04d8", ATTRS{idProduct}=="e11c", GROUP="plugdev", MODE="0666" # MiniPro
     '';
-
-    xbanish.enable = true;
 
     xserver = {
       enable = true;
@@ -81,4 +76,6 @@
   programs = {
     dconf.enable = true;
   };
+
+  security.pam.services.sddm.enableGnomeKeyring = true;
 }
