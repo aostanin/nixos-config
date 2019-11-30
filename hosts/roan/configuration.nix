@@ -15,15 +15,32 @@ in {
     ../../modules/syncthing
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    supportedFilesystems = [ "zfs" ];
+    extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+    kernelParams = [
+      "zfs.zfs_arc_max=2147483648"
+    ];
+  };
 
   networking = {
     hostName = "roan";
     hostId = "9bc52069";
     networkmanager.enable = true;
+  };
+
+  services.zfs = {
+    autoScrub.enable = true;
+    autoSnapshot = {
+      enable = true;
+      weekly = 0;
+      monthly = 0;
+    };
+    trim.enable = true;
   };
 
   services.xserver = {
