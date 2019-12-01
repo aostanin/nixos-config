@@ -63,10 +63,5 @@ in {
     '';
   };
 
-  services.undervolt = {
-    enable = true;
-    coreOffset = "-70";
-  };
-
   virtualisation.libvirtd.enable = true;
 }
