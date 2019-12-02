@@ -18,13 +18,18 @@
       fsType = "zfs";
     };
 
+  fileSystems."/home" =
+    { device = "rpool/home";
+      fsType = "zfs";
+    };
+
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/77DC-A61A";
       fsType = "vfat";
     };
 
-  fileSystems."/home" =
-    { device = "rpool/home";
+  fileSystems."/var/lib/docker" =
+    { device = "rpool/docker";
       fsType = "zfs";
     };
 
