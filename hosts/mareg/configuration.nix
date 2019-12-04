@@ -70,7 +70,7 @@ in {
   services.tlp = {
     enable = true;
     extraConfig = ''
-      START_CHARGE_THRESH_BAT0=70
+      START_CHARGE_THRESH_BAT0=75
       STOP_CHARGE_THRESH_BAT0=80
     '';
   };
