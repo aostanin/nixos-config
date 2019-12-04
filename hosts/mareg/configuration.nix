@@ -21,7 +21,6 @@ in {
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
-    blacklistedKernelModules = [ "nouveau" ];
     extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
     extraModprobeConfig = ''
       options hid_apple fnmode=2
@@ -29,6 +28,8 @@ in {
 
     kernelParams = [
       "zfs.zfs_arc_max=2147483648"
+      "acpi_osi=\"!Windows 2013\"" # Needed to disable NVIDIA card
+      "acpi_osi=Linux"
     ];
     kernelPatches = [ {
       # Fix Magic Mouse / Trackpad disconnects
@@ -66,6 +67,8 @@ in {
       tapping = false;
     };
   };
+
+  hardware.nvidiaOptimus.disable = true;
 
   services.tlp = {
     enable = true;
