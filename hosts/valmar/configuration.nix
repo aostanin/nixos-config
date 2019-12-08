@@ -22,6 +22,19 @@ in {
       efi.canTouchEfiVariables = true;
     };
     blacklistedKernelModules = [ "nouveau" ];
+    kernelModules = [ "vfio_pci" ];
+    kernelParams = [
+      "intel_iommu=on"
+      "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=16"
+      "pcie_acs_override=downstream"
+    ];
+    kernelPatches = [ {
+      name = "acs";
+      patch = pkgs.fetchurl {
+        url = "https://aur.archlinux.org/cgit/aur.git/plain/add-acs-overrides.patch?h=linux-vfio";
+        sha256 = "1qd68s9r0ppynksbffqn2qbp1whqpbfp93dpccp9griwhx5srx6v";
+      };
+    } ];
   };
 
   networking = {
@@ -79,10 +92,4 @@ in {
       ]
     '';
   };
-
-  boot.kernelModules = [ "vfio_pci" ];
-  boot.kernelParams = [
-    "intel_iommu=on"
-    "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=16"
-  ];
 }
