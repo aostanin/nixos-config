@@ -41,6 +41,13 @@ in {
     hostName = "valmar";
     hostId = "203d588e";
     bridges.br0.interfaces = [ "enp0s31f6" ];
+    interfaces.enp2s0f0 = {
+      ipv4.addresses = [ {
+        address = "192.168.10.2";
+        prefixLength = 24;
+      } ];
+      mtu = 9000;
+    };
   };
 
   services.flatpak.enable = true;
