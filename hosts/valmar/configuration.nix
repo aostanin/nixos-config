@@ -48,6 +48,9 @@ in {
       } ];
       mtu = 9000;
     };
+    hosts = {
+      "192.168.10.1" = [ "elena-10g" ];
+    };
   };
 
   services.flatpak.enable = true;
