@@ -21,6 +21,8 @@ in {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    supportedFilesystems = [ "zfs" ];
+    zfs.extraPools = [ "tank" ];
     blacklistedKernelModules = [ "nouveau" ];
     kernelModules = [ "vfio_pci" ];
     kernelParams = [
@@ -53,17 +55,20 @@ in {
     };
   };
 
-  services.flatpak.enable = true;
-
   services.xserver = {
     xkbOptions = "ctrl:nocaps, shift:both_capslock";
     videoDrivers = [ "intel" /*"nvidia"*/ ]; # TODO: enabling nvidia disables glx
   };
 
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.zfs.extraPools = [ "tank" ];
-  services.zfs.autoScrub.enable = true;
-  services.zfs.autoSnapshot.enable = true;
+  services.zfs = {
+    autoScrub.enable = true;
+    autoSnapshot = {
+      enable = true;
+      weekly = 0;
+      monthly = 0;
+    };
+    trim.enable = true;
+  };
 
   #environment.etc."iscsi/initiatorname.iscsi".text = "InitiatorName=iqn.2005-03.org.open-iscsi:c1aa1469c14";
   #systemd.services.iscsid = {
