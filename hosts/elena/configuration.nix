@@ -21,6 +21,9 @@ in {
     zfs.extraPools = [ "spool" ]; # TODO: temporary
     kernelModules = [ "vfio_pci" ];
     kernelParams = [
+      "zfs.zfs_arc_max=51539607552"
+      # TODO: After memory upgrade
+      #"zfs.zfs_arc_max=103079215104"
       "intel_iommu=on"
     ];
   };
