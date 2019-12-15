@@ -64,6 +64,34 @@ in {
     storageDriver = "zfs";
   };
 
+  # Needed for rclone mount
+  environment.etc."fuse.conf".text = ''
+    user_allow_other
+  '';
+
+  # TODO: Clean this up
+  systemd.services.media-union-mount = {
+    description = "rclone mount media-union";
+    documentation = [ "http://rclone.org/docs/" ];
+    after = [ "network-online.target" ];
+    before = [ "docker.service" ];
+    wantedBy = [ "multi-user.target" ];
+    path = [ "${config.security.wrapperDir}/.." ];
+    serviceConfig = {
+      Type = "notify";
+      User = "aostanin";
+      Group = "users";
+      ExecStart = ''
+        ${pkgs.rclone}/bin/rclone mount media-union: /srv/media-union \
+          --read-only \
+          --allow-other
+      '';
+      ExecStop = "${config.security.wrapperDir}/fusermount -uz /srv/media-union";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+  };
+
   containers.shell = {
     autoStart = true;
     privateNetwork = true;
