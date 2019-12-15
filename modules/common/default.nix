@@ -32,7 +32,6 @@
 
   services.openssh = {
     enable = true;
-    permitRootLogin = "no";
     forwardX11 = true;
   };
 
