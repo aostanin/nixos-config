@@ -63,4 +63,30 @@ in {
   virtualisation.docker = {
     storageDriver = "zfs";
   };
+
+  containers.shell = {
+    autoStart = true;
+    privateNetwork = true;
+    hostBridge = "br0";
+
+    bindMounts = {
+      "/home" = { hostPath = "/home"; isReadOnly = false; };
+      "/srv/download" = { hostPath = "/srv/download"; isReadOnly = false; };
+      "/srv/media" = { hostPath = "/srv/media"; isReadOnly = false; };
+      "/srv/photos" = { hostPath = "/srv/photos"; isReadOnly = false; };
+      "/srv/sync" = { hostPath = "/srv/sync"; isReadOnly = false; };
+    };
+
+    config = { config, pkgs, ... }: {
+      imports = [
+        ../../modules/common
+      ];
+
+      networking = {
+        hostName = "aostanin-shell";
+        hostId = "1a2fc380";
+        interfaces.eth0.useDHCP = true;
+      };
+    };
+  };
 }
