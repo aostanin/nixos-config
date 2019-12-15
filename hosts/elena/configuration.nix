@@ -72,6 +72,25 @@ in {
     user_allow_other
   '';
 
+  fileSystems."/srv/nfs/images" = {
+    device = "/var/lib/libvirt/images";
+    options = [ "bind" ];
+  };
+
+  fileSystems."/srv/nfs/media" = {
+    device = "/srv/media";
+    options = [ "bind" ];
+  };
+
+  services.nfs.server = {
+    enable = true;
+    exports = ''
+      /srv/nfs        192.168.10.0/24(insecure,rw,fsid=0)
+      /srv/nfs/images 192.168.10.0/24(insecure,no_root_squash,rw)
+      /srv/nfs/media  192.168.10.0/24(insecure,rw)
+    '';
+  };
+
   # TODO: Clean this up
   systemd.services.media-union-mount = {
     description = "rclone mount media-union";
