@@ -70,6 +70,11 @@ in {
     trim.enable = true;
   };
 
+  fileSystems."/var/lib/libvirt/images" = {
+    device = "elena-10g:/images";
+    fsType = "nfs";
+  };
+
   #environment.etc."iscsi/initiatorname.iscsi".text = "InitiatorName=iqn.2005-03.org.open-iscsi:c1aa1469c14";
   #systemd.services.iscsid = {
     #wantedBy = [ "multi-user.target" ];
