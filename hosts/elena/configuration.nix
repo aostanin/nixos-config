@@ -6,7 +6,7 @@ let
   };
 in {
   imports = [
-    "${nixos-hardware}/common/cpu/intel/sandy-bridge"
+    "${nixos-hardware}/common/cpu/intel"
     "${nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ../../modules/common
@@ -14,10 +14,11 @@ in {
 
   boot = {
     loader = {
-      # TODO: not uefi
       systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
+    zfs.extraPools = [ "spool" ]; # TODO: temporary
     kernelModules = [ "vfio_pci" ];
     kernelParams = [
       "intel_iommu=on"
@@ -27,7 +28,13 @@ in {
   networking = {
     hostName = "elena";
     hostId = "4446d154";
-    interfaces.enp2s0f0 = {
+
+    bridges.br0.interfaces = [ "enp9s0" ];
+    interfaces.br0 = {
+      macAddress = "26:76:54:CA:95:14";
+    };
+
+    interfaces.enp3s0f0 = {
       ipv4.addresses = [ {
         address = "192.168.10.1";
         prefixLength = 24;
@@ -40,7 +47,10 @@ in {
   };
 
   services.zfs = {
-    autoScrub.enable = true;
+    autoScrub = {
+      enable = true;
+      interval = "monthly";
+    };
     autoSnapshot = {
       enable = true;
       monthly = 0;
@@ -49,4 +59,8 @@ in {
   };
 
   virtualisation.libvirtd.enable = true;
+
+  virtualisation.docker = {
+    storageDriver = "zfs";
+  };
 }
