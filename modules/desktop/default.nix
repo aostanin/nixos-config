@@ -15,8 +15,13 @@
     kochi-substitute
   ];
 
+  # Fix for USB redirection in virt-manager
+  # ref: https://github.com/NixOS/nixpkgs/issues/39618
+  security.wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice_gtk}/bin/spice-client-glib-usb-acl-helper";
+
   environment.systemPackages = with pkgs; [
     kde-gtk-config
+    spice_gtk # Fix for USB redirection in virt-manager
   ];
 
   location.provider = "geoclue2";
