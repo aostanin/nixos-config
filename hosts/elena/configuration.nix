@@ -25,6 +25,7 @@ in {
       # TODO: After memory upgrade
       #"zfs.zfs_arc_max=103079215104"
       "intel_iommu=on"
+      "console=ttyS1,57600"
     ];
   };
 
@@ -32,9 +33,11 @@ in {
     hostName = "elena";
     hostId = "4446d154";
 
+    useDHCP = false;
+
     bridges.br0.interfaces = [ "enp9s0" ];
     interfaces.br0 = {
-      macAddress = "26:76:54:CA:95:14";
+      useDHCP = true;
     };
 
     interfaces.enp3s0f0 = {
@@ -66,6 +69,11 @@ in {
   virtualisation.docker = {
     enable = true;
     storageDriver = "zfs";
+    # Docker defaults to Google's DNS
+    extraOptions = ''
+      --dns 192.168.1.1 \
+      --dns-search lan
+    '';
   };
 
   # Needed for rclone mount
