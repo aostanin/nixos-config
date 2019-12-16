@@ -13,6 +13,7 @@ in {
     ../../modules/desktop
     ../../modules/mullvad-vpn
     ../../modules/syncthing
+    ../../home
   ];
 
   boot = {
