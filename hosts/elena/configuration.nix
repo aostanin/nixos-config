@@ -29,6 +29,8 @@ in {
     ];
   };
 
+  services.mingetty.serialSpeed = [ 57600 ];
+
   networking = {
     hostName = "elena";
     hostId = "4446d154";
