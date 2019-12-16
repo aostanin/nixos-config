@@ -45,29 +45,6 @@
     };
   };
 
-  systemd.user.services.xcape = {
-    description = "xcape to use CTRL as ESC when pressed alone";
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    serviceConfig = {
-      Type = "forking";
-      ExecStart = "${pkgs.xcape}/bin/xcape";
-      RestartSec = 3;
-      Restart = "always";
-    };
-  };
-
-  systemd.user.services.sxhkd = {
-    description = "Simple X hotkey daemon";
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.sxhkd}/bin/sxhkd";
-      RestartSec = 3;
-      Restart = "always";
-    };
-  };
-
   sound.enable = true;
 
   hardware = {
