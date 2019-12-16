@@ -9,7 +9,6 @@ in {
     "${nixos-hardware}/common/cpu/intel"
     "${nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
-    ../../modules/systemd-patched
     ../../modules/common
     ../../modules/desktop
     ../../modules/mullvad-vpn
@@ -74,29 +73,6 @@ in {
     device = "elena-10g:/images";
     fsType = "nfs";
   };
-
-  #environment.etc."iscsi/initiatorname.iscsi".text = "InitiatorName=iqn.2005-03.org.open-iscsi:c1aa1469c14";
-  #systemd.services.iscsid = {
-    #wantedBy = [ "multi-user.target" ];
-    #before = [ "libvirtd.service" ];
-    #after = [ "network.target" ];
-    #serviceConfig = {
-      #Type = "forking";
-      #ExecStart = "${pkgs.openiscsi}/bin/iscsid -c ${pkgs.openiscsi}/etc/iscsi/iscsid.conf";
-      #ExecStop = [
-        #"${pkgs.openiscsi}/sbin/iscsiadm iscsiadm --mode node --logoutall=all"
-        #"${pkgs.openiscsi}/sbin/iscsiadm -k 0 2"
-      #];
-    #};
-  #};
-
-  #nixpkgs.overlays = [
-    #(self: super: {
-      #libvirt = super.libvirt.override {
-        #enableIscsi = true;
-      #};
-    #})
-  #];
 
   virtualisation.libvirtd = {
     enable = true;
