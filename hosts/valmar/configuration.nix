@@ -13,6 +13,7 @@ in {
     ../../modules/desktop
     ../../modules/mullvad-vpn
     ../../modules/syncthing
+    ../../home
   ];
 
   boot = {
@@ -23,7 +24,10 @@ in {
     supportedFilesystems = [ "zfs" ];
     zfs.extraPools = [ "tank" ];
     blacklistedKernelModules = [ "nouveau" ];
-    kernelModules = [ "vfio_pci" ];
+    kernelModules = [
+      "i2c-dev" # for ddcutil
+      "vfio_pci"
+    ];
     kernelParams = [
       "intel_iommu=on"
       "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=16"

@@ -11,9 +11,9 @@ in {
     ./hardware-configuration.nix
     ../../modules/common
     ../../modules/desktop
-    ../../modules/home
     ../../modules/mullvad-vpn
     ../../modules/syncthing
+    ../../home
   ];
 
   boot = {

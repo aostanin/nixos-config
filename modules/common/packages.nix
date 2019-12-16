@@ -8,14 +8,16 @@
 
     file
     git
-    gnumake
     htop
     ncdu
     neovim
-    stow
     tmux
-    vim
     wget
     which
+
+    # TODO: remove after switching to home-manager
+    gnumake
+    stow
+    vim
   ];
 }

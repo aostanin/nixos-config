@@ -94,8 +94,13 @@ in {
     sxhkd = {
       enable = true;
       keybindings = with pkgs; {
-        "ctrl + alt + {Prior,Next}" =
+        "ctrl + alt + {Prior,Next}" = # volume control
           "${getBin qt5.qttools}/bin/qdbus org.kde.kglobalaccel /component/kmix invokeShortcut {increase,decrease}_volume";
+      } // optionalAttrs (sysconfig.networking.hostName == "valmar") {
+        "ctrl + alt + {1,2,3,4}" = # input switching
+          "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil setvcp 60 0x0{1,3,4,f}";
+        "ctrl + alt + 0" = # turn off display
+          "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil setvcp d6 0x05";
       };
     };
 
