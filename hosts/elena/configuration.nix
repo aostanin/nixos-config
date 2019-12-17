@@ -20,7 +20,10 @@ in {
     };
     supportedFilesystems = [ "zfs" ];
     zfs.extraPools = [ "spool" ]; # TODO: temporary
-    kernelModules = [ "vfio_pci" ];
+    kernelModules = [
+      "nct6775" # For lm-sensors
+      "vfio_pci"
+    ];
     kernelParams = [
       "zfs.zfs_arc_max=51539607552"
       # TODO: After memory upgrade
