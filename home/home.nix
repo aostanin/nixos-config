@@ -136,16 +136,23 @@ in {
     xcape.enable = true;
   };
 
-  xdg.configFile."catt/catt.cfg".text = ''
-    [options]
-    device = up
+  xdg.configFile = {
+    "catt/catt.cfg".text = ''
+      [options]
+      device = up
 
-    [aliases]
-    up = Upstairs TV
-    down = Downstairs Home Hub
-  '';
+      [aliases]
+      up = Upstairs TV
+      down = Downstairs Home Hub
+    '';
 
-  xdg.configFile."libvirt/libvirt.conf".text = ''
-    uri_default='qemu:///system'
-  '';
+    "libvirt/libvirt.conf".text = ''
+      uri_default='qemu:///system'
+    '';
+  };
+
+  home.file = {
+    ".ssh/config".source = ./ssh_config;
+    ".ssh/master/.keep".text = "";
+  };
 }
