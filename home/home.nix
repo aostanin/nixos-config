@@ -135,4 +135,8 @@ in {
 
     xcape.enable = true;
   };
+
+  xdg.configFile."libvirt/libvirt.conf".text = ''
+    uri_default='qemu:///system'
+  '';
 }
