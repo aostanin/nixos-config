@@ -4,12 +4,16 @@ with lib;
 
 let
   sysconfig = (import <nixpkgs/nixos> {}).config;
-  unstable = import (fetchTarball https://github.com/NixOS/nixpkgs/archive/master.tar.gz) {};
 in {
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = import ./nixpkgs-config.nix;
+  xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
+
+  nixpkgs.overlays = import ./nixpkgs-overlays.nix;
+  xdg.configFile."nixpkgs/overlays.nix".source = ./nixpkgs-overlays.nix;
 
   home.packages = with pkgs; [
     bat
+    catt
     dhex
     docker-compose
     fd
@@ -58,6 +62,7 @@ in {
   ] ++ optionals sysconfig.programs.adb.enable [
     # Android
     android-studio
+    pidcat
     scrcpy
   ];
 
