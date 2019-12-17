@@ -136,6 +136,15 @@ in {
     xcape.enable = true;
   };
 
+  xdg.configFile."catt/catt.cfg".text = ''
+    [options]
+    device = up
+
+    [aliases]
+    up = Upstairs TV
+    down = Downstairs Home Hub
+  '';
+
   xdg.configFile."libvirt/libvirt.conf".text = ''
     uri_default='qemu:///system'
   '';
