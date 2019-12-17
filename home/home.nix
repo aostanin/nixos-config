@@ -4,14 +4,18 @@ with lib;
 
 let
   sysconfig = (import <nixpkgs/nixos> {}).config;
+  unstable = import (fetchTarball https://github.com/NixOS/nixpkgs/archive/master.tar.gz) {};
 in {
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
+    bat
     dhex
     docker-compose
+    fd
     ffmpeg
     gpsbabel
+    lazygit
     lftp
     p7zip
     python3
@@ -21,6 +25,7 @@ in {
     rtv
     tig
     tmuxp
+    tokei
     translate-shell
   ] ++ optionals sysconfig.services.xserver.enable [
     # GUI
@@ -29,17 +34,14 @@ in {
     keepassxc
     kicad
     libreoffice
-    mpv
     mullvad-vpn
     skype
     slack
     tdesktop
     thunderbird
     virtmanager
-    vscodium
     (wine.override { wineBuild = "wineWow"; })
     xclip
-    xorg.xmodmap
     zoom-us
   ] ++ optionals sysconfig.services.xserver.desktopManager.plasma5.enable [
     # KDE
@@ -87,6 +89,25 @@ in {
       shortcut = "a";
       terminal = "screen-256color";
       tmuxp.enable = true;
+    };
+  } // optionalAttrs sysconfig.services.xserver.enable {
+    mpv.enable = true;
+
+    vscode = {
+      enable = true;
+      package = pkgs.vscodium;
+      extensions = with pkgs.vscode-extensions; [
+        bbenoist.Nix
+        vscodevim.vim
+        # TODO: Add others like https://github.com/NixOS/nixpkgs/blob/master/pkgs/misc/vscode-extensions/default.nix
+        # Tom Philbin - Gruvbox Themes
+      ];
+      userSettings = {
+        "editor.wordWrap" = "on";
+        "update.channel" = "none";
+        "workbench.colorTheme" = "Gruvbox Dark (Medium)";
+        "vim.useCtrlKeys" = false;
+      };
     };
   };
 
