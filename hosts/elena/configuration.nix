@@ -10,6 +10,7 @@ in {
     "${nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ../../modules/common
+    ../../home
   ];
 
   boot = {
@@ -141,6 +142,7 @@ in {
     config = { config, pkgs, ... }: {
       imports = [
         ../../modules/common
+        ../../home
       ];
 
       networking = {

@@ -15,6 +15,7 @@ in {
     fd
     ffmpeg
     gpsbabel
+    ipmitool
     lazygit
     lftp
     p7zip
@@ -27,6 +28,7 @@ in {
     tmuxp
     tokei
     translate-shell
+    wol
   ] ++ optionals sysconfig.services.xserver.enable [
     # GUI
     deluge
@@ -112,6 +114,7 @@ in {
   };
 
   services = {
+  } // optionalAttrs sysconfig.services.xserver.enable {
     sxhkd = {
       enable = true;
       keybindings = with pkgs; {
