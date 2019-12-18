@@ -107,25 +107,6 @@ in {
       terminal = "screen-256color";
       tmuxp.enable = true;
     };
-  } // optionalAttrs sysconfig.services.xserver.enable {
-    mpv.enable = true;
-
-    vscode = {
-      enable = true;
-      package = pkgs.vscodium;
-      extensions = with pkgs.vscode-extensions; [
-        bbenoist.Nix
-        vscodevim.vim
-        # TODO: Add others like https://github.com/NixOS/nixpkgs/blob/master/pkgs/misc/vscode-extensions/default.nix
-        # Tom Philbin - Gruvbox Themes
-      ];
-      userSettings = {
-        "editor.wordWrap" = "on";
-        "update.channel" = "none";
-        "workbench.colorTheme" = "Gruvbox Dark (Medium)";
-        "vim.useCtrlKeys" = false;
-      };
-    };
 
     zsh = {
       enable = true;
@@ -146,6 +127,25 @@ in {
         DISABLE_AUTO_UPDATE = "true";
       } // optionalAttrs pkgs.stdenv.isDarwin {
         HOMEBREW_GITHUB_API_TOKEN = "***REMOVED***";
+      };
+    };
+  } // optionalAttrs sysconfig.services.xserver.enable {
+    mpv.enable = true;
+
+    vscode = {
+      enable = true;
+      package = pkgs.vscodium;
+      extensions = with pkgs.vscode-extensions; [
+        bbenoist.Nix
+        vscodevim.vim
+        # TODO: Add others like https://github.com/NixOS/nixpkgs/blob/master/pkgs/misc/vscode-extensions/default.nix
+        # Tom Philbin - Gruvbox Themes
+      ];
+      userSettings = {
+        "editor.wordWrap" = "on";
+        "update.channel" = "none";
+        "workbench.colorTheme" = "Gruvbox Dark (Medium)";
+        "vim.useCtrlKeys" = false;
       };
     };
   };
