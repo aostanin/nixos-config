@@ -29,7 +29,15 @@
   services = {
     gnome3.gnome-keyring.enable = true;
     printing.enable = true;
-    redshift.enable = true;
+
+    redshift = {
+      enable = true;
+      temperature = {
+        day = 5500;
+        night = 3000;
+      };
+    };
+
     xbanish.enable = true;
 
     udev.extraRules = ''
