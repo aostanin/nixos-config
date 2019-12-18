@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, config, lib, ... }:
 
 with lib;
 
@@ -11,60 +11,68 @@ in {
   nixpkgs.overlays = import ./nixpkgs-overlays.nix;
   xdg.configFile."nixpkgs/overlays.nix".source = ./nixpkgs-overlays.nix;
 
-  home.packages = with pkgs; [
-    bat
-    catt
-    dhex
-    docker-compose
-    fd
-    ffmpeg
-    gpsbabel
-    ipmitool
-    lazygit
-    lftp
-    p7zip
-    python3
-    pv
-    rclone
-    ripgrep
-    rtv
-    tig
-    tmuxp
-    tokei
-    translate-shell
-    wol
-  ] ++ optionals sysconfig.services.xserver.enable [
-    # GUI
-    deluge
-    discord
-    keepassxc
-    kicad
-    libreoffice
-    mullvad-vpn
-    skype
-    slack
-    tdesktop
-    thunderbird
-    virtmanager
-    (wine.override { wineBuild = "wineWow"; })
-    xclip
-    zoom-us
-  ] ++ optionals sysconfig.services.xserver.desktopManager.plasma5.enable [
-    # KDE
-    (ark.override { unfreeEnableUnrar = true; })
-    gwenview
-    kate
-    kdeconnect
-    krdc
-    okular
-    plasma-browser-integration
-    spectacle
-  ] ++ optionals sysconfig.programs.adb.enable [
-    # Android
-    android-studio
-    pidcat
-    scrcpy
-  ];
+  home = {
+    packages = with pkgs; [
+      bat
+      catt
+      dhex
+      docker-compose
+      fd
+      ffmpeg
+      gpsbabel
+      ipmitool
+      lazygit
+      lftp
+      p7zip
+      python3
+      pv
+      rclone
+      ripgrep
+      rtv
+      tig
+      tmuxp
+      tokei
+      translate-shell
+      wol
+    ] ++ optionals sysconfig.services.xserver.enable [
+      # GUI
+      deluge
+      discord
+      keepassxc
+      kicad
+      libreoffice
+      mullvad-vpn
+      skype
+      slack
+      tdesktop
+      thunderbird
+      virtmanager
+      (wine.override { wineBuild = "wineWow"; })
+      xclip
+      zoom-us
+    ] ++ optionals sysconfig.services.xserver.desktopManager.plasma5.enable [
+      # KDE
+      (ark.override { unfreeEnableUnrar = true; })
+      gwenview
+      kate
+      kdeconnect
+      krdc
+      okular
+      plasma-browser-integration
+      spectacle
+    ] ++ optionals sysconfig.programs.adb.enable [
+      # Android
+      android-studio
+      pidcat
+      scrcpy
+    ];
+
+    sessionVariables = {
+      EDITOR = "vi";
+      VISUAL = config.home.sessionVariables.EDITOR;
+      MANPAGER = "sh -c 'col -bx | ${pkgs.bat}/bin/bat -l man -p'";
+    };
+  };
 
   programs = {
     direnv.enable = true;
