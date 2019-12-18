@@ -29,11 +29,11 @@ in {
       # TODO: After memory upgrade
       #"zfs.zfs_arc_max=103079215104"
       "intel_iommu=on"
-      "console=ttyS1,57600"
+      "console=ttyS1,115200"
     ];
   };
 
-  services.mingetty.serialSpeed = [ 57600 ];
+  services.mingetty.serialSpeed = [ 115200 ];
 
   networking = {
     hostName = "elena";
@@ -120,7 +120,6 @@ in {
       Group = "users";
       ExecStart = ''
         ${pkgs.rclone}/bin/rclone mount media-union: /srv/media-union \
-          --read-only \
           --allow-other
       '';
       ExecStop = "${config.security.wrapperDir}/fusermount -uz /srv/media-union";
