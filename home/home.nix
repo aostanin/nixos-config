@@ -118,6 +118,7 @@ in {
         ];
       };
       initExtra = ''
+        autoload zmv
         source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
         source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
         export PATH=$HOME/.local/bin:$PATH
