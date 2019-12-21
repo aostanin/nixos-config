@@ -42,6 +42,7 @@
     extraGroups = [
       "adbusers"
       "cdrom"
+      "dialout"
       "docker"
       "input"
       "libvirtd"
