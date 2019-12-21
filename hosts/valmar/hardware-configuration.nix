@@ -18,6 +18,11 @@
       fsType = "zfs";
     };
 
+  fileSystems."/nix" =
+    { device = "rpool/root/nix";
+      fsType = "zfs";
+    };
+
   fileSystems."/home" =
     { device = "rpool/home";
       fsType = "zfs";
@@ -26,6 +31,11 @@
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/1FA6-DE5C";
       fsType = "vfat";
+    };
+
+  fileSystems."/var/lib/docker" =
+    { device = "rpool/docker";
+      fsType = "zfs";
     };
 
   swapDevices =

@@ -58,19 +58,41 @@ in {
     };
   };
 
-  services.xserver = {
-    xkbOptions = "ctrl:nocaps, shift:both_capslock";
-    videoDrivers = [ "intel" /*"nvidia"*/ ]; # TODO: enabling nvidia disables glx
-  };
-
-  services.zfs = {
-    autoScrub.enable = true;
-    autoSnapshot = {
-      enable = true;
-      weekly = 0;
-      monthly = 0;
+  services = {
+    xserver = {
+      xkbOptions = "ctrl:nocaps, shift:both_capslock";
+      videoDrivers = [ "intel" /*"nvidia"*/ ]; # TODO: enabling nvidia disables glx
     };
-    trim.enable = true;
+
+    zfs = {
+      autoScrub.enable = true;
+      trim.enable = true;
+    };
+
+    znapzend = {
+      enable = true;
+      pure = true;
+      autoCreation = true;
+      zetup = {
+        "rpool/home" = {
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "elena";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/home";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
+        "rpool/root/nixos" = {
+          recursive = true;
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "elena";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/root/nixos";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
+      };
+    };
   };
 
   fileSystems."/var/lib/libvirt/images" = {
@@ -78,20 +100,22 @@ in {
     fsType = "nfs";
   };
 
-  virtualisation.libvirtd = {
-    enable = true;
-    qemuVerbatimConfig = ''
-      user = "aostanin"
-      cgroup_device_acl = [
-        "/dev/null", "/dev/full", "/dev/zero",
-        "/dev/random", "/dev/urandom",
-        "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-        "/dev/rtc","/dev/hpet", "/dev/sev",
-        "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd",
-        "/dev/input/by-id/usb-Logitech_G500s_Laser_Gaming_Mouse_2881723C750008-event-mouse"
-      ]
-    '';
-  };
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      qemuVerbatimConfig = ''
+        user = "aostanin"
+        cgroup_device_acl = [
+          "/dev/null", "/dev/full", "/dev/zero",
+          "/dev/random", "/dev/urandom",
+          "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+          "/dev/rtc","/dev/hpet", "/dev/sev",
+          "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd",
+          "/dev/input/by-id/usb-Logitech_G500s_Laser_Gaming_Mouse_2881723C750008-event-mouse"
+        ]
+      '';
+    };
 
-  virtualisation.docker.enable = true;
+    docker.enable = true;
+  };
 }
