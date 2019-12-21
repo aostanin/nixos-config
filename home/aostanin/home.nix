@@ -5,11 +5,11 @@ with lib;
 let
   sysconfig = (import <nixpkgs/nixos> {}).config;
 in {
-  nixpkgs.config = import ./nixpkgs-config.nix;
-  xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
+  nixpkgs.config = import ./nixpkgs/config.nix;
+  xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs/config.nix;
 
-  nixpkgs.overlays = import ./nixpkgs-overlays.nix;
-  xdg.configFile."nixpkgs/overlays.nix".source = ./nixpkgs-overlays.nix;
+  nixpkgs.overlays = import ./nixpkgs/overlays.nix;
+  xdg.configFile."nixpkgs/overlays.nix".source = ./nixpkgs/overlays.nix;
 
   home = {
     packages = with pkgs; [

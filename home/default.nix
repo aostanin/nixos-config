@@ -9,5 +9,6 @@ in {
     "${home-manager}/nixos"
   ];
 
-  home-manager.users.aostanin = import ./home.nix;
+  home-manager.users.root = import ./root/home.nix;
+  home-manager.users.aostanin = import ./aostanin/home.nix;
 }

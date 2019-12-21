@@ -34,37 +34,63 @@ in {
     networkmanager.enable = true;
   };
 
-  services.zfs = {
-    autoScrub.enable = true;
-    autoSnapshot = {
+  services = {
+    tlp = {
       enable = true;
-      weekly = 0;
-      monthly = 0;
+      extraConfig = ''
+        START_CHARGE_THRESH_BAT0=75
+        STOP_CHARGE_THRESH_BAT0=80
+        START_CHARGE_THRESH_BAT1=75
+        STOP_CHARGE_THRESH_BAT1=80
+      '';
     };
-    trim.enable = true;
-  };
 
-  services.xserver = {
-    xkbOptions = "ctrl:nocaps, shift:both_capslock";
-    libinput = {
+    xserver = {
+      xkbOptions = "ctrl:nocaps, shift:both_capslock";
+      libinput = {
+        enable = true;
+        clickMethod = "clickfinger";
+        naturalScrolling = true;
+        tapping = false;
+      };
+    };
+
+    zfs = {
+      autoScrub.enable = true;
+      trim.enable = true;
+    };
+
+    znapzend = {
       enable = true;
-      clickMethod = "clickfinger";
-      naturalScrolling = true;
-      tapping = false;
+      pure = true;
+      autoCreation = true;
+      zetup = {
+        "rpool/home" = {
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "elena";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/home";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
+        "rpool/root/nixos" = {
+          recursive = true;
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "elena";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/root/nixos";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
+      };
     };
   };
 
-  services.tlp = {
-    enable = true;
-    extraConfig = ''
-      START_CHARGE_THRESH_BAT0=75
-      STOP_CHARGE_THRESH_BAT0=80
-      START_CHARGE_THRESH_BAT1=75
-      STOP_CHARGE_THRESH_BAT1=80
-    '';
+  virtualisation = {
+    libvirtd.enable = true;
+    docker = {
+      enable = true;
+      storageDriver = "zfs";
+    };
   };
-
-  virtualisation.libvirtd.enable = true;
-
-  virtualisation.docker.enable = true;
 }
