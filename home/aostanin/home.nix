@@ -152,6 +152,7 @@ in {
   };
 
   services = {
+    lorri.enable = true;
   } // optionalAttrs sysconfig.services.xserver.enable {
     sxhkd = {
       enable = true;
