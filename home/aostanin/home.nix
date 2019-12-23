@@ -124,8 +124,19 @@ in {
       withPython = false;
       withPython3 = false;
       withRuby = false;
-      # TODO: extraConfig
-      # TODO: plugins
+      plugins = with pkgs.vimPlugins; [
+        ctrlp-vim
+        gruvbox
+        lightline-vim
+        nerdcommenter
+        polyglot
+        syntastic
+        vim-fugitive
+        vim-gitgutter
+        vim-sensible
+        # TODO: vim-nfo
+      ];
+      extraConfig = readFile ./neovim/config;
     };
 
     starship.enable = true;

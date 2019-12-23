@@ -1,0 +1,103 @@
+"
+" Vim Options
+"
+
+" General options
+set nocompatible
+
+" Tab key is 4 spaces
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
+" Indent options
+set smartindent
+
+" File encoding options
+set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8,euc-jp,sjis,iso-2022-jp,cp932
+set fileformats=unix,dos,mac
+
+" Show whitespace
+set list
+set listchars=tab:>-,extends:<,trail:-
+
+" Japanese specific
+set formatoptions+=m " allow line-breaks on Asian characters
+
+" Code options
+set number    " Show line numbers
+set showmatch " Show matching braces etc.
+
+" Search options
+set wrapscan
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+set gdefault   " Global search and replace by default
+
+" Status line
+set laststatus=2 " Always show
+
+" Tab line
+set showtabline=2 " Always show
+
+" Various options
+set hidden                     " Allow unsaved changes in abandoned buffers
+set nobackup                   " Don't write ~ files all over
+set noswapfile                 " Don't write .swp files
+set cursorline                 " Highlight current line
+set ttyfast                    " Faster redrawing
+set termguicolors              " True color support
+
+" GUI options
+if has('gui_running')
+  set guioptions-=T " No toolbar
+  set guioptions-=r " Disable right scrollbar
+  set guioptions-=L " Disable left scrollbar
+  set guifont=Meslo\ LG\ S\ DZ\ for\ Powerline
+endif
+
+" CLI options
+if !has('gui_running')
+  set t_Co=256
+endif
+
+
+
+"
+" Key Mappings
+"
+
+let mapleader = ","
+
+" Clear search highlight
+nmap <silent> <leader>/ :nohlsearch<CR>
+
+
+
+"
+" Plugin Options
+"
+
+" CtrlP
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  let g:ctrlp_use_caching = 0
+endif
+
+" TagBar
+let g:tagbar_width = 26                           " Make tagbar smaller
+
+
+
+"
+" Theme Options
+"
+
+colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'hard'
