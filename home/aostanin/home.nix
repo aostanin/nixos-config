@@ -188,5 +188,8 @@ in {
   home.file = {
     ".ssh/config".source = ./ssh_config;
     ".ssh/master/.keep".text = "";
+  } // optionalAttrs sysconfig.services.xserver.enable {
+    ".local/share/konsole/Gruvbox_dark.colorscheme".source = ./konsole/Gruvbox_dark.colorscheme;
+    ".local/share/konsole/Profile 1.profile".source = ./konsole/Profile_1.profile;
   };
 }
