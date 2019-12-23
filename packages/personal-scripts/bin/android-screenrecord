@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+MODEL=$(adb exec-out getprop ro.product.model)
+FILE=Screenrecord_${MODEL}_$(date '+%Y%m%d-%H%M%S')
+
+trap encode SIGINT
+encode() {
+    ffmpeg -i ~/Desktop/${FILE}.mp4 -vf "fps=15,scale=-1:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" ~/Desktop/${FILE}.gif
+}
+
+adb exec-out screenrecord --output-format=h264 - > ~/Desktop/${FILE}.mp4

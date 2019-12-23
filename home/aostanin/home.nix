@@ -24,6 +24,7 @@ in {
       lazygit
       lftp
       p7zip
+      personal-scripts
       python3
       pv
       rclone

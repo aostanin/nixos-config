@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+MODEL=$(adb exec-out getprop ro.product.model)
+adb exec-out screencap -p > ~/Desktop/Screenshot_${MODEL}_$(date '+%Y%m%d-%H%M%S').png

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+scp ~/Downloads/*.torrent elena:/srv/download/torrent/watch
+rm ~/Downloads/*.torrent

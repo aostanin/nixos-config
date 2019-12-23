@@ -1,0 +1,12 @@
+#!/bin/sh
+
+case $OSTYPE in
+    darwin*)
+        SELECTION="$(pbpaste)"
+        ;;
+    linux*)
+        SELECTION="$(xclip -selection c -o)"
+        ;;
+esac
+
+ssh ipad uiopen "$SELECTION"

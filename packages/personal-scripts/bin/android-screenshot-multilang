@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -x
+
+for lang in de es fr it ja en; do
+    adb shell am start -n net.sanapeli.adbchangelanguage/.AdbChangeLanguage -e language $lang
+    sleep 5
+    android-screenshot
+done
