@@ -77,6 +77,43 @@ in {
   programs = {
     direnv.enable = true;
 
+    git = {
+      enable = true;
+      userName = "***REMOVED***";
+      userEmail = "***REMOVED***";
+      ignores = [
+        # Compiled source
+        "*.com"
+        "*.class"
+        "*.dll"
+        "*.exe"
+        "*.o"
+        "*.so"
+        "*.pyc"
+
+        # OS generated files
+        ".DS_Store"
+        "Thumbs.db"
+
+        # Other SCM
+        ".svn"
+
+        # Junk files
+        "*.bak"
+        "*.swp"
+        "*~"
+
+        # IDE
+        ".idea"
+        "*.iml"
+        ".vscode"
+
+        # SyncThing
+        ".stfolder"
+        ".stignore"
+      ];
+    };
+
     google-chrome.enable = true;
 
     neovim = {
