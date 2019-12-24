@@ -82,6 +82,19 @@ in {
       enable = true;
       userName = "***REMOVED***";
       userEmail = "***REMOVED***";
+      aliases = {
+        a = "add";
+        br = "branch";
+        c = "commit";
+        cm = "commit -m";
+        co = "checkout";
+        cob = "checkout -b";
+        d = "diff";
+        f = "fetch";
+        pl = "pull";
+        po = "push origin";
+        s = "status -s";
+      };
       ignores = [
         # Compiled source
         "*.com"
