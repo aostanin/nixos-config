@@ -41,6 +41,9 @@ in {
         sha256 = "1qd68s9r0ppynksbffqn2qbp1whqpbfp93dpccp9griwhx5srx6v";
       };
     } ];
+    extraModprobeConfig = ''
+      kvm ignore_msrs=1
+    '';
   };
 
   networking = {

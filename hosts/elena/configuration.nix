@@ -32,6 +32,9 @@ in {
       "iommu=pt"
       "console=ttyS1,115200"
     ];
+    extraModprobeConfig = ''
+      kvm ignore_msrs=1
+    '';
   };
 
   services.mingetty.serialSpeed = [ 115200 ];
