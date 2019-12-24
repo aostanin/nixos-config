@@ -29,6 +29,7 @@ in {
       # TODO: After memory upgrade
       #"zfs.zfs_arc_max=103079215104"
       "intel_iommu=on"
+      "iommu=pt"
       "console=ttyS1,115200"
     ];
   };

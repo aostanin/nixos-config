@@ -30,6 +30,7 @@ in {
     ];
     kernelParams = [
       "intel_iommu=on"
+      "iommu=pt"
       "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=16"
       "pcie_acs_override=downstream"
     ];
