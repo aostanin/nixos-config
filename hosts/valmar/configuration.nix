@@ -42,7 +42,7 @@ in {
       };
     } ];
     extraModprobeConfig = ''
-      kvm ignore_msrs=1
+      options kvm ignore_msrs=1
     '';
   };
 
