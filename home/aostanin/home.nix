@@ -82,6 +82,11 @@ in {
       enable = true;
       userName = "***REMOVED***";
       userEmail = "***REMOVED***";
+      extraConfig = {
+        push = {
+          default = "current";
+        };
+      };
       aliases = {
         a = "add";
         br = "branch";
