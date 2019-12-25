@@ -16,7 +16,6 @@ in {
       bat
       catt
       dhex
-      docker-compose
       fd
       ffmpeg
       gpsbabel
