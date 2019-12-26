@@ -11,6 +11,7 @@ in {
     ./hardware-configuration.nix
     ../../modules/common
     ../../home
+    ./telegraf.nix
   ];
 
   boot = {
@@ -32,6 +33,7 @@ in {
       # "zfs.zfs_arc_max=103079215104"
       "intel_iommu=on"
       "iommu=pt"
+      "console=tty0"
       "console=ttyS1,115200"
     ];
     extraModprobeConfig = ''
