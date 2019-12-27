@@ -8,12 +8,12 @@
         cpu = { totalcpu = true; };
         disk = {}; # TODO: ignore_fs = ["tmpfs", "devtmpfs", "devfs"]
         diskio = {}; # TODO: skip_serial_number = false?
-        docker = { endpoint = "unix:///var/run/docker.sock"; }; # TODO: need to config?
+        docker = { endpoint = "unix:///var/run/docker.sock"; };
         interrupts = {};
         #ipmi_sensor = {};
         kernel = {};
         mem = {};
-        net = { interfaces = [ "enp2s0" ]; };
+        net = {}; # TODO: interfaces
         netstat = {};
         processes = {};
         sensors = {};
