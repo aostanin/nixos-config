@@ -121,6 +121,9 @@ in {
       '';
     };
 
-    docker.enable = true;
+    docker = {
+      enable = true;
+      storageDriver = "zfs";
+    };
   };
 }
