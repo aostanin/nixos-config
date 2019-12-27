@@ -14,6 +14,7 @@ in {
     ../../modules/mullvad-vpn
     ../../modules/syncthing
     ../../home
+    ./telegraf.nix
   ];
 
   boot = {
