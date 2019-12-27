@@ -4,6 +4,7 @@
   environment.systemPackages = with pkgs; [
     lm_sensors
     pciutils
+    smartmontools
     usbutils
 
     file
