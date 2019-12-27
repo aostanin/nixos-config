@@ -7,10 +7,12 @@
       inputs = {
         cpu = { totalcpu = true; };
         disk = {}; # TODO: ignore_fs = ["tmpfs", "devtmpfs", "devfs"]
-        diskio = {}; # TODO: skip_serial_number = false?
+        diskio = {
+          devices = [ "sd[a-z]" ];
+          skip_serial_number = false;
+        };
         docker = { endpoint = "unix:///var/run/docker.sock"; };
         interrupts = {};
-        #ipmi_sensor = {};
         kernel = {};
         mem = {};
         net = {}; # TODO: interfaces
