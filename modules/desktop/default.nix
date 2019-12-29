@@ -57,6 +57,7 @@
 
   hardware = {
     bluetooth.enable = true;
+    opengl.driSupport32Bit = true; # Needed for Steam
     pulseaudio = {
       enable = true;
       package = pkgs.pulseaudioFull;
