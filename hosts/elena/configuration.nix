@@ -26,11 +26,8 @@ in {
       "vfio_pci"
     ];
     kernelParams = [
-      "zfs.zfs_arc_min=34359738368"
-      "zfs.zfs_arc_max=51539607552"
-      # TODO: After memory upgrade
-      # "zfs.zfs_arc_min=68719476736"
-      # "zfs.zfs_arc_max=103079215104"
+      "zfs.zfs_arc_min=68719476736"
+      "zfs.zfs_arc_max=103079215104"
       "intel_iommu=on"
       "iommu=pt"
       "console=tty0"
