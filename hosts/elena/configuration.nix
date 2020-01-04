@@ -20,7 +20,6 @@ in {
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
-    zfs.extraPools = [ "spool" ]; # TODO: temporary
     kernelModules = [
       "nct6775" # For lm-sensors
       "vfio_pci"
@@ -46,12 +45,12 @@ in {
 
     useDHCP = false;
 
-    bridges.br0.interfaces = [ "enp9s0" ];
+    bridges.br0.interfaces = [ "enp10s0" ];
     interfaces.br0 = {
       useDHCP = true;
     };
 
-    interfaces.enp3s0f0 = {
+    interfaces.enp6s0f0 = {
       ipv4.addresses = [ {
         address = "192.168.10.1";
         prefixLength = 24;
