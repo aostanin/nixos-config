@@ -201,7 +201,8 @@ in {
 
     vscode = {
       enable = true;
-      package = pkgs.vscodium;
+      # TODO: Requires master home-manager
+      # package = pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
         bbenoist.Nix
         vscodevim.vim
