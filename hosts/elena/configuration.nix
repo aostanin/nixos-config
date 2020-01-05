@@ -86,18 +86,13 @@ in {
     '';
   };
 
-  # Needed for rclone mount
-  environment.etc."fuse.conf".text = ''
-    user_allow_other
-  '';
-
   fileSystems."/srv/nfs/images" = {
     device = "/var/lib/libvirt/images";
     options = [ "bind" ];
   };
 
   fileSystems."/srv/nfs/media" = {
-    device = "/srv/media";
+    device = "/storage/media";
     options = [ "bind" ];
   };
 
@@ -109,6 +104,11 @@ in {
       /srv/nfs/media  192.168.10.0/24(insecure,rw)
     '';
   };
+
+  # Needed for rclone mount
+  environment.etc."fuse.conf".text = ''
+    user_allow_other
+  '';
 
   # TODO: Clean this up
   systemd.services.media-union-mount = {
@@ -123,10 +123,10 @@ in {
       User = "aostanin";
       Group = "users";
       ExecStart = ''
-        ${pkgs.rclone}/bin/rclone mount media-union: /srv/media-union \
+        ${pkgs.rclone}/bin/rclone mount media-union: /storage/media-union \
           --allow-other
       '';
-      ExecStop = "${config.security.wrapperDir}/fusermount -uz /srv/media-union";
+      ExecStop = "${config.security.wrapperDir}/fusermount -uz /storage/media-union";
       Restart = "on-failure";
       RestartSec = 5;
     };
@@ -139,10 +139,9 @@ in {
 
     bindMounts = {
       "/home" = { hostPath = "/home"; isReadOnly = false; };
-      "/srv/download" = { hostPath = "/srv/download"; isReadOnly = false; };
-      "/srv/media" = { hostPath = "/srv/media"; isReadOnly = false; };
-      "/srv/photos" = { hostPath = "/srv/photos"; isReadOnly = false; };
-      "/srv/sync" = { hostPath = "/srv/sync"; isReadOnly = false; };
+      "/storage/download" = { hostPath = "/storage/download"; isReadOnly = false; };
+      "/storage/media" = { hostPath = "/storage/media"; isReadOnly = false; };
+      "/storage/personal" = { hostPath = "/storage/personal"; isReadOnly = false; };
     };
 
     config = { config, pkgs, ... }: {
