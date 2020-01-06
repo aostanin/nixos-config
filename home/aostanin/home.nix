@@ -132,8 +132,6 @@ in {
       ];
     };
 
-    google-chrome.enable = true;
-
     neovim = {
       enable = true;
       viAlias = true;
@@ -197,6 +195,8 @@ in {
       };
     };
   } // optionalAttrs sysconfig.services.xserver.enable {
+    google-chrome.enable = true;
+
     mpv.enable = true;
 
     vscode = {
