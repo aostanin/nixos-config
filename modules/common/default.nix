@@ -43,6 +43,7 @@
       "adbusers"
       "cdrom"
       "dialout"
+      "disk"
       "docker"
       "input"
       "libvirtd"

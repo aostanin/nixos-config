@@ -18,6 +18,11 @@
       fsType = "zfs";
     };
 
+  fileSystems."/nix" =
+    { device = "tank/root/nix";
+      fsType = "zfs";
+    };
+
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/3E1E-2057";
       fsType = "vfat";
@@ -25,6 +30,21 @@
 
   fileSystems."/home" =
     { device = "tank/home";
+      fsType = "zfs";
+    };
+
+  fileSystems."/var/lib/libvirt" =
+    { device = "tank/virtualization/libvirt";
+      fsType = "zfs";
+    };
+
+  fileSystems."/var/lib/libvirt/images" =
+    { device = "tank/virtualization/libvirt/images";
+      fsType = "zfs";
+    };
+
+  fileSystems."/var/lib/libvirt/isos" =
+    { device = "tank/virtualization/libvirt/isos";
       fsType = "zfs";
     };
 

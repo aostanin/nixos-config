@@ -14,6 +14,7 @@ in {
     ../../modules/mullvad-vpn
     ../../modules/syncthing
     ../../home
+    ./telegraf.nix
   ];
 
   boot = {
@@ -120,6 +121,9 @@ in {
       '';
     };
 
-    docker.enable = true;
+    docker = {
+      enable = true;
+      storageDriver = "zfs";
+    };
   };
 }

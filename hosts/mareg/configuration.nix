@@ -23,24 +23,12 @@ in {
     };
     supportedFilesystems = [ "zfs" ];
     extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
-    extraModprobeConfig = ''
-      options hid_apple fnmode=2
-    '';
 
     kernelParams = [
       "zfs.zfs_arc_max=2147483648"
       "acpi_osi=\"!Windows 2013\"" # Needed to disable NVIDIA card
       "acpi_osi=Linux"
     ];
-    kernelPatches = [ {
-      # Fix Magic Mouse / Trackpad disconnects
-      # ref: https://bugzilla.kernel.org/show_bug.cgi?id=103631
-      name = "disable-hid-battery-strength";
-      patch = null;
-      extraConfig = ''
-        HID_BATTERY_STRENGTH n
-      '';
-    } ];
   };
 
   networking = {

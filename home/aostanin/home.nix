@@ -132,8 +132,6 @@ in {
       ];
     };
 
-    google-chrome.enable = true;
-
     neovim = {
       enable = true;
       viAlias = true;
@@ -197,11 +195,16 @@ in {
       };
     };
   } // optionalAttrs sysconfig.services.xserver.enable {
+    firefox.enable = true;
+
+    google-chrome.enable = true;
+
     mpv.enable = true;
 
     vscode = {
       enable = true;
-      package = pkgs.vscodium;
+      # TODO: Requires master home-manager
+      # package = pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
         bbenoist.Nix
         vscodevim.vim
