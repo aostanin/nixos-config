@@ -195,6 +195,8 @@ in {
       };
     };
   } // optionalAttrs sysconfig.services.xserver.enable {
+    firefox.enable = true;
+
     google-chrome.enable = true;
 
     mpv.enable = true;
