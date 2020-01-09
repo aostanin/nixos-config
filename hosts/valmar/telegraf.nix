@@ -27,7 +27,7 @@
       outputs = {
         influxdb = {
           database = "telegraf";
-          urls = [ "http://elena-10g:8086" ];
+          urls = [ "http://elena.lan:8086" ];
         };
       };
     };

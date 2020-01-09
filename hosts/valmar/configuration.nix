@@ -50,17 +50,7 @@ in {
   networking = {
     hostName = "valmar";
     hostId = "203d588e";
-    bridges.br0.interfaces = [ "enp0s31f6" ];
-    interfaces.enp2s0f0 = {
-      ipv4.addresses = [ {
-        address = "192.168.10.2";
-        prefixLength = 24;
-      } ];
-      mtu = 9000;
-    };
-    hosts = {
-      "192.168.10.1" = [ "elena-10g" ];
-    };
+    bridges.br0.interfaces = [ "enp2s0f0" ];
   };
 
   services = {
@@ -101,7 +91,7 @@ in {
   };
 
   fileSystems."/var/lib/libvirt/images" = {
-    device = "elena-10g:/images";
+    device = "elena.lan:/images";
     fsType = "nfs";
   };
 
