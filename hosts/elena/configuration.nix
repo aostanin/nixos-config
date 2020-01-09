@@ -45,21 +45,20 @@ in {
 
     useDHCP = false;
 
-    bridges.br0.interfaces = [ "enp10s0" ];
-    interfaces.br0 = {
+    bridges.br-wan.interfaces = [
+      "enp10s0" # 1G
+    ];
+
+    bridges.br-lan.interfaces = [
+      "enp11s0"  # 1G
+      "enp6s0f0" # 10G
+      "enp6s0f1" # 10G
+    ];
+    interfaces.br-lan = {
       useDHCP = true;
     };
 
-    interfaces.enp6s0f0 = {
-      ipv4.addresses = [ {
-        address = "192.168.10.1";
-        prefixLength = 24;
-      } ];
-      mtu = 9000;
-    };
-    hosts = {
-      "192.168.10.2" = [ "valmar-10g" ];
-    };
+    # TODO: vlan tagging
   };
 
   services.zfs = {
@@ -81,7 +80,7 @@ in {
     storageDriver = "zfs";
     # Docker defaults to Google's DNS
     extraOptions = ''
-      --dns 192.168.1.1 \
+      --dns 10.0.0.1 \
       --dns-search lan
     '';
   };
@@ -98,10 +97,11 @@ in {
 
   services.nfs.server = {
     enable = true;
+    # TODO: limit to vlan
     exports = ''
-      /srv/nfs        192.168.10.0/24(insecure,rw,fsid=0)
-      /srv/nfs/images 192.168.10.0/24(insecure,no_root_squash,rw)
-      /srv/nfs/media  192.168.10.0/24(insecure,rw)
+      /srv/nfs        10.0.0.0/24(insecure,rw,fsid=0)
+      /srv/nfs/images 10.0.0.0/24(insecure,no_root_squash,rw)
+      /srv/nfs/media  10.0.0.0/24(insecure,rw)
     '';
   };
 
@@ -135,7 +135,7 @@ in {
   containers.shell = {
     autoStart = true;
     privateNetwork = true;
-    hostBridge = "br0";
+    hostBridge = "br-lan";
 
     bindMounts = {
       "/home" = { hostPath = "/home"; isReadOnly = false; };
