@@ -19,7 +19,14 @@
     };
   };
 
-  nix.autoOptimiseStore = true;
+  nix = {
+    autoOptimiseStore = true;
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 30d";
+    };
+  };
+
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "19.09";
 
