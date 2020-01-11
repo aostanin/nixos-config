@@ -50,11 +50,14 @@ in {
       "enp10s0"  # 1G
     ];
 
-    bridges.br-lan.interfaces = [
-      "enp11s0"  # 1G
-      "enp6s0f0" # 10G
-      "enp6s0f1" # 10G
-    ];
+    bridges.br-lan = {
+      interfaces = [
+        "enp11s0"  # 1G
+        "enp6s0f0" # 10G
+        "enp6s0f1" # 10G
+      ];
+      rstp = true;
+    };
     interfaces.br-lan = {
       useDHCP = true;
       macAddress = "7a:72:12:cc:08:19";

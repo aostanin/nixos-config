@@ -62,7 +62,10 @@ in {
         primary = "enp2s0f0";
       };
     };
-    bridges.br0.interfaces = [ "bond0" ];
+    bridges.br0 = {
+      interfaces = [ "bond0" ];
+      rstp = true;
+    };
     interfaces.br0 = {
       useDHCP = true;
       macAddress = "6a:c7:9c:df:fc:96";
