@@ -32,10 +32,15 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  boot.kernel.sysctl = {
-    "net.bridge.bridge-nf-call-arptables" = 0;
-    "net.bridge.bridge-nf-call-iptables" = 0;
-    "net.bridge.bridge-nf-call-ip6tables" = 0;
+  boot = {
+    # Don't filter bridge traffic
+    kernel.sysctl = {
+      "net.bridge.bridge-nf-call-arptables" = 0;
+      "net.bridge.bridge-nf-call-iptables" = 0;
+      "net.bridge.bridge-nf-call-ip6tables" = 0;
+    };
+    # Load module needed to set above sysctl
+    kernelModules = [ "br_netfilter" ];
   };
 
   networking = {
