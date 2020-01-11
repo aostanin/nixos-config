@@ -35,6 +35,9 @@ in {
     extraModprobeConfig = ''
       options kvm ignore_msrs=1
     '';
+    kernel.sysctl = {
+      "net.ipv6.conf.br-wan.disable_ipv6" = 1;
+    };
   };
 
   services.mingetty.serialSpeed = [ 115200 ];
@@ -43,10 +46,8 @@ in {
     hostName = "elena";
     hostId = "4446d154";
 
-    useDHCP = false;
-
     bridges.br-wan.interfaces = [
-      "enp10s0" # 1G
+      "enp10s0"  # 1G
     ];
 
     bridges.br-lan.interfaces = [
@@ -56,9 +57,8 @@ in {
     ];
     interfaces.br-lan = {
       useDHCP = true;
+      macAddress = "7a:72:12:cc:08:19";
     };
-
-    # TODO: vlan tagging
   };
 
   services.zfs = {
