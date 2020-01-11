@@ -50,7 +50,23 @@ in {
   networking = {
     hostName = "valmar";
     hostId = "203d588e";
-    bridges.br0.interfaces = [ "enp2s0f0" ];
+
+    bonds.bond0 = {
+      interfaces = [
+        "enp0s31f6" # 1G
+        "enp2s0f0"  # 10G
+      ];
+      driverOptions = {
+        mode = "active-backup";
+        miimon = "100";
+        primary = "enp2s0f0";
+      };
+    };
+    bridges.br0.interfaces = [ "bond0" ];
+    interfaces.br0 = {
+      useDHCP = true;
+      macAddress = "6a:c7:9c:df:fc:96";
+    };
   };
 
   services = {
