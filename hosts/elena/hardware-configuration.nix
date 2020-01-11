@@ -43,11 +43,6 @@
       fsType = "zfs";
     };
 
-  fileSystems."/var/lib/libvirt/isos" =
-    { device = "tank/virtualization/libvirt/isos";
-      fsType = "zfs";
-    };
-
   swapDevices =
     [ { device = "/dev/disk/by-uuid/7150d268-bc6c-430c-a8f0-eeacf879b9d9"; }
     ];
