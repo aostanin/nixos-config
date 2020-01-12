@@ -208,8 +208,19 @@ in {
       extensions = with pkgs.vscode-extensions; [
         bbenoist.Nix
         vscodevim.vim
-        # TODO: Add others like https://github.com/NixOS/nixpkgs/blob/master/pkgs/misc/vscode-extensions/default.nix
-        # Tom Philbin - Gruvbox Themes
+      ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        {
+          name = "gruvbox-themes";
+          publisher = "tomphilbin";
+          version = "1.0.0";
+          sha256 = "0xykf120j27s0bmbqj8grxc79dzkh4aclgrpp1jz5kkm39400z0f";
+        }
+        {
+          name = "vscode-direnv";
+          publisher = "Rubymaniac";
+          version = "0.0.2";
+          sha256 = "1gml41bc77qlydnvk1rkaiv95rwprzqgj895kxllqy4ps8ly6nsd";
+        }
       ];
       userSettings = {
         "editor.wordWrap" = "on";
