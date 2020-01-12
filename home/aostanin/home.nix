@@ -36,6 +36,7 @@ in {
       wol
     ] ++ optionals sysconfig.services.xserver.enable [
       # GUI
+      barrier
       deluge
       discord
       keepassxc
