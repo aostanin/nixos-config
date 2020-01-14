@@ -110,7 +110,7 @@ in {
     };
   };
 
-  fileSystems."/var/lib/libvirt/images" = {
+  fileSystems."/var/lib/libvirt/images/remote" = {
     device = "elena.lan:/images";
     fsType = "nfs";
   };
