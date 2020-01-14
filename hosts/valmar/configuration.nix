@@ -44,6 +44,7 @@ in {
     } ];
     extraModprobeConfig = ''
       options kvm ignore_msrs=1
+      options kvm-intel nested=1
     '';
   };
 

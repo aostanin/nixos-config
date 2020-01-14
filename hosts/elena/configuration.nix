@@ -34,6 +34,7 @@ in {
     ];
     extraModprobeConfig = ''
       options kvm ignore_msrs=1
+      options kvm-intel nested=1
     '';
     kernel.sysctl = {
       "net.ipv6.conf.br-wan.disable_ipv6" = 1;
