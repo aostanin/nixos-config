@@ -1,13 +1,9 @@
 { config, pkgs, ... }:
 
-let
-  nixos-hardware = builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
-  };
-in {
+{
   imports = [
-    "${nixos-hardware}/common/cpu/intel"
-    "${nixos-hardware}/common/pc/ssd"
+    <nixos-hardware/common/cpu/intel>
+    <nixos-hardware/common/pc/ssd>
     ./hardware-configuration.nix
     ../../modules/common
     ../../home

@@ -1,10 +1,9 @@
+sysconfig:
 { pkgs, config, lib, ... }:
 
 with lib;
 
-let
-  sysconfig = (import <nixpkgs/nixos> {}).config;
-in {
+{
   nixpkgs.config = import ./nixpkgs/config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs/config.nix;
 

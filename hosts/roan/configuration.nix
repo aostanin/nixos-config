@@ -1,13 +1,9 @@
 { config, pkgs, ... }:
 
-let
-  nixos-hardware = builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
-  };
-in {
+{
   imports = [
-    "${nixos-hardware}/lenovo/thinkpad/x250"
-    "${nixos-hardware}/common/pc/laptop/ssd"
+    <nixos-hardware/lenovo/thinkpad/x250>
+    <nixos-hardware/common/pc/laptop/ssd>
     ./hardware-configuration.nix
     ../../modules/common
     ../../modules/desktop
