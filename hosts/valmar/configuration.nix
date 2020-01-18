@@ -39,6 +39,7 @@
       };
     } ];
     extraModprobeConfig = ''
+      options bonding max_bonds=0
       options kvm ignore_msrs=1
       options kvm-intel nested=1
     '';
@@ -68,6 +69,64 @@
       macAddress = "6a:c7:9c:df:fc:96";
     };
   };
+
+  # TODO: This doesn't work for some reason
+  # systemd.network = {
+  #   enable = true;
+
+  #   netdevs = {
+  #     bond0 = {
+  #       netdevConfig = {
+  #         Name = "bond0";
+  #         Kind = "bond";
+  #       };
+  #       bondConfig = {
+  #         Mode = "active-backup";
+  #         MIIMonitorSec = "100ms";
+  #       };
+  #     };
+  #     br0 = {
+  #       netdevConfig = {
+  #         Name = "br0";
+  #         Kind = "bridge";
+  #         MACAddress = "6a:c7:9c:df:fc:96";
+  #       };
+  #       extraConfig = ''
+  #         [Bridge]
+  #         VLANFiltering=yes
+  #         STP=yes
+  #       '';
+  #     };
+  #   };
+
+  #   networks = {
+  #     enp0s31f6 = {
+  #       matchConfig = { Name = "enp0s31f6"; };
+  #       networkConfig = {
+  #         Bond = "bond0";
+  #       };
+  #     };
+  #     enp2s0f0 = {
+  #       matchConfig = { Name = "enp2s0f0"; };
+  #       networkConfig = {
+  #         Bond = "bond0";
+  #         PrimarySlave = "yes";
+  #       };
+  #     };
+  #     bond0 = {
+  #       matchConfig = { Name = "bond0"; };
+  #       networkConfig = {
+  #         Bridge = "br0";
+  #       };
+  #     };
+  #     br0 = {
+  #       matchConfig = { Name = "br0"; };
+  #       networkConfig = {
+  #         DHCP = "yes";
+  #       };
+  #     };
+  #   };
+  # };
 
   services = {
     xserver = {
