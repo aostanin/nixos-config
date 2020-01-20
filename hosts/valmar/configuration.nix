@@ -170,6 +170,11 @@
     fsType = "nfs";
   };
 
+  fileSystems."/mnt/media" = {
+    device = "elena.lan:/media";
+    fsType = "nfs";
+  };
+
   virtualisation = {
     libvirtd = {
       enable = true;
