@@ -14,5 +14,14 @@ pkgs.mkShell {
     nixos-hardware=https://github.com/NixOS/nixos-hardware/archive/master.tar.gz:\
     ."
     export NIXOPS_STATE=state.nixops
+
+    function our_create () {
+      if [ `nixops list | grep -c $1` -eq 0 ]
+      then
+       (set -x; nixops create --deployment $1 "<$1.nix>")
+      fi
+    }
+
+    our_create network
   '';
 }
