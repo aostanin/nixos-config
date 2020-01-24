@@ -131,7 +131,7 @@
   services = {
     xserver = {
       xkbOptions = "ctrl:nocaps, shift:both_capslock";
-      videoDrivers = [ "intel" /*"nvidia"*/ ]; # TODO: enabling nvidia disables glx
+      videoDrivers = [ "intel" "nvidia" ];
     };
 
     zfs = {
@@ -194,6 +194,7 @@
 
     docker = {
       enable = true;
+      enableNvidia = true;
       storageDriver = "zfs";
     };
   };
