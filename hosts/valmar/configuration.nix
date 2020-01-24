@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
-{
+let
+  nvidia_x11 = config.boot.kernelPackages.nvidia_x11;
+in {
   imports = [
     <nixos-hardware/common/cpu/intel>
     <nixos-hardware/common/pc/ssd>
@@ -20,8 +22,10 @@
     };
     supportedFilesystems = [ "zfs" ];
     zfs.extraPools = [ "tank" ];
+    extraModulePackages = [ nvidia_x11.bin ];
     blacklistedKernelModules = [ "nouveau" ];
     kernelModules = [
+      "nvidia-uvm"
       "i2c-dev" # for ddcutil
       "vfio_pci"
     ];
@@ -44,6 +48,17 @@
       options kvm-intel nested=1
     '';
   };
+
+  hardware.opengl = {
+    extraPackages = [ nvidia_x11.out ];
+    extraPackages32 = [ nvidia_x11.lib32 ];
+  };
+
+  environment.systemPackages = [
+    nvidia_x11.bin
+    nvidia_x11.settings
+    nvidia_x11.persistenced
+  ];
 
   networking = {
     hostName = "valmar";
@@ -131,7 +146,7 @@
   services = {
     xserver = {
       xkbOptions = "ctrl:nocaps, shift:both_capslock";
-      videoDrivers = [ "intel" "nvidia" ];
+      videoDrivers = [ "intel" ];
     };
 
     zfs = {
