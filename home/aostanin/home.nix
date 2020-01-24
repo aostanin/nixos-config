@@ -223,6 +223,9 @@ with lib;
         }
       ];
       userSettings = {
+        "editor.minimap.enabled" = false;
+        "editor.renderControlCharacters" = true;
+        "editor.renderWhitespace" = "boundary";
         "editor.wordWrap" = "on";
         "telemetry.enableTelemetry" = false;
         "telemetry.enableCrashReporter" = false;
