@@ -224,9 +224,11 @@ with lib;
       ];
       userSettings = {
         "editor.wordWrap" = "on";
-        "update.channel" = "none";
-        "workbench.colorTheme" = "Gruvbox Dark (Medium)";
+        "telemetry.enableTelemetry" = false;
+        "telemetry.enableCrashReporter" = false;
+        "update.mode" = "none";
         "vim.useCtrlKeys" = false;
+        "workbench.colorTheme" = "Gruvbox Dark (Medium)";
       };
     };
   };
