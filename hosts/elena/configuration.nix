@@ -43,21 +43,18 @@
     hostName = "elena";
     hostId = "4446d154";
 
-    bridges.br-wan.interfaces = [
-      "enp10s0"  # 1G
-    ];
-
+    bridges.br-wan.interfaces = [ "vl-wan" ];
     bridges.br-lan = {
-      interfaces = [
-        "enp11s0"  # 1G
-        "enp6s0f0" # 10G
-        "enp6s0f1" # 10G
-      ];
+      interfaces = [ "enp6s0f0" ];
       rstp = true;
     };
     interfaces.br-lan = {
       useDHCP = true;
       macAddress = "7a:72:12:cc:08:19";
+    };
+    vlans.vl-wan = {
+      id = 10;
+      interface = "enp6s0f0";
     };
   };
 
