@@ -36,6 +36,7 @@ with lib;
     ] ++ optionals sysconfig.services.xserver.enable [
       # GUI
       barrier
+      bitwarden
       deluge
       discord
       keepassxc
