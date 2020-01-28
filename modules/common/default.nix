@@ -25,9 +25,6 @@
       automatic = true;
       options = "--delete-older-than 30d";
     };
-    nixPath = [
-      "nixpkgs=https://github.com/NixOS/nixpkgs-channels/archive/nixos-19.09.tar.gz"
-    ];
   };
 
   nixpkgs.config.allowUnfree = true;
