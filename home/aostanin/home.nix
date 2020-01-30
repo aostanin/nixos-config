@@ -151,7 +151,6 @@ with lib;
         vim-fugitive
         vim-gitgutter
         vim-sensible
-        # TODO: vim-nfo
       ];
       extraConfig = readFile ./neovim/config;
     };

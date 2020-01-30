@@ -67,6 +67,9 @@ if !has('gui_running')
   set t_Co=256
 endif
 
+" Support nfo files
+autocmd BufReadPre *.nfo :setlocal fileencodings=cp437,utf-8
+
 
 
 "
