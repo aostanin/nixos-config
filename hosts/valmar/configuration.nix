@@ -190,6 +190,8 @@ in {
     fsType = "nfs";
   };
 
+  programs.adb.enable = true;
+
   virtualisation = {
     libvirtd = {
       enable = true;
