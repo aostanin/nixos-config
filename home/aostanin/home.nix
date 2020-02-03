@@ -39,8 +39,10 @@ with lib;
       bitwarden
       deluge
       discord
+      gimp
       keepassxc
       kicad
+      krita
       libreoffice
       mullvad-vpn
       skype
