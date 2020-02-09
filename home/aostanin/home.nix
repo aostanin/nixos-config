@@ -33,11 +33,14 @@ with lib;
       tokei
       translate-shell
       wol
+
+      # Sailing the seven seas
+      cksfv
+      splitNSP
     ] ++ optionals sysconfig.services.xserver.enable [
       # GUI
       barrier
       bitwarden
-      deluge
       discord
       gimp
       keepassxc
