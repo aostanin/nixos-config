@@ -35,6 +35,7 @@ with lib;
       wol
 
       # Sailing the seven seas
+      beets
       cksfv
       splitNSP
     ] ++ optionals sysconfig.services.xserver.enable [
