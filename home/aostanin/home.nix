@@ -42,6 +42,7 @@ with lib;
       # GUI
       barrier
       bitwarden
+      cool-retro-term
       discord
       gimp
       keepassxc
