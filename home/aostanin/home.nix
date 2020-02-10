@@ -44,6 +44,7 @@ with lib;
       bitwarden
       cool-retro-term
       discord
+      filezilla
       gimp
       keepassxc
       kicad
