@@ -12,7 +12,7 @@ pkgs.mkShell {
     nixops
   ];
 
-  shellHook = ''
+  lorriHook = ''
     export NIX_PATH="${builtins.concatStringsSep ":" (nixPath ++ [ "." ])}"
     export NIXOPS_STATE=state.nixops
 
