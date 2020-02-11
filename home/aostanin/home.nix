@@ -44,6 +44,7 @@ with lib;
       bitwarden
       cool-retro-term
       discord
+      unstable.etcher
       filezilla
       gimp
       keepassxc
