@@ -72,7 +72,7 @@ with lib;
       spectacle
     ] ++ optionals sysconfig.programs.adb.enable [
       # Android
-      android-studio
+      unstable.android-studio
       pidcat
       scrcpy
     ];
