@@ -43,6 +43,11 @@
       fsType = "zfs";
     };
 
+  fileSystems."/var/lib/libvirt/images/ssd" =
+    { device = "tank/virtualization/libvirt/images/ssd";
+      fsType = "zfs";
+    };
+
   fileSystems."/storage/recorded" =
     { device = "/dev/disk/by-label/recorded";
       fsType = "xfs";
