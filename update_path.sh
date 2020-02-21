@@ -16,6 +16,7 @@ github_tarball()
 
 nixPath="[
   \"nixpkgs=$(github_tarball NixOS/nixpkgs nixos-$NIX_STATE_VERSION)\"
+  \"unstable=$(github_tarball NixOS/nixpkgs master)\"
   \"nixos-hardware=$(github_tarball NixOS/nixos-hardware master)\"
   \"home-manager=$(github_tarball rycee/home-manager release-$NIX_STATE_VERSION)\"
 ]"

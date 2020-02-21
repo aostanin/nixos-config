@@ -1,6 +1,6 @@
 [
   (self: super: {
-    unstable = import (fetchTarball https://github.com/NixOS/nixpkgs/archive/master.tar.gz) { };
+    unstable = import <unstable> { };
 
     # TODO: Make this compatible with host systems
     catt = super.python3Packages.callPackage ../../../packages/catt { };
