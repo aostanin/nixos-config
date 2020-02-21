@@ -216,6 +216,7 @@ with lib;
       # package = pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
         bbenoist.Nix
+        pkgs.unstable.vscode-extensions.ms-python.python # TODO: stable had a 404
         vscodevim.vim
       ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {
