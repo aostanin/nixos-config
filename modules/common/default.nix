@@ -28,7 +28,6 @@
   };
 
   nixpkgs.config.allowUnfree = true;
-  system.stateVersion = "19.09";
 
   security.sudo.wheelNeedsPassword = false;
 

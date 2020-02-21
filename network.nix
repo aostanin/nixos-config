@@ -1,4 +1,4 @@
-{ nixPath }:
+{ nixPath, stateVersion }:
 {
     network.description = "Home";
 
@@ -7,6 +7,7 @@
       deployment.targetHost = "elena";
       deployment.hasFastConnection = true;
       nix.nixPath = nixPath;
+      system.stateVersion = stateVersion;
     };
 
     mareg = { config, pkgs, ... }:
@@ -14,6 +15,7 @@
       deployment.targetHost = "mareg";
       deployment.hasFastConnection = true;
       nix.nixPath = nixPath;
+      system.stateVersion = stateVersion;
     };
 
     roan = { config, pkgs, ... }:
@@ -21,6 +23,7 @@
       deployment.targetHost = "roan";
       deployment.hasFastConnection = true;
       nix.nixPath = nixPath;
+      system.stateVersion = stateVersion;
     };
 
     valmar = { config, pkgs, ... }:
@@ -28,5 +31,6 @@
       deployment.targetHost = "valmar";
       deployment.hasFastConnection = true;
       nix.nixPath = nixPath;
+      system.stateVersion = stateVersion;
     };
 }

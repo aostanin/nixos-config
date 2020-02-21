@@ -1,8 +1,22 @@
 #!/bin/sh
 
+commit_hash()
+{
+  repo=$1
+  branch=$2
+  echo $(git ls-remote -q "$repo" "refs/heads/$branch" | cut -f1)
+}
+
+github_tarball()
+{
+  path=$1
+  branch=$2
+  echo "https://github.com/$path/archive/$(commit_hash https://github.com/$path.git "$branch").tar.gz"
+}
+
 nixPath="[
-  \"nixpkgs=https://github.com/NixOS/nixpkgs/archive/$(git ls-remote -q https://github.com/NixOS/nixpkgs.git refs/heads/nixos-19.09 | cut -f1).tar.gz\"
-  \"home-manager=https://github.com/rycee/home-manager/archive/$(git ls-remote -q https://github.com/rycee/home-manager.git refs/heads/release-19.09 | cut -f1).tar.gz\"
-  \"nixos-hardware=https://github.com/NixOS/nixos-hardware/archive/$(git ls-remote -q https://github.com/NixOS/nixos-hardware.git refs/heads/master | cut -f1).tar.gz\"
+  \"nixpkgs=$(github_tarball NixOS/nixpkgs nixos-$NIX_STATE_VERSION)\"
+  \"nixos-hardware=$(github_tarball NixOS/nixos-hardware master)\"
+  \"home-manager=$(github_tarball rycee/home-manager release-$NIX_STATE_VERSION)\"
 ]"
 echo "$nixPath" | tee path.nix
