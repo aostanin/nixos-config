@@ -237,6 +237,7 @@ with lib;
         "editor.renderControlCharacters" = true;
         "editor.renderWhitespace" = "boundary";
         "editor.wordWrap" = "on";
+        "files.insertFinalNewline" = true;
         "telemetry.enableTelemetry" = false;
         "telemetry.enableCrashReporter" = false;
         "update.mode" = "none";
