@@ -38,7 +38,8 @@ in {
     kernelPatches = [ {
       name = "acs";
       patch = pkgs.fetchurl {
-        url = "https://aur.archlinux.org/cgit/aur.git/plain/add-acs-overrides.patch?h=linux-vfio";
+        name = "add-acs-overrides.patch";
+        url = "https://aur.archlinux.org/cgit/aur.git/plain/add-acs-overrides.patch?h=linux-vfio&id=84d928649b39b791a894aac9a29547182b7c2a52";
         sha256 = "1qd68s9r0ppynksbffqn2qbp1whqpbfp93dpccp9griwhx5srx6v";
       };
     } ];
