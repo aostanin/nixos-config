@@ -84,6 +84,36 @@ with lib;
     };
   };
 
+  xsession.windowManager.i3 = mkIf sysconfig.services.xserver.windowManager.i3.enable  {
+    enable = true;
+    config = {
+      # modifier = "Mod4";
+      # TODO: Not supported on 19.09
+      # terminal = "konsole";
+      focus.followMouse = false;
+      keybindings =
+        let modifier = config.xsession.windowManager.i3.config.modifier;
+        in lib.mkOptionDefault {
+          "${modifier}+Return" = "exec konsole";
+          "${modifier}+d" = "exec ${getBin pkgs.qt5.qttools}/bin/qdbus org.kde.kglobalaccel /component/krunner org.kde.kglobalaccel.Component.invokeShortcut 'run command'";
+        };
+      bars = [];
+    };
+    extraConfig = ''
+      for_window [title="Desktop — Plasma"] kill; floating enable; border none
+      for_window [class="plasmashell"] floating enable;
+      for_window [class="Plasma"] floating enable; border none
+      for_window [title="plasma-desktop"] floating enable; border none
+      for_window [title="win7"] floating enable; border none
+      for_window [class="krunner"] floating enable; border none
+      for_window [class="Kmix"] floating enable; border none
+      for_window [class="Klipper"] floating enable; border none
+      for_window [class="Plasmoidviewer"] floating enable; border none
+      for_window [class="(?i)*nextcloud*"] floating disable
+      for_window [class="plasmashell" window_type="notification"] floating enable, border none, move right 700px, move down 450px, no_focus
+    '';
+  };
+
   programs = {
     direnv.enable = true;
 
@@ -257,8 +287,10 @@ with lib;
           "${getBin qt5.qttools}/bin/qdbus org.kde.kglobalaccel /component/kmix invokeShortcut {increase,decrease}_volume";
       } // optionalAttrs (sysconfig.networking.hostName == "valmar") {
         "ctrl + alt + {1,2,3,4}" = # input switching
+          # TODO: add --bus parameter to speed this up
           "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil setvcp 60 0x0{1,3,4,f}";
         "ctrl + alt + 0" = # turn off display
+          # TODO: Turn off both displays
           "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil setvcp d6 0x05";
       };
     };

@@ -50,6 +50,7 @@
 
       displayManager.sddm.enable = true;
       desktopManager.plasma5.enable = true;
+      windowManager.i3.enable = true;
     };
   };
 
