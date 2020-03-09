@@ -87,7 +87,7 @@ with lib;
   xsession.windowManager.i3 = mkIf sysconfig.services.xserver.windowManager.i3.enable  {
     enable = true;
     config = {
-      # modifier = "Mod4";
+      modifier = "Mod4";
       # TODO: Not supported on 19.09
       # terminal = "konsole";
       focus.followMouse = false;
