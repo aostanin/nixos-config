@@ -4,6 +4,11 @@ sysconfig:
 with lib;
 
 {
+  imports = [
+  ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable  [
+    ./i3
+  ];
+
   nixpkgs.config = import ./nixpkgs/config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs/config.nix;
 
@@ -82,36 +87,6 @@ with lib;
       VISUAL = config.home.sessionVariables.EDITOR;
       MANPAGER = "sh -c 'col -bx | ${pkgs.bat}/bin/bat -l man -p'";
     };
-  };
-
-  xsession.windowManager.i3 = mkIf sysconfig.services.xserver.windowManager.i3.enable  {
-    enable = true;
-    config = {
-      modifier = "Mod4";
-      # TODO: Not supported on 19.09
-      # terminal = "konsole";
-      focus.followMouse = false;
-      keybindings =
-        let modifier = config.xsession.windowManager.i3.config.modifier;
-        in lib.mkOptionDefault {
-          "${modifier}+Return" = "exec konsole";
-          "${modifier}+d" = "exec ${getBin pkgs.qt5.qttools}/bin/qdbus org.kde.kglobalaccel /component/krunner org.kde.kglobalaccel.Component.invokeShortcut 'run command'";
-        };
-      bars = [];
-    };
-    extraConfig = ''
-      for_window [title="Desktop — Plasma"] kill; floating enable; border none
-      for_window [class="plasmashell"] floating enable;
-      for_window [class="Plasma"] floating enable; border none
-      for_window [title="plasma-desktop"] floating enable; border none
-      for_window [title="win7"] floating enable; border none
-      for_window [class="krunner"] floating enable; border none
-      for_window [class="Kmix"] floating enable; border none
-      for_window [class="Klipper"] floating enable; border none
-      for_window [class="Plasmoidviewer"] floating enable; border none
-      for_window [class="(?i)*nextcloud*"] floating disable
-      for_window [class="plasmashell" window_type="notification"] floating enable, border none, move right 700px, move down 450px, no_focus
-    '';
   };
 
   programs = {
@@ -316,7 +291,7 @@ with lib;
   home.file = {
     ".ssh/config".source = ./ssh_config;
     ".ssh/master/.keep".text = "";
-  } // optionalAttrs sysconfig.services.xserver.enable {
+  } // optionalAttrs sysconfig.services.xserver.desktopManager.plasma5.enable {
     ".local/share/konsole/Gruvbox_dark.colorscheme".source = ./konsole/Gruvbox_dark.colorscheme;
     ".local/share/konsole/Profile 1.profile".source = ./konsole/Profile_1.profile;
   };
