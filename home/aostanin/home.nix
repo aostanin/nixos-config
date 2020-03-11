@@ -259,7 +259,7 @@ with lib;
       enable = true;
       keybindings = with pkgs; {
         "ctrl + alt + {Prior,Next}" = # volume control
-          "${getBin qt5.qttools}/bin/qdbus org.kde.kglobalaccel /component/kmix invokeShortcut {increase,decrease}_volume";
+          "${pamixer}/bin/pamixer -{i,d} 5";
       } // optionalAttrs (sysconfig.networking.hostName == "valmar") {
         "ctrl + alt + {1,2,3,4}" = # input switching
           # TODO: add --bus parameter to speed this up
