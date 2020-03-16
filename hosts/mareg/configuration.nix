@@ -45,6 +45,10 @@
     };
 
     xserver = {
+      videoDrivers = [ "intel" ];
+      deviceSection = ''
+        Option "TearFree" "true"
+      '';
       xkbOptions = "ctrl:nocaps, shift:both_capslock";
       libinput = {
         enable = true;

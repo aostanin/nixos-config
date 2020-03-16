@@ -88,8 +88,11 @@ in {
 
   services = {
     xserver = {
-      xkbOptions = "ctrl:nocaps, shift:both_capslock";
       videoDrivers = [ "intel" ];
+      deviceSection = ''
+        Option "TearFree" "true"
+      '';
+      xkbOptions = "ctrl:nocaps, shift:both_capslock";
     };
 
     zfs = {
