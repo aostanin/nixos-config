@@ -21,11 +21,13 @@ with lib;
       } ];
     };
     extraConfig = ''
+      exec --no-startup-id xset dpms 600
       exec --no-startup-id ${pkgs.nitrogen}/bin/nitrogen --restore
       exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable
       exec --no-startup-id ${pkgs.pasystray}/bin/pasystray
 
-      for_window [class="mpv"] floating enable; border none
+      for_window [class="mpv"] floating enable border none
+      for_window [class=".*scrcpy.*"] floating enable border none
     '';
   };
 
@@ -40,6 +42,7 @@ with lib;
       extraConfig = ''
         rofi.modi: window,drun,run,ssh,combi
         rofi.combi-modi: window,drun,ssh
+        rofi.show-icons: true
       '';
     };
   };
