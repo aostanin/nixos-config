@@ -69,6 +69,7 @@ with lib;
       mullvad-vpn
       skype
       slack
+      syncthing-gtk
       tdesktop
       thunderbird
       virtmanager

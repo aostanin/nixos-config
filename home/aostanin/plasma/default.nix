@@ -5,7 +5,6 @@
     (ark.override { unfreeEnableUnrar = true; })
     gwenview
     kate
-    kdeconnect
     krdc
     okular
     plasma-browser-integration

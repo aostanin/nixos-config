@@ -26,6 +26,7 @@ with lib;
       exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable
       exec --no-startup-id ${pkgs.pasystray}/bin/pasystray
       exec --no-startup-id ${pkgs.barrier}/bin/barrier
+      exec --no-startup-id ${pkgs.syncthing-gtk}/bin/syncthing-gtk --minimized
 
       for_window [class="mpv"] floating enable border none
       for_window [class=".*scrcpy.*"] floating enable border none
