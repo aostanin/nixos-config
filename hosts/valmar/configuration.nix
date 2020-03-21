@@ -50,9 +50,15 @@ in {
     '';
   };
 
-  hardware.opengl = {
-    extraPackages = [ nvidia_x11.out ];
-    extraPackages32 = [ nvidia_x11.lib32 ];
+  hardware = {
+    opengl = {
+      extraPackages = [ nvidia_x11.out ];
+      extraPackages32 = [ nvidia_x11.lib32 ];
+    };
+
+    pulseaudio.extraConfig = ''
+      set-default-sink alsa_output.pci-0000_00_1f.3.hdmi-stereo-extra1
+    '';
   };
 
   environment.systemPackages = [
