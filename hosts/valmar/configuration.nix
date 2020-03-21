@@ -93,6 +93,23 @@ in {
         Option "TearFree" "true"
       '';
       xkbOptions = "ctrl:nocaps, shift:both_capslock";
+      xrandrHeads = [
+        {
+          output = "HDMI2";
+          primary = true;
+          monitorConfig = ''
+            Option "Position" "0 1440"
+            Option "PreferredMode" "3440x1440"
+          '';
+        }
+        {
+          output = "DP1";
+          monitorConfig = ''
+            Option "Position" "440 0"
+            Option "PreferredMode" "2560x1440"
+          '';
+        }
+      ];
     };
 
     zfs = {
