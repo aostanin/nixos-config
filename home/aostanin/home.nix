@@ -11,8 +11,11 @@ with lib;
     ./tmux
     ./zsh
   ] ++ optionals sysconfig.services.xserver.enable [
+    ./alacritty
     ./vscode
   ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable  [
+    ./autorandr
+    ./dunst
     ./i3
   ] ++ optionals sysconfig.services.xserver.desktopManager.plasma5.enable [
     ./plasma
@@ -41,6 +44,7 @@ with lib;
       personal-scripts
       python3
       pv
+      ranger
       rclone
       ripgrep
       rtv
@@ -57,7 +61,6 @@ with lib;
       # GUI
       barrier
       bitwarden
-      cool-retro-term
       discord
       unstable.etcher
       filezilla
@@ -87,6 +90,10 @@ with lib;
 
   programs = {
     direnv.enable = true;
+    lsd = {
+      enable = true;
+      enableAliases = true;
+    };
     starship.enable = true;
   } // optionalAttrs sysconfig.services.xserver.enable {
     firefox.enable = true;
