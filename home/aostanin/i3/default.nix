@@ -27,6 +27,7 @@ with lib;
 
       for_window [class="mpv"] floating enable border none
       for_window [class=".*scrcpy.*"] floating enable border none
+      for_window [title="Android Emulator - .*"] floating enable border none
     '';
   };
 
@@ -43,6 +44,7 @@ with lib;
         rofi.modi: window,drun,run,ssh,combi
         rofi.combi-modi: window,drun,ssh
         rofi.show-icons: true
+        rofi.parse-known-hosts: false
       '';
     };
   };

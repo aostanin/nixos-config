@@ -12,6 +12,7 @@ with lib;
     ./zsh
   ] ++ optionals sysconfig.services.xserver.enable [
     ./alacritty
+    ./chrome
     ./vscode
   ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable  [
     ./autorandr
@@ -97,7 +98,6 @@ with lib;
     starship.enable = true;
   } // optionalAttrs sysconfig.services.xserver.enable {
     firefox.enable = true;
-    google-chrome.enable = true;
     mpv.enable = true;
   };
 

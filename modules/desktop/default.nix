@@ -7,12 +7,14 @@
   };
 
   fonts.fonts = with pkgs; [
+    dejavu_fonts
+    ipafont
+    joypixels
+    kochi-substitute
+    nerdfonts
     noto-fonts
     noto-fonts-cjk
     noto-fonts-emoji
-    dejavu_fonts
-    ipafont
-    kochi-substitute
   ];
 
   # Fix for USB redirection in virt-manager

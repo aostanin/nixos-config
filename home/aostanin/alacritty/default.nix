@@ -9,7 +9,10 @@
     enable = true;
     settings = {
       font = {
-        size = 9.0;
+        size = 8.0;
+        normal = {
+          family = "Hack Nerd Font";
+        };
       };
       colors = {
         primary = {
