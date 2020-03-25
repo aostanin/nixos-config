@@ -1,10 +1,8 @@
 { config, pkgs, ... }:
 
-let
-  nvidia_x11 = config.boot.kernelPackages.nvidia_x11;
-in {
+{
   imports = [
-    <nixos-hardware/common/cpu/intel>
+    <nixos-hardware/common/cpu/amd>
     <nixos-hardware/common/pc/ssd>
     ./hardware-configuration.nix
     ../../modules/common
@@ -22,51 +20,38 @@ in {
     };
     supportedFilesystems = [ "zfs" ];
     zfs.extraPools = [ "tank" ];
-    extraModulePackages = [ nvidia_x11.bin ];
-    blacklistedKernelModules = [ "nouveau" ];
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [
-      "nvidia-uvm"
       "i2c-dev" # for ddcutil
       "vfio_pci"
     ];
     kernelParams = [
-      "intel_iommu=on"
+      "amd_iommu=on"
+      #"pcie_aspm=off"
       "iommu=pt"
-      "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=16"
-      "pcie_acs_override=downstream"
+      "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"
+      #"pcie_acs_override=downstream"
     ];
-    kernelPatches = [ {
-      name = "acs";
-      patch = pkgs.fetchurl {
-        name = "add-acs-overrides.patch";
-        url = "https://aur.archlinux.org/cgit/aur.git/plain/add-acs-overrides.patch?h=linux-vfio&id=84d928649b39b791a894aac9a29547182b7c2a52";
-        sha256 = "1qd68s9r0ppynksbffqn2qbp1whqpbfp93dpccp9griwhx5srx6v";
-      };
-    } ];
+    #kernelPatches = [ {
+      #name = "acs";
+      #patch = pkgs.fetchurl {
+        #name = "add-acs-overrides.patch";
+        #url = "https://aur.archlinux.org/cgit/aur.git/plain/add-acs-overrides.patch?h=linux-vfio&id=84d928649b39b791a894aac9a29547182b7c2a52";
+        #sha256 = "1qd68s9r0ppynksbffqn2qbp1whqpbfp93dpccp9griwhx5srx6v";
+      #};
+    #} ];
     extraModprobeConfig = ''
       options bonding max_bonds=0
-      options kvm ignore_msrs=1
-      options kvm-intel nested=1
+      options kvm-amd nested=1
     '';
   };
 
   hardware = {
-    opengl = {
-      extraPackages = [ nvidia_x11.out ];
-      extraPackages32 = [ nvidia_x11.lib32 ];
-    };
-
-    pulseaudio.extraConfig = ''
-      set-default-sink alsa_output.pci-0000_00_1f.3.hdmi-stereo-extra1
-      set-card-profile alsa_card.pci-0000_00_1f.3 output:hdmi-stereo-extra1
-    '';
+    #pulseaudio.extraConfig = ''
+      #set-default-sink alsa_output.pci-0000_00_1f.3.hdmi-stereo-extra1
+      #set-card-profile alsa_card.pci-0000_00_1f.3 output:hdmi-stereo-extra1
+    #'';
   };
-
-  environment.systemPackages = [
-    nvidia_x11.bin
-    nvidia_x11.settings
-    nvidia_x11.persistenced
-  ];
 
   networking = {
     hostName = "valmar";
@@ -74,13 +59,13 @@ in {
 
     bonds.bond0 = {
       interfaces = [
-        "enp0s31f6" # 1G
-        "enp2s0f0"  # 10G
+        "enp3s0"   # 1G
+        "enp8s0f0" # 10G
       ];
       driverOptions = {
         mode = "active-backup";
         miimon = "100";
-        primary = "enp2s0f0";
+        primary = "enp8s0f0";
       };
     };
     bridges.br0 = {
@@ -95,28 +80,25 @@ in {
 
   services = {
     xserver = {
-      videoDrivers = [ "intel" ];
-      deviceSection = ''
-        Option "TearFree" "true"
-      '';
+      videoDrivers = [ "nvidia" ];
       xkbOptions = "ctrl:nocaps, shift:both_capslock";
-      xrandrHeads = [
-        {
-          output = "HDMI2";
-          primary = true;
-          monitorConfig = ''
-            Option "Position" "0 1440"
-            Option "PreferredMode" "3440x1440"
-          '';
-        }
-        {
-          output = "DP1";
-          monitorConfig = ''
-            Option "Position" "440 0"
-            Option "PreferredMode" "2560x1440"
-          '';
-        }
-      ];
+      #xrandrHeads = [
+        #{
+          #output = "HDMI2";
+          #primary = true;
+          #monitorConfig = ''
+            #Option "Position" "0 1440"
+            #Option "PreferredMode" "3440x1440"
+          #'';
+        #}
+        #{
+          #output = "DP1";
+          #monitorConfig = ''
+            #Option "Position" "440 0"
+            #Option "PreferredMode" "2560x1440"
+          #'';
+        #}
+      #];
     };
 
     zfs = {
