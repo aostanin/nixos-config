@@ -28,7 +28,8 @@
     kernelParams = [
       "amd_iommu=on" "iommu=pt"                              # IOMMU
       "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32" # Huge pages
-      "vfio-pci.ids=10de:1b81,10de:10f0"
+      "vfio-pci.ids=10de:1b81"
+      # "vfio-pci.ids=10de:1b81,10de:10f0"
       #"video=vesafb:off,efifb:off"                           # Disable framebuffer
       #"pcie_aspm=off"
       #"pcie_acs_override=downstream"
@@ -44,6 +45,7 @@
     extraModprobeConfig = ''
       options bonding max_bonds=0
       options kvm-amd nested=1
+      options snd-hda-intel enable_msi=1 # Fix audio in VFIO
     '';
   };
 

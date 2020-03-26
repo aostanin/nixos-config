@@ -42,7 +42,7 @@
           DP2-2 = {
             enable = true;
             position = "440x0";
-            mode = "2560x1440_41";
+            mode = "2560x1440";
           };
           eDP1 = {
             enable = true;
@@ -50,7 +50,6 @@
             mode = "1920x1080";
           };
         };
-        hooks.preswitch = "xrandr --newmode 2560x1440_41 162.00 2560 2608 2640 2720 1440 1443 1448 1468 +hsync +vsync; xrandr --addmode DP2-2 2560x1440_41";
       };
       "ThinkPad Mobile" = {
         fingerprint = {
