@@ -26,10 +26,11 @@
       "vfio_pci"
     ];
     kernelParams = [
-      "amd_iommu=on"
+      "amd_iommu=on" "iommu=pt"                              # IOMMU
+      "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32" # Huge pages
+      "vfio-pci.ids=10de:1b81,10de:10f0"
+      #"video=vesafb:off,efifb:off"                           # Disable framebuffer
       #"pcie_aspm=off"
-      "iommu=pt"
-      "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"
       #"pcie_acs_override=downstream"
     ];
     #kernelPatches = [ {
@@ -59,13 +60,13 @@
 
     bonds.bond0 = {
       interfaces = [
-        "enp3s0"   # 1G
-        "enp8s0f0" # 10G
+        "enp5s0"   # 1G
+        "enp10s0f0" # 10G
       ];
       driverOptions = {
         mode = "active-backup";
         miimon = "100";
-        primary = "enp8s0f0";
+        primary = "enp10s0f0";
       };
     };
     bridges.br0 = {
@@ -80,7 +81,7 @@
 
   services = {
     xserver = {
-      videoDrivers = [ "nvidia" ];
+      #videoDrivers = [ "nvidia" ];
       xkbOptions = "ctrl:nocaps, shift:both_capslock";
       #xrandrHeads = [
         #{
