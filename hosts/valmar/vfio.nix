@@ -1,6 +1,17 @@
 { config, pkgs, ... }:
 
-{
+let
+  gameScript = pkgs.writeScriptBin "game" ''
+    #!${pkgs.stdenv.shell}
+
+    virsh start win10-play
+    ${pkgs.looking-glass-client}/bin/looking-glass-client -s &
+    ${pkgs.scream-receivers}/bin/scream-ivshmem-alsa /dev/shm/scream &
+
+    wait -n
+    pkill -P $$
+  '';
+in {
   boot = {
     kernelPackages = pkgs.linuxPackages_latest; # Avoid kernel panic for IOMMU
     kernelModules = [
@@ -18,6 +29,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    gameScript
     looking-glass-client
     scream-receivers
     virtmanager
