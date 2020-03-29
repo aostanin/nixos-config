@@ -28,6 +28,8 @@ with lib;
       for_window [class="mpv"] floating enable border none
       for_window [class=".*scrcpy.*"] floating enable border none
       for_window [title="Android Emulator - .*"] floating enable border none
+
+      for_window [class="looking-glass-client"] move container to workspace 9, workspace 9, move workspace to output down, focus, fullscreen enable
     '';
   };
 

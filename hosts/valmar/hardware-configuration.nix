@@ -8,7 +8,7 @@
     [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
@@ -34,7 +34,17 @@
     };
 
   fileSystems."/var/lib/docker" =
-    { device = "rpool/docker";
+    { device = "rpool/virtualization/docker";
+      fsType = "zfs";
+    };
+
+  fileSystems."/var/lib/libvirt" =
+    { device = "rpool/virtualization/libvirt";
+      fsType = "zfs";
+    };
+
+  fileSystems."/var/lib/libvirt/images" =
+    { device = "rpool/virtualization/libvirt/images";
       fsType = "zfs";
     };
 
