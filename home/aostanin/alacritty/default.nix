@@ -8,8 +8,11 @@
   programs.alacritty = {
     enable = true;
     settings = {
+      env = {
+        WINIT_HIDPI_FACTOR = "1";
+      };
       font = {
-        size = 8.0;
+        size = 10.0;
         normal = {
           family = "Hack Nerd Font";
         };

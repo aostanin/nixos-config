@@ -104,11 +104,15 @@ with lib;
   services = {
     lorri.enable = true;
   } // optionalAttrs sysconfig.services.xserver.enable {
+    blueman-applet.enable = true;
+
     sxhkd = {
       enable = true;
       keybindings = with pkgs; {
         "ctrl + alt + {Prior,Next}" = # volume control
           "${pamixer}/bin/pamixer -{i,d} 5";
+        "{XF86MonBrightnessUp,XF86MonBrightnessDown}" = # backlight
+          "${xorg.xbacklight}/bin/xbacklight -{inc,dec} 10";
       } // optionalAttrs (sysconfig.networking.hostName == "valmar") {
         "ctrl + alt + {1,2,3,4}" = # input switching
           "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 3 setvcp 60 0x0{1,3,4,f}";

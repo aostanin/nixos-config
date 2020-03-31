@@ -29,6 +29,7 @@
   location.provider = "geoclue2";
 
   services = {
+    blueman.enable = true;
     gnome3.gnome-keyring.enable = true;
     printing.enable = true;
 
@@ -63,6 +64,7 @@
     opengl.driSupport32Bit = true; # Needed for Steam
     pulseaudio = {
       enable = true;
+      extraModules = [ pkgs.pulseaudio-modules-bt ];
       package = pkgs.pulseaudioFull;
     };
   };
