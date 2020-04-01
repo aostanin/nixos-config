@@ -30,6 +30,7 @@
       }
     ];
     userSettings = {
+      "editor.fontFamily" = "'Hack Nerd Font', 'monospace', monospace, 'Droid Sans Fallback'";
       "editor.minimap.enabled" = false;
       "editor.renderControlCharacters" = true;
       "editor.renderWhitespace" = "boundary";
