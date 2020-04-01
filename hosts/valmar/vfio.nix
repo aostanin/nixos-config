@@ -6,7 +6,7 @@ let
 
     virsh start win10-play
     ${pkgs.looking-glass-client}/bin/looking-glass-client -s &
-    ${pkgs.scream-receivers}/bin/scream-ivshmem-alsa /dev/shm/scream &
+    ${pkgs.scream-receivers}/bin/scream-alsa &
 
     wait -n
     pkill -P $$
@@ -36,7 +36,6 @@ in {
   ];
 
   systemd.tmpfiles.rules = [
-    "f /dev/shm/scream 0660 aostanin qemu-libvirtd -"
     "f /dev/shm/looking-glass 0660 aostanin qemu-libvirtd -"
   ];
 

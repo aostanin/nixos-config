@@ -118,7 +118,6 @@ with lib;
 
           [[block]]
           block = "music"
-          buttons = ["play", "next"]
 
           [[block]]
           block = "time"
