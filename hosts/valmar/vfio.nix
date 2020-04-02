@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
 let
+  unstable = import <unstable> { };
   screamReceivers = (pkgs.scream-receivers.override { pulseSupport = true; });
   gameScript = pkgs.writeScriptBin "game" ''
     #!${pkgs.stdenv.shell}
@@ -42,6 +43,7 @@ in {
 
   virtualisation.libvirtd = {
     enable = true;
+    qemuPackage = unstable.qemu;
     qemuVerbatimConfig = ''
       user = "aostanin"
       cgroup_device_acl = [
