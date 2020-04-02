@@ -109,9 +109,13 @@ with lib;
     sxhkd = {
       enable = true;
       keybindings = with pkgs; {
-        "ctrl + alt + {Prior,Next}" = # volume control
+        "ctrl + alt + {Prior,Next}" =
           "${pamixer}/bin/pamixer -{i,d} 5";
-        "{XF86MonBrightnessUp,XF86MonBrightnessDown}" = # backlight
+        "{XF86AudioRaiseVolume,XF86AudioLowerVolume}" =
+          "${pamixer}/bin/pamixer -{i,d} 5";
+        "XF86AudioMute" =
+          "${pamixer}/bin/pamixer -t";
+        "{XF86MonBrightnessUp,XF86MonBrightnessDown}" =
           "${xorg.xbacklight}/bin/xbacklight -{inc,dec} 10";
       } // optionalAttrs (sysconfig.networking.hostName == "valmar") {
         "ctrl + alt + {1,2,3,4}" = # input switching
