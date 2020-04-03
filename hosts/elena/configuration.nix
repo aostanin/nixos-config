@@ -5,6 +5,7 @@
     <nixos-hardware/common/cpu/intel>
     <nixos-hardware/common/pc/ssd>
     ./hardware-configuration.nix
+    ../../modules/variables
     ../../modules/common
     ../../home
     ./telegraf.nix

@@ -17,7 +17,7 @@ with lib;
   ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable  [
     ./autorandr
     ./dunst
-    ./i3
+    (import ./i3 (sysconfig))
   ] ++ optionals sysconfig.services.xserver.desktopManager.plasma5.enable [
     ./plasma
   ] ++ optionals sysconfig.programs.adb.enable [

@@ -1,3 +1,4 @@
+sysconfig:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -103,15 +104,19 @@ with lib;
           interval = 1
           format = "{1m}"
 
-          [[block]]
-          block = "battery"
-          driver = "upower"
-          device = "DisplayDevice"
-          interval = 10
-          format = "{percentage}%"
+          ${optionalString sysconfig.variables.hasBattery ''
+            [[block]]
+            block = "battery"
+            driver = "upower"
+            device = "DisplayDevice"
+            interval = 10
+            format = "{percentage}%"
+          ''}
 
-          [[block]]
-          block = "backlight"
+          ${optionalString sysconfig.variables.hasBacklightControl ''
+            [[block]]
+            block = "backlight"
+          ''}
 
           [[block]]
           block = "sound"

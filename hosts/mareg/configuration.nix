@@ -5,6 +5,7 @@
     <nixos-hardware/lenovo/thinkpad/t440p>
     <nixos-hardware/common/pc/laptop/ssd>
     ./hardware-configuration.nix
+    ../../modules/variables
     ../../modules/common
     ../../modules/desktop
     ../../modules/mullvad-vpn
@@ -12,6 +13,11 @@
     ../../modules/zerotier
     ../../home
   ];
+
+  variables = {
+    hasBattery = true;
+    hasBacklightControl = true;
+  };
 
   boot = {
     loader = {

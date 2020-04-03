@@ -5,6 +5,7 @@
     <nixos-hardware/common/cpu/amd>
     <nixos-hardware/common/pc/ssd>
     ./hardware-configuration.nix
+    ../../modules/variables
     ../../modules/common
     ../../modules/desktop
     ../../modules/mullvad-vpn
