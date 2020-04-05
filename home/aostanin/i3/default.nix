@@ -176,6 +176,7 @@ with lib;
 
   home.packages = with pkgs; [
     arandr
+    nitrogen
     pavucontrol
   ];
 

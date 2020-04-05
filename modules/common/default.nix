@@ -66,6 +66,7 @@
       "input"
       "libvirtd"
       "networkmanager"
+      "plugdev"
       "wheel"
     ];
     shell = pkgs.zsh;

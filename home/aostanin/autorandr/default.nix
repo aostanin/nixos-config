@@ -58,6 +58,7 @@
         config = {
           eDP1 = {
             enable = true;
+            primary = true;
             mode = "1920x1080";
           };
         };

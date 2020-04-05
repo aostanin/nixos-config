@@ -45,6 +45,7 @@
 
     udev.extraRules = ''
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="04d8", ATTRS{idProduct}=="e11c", GROUP="plugdev", MODE="0666" # MiniPro
+      SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="plugdev", MODE="0666" # Saleae Logic
     '';
 
     xserver = {
