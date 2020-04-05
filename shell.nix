@@ -1,11 +1,14 @@
 let
-  pkgs = import <nixpkgs> {};
+  pkgs = import <nixpkgs> { };
   stateVersion = "19.09";
   nixPath = import ./path.nix;
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
+    cargo
     nixops
+    nixpkgs-fmt
+    pre-commit
   ];
 
   lorriHook = ''
