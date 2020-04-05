@@ -11,6 +11,12 @@
       vscodevim.vim
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       {
+        name = "EditorConfig";
+        publisher = "EditorConfig";
+        version = "0.14.4";
+        sha256 = "0580dsxhw78qgds9ljvzsqqkd2ndksppk7l9s5gnrddirn6fdk5i";
+      }
+      {
         name = "gruvbox-themes";
         publisher = "tomphilbin";
         version = "1.0.0";

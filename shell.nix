@@ -7,7 +7,6 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     cargo
     nixops
-    nixpkgs-fmt
     pre-commit
   ];
 
