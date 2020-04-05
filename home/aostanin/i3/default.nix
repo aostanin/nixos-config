@@ -10,25 +10,27 @@ with lib;
       modifier = "Mod4";
       focus.followMouse = false;
       keybindings =
-        let modifier = config.xsession.windowManager.i3.config.modifier;
-        in mkOptionDefault {
-          "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
-          "${modifier}+h" = "focus left";
-          "${modifier}+j" = "focus down";
-          "${modifier}+k" = "focus up";
-          "${modifier}+l" = "focus right";
-          "${modifier}+Shift+h" = "move left";
-          "${modifier}+Shift+j" = "move down";
-          "${modifier}+Shift+k" =  "move up";
-          "${modifier}+Shift+l" = "move right";
-          "${modifier}+bar" = "split h";
-          "${modifier}+underscore" = "split v";
-          "${modifier}+a" = "focus parent";
-        };
+        let
+          modifier = config.xsession.windowManager.i3.config.modifier;
+        in
+          mkOptionDefault {
+            "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
+            "${modifier}+h" = "focus left";
+            "${modifier}+j" = "focus down";
+            "${modifier}+k" = "focus up";
+            "${modifier}+l" = "focus right";
+            "${modifier}+Shift+h" = "move left";
+            "${modifier}+Shift+j" = "move down";
+            "${modifier}+Shift+k" = "move up";
+            "${modifier}+Shift+l" = "move right";
+            "${modifier}+bar" = "split h";
+            "${modifier}+underscore" = "split v";
+            "${modifier}+a" = "focus parent";
+          };
       modes.resize = {
         "h" = "resize shrink width 10 px or 10 ppt";
         "j" = "resize grow height 10 px or 10 ppt";
-        "k" =  "resize shrink height 10 px or 10 ppt";
+        "k" = "resize shrink height 10 px or 10 ppt";
         "l" = "resize grow width 10 px or 10 ppt";
         "Left" = "resize shrink width 10 px or 10 ppt";
         "Down" = "resize grow height 10 px or 10 ppt";
@@ -68,95 +70,100 @@ with lib;
           indicator = "#282828";
         };
       };
-      bars = [ {
-        trayOutput = "primary";
-        statusCommand = let config = pkgs.writeText "i3status-rust-config" ''
-          theme = "gruvbox-dark"
-          icons = "awesome"
+      bars = [
+        {
+          trayOutput = "primary";
+          statusCommand =
+            let
+              config = pkgs.writeText "i3status-rust-config" ''
+                theme = "gruvbox-dark"
+                icons = "awesome"
 
-          [[block]]
-          block = "focused_window"
-          max_width = 50
+                [[block]]
+                block = "focused_window"
+                max_width = 50
 
-          [[block]]
-          block = "disk_space"
-          path = "/"
-          alias = "/"
-          info_type = "available"
-          unit = "GB"
-          interval = 20
-          warning = 20.0
-          alert = 10.0
+                [[block]]
+                block = "disk_space"
+                path = "/"
+                alias = "/"
+                info_type = "available"
+                unit = "GB"
+                interval = 20
+                warning = 20.0
+                alert = 10.0
 
-          [[block]]
-          block = "memory"
-          display_type = "memory"
-          format_mem = "{Mup}%"
-          format_swap = "{SUp}%"
+                [[block]]
+                block = "memory"
+                display_type = "memory"
+                format_mem = "{Mup}%"
+                format_swap = "{SUp}%"
 
-          [[block]]
-          block = "cpu"
-          format = "{utilization}%"
-          interval = 1
+                [[block]]
+                block = "cpu"
+                format = "{utilization}%"
+                interval = 1
 
-          [[block]]
-          block = "load"
-          interval = 1
-          format = "{1m}"
+                [[block]]
+                block = "load"
+                interval = 1
+                format = "{1m}"
 
-          ${optionalString sysconfig.variables.hasBattery ''
-            [[block]]
-            block = "battery"
-            driver = "upower"
-            device = "DisplayDevice"
-            interval = 10
-            format = "{percentage}%"
-          ''}
+                ${optionalString sysconfig.variables.hasBattery ''
+                [[block]]
+                block = "battery"
+                driver = "upower"
+                device = "DisplayDevice"
+                interval = 10
+                format = "{percentage}%"
+              ''}
 
-          ${optionalString sysconfig.variables.hasBacklightControl ''
-            [[block]]
-            block = "backlight"
-          ''}
+                ${optionalString sysconfig.variables.hasBacklightControl ''
+                [[block]]
+                block = "backlight"
+              ''}
 
-          [[block]]
-          block = "sound"
+                [[block]]
+                block = "sound"
 
-          [[block]]
-          block = "music"
+                [[block]]
+                block = "music"
 
-          [[block]]
-          block = "time"
-          interval = 5
-          format = "%a %-m/%-d %-H:%M"
-        '';
-          in "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
-        fonts = [ "Hack Nerd Font 10" ];
-        colors = {
-          separator = "#928374";
-          background = "#282828";
-          statusline = "#ebdbb2";
-          focusedWorkspace = {
-            border = "#689d6a";
-            background = "#689d6a";
-            text = "#282828";
-          };
-          activeWorkspace = {
-            border = "#282828";
+                [[block]]
+                block = "time"
+                interval = 5
+                format = "%a %-m/%-d %-H:%M"
+              '';
+            in
+              "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
+          fonts = [ "Hack Nerd Font 10" ];
+          colors = {
+            separator = "#928374";
             background = "#282828";
-            text = "#928374";
+            statusline = "#ebdbb2";
+            focusedWorkspace = {
+              border = "#689d6a";
+              background = "#689d6a";
+              text = "#282828";
+            };
+            activeWorkspace = {
+              border = "#282828";
+              background = "#282828";
+              text = "#928374";
+            };
+            inactiveWorkspace = {
+              border = "#32302f";
+              background = "#32302f";
+              text = "#928374";
+            };
+            urgentWorkspace = {
+              border = "#cc241d";
+              background = "#cc241d";
+              text = "#ebdbb2";
+            };
           };
-          inactiveWorkspace = {
-            border = "#32302f";
-            background = "#32302f";
-            text = "#928374";
-          };
-          urgentWorkspace = {
-            border = "#cc241d";
-            background = "#cc241d";
-            text = "#ebdbb2";
-          };
-        };
-      } ];
+        }
+      ];
     };
     extraConfig = ''
       exec --no-startup-id xset dpms 600

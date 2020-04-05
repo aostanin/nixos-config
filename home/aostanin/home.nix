@@ -14,7 +14,7 @@ with lib;
     ./alacritty
     ./chrome
     ./vscode
-  ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable  [
+  ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable [
     ./autorandr
     ./dunst
     (import ./i3 (sysconfig))
@@ -89,46 +89,53 @@ with lib;
     };
   };
 
-  programs = {
-    direnv.enable = true;
-    lsd = {
-      enable = true;
-      enableAliases = true;
-    };
-    starship.enable = true;
-  } // optionalAttrs sysconfig.services.xserver.enable {
-    firefox.enable = true;
-    mpv.enable = true;
-  };
-
-  services = {
-    lorri.enable = true;
-  } // optionalAttrs sysconfig.services.xserver.enable {
-    blueman-applet.enable = true;
-
-    sxhkd = {
-      enable = true;
-      keybindings = with pkgs; {
-        "ctrl + alt + {Prior,Next}" =
-          "${pamixer}/bin/pamixer -{i,d} 5";
-        "{XF86AudioRaiseVolume,XF86AudioLowerVolume}" =
-          "${pamixer}/bin/pamixer -{i,d} 5";
-        "XF86AudioMute" =
-          "${pamixer}/bin/pamixer -t";
-        "{XF86MonBrightnessUp,XF86MonBrightnessDown}" =
-          "${xorg.xbacklight}/bin/xbacklight -{inc,dec} 10";
-      } // optionalAttrs (sysconfig.networking.hostName == "valmar") {
-        "ctrl + alt + {1,2,3,4}" = # input switching
-          "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 3 setvcp 60 0x0{1,3,4,f}";
-        "ctrl + alt + 0" = concatStringsSep " && " [ # turn off display
-          "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 0 setvcp d6 0x05"
-          "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 3 setvcp d6 0x05"
-        ];
+  programs =
+    {
+      direnv.enable = true;
+      lsd = {
+        enable = true;
+        enableAliases = true;
       };
+      starship.enable = true;
+    }
+    // optionalAttrs sysconfig.services.xserver.enable {
+      firefox.enable = true;
+      mpv.enable = true;
     };
 
-    xcape.enable = true;
-  };
+  services =
+    {
+      lorri.enable = true;
+    }
+    // optionalAttrs sysconfig.services.xserver.enable {
+      blueman-applet.enable = true;
+
+      sxhkd = {
+        enable = true;
+        keybindings = with pkgs;
+          {
+            "ctrl + alt + {Prior,Next}" =
+              "${pamixer}/bin/pamixer -{i,d} 5";
+            "{XF86AudioRaiseVolume,XF86AudioLowerVolume}" =
+              "${pamixer}/bin/pamixer -{i,d} 5";
+            "XF86AudioMute" =
+              "${pamixer}/bin/pamixer -t";
+            "{XF86MonBrightnessUp,XF86MonBrightnessDown}" =
+              "${xorg.xbacklight}/bin/xbacklight -{inc,dec} 10";
+          }
+          // optionalAttrs (sysconfig.networking.hostName == "valmar") {
+            "ctrl + alt + {1,2,3,4}" = # input switching
+              "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 3 setvcp 60 0x0{1,3,4,f}";
+            "ctrl + alt + 0" = concatStringsSep " && " [
+              # turn off display
+              "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 0 setvcp d6 0x05"
+              "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 3 setvcp d6 0x05"
+            ];
+          };
+      };
+
+      xcape.enable = true;
+    };
 
   xdg.configFile = {
     "catt/catt.cfg".text = ''

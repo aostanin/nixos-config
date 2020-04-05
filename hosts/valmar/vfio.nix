@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 let
   unstable = import <unstable> { };
   screamReceivers = (pkgs.scream-receivers.override { pulseSupport = true; });
@@ -13,15 +12,19 @@ let
     wait -n
     pkill -P $$
   '';
-in {
+in
+{
   boot = {
     kernelPackages = pkgs.linuxPackages_latest; # Avoid kernel panic for IOMMU
     kernelModules = [
       "vfio_pci"
     ];
     kernelParams = [
-      "amd_iommu=on" "iommu=pt"
-      "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=32"
+      "amd_iommu=on"
+      "iommu=pt"
+      "default_hugepagesz=1G"
+      "hugepagesz=1G"
+      "hugepages=32"
       #"vfio-pci.ids=10de:1b81,10de:10f0" # GTX 1070
       "vfio-pci.ids=10de:1e84,10de:10f8,10de:1ad8,10de:1ad9" # GTX 2070 Super
     ];

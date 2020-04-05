@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+    [
+      <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
   boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "mpt3sas" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" ];
@@ -14,47 +15,56 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "tank/root/nixos";
+    {
+      device = "tank/root/nixos";
       fsType = "zfs";
     };
 
   fileSystems."/nix" =
-    { device = "tank/root/nix";
+    {
+      device = "tank/root/nix";
       fsType = "zfs";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/3E1E-2057";
+    {
+      device = "/dev/disk/by-uuid/3E1E-2057";
       fsType = "vfat";
     };
 
   fileSystems."/home" =
-    { device = "tank/home";
+    {
+      device = "tank/home";
       fsType = "zfs";
     };
 
   fileSystems."/var/lib/libvirt" =
-    { device = "tank/virtualization/libvirt";
+    {
+      device = "tank/virtualization/libvirt";
       fsType = "zfs";
     };
 
   fileSystems."/var/lib/libvirt/images" =
-    { device = "tank/virtualization/libvirt/images";
+    {
+      device = "tank/virtualization/libvirt/images";
       fsType = "zfs";
     };
 
   fileSystems."/var/lib/libvirt/images/ssd" =
-    { device = "tank/virtualization/libvirt/images/ssd";
+    {
+      device = "tank/virtualization/libvirt/images/ssd";
       fsType = "zfs";
     };
 
   fileSystems."/storage/recorded" =
-    { device = "/dev/disk/by-label/recorded";
+    {
+      device = "/dev/disk/by-label/recorded";
       fsType = "xfs";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/7150d268-bc6c-430c-a8f0-eeacf879b9d9"; }
+    [
+      { device = "/dev/disk/by-uuid/7150d268-bc6c-430c-a8f0-eeacf879b9d9"; }
     ];
 
   nix.maxJobs = lib.mkDefault 32;

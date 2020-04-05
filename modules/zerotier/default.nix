@@ -4,7 +4,7 @@
   services.zerotierone = {
     enable = true;
     joinNetworks = [
-        "***REMOVED***"
+      "***REMOVED***"
     ];
   };
 }

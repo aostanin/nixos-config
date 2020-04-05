@@ -77,6 +77,6 @@
   };
 
   users.users.root.openssh.authorizedKeys.keys = [
-      "***REMOVED***"
+    "***REMOVED***"
   ];
 }

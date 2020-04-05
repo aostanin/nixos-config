@@ -36,7 +36,7 @@
 
     bonds.bond0 = {
       interfaces = [
-        "enp6s0"   # 1G
+        "enp6s0" # 1G
         "enp4s0f0" # 10G
       ];
       driverOptions = {
@@ -56,10 +56,12 @@
   };
 
   services = {
-    wakeonlan.interfaces = [ {
-      interface = "enp6s0";
-      method = "magicpacket";
-    } ];
+    wakeonlan.interfaces = [
+      {
+        interface = "enp6s0";
+        method = "magicpacket";
+      }
+    ];
 
     xserver = {
       videoDrivers = [ "nvidia" ];

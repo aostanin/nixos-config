@@ -5,8 +5,8 @@
     variables = lib.mkOption {
       type = lib.types.attrs;
       default = {
-          hasBattery = false;
-          hasBacklightControl = false;
+        hasBattery = false;
+        hasBacklightControl = false;
       };
     };
   };

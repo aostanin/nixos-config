@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+    [
+      <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "sd_mod" ];
@@ -14,42 +15,50 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "rpool/root/nixos";
+    {
+      device = "rpool/root/nixos";
       fsType = "zfs";
     };
 
   fileSystems."/nix" =
-    { device = "rpool/root/nix";
+    {
+      device = "rpool/root/nix";
       fsType = "zfs";
     };
 
   fileSystems."/home" =
-    { device = "rpool/home";
+    {
+      device = "rpool/home";
       fsType = "zfs";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/1FA6-DE5C";
+    {
+      device = "/dev/disk/by-uuid/1FA6-DE5C";
       fsType = "vfat";
     };
 
   fileSystems."/var/lib/docker" =
-    { device = "rpool/virtualization/docker";
+    {
+      device = "rpool/virtualization/docker";
       fsType = "zfs";
     };
 
   fileSystems."/var/lib/libvirt" =
-    { device = "rpool/virtualization/libvirt";
+    {
+      device = "rpool/virtualization/libvirt";
       fsType = "zfs";
     };
 
   fileSystems."/var/lib/libvirt/images" =
-    { device = "rpool/virtualization/libvirt/images";
+    {
+      device = "rpool/virtualization/libvirt/images";
       fsType = "zfs";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/46a8575f-76a1-4f99-87fa-8e56aa7dc0c4"; }
+    [
+      { device = "/dev/disk/by-uuid/46a8575f-76a1-4f99-87fa-8e56aa7dc0c4"; }
     ];
 
   nix.maxJobs = lib.mkDefault 24;

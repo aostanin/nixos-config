@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+    [
+      <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc" ];
@@ -14,32 +15,38 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "rpool/root/nixos";
+    {
+      device = "rpool/root/nixos";
       fsType = "zfs";
     };
 
   fileSystems."/nix" =
-    { device = "rpool/root/nix";
+    {
+      device = "rpool/root/nix";
       fsType = "zfs";
     };
 
   fileSystems."/home" =
-    { device = "rpool/home";
+    {
+      device = "rpool/home";
       fsType = "zfs";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/77DC-A61A";
+    {
+      device = "/dev/disk/by-uuid/77DC-A61A";
       fsType = "vfat";
     };
 
   fileSystems."/var/lib/docker" =
-    { device = "rpool/docker";
+    {
+      device = "rpool/docker";
       fsType = "zfs";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/63c1868b-c0cb-4030-bebb-2186c41b2c4a"; }
+    [
+      { device = "/dev/disk/by-uuid/63c1868b-c0cb-4030-bebb-2186c41b2c4a"; }
     ];
 
   nix.maxJobs = lib.mkDefault 8;

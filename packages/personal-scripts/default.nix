@@ -13,12 +13,12 @@ stdenv.mkDerivation rec {
     cp -r bin $out
     for i in $out/bin/*; do
       wrapProgram $i --prefix PATH : ${stdenv.lib.makeBinPath [
-        androidenv.androidPkgs_9_0.platform-tools
-        ffmpeg
-        hplip
-        qt5.qttools
-        xclip
-      ]}
+      androidenv.androidPkgs_9_0.platform-tools
+      ffmpeg
+      hplip
+      qt5.qttools
+      xclip
+    ]}
     done
   '';
 }
