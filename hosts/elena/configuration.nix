@@ -33,10 +33,6 @@
       options kvm ignore_msrs=1
       options kvm-intel nested=1
     '';
-    kernel.sysctl = {
-      "net.ipv6.conf.br-wan.disable_ipv6" = 1;
-      "net.ipv6.conf.br-guest.disable_ipv6" = 1;
-    };
   };
 
   services.mingetty.serialSpeed = [ 115200 ];
@@ -45,27 +41,11 @@
     hostName = "elena";
     hostId = "4446d154";
 
-    bridges = {
-      br-wan.interfaces = [ "vl-wan" ];
-      br-guest.interfaces = [ "vl-guest" ];
-      br-lan = {
-        interfaces = [ "enp6s0f0" ];
-        rstp = true;
-      };
+    bridges.br0 = {
+      interfaces = [ "enp6s0f0" ];
+      rstp = true;
     };
-
-    vlans = {
-      vl-wan = {
-        id = 10;
-        interface = "enp6s0f0";
-      };
-      vl-guest = {
-        id = 20;
-        interface = "enp6s0f0";
-      };
-    };
-
-    interfaces.br-lan = {
+    interfaces.br0 = {
       useDHCP = true;
       macAddress = "7a:72:12:cc:08:19";
     };
@@ -145,7 +125,7 @@
   containers.shell = {
     autoStart = true;
     privateNetwork = true;
-    hostBridge = "br-lan";
+    hostBridge = "br0";
 
     bindMounts = {
       "/home" = { hostPath = "/home"; isReadOnly = false; };
