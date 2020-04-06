@@ -12,6 +12,7 @@ with lib;
     ./zsh
   ] ++ optionals sysconfig.services.xserver.enable [
     ./alacritty
+    ./electronics
     ./chrome
     ./vscode
   ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable [
@@ -67,7 +68,6 @@ with lib;
       filezilla
       gimp
       keepassxc
-      kicad
       krita
       libreoffice
       mullvad-vpn
