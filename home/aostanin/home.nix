@@ -73,6 +73,7 @@ with lib;
       mullvad-vpn
       skype
       slack
+      steam
       syncthing-gtk
       tdesktop
       thunderbird
