@@ -24,6 +24,7 @@
     zfs.extraPools = [ "tank" ];
     kernelModules = [
       "i2c-dev" # for ddcutil
+      "it87"
     ];
     extraModprobeConfig = ''
       options bonding max_bonds=0
