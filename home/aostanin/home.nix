@@ -80,7 +80,7 @@ with lib;
       virtmanager
       (wine.override { wineBuild = "wineWow"; })
       xclip
-      zoom-us
+      unstable.zoom-us
     ];
 
     sessionVariables = {
