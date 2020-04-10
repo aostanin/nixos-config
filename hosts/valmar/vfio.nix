@@ -15,7 +15,6 @@ let
 in
 {
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest; # Avoid kernel panic for IOMMU
     kernelModules = [
       "vfio_pci"
     ];
@@ -46,7 +45,6 @@ in
 
   virtualisation.libvirtd = {
     enable = true;
-    qemuPackage = unstable.qemu;
     qemuVerbatimConfig = ''
       user = "aostanin"
       cgroup_device_acl = [

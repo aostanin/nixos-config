@@ -201,13 +201,13 @@ with lib;
   };
 
   services = {
-    compton = {
-      enable = true;
-    };
-
     kdeconnect = {
       enable = true;
       indicator = true;
+    };
+
+    picom = {
+      enable = true;
     };
 
     redshift = {
@@ -218,11 +218,6 @@ with lib;
         day = 6500;
         night = 3000;
       };
-    };
-
-    screen-locker = {
-      enable = true;
-      inactiveInterval = 10;
     };
 
     udiskie = {

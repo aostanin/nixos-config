@@ -3,11 +3,10 @@
 {
   programs.vscode = {
     enable = true;
-    # TODO: Requires master home-manager
-    # package = pkgs.vscodium;
+    package = pkgs.vscodium;
     extensions = with pkgs.vscode-extensions; [
       bbenoist.Nix
-      pkgs.unstable.vscode-extensions.ms-python.python # TODO: stable had a 404
+      ms-python.python
       vscodevim.vim
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       {

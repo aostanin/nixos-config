@@ -15,10 +15,5 @@
     tmux
     wget
     which
-
-    # TODO: remove after switching to home-manager
-    gnumake
-    stow
-    vim
   ];
 }

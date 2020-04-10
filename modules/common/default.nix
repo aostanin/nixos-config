@@ -7,9 +7,12 @@
 
   time.timeZone = "Asia/Tokyo";
 
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "jp106";
+  };
+
   i18n = {
-    consoleFont = "Lat2-Terminus16";
-    consoleKeyMap = "jp106";
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
       LC_TIME = "en_IE.UTF-8";

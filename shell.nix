@@ -1,6 +1,6 @@
 let
   pkgs = import <nixpkgs> { };
-  stateVersion = "19.09";
+  stateVersion = "20.03";
   nixPath = import ./path.nix;
 in
 pkgs.mkShell {
