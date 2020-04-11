@@ -55,7 +55,7 @@
       enable = true;
       layout = "jp";
 
-      displayManager.sddm.enable = true;
+      displayManager.lightdm.enable = true;
       desktopManager.plasma5.enable = true;
       windowManager.i3.enable = true;
     };
@@ -77,5 +77,5 @@
     dconf.enable = true;
   };
 
-  security.pam.services.sddm.enableGnomeKeyring = true;
+  security.pam.services.lightdm.enableGnomeKeyring = true;
 }

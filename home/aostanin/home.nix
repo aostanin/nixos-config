@@ -70,8 +70,6 @@ with lib;
       keepassxc
       krita
       libreoffice
-      mullvad-vpn
-      skype
       slack
       steam
       syncthing-gtk
