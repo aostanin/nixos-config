@@ -7,6 +7,7 @@
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
+    ../../modules/zerotier
     ../../home
     ./telegraf.nix
   ];

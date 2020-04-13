@@ -10,6 +10,7 @@
     ../../modules/desktop
     ../../modules/mullvad-vpn
     ../../modules/syncthing
+    ../../modules/zerotier
     ../../home
     ./telegraf.nix
     ./vfio.nix
@@ -35,19 +36,19 @@
     hostName = "valmar";
     hostId = "203d588e";
 
-    bonds.bond0 = {
-      interfaces = [
-        "enp6s0" # 1G
-        "enp4s0f0" # 10G
-      ];
-      driverOptions = {
-        mode = "active-backup";
-        miimon = "100";
-        primary = "enp4s0f0";
-      };
-    };
+    # bonds.bond0 = {
+    #   interfaces = [
+    #     "enp4s0" # 1G
+    #     "enp4s0f0" # 10G
+    #   ];
+    #   driverOptions = {
+    #     mode = "active-backup";
+    #     miimon = "100";
+    #     primary = "enp4s0f0";
+    #   };
+    # };
     bridges.br0 = {
-      interfaces = [ "bond0" ];
+      interfaces = [ "enp4s0" ];
       rstp = true;
     };
     interfaces.br0 = {
