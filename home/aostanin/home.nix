@@ -57,7 +57,7 @@ with lib;
       wol
 
       # Sailing the seven seas
-      beets
+      (beets.override { enableSonosUpdate = false; })
       cksfv
     ] ++ optionals sysconfig.services.xserver.enable [
       # GUI
