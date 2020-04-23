@@ -47,9 +47,15 @@
       rstp = true;
     };
     interfaces.br0 = {
-      useDHCP = true;
       macAddress = "7a:72:12:cc:08:19";
+      ipv4.addresses = [{
+        address = "10.0.0.10";
+        prefixLength = 24;
+      }];
     };
+
+    defaultGateway = "10.0.0.1";
+    nameservers = [ "10.0.0.1" ];
   };
 
   services.zfs = {
