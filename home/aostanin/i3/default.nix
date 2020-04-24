@@ -211,6 +211,8 @@ with lib;
     picom = {
       enable = true;
       backend = "xrender";
+      blur = true;
+      shadow = true;
     };
 
     redshift = {
