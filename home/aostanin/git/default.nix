@@ -1,10 +1,12 @@
 { pkgs, config, lib, ... }:
-
+let
+  secrets = import ../../../secrets;
+in
 {
   programs.git = {
     enable = true;
-    userName = "***REMOVED***";
-    userEmail = "***REMOVED***";
+    userName = secrets.user.fullName;
+    userEmail = secrets.user.emailAddress;
     extraConfig = {
       push = {
         default = "current";
