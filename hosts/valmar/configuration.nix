@@ -8,7 +8,6 @@
     ../../modules/variables
     ../../modules/common
     ../../modules/desktop
-    ../../modules/mullvad-vpn
     ../../modules/syncthing
     ../../modules/zerotier
     ../../home
