@@ -1,7 +1,9 @@
 { pkgs, config, lib, ... }:
 
 with lib;
-
+let
+  secrets = import ../../../secrets;
+in
 {
   programs.zsh = {
     enable = true;
@@ -22,7 +24,7 @@ with lib;
       CASE_SENSITIVE = "true";
       DISABLE_AUTO_UPDATE = "true";
     } // optionalAttrs pkgs.stdenv.isDarwin {
-      HOMEBREW_GITHUB_API_TOKEN = "***REMOVED***";
+      HOMEBREW_GITHUB_API_TOKEN = secrets.githubApiToken;
     };
   };
 }
