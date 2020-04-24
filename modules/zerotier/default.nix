@@ -1,10 +1,10 @@
 { config, pkgs, ... }:
-
+let
+  secrets = import ../../secrets;
+in
 {
   services.zerotierone = {
     enable = true;
-    joinNetworks = [
-      "***REMOVED***"
-    ];
+    joinNetworks = [ secrets.zerotier.network ];
   };
 }
