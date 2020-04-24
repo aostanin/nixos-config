@@ -13,20 +13,20 @@ with lib;
         let
           modifier = config.xsession.windowManager.i3.config.modifier;
         in
-          mkOptionDefault {
-            "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
-            "${modifier}+h" = "focus left";
-            "${modifier}+j" = "focus down";
-            "${modifier}+k" = "focus up";
-            "${modifier}+l" = "focus right";
-            "${modifier}+Shift+h" = "move left";
-            "${modifier}+Shift+j" = "move down";
-            "${modifier}+Shift+k" = "move up";
-            "${modifier}+Shift+l" = "move right";
-            "${modifier}+bar" = "split h";
-            "${modifier}+underscore" = "split v";
-            "${modifier}+a" = "focus parent";
-          };
+        mkOptionDefault {
+          "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
+          "${modifier}+h" = "focus left";
+          "${modifier}+j" = "focus down";
+          "${modifier}+k" = "focus up";
+          "${modifier}+l" = "focus right";
+          "${modifier}+Shift+h" = "move left";
+          "${modifier}+Shift+j" = "move down";
+          "${modifier}+Shift+k" = "move up";
+          "${modifier}+Shift+l" = "move right";
+          "${modifier}+bar" = "split h";
+          "${modifier}+underscore" = "split v";
+          "${modifier}+a" = "focus parent";
+        };
       modes.resize = {
         "h" = "resize shrink width 10 px or 10 ppt";
         "j" = "resize grow height 10 px or 10 ppt";
@@ -110,18 +110,18 @@ with lib;
                 format = "{1m}"
 
                 ${optionalString sysconfig.variables.hasBattery ''
-                [[block]]
-                block = "battery"
-                driver = "upower"
-                device = "DisplayDevice"
-                interval = 10
-                format = "{percentage}%"
-              ''}
+                  [[block]]
+                  block = "battery"
+                  driver = "upower"
+                  device = "DisplayDevice"
+                  interval = 10
+                  format = "{percentage}%"
+                ''}
 
                 ${optionalString sysconfig.variables.hasBacklightControl ''
-                [[block]]
-                block = "backlight"
-              ''}
+                  [[block]]
+                  block = "backlight"
+                ''}
 
                 [[block]]
                 block = "sound"
@@ -135,7 +135,7 @@ with lib;
                 format = "%a %-m/%-d %-H:%M"
               '';
             in
-              "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
+            "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
           fonts = [ "Hack Nerd Font 10" ];
           colors = {
             separator = "#928374";
@@ -169,8 +169,8 @@ with lib;
       exec --no-startup-id xset dpms 600
       exec --no-startup-id ${pkgs.autorandr}/bin/autorandr --change
       ${optionalString sysconfig.networking.networkmanager.enable ''
-      exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable
-    ''}
+        exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable
+      ''}
       exec --no-startup-id ${pkgs.pasystray}/bin/pasystray
       exec --no-startup-id ${pkgs.barrier}/bin/barrier
       exec --no-startup-id ${pkgs.syncthing-gtk}/bin/syncthing-gtk --minimized
@@ -210,6 +210,7 @@ with lib;
 
     picom = {
       enable = true;
+      backend = "xrender";
     };
 
     redshift = {
