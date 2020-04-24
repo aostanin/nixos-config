@@ -2,6 +2,6 @@
 
 {
   home.file = {
-    ".ssh/config".source = ./ssh_config;
+    ".ssh/config".source = ../../../secrets/ssh/ssh_config;
   };
 }
