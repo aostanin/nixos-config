@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
-
+let
+  secrets = import ../../secrets;
+in
 {
   imports = [
     ./packages.nix
@@ -73,13 +75,9 @@
       "wheel"
     ];
     shell = pkgs.zsh;
-    hashedPassword = "***REMOVED***";
-    openssh.authorizedKeys.keys = [
-      "***REMOVED***"
-    ];
+    hashedPassword = secrets.user.hashedPassword;
+    openssh.authorizedKeys.keys = [ secrets.user.sshKey ];
   };
 
-  users.users.root.openssh.authorizedKeys.keys = [
-    "***REMOVED***"
-  ];
+  users.users.root.openssh.authorizedKeys.keys = [ secrets.user.sshKey ];
 }

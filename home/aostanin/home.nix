@@ -12,8 +12,9 @@ with lib;
     ./zsh
   ] ++ optionals sysconfig.services.xserver.enable [
     ./alacritty
-    ./electronics
     ./chrome
+    ./electronics
+    ./gnupg
     ./vscode
   ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable [
     ./autorandr

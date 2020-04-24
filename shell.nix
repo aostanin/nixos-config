@@ -5,7 +5,8 @@ let
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    cargo
+    cargo # For nixpkgs-fmt
+    git-crypt
     nixops
     pre-commit
   ];
@@ -24,5 +25,7 @@ pkgs.mkShell {
     }
 
     our_create network
+
+    pre-commit install --install-hooks
   '';
 }
