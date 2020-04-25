@@ -51,6 +51,8 @@
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="users", MODE="0660"
     '';
 
+    upower.enable = true;
+
     xserver = {
       enable = true;
       layout = "jp";
