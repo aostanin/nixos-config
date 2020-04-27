@@ -15,6 +15,7 @@ with lib;
         in
         mkOptionDefault {
           "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
+          "${modifier}+c" = "exec ${pkgs.rofi}/bin/rofi -show calc -modi calc -no-show-match -no-sort";
           "${modifier}+h" = "focus left";
           "${modifier}+j" = "focus down";
           "${modifier}+k" = "focus up";
