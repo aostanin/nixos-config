@@ -61,6 +61,9 @@
         naturalScrolling = true;
         tapping = false;
       };
+      displayManager.sessionCommands = ''
+        xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Natural Scrolling Enabled" 0
+      '';
     };
 
     zfs = {
