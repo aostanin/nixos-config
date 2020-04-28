@@ -58,7 +58,7 @@ with lib;
       wol
 
       # Sailing the seven seas
-      (beets.override { enableSonosUpdate = false; })
+      beets
       cksfv
     ] ++ optionals sysconfig.services.xserver.enable [
       # GUI
@@ -77,7 +77,7 @@ with lib;
       tdesktop
       thunderbird
       virtmanager
-      (wine.override { wineBuild = "wineWow"; })
+      wine
       xclip
       unstable.zoom-us
     ];
