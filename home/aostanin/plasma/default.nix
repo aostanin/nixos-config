@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    ark
+    (ark.override { unfreeEnableUnrar = true; })
     gwenview
     kate
     krdc

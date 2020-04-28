@@ -1,12 +1,13 @@
 { config, pkgs, ... }:
 let
   unstable = import <unstable> { };
+  screamReceivers = (pkgs.scream-receivers.override { pulseSupport = true; });
   gameScript = pkgs.writeScriptBin "game" ''
     #!${pkgs.stdenv.shell}
 
     virsh start win10-play
     ${pkgs.looking-glass-client}/bin/looking-glass-client -s &
-    ${pkgs.scream-receivers}/bin/scream-pulse &
+    ${screamReceivers}/bin/scream-pulse &
 
     wait -n
     pkill -P $$
@@ -44,7 +45,7 @@ in
   environment.systemPackages = with pkgs; [
     gameScript
     looking-glass-client
-    scream-receivers
+    screamReceivers
     virtmanager
   ];
 
