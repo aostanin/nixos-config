@@ -56,6 +56,7 @@ with lib;
       tokei
       translate-shell
       wol
+      youtube-dl
 
       # Sailing the seven seas
       (beets.override { enableSonosUpdate = false; })
