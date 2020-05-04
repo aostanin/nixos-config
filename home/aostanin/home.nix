@@ -78,7 +78,7 @@ with lib;
       tdesktop
       thunderbird
       virtmanager
-      (wine.override { wineBuild = "wineWow"; })
+      wineWowPackages.stable
       xclip
       unstable.zoom-us
     ];
