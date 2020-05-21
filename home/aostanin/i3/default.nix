@@ -181,6 +181,7 @@ in
       exec --no-startup-id ${pkgs.pasystray}/bin/pasystray
       exec --no-startup-id ${pkgs.barrier}/bin/barrier
       exec --no-startup-id ${pkgs.syncthing-gtk}/bin/syncthing-gtk --minimized
+      exec --no-startup-id ${pkgs.flameshot}/bin/flameshot
 
       for_window [class="mpv"] floating enable border none
       for_window [class=".*scrcpy.*"] floating enable border none
