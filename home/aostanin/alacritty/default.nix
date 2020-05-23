@@ -9,7 +9,7 @@
     enable = true;
     settings = {
       env = {
-        WINIT_HIDPI_FACTOR = "1";
+        WINIT_X11_SCALE_FACTOR = "1";
       };
       font = {
         size = 10.0;
