@@ -42,10 +42,8 @@
     hostName = "elena";
     hostId = "4446d154";
 
-    bridges.br0 = {
-      interfaces = [ "enp6s0f0" ];
-      rstp = true;
-    };
+    # Home LAN, IPoE uplink
+    bridges.br0.interfaces = [ "enp6s0f0" ];
     interfaces.br0 = {
       macAddress = "7a:72:12:cc:08:19";
       ipv4.addresses = [{
@@ -54,7 +52,17 @@
       }];
     };
 
-    defaultGateway = "10.0.0.1";
+    # Server LAN, PPPoE uplink
+    bridges.br1.interfaces = [ ];
+    interfaces.br1 = {
+      macAddress = "7a:72:12:cc:08:20";
+      ipv4.addresses = [{
+        address = "10.0.30.10";
+        prefixLength = 24;
+      }];
+    };
+
+    defaultGateway = "10.0.30.1";
     nameservers = [ "10.0.0.1" ];
   };
 
