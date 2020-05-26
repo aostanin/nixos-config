@@ -123,6 +123,11 @@
     fsType = "nfs";
   };
 
+  fileSystems."/mnt/personal" = {
+    device = "elena.lan:/personal";
+    fsType = "nfs";
+  };
+
   programs.adb.enable = true;
 
   virtualisation.docker = {
