@@ -21,7 +21,7 @@
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
-    zfs.extraPools = [ "tank" ];
+    # zfs.extraPools = [ "tank" ]; TODO: Dead drive?
     kernelModules = [
       "i2c-dev" # for ddcutil
       "it87"
