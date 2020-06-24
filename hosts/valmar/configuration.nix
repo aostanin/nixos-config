@@ -21,7 +21,6 @@
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
-    # zfs.extraPools = [ "tank" ]; TODO: Dead drive?
     kernelModules = [
       "i2c-dev" # for ddcutil
       "it87"
@@ -51,9 +50,15 @@
       rstp = true;
     };
     interfaces.br0 = {
-      useDHCP = true;
       macAddress = "6a:c7:9c:df:fc:96";
+      ipv4.addresses = [{
+        address = "10.0.0.12";
+        prefixLength = 24;
+      }];
     };
+
+    defaultGateway = "10.0.0.1";
+    nameservers = [ "10.0.0.10" ];
   };
 
   services = {
