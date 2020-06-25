@@ -43,7 +43,7 @@ with lib;
       ipmitool
       lazygit
       lftp
-      p7zip
+      (p7zip.override { enableUnfree = true; })
       personal-scripts
       python3
       pv
