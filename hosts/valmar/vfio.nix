@@ -27,16 +27,6 @@ in
       #"vfio-pci.ids=10de:1b81,10de:10f0" # GTX 1070
       "vfio-pci.ids=10de:1e84,10de:10f8,10de:1ad8,10de:1ad9" # RTX 2070 Super
     ];
-    kernelPatches = [
-      {
-        # https://www.reddit.com/r/VFIO/comments/eba5mh/workaround_patch_for_passing_through_usb_and/
-        name = "pcie_no_flr";
-        patch = pkgs.fetchurl {
-          url = "https://gist.githubusercontent.com/JKJameson/b24c972dbbb80bb330a0a1c4e8349cd3/raw/4bc4f788deeb45570023541650822503e6778d48/pcie_no_flr.patch";
-          sha256 = "09wjj6qlha5c0zya3n4zbsli88siv9y04vsv5lqnbr8hnrs9z0hr";
-        };
-      }
-    ];
     extraModprobeConfig = ''
       options kvm-amd nested=1
     '';
