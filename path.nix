@@ -1,6 +1,6 @@
 [
-  "nixpkgs=https://github.com/NixOS/nixpkgs/archive/9a3e34ae60130c63b93809eecf555b0d796f001c.tar.gz"
-  "unstable=https://github.com/NixOS/nixpkgs/archive/9f93642b79ad4f6ac95300522dd690dac02f0066.tar.gz"
+  "nixpkgs=https://github.com/NixOS/nixpkgs/archive/afa9ca61924f05aacfe495a7ad0fd84709d236cc.tar.gz"
+  "unstable=https://github.com/NixOS/nixpkgs/archive/83f667613c5d84b521469e4a1f85f6b87771a12d.tar.gz"
   "nixos-hardware=https://github.com/NixOS/nixos-hardware/archive/841caf7d201f3fd3c270d52396e1f077e85329ef.tar.gz"
-  "home-manager=https://github.com/rycee/home-manager/archive/d8fdbbdf03617de1015d1c10fe3bd6ecc5cdce77.tar.gz"
+  "home-manager=https://github.com/rycee/home-manager/archive/318bc0754ed6370cfcae13183a7f13f7aa4bc73f.tar.gz"
 ]
