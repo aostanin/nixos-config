@@ -50,11 +50,11 @@ with lib;
       ranger
       rclone
       ripgrep
-      rtv
       tig
       tmuxp
       tokei
       translate-shell
+      tuir
       wol
       youtube-dl
 
