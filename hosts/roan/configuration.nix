@@ -48,6 +48,12 @@
       '';
     };
 
+    undervolt = {
+      enable = true;
+      coreOffset = "-60";
+      gpuOffset = "-50";
+    };
+
     xserver = {
       videoDrivers = [ "intel" ];
       deviceSection = ''
