@@ -26,6 +26,6 @@ pkgs.mkShell {
 
     our_create network
 
-    pre-commit install --install-hooks
+    pre-commit install -f --hook-type pre-commit
   '';
 }
