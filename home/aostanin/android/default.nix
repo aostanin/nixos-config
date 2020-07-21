@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    android-studio
+    unstable.android-studio
     pidcat
     scrcpy
   ];
