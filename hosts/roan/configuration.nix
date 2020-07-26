@@ -50,8 +50,8 @@
 
     undervolt = {
       enable = true;
-      coreOffset = "-50";
-      gpuOffset = "-40";
+      coreOffset = "-40";
+      gpuOffset = "-30";
     };
 
     xserver = {
