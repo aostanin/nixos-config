@@ -72,6 +72,7 @@ with lib;
       keepassxc
       krita
       libreoffice
+      peek
       slack
       steam
       syncthing-gtk
