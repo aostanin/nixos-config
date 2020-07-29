@@ -1,6 +1,7 @@
 let
   stateVersion = import ./state-version.nix;
-  nixPath = import ./path.nix;
+  sources = import ./nix/sources.nix { };
+  nixPath = map (name: name + "=" + sources."${name}".url) (builtins.attrNames sources);
   defineHost = name: host: { config, pkgs, ... }: (import (./. + "/hosts/${name}/configuration.nix") { inherit config pkgs; }) // {
     deployment.targetUser = "root";
     deployment.targetHost = host;

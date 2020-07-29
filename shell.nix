@@ -1,13 +1,15 @@
 let
   pkgs = import <nixpkgs> { };
   stateVersion = import ./state-version.nix;
-  nixPath = import ./path.nix;
+  sources = import ./nix/sources.nix { };
+  nixPath = map (name: name + "=" + sources."${name}".url) (builtins.attrNames sources);
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
     cargo # For nixpkgs-fmt
     git-crypt
     morph
+    niv
     pre-commit
   ];
 
