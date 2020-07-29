@@ -1,30 +1,19 @@
 let
   pkgs = import <nixpkgs> { };
-  stateVersion = "20.03";
+  stateVersion = import ./state-version.nix;
   nixPath = import ./path.nix;
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
     cargo # For nixpkgs-fmt
     git-crypt
-    nixops
+    morph
     pre-commit
   ];
 
   lorriHook = ''
     export NIX_PATH="${builtins.concatStringsSep ":" (nixPath ++ [ "." ])}"
-    export NIXOPS_STATE=state.nixops
     export NIX_STATE_VERSION="${stateVersion}"
-
-    function our_create () {
-      if [ `nixops list | grep -c $1` -eq 0 ]; then
-        (set -x; nixops create --deployment $1 "<$1.nix>")
-      fi
-      nixops set-args --arg nixPath '[ "${builtins.concatStringsSep "\" \"" nixPath}" ]' -d $1
-      nixops set-args --argstr stateVersion '${stateVersion}' -d $1
-    }
-
-    our_create network
 
     pre-commit install -f --hook-type pre-commit
   '';
