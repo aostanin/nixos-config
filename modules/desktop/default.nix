@@ -80,9 +80,4 @@
   };
 
   security.pam.services.lightdm.enableGnomeKeyring = true;
-
-  systemd.additionalUpstreamSystemUnits = [
-    "proc-sys-fs-binfmt_misc.automount"
-    "proc-sys-fs-binfmt_misc.mount"
-  ];
 }

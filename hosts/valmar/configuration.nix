@@ -28,6 +28,7 @@
     extraModprobeConfig = ''
       options bonding max_bonds=0
     '';
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   networking = {
