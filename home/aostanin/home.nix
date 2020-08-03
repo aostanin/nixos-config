@@ -65,7 +65,6 @@ with lib;
       # GUI
       barrier
       bitwarden
-      discord
       unstable.etcher
       filezilla
       gimp
@@ -73,14 +72,18 @@ with lib;
       krita
       libreoffice
       peek
-      slack
       steam
       syncthing-gtk
-      tdesktop
       thunderbird
       virtmanager
       wineWowPackages.stable
       xclip
+
+      # Chat
+      discord
+      unstable.element-desktop
+      slack
+      tdesktop
       unstable.zoom-us
     ];
 
