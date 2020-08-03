@@ -150,6 +150,7 @@ with lib;
       [aliases]
       up = Upstairs TV
       down = Downstairs Home Hub
+      stereo = Upstairs Stereo
     '';
 
     "libvirt/libvirt.conf".text = ''
