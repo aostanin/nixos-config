@@ -39,6 +39,7 @@ with lib;
       dhex
       fd
       ffmpeg
+      gotop
       gpsbabel
       ipmitool
       lazygit
