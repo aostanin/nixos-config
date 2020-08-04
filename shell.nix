@@ -1,8 +1,7 @@
 let
   pkgs = import <nixpkgs> { };
   stateVersion = import ./state-version.nix;
-  sources = import ./nix/sources.nix { };
-  nixPath = map (name: name + "=" + sources."${name}".url) (builtins.attrNames sources);
+  nixPath = import ./nix-path.nix;
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
