@@ -39,7 +39,7 @@ with lib;
       dhex
       fd
       ffmpeg
-      gotop
+      gotop # TODO: Switch to ytop once it no longer crashes on elena
       gpsbabel
       ipmitool
       lazygit

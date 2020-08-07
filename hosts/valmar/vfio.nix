@@ -6,7 +6,7 @@ let
     #!${pkgs.stdenv.shell}
 
     virsh start win10-play
-    ${pkgs.looking-glass-client}/bin/looking-glass-client -s &
+    ${pkgs.looking-glass-client}/bin/looking-glass-client &
     ${screamReceivers}/bin/scream-pulse &
 
     wait -n
