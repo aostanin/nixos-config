@@ -11,6 +11,8 @@
       personal-scripts = super.callPackage ../../../packages/personal-scripts { };
       pidcat = super.callPackage ../../../packages/pidcat { };
       splitNSP = super.callPackage ../../../packages/splitNSP { };
+
+      looking-glass-client = super.callPackage ../../../packages/looking-glass-client { };
     }
   )
 ]
