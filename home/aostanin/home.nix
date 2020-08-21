@@ -69,6 +69,7 @@ with lib;
       unstable.etcher
       filezilla
       gimp
+      unstable.jellyfin-mpv-shim
       keepassxc
       krita
       libreoffice
