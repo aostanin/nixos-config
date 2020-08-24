@@ -28,8 +28,11 @@
 
   location.provider = "geoclue2";
 
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # Needed for Flatpak
+
   services = {
     blueman.enable = true;
+    flatpak.enable = true;
     gnome3.gnome-keyring.enable = true;
     printing.enable = true;
 
