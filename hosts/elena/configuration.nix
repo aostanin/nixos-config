@@ -122,25 +122,64 @@
     user_allow_other
   '';
 
-  # TODO: Clean this up
-  systemd.services.media-union-mount = {
-    description = "rclone mount media-union";
-    documentation = [ "http://rclone.org/docs/" ];
-    after = [ "network-online.target" ];
-    before = [ "docker.service" ];
-    wantedBy = [ "multi-user.target" ];
-    path = [ "${config.security.wrapperDir}/.." ];
-    serviceConfig = {
-      Type = "notify";
-      User = "aostanin";
-      Group = "users";
-      ExecStart = ''
-        ${pkgs.rclone}/bin/rclone mount media-union: /storage/media-union \
-          --allow-other
-      '';
-      ExecStop = "${config.security.wrapperDir}/fusermount -uz /storage/media-union";
-      Restart = "on-failure";
-      RestartSec = 5;
+  systemd = {
+    timers.cleanup-recorded-videos = {
+      wantedBy = [ "timers.target" ];
+      partOf = [ "cleanup-recorded-videos.service" ];
+      timerConfig = {
+        OnCalendar = "daily";
+        RandomizedDelaySec = "5h";
+      };
+    };
+    services = {
+      cleanup-recorded-videos = {
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = pkgs.writers.writePython3 "cleanup-recorded-videos" { } ''
+            import glob
+            import os
+
+            DIR = '/storage/recorded'
+            MIN_FREE_RATIO = 0.1
+
+
+            def free_ratio():
+                statvfs = os.statvfs(DIR)
+                return statvfs.f_bavail / statvfs.f_blocks
+
+
+            def oldest_file():
+                files = glob.glob(f'{DIR}/**/*', recursive=True)
+                return sorted(files, key=os.path.getctime)[0]
+
+
+            while free_ratio() < MIN_FREE_RATIO:
+                file = oldest_file()
+                os.remove(file)
+          '';
+        };
+      };
+      # TODO: Clean this up
+      media-union-mount = {
+        description = "rclone mount media-union";
+        documentation = [ "http://rclone.org/docs/" ];
+        after = [ "network-online.target" ];
+        before = [ "docker.service" ];
+        wantedBy = [ "multi-user.target" ];
+        path = [ "${config.security.wrapperDir}/.." ];
+        serviceConfig = {
+          Type = "notify";
+          User = "aostanin";
+          Group = "users";
+          ExecStart = ''
+            ${pkgs.rclone}/bin/rclone mount media-union: /storage/media-union \
+              --allow-other
+          '';
+          ExecStop = "${config.security.wrapperDir}/fusermount -uz /storage/media-union";
+          Restart = "on-failure";
+          RestartSec = 5;
+        };
+      };
     };
   };
 
