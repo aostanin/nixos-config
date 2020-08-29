@@ -36,6 +36,7 @@ with lib;
     packages = with pkgs; [
       bat
       catt
+      ctop
       dhex
       fd
       ffmpeg
