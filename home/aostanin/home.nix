@@ -5,6 +5,7 @@ with lib;
 
 {
   imports = [
+    ./fish
     ./git
     ./neovim
     ./ssh
