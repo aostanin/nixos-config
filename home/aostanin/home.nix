@@ -8,6 +8,7 @@ with lib;
     ./fish
     ./git
     ./neovim
+    ./newsboat
     ./ssh
     ./tmux
     ./zsh
@@ -48,8 +49,8 @@ with lib;
       lftp
       (p7zip.override { enableUnfree = true; })
       personal-scripts
-      python3
       pv
+      python3
       ranger
       rclone
       ripgrep
