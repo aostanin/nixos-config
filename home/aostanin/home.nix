@@ -42,7 +42,6 @@ with lib;
       dhex
       fd
       ffmpeg
-      gotop # TODO: Switch to ytop once it no longer crashes on elena
       gpsbabel
       ipmitool
       lazygit
@@ -61,6 +60,7 @@ with lib;
       tuir
       wol
       youtube-dl
+      unstable.ytop # TODO: switch to stable once it no longer crashes on elena
 
       # Sailing the seven seas
       (beets.override { enableSonosUpdate = false; })
