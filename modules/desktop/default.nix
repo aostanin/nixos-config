@@ -77,7 +77,6 @@
       package = pkgs.pulseaudioFull;
       zeroconf = {
         discovery.enable = true;
-        publish.enable = true;
       };
     };
   };

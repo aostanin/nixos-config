@@ -7,6 +7,7 @@ with lib;
   imports = [
     ./fish
     ./git
+    ./mpd
     ./neovim
     ./newsboat
     ./ssh
