@@ -26,5 +26,12 @@ in
     } // optionalAttrs pkgs.stdenv.isDarwin {
       HOMEBREW_GITHUB_API_TOKEN = secrets.githubApiToken;
     };
+    shellAliases = {
+      ls = "${pkgs.exa}/bin/exa";
+      ll = "ls -l";
+      la = "ls -a";
+      lt = "ls --tree";
+      lla = "ls -la";
+    };
   };
 }

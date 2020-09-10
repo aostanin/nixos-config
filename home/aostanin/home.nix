@@ -40,6 +40,7 @@ with lib;
       catt
       ctop
       dhex
+      exa
       fd
       ffmpeg
       gpsbabel
@@ -102,10 +103,6 @@ with lib;
   programs =
     {
       direnv.enable = true;
-      lsd = {
-        enable = true;
-        enableAliases = true;
-      };
       starship.enable = true;
     }
     // optionalAttrs sysconfig.services.xserver.enable {
