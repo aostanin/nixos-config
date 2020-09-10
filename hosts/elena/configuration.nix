@@ -97,7 +97,7 @@
   };
 
   fileSystems."/srv/nfs/media" = {
-    device = "/storage/media";
+    device = "/storage/media-union";
     options = [ "bind" ];
   };
 
@@ -115,6 +115,16 @@
       /srv/nfs/media    10.0.0.0/24(insecure,rw)
       /srv/nfs/personal 10.0.0.0/24(insecure,rw)
     '';
+  };
+
+  hardware.pulseaudio = {
+    enable = true;
+    systemWide = true;
+    tcp = {
+      enable = true;
+      anonymousClients.allowAll = true;
+    };
+    zeroconf.publish.enable = true;
   };
 
   # Needed for rclone mount
