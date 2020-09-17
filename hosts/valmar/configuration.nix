@@ -109,17 +109,17 @@
   };
 
   fileSystems."/var/lib/libvirt/images/remote" = {
-    device = "elena.lan:/images";
+    device = "10.0.0.10:/images";
     fsType = "nfs";
   };
 
   fileSystems."/mnt/media" = {
-    device = "elena.lan:/media";
+    device = "10.0.0.10:/media";
     fsType = "nfs";
   };
 
   fileSystems."/mnt/personal" = {
-    device = "elena.lan:/personal";
+    device = "10.0.0.10:/personal";
     fsType = "nfs";
   };
 

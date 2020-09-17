@@ -6,28 +6,28 @@
     extraConfig = {
       inputs = {
         cpu = { totalcpu = true; };
-        disk = {}; # TODO: ignore_fs = ["tmpfs", "devtmpfs", "devfs"]
+        disk = { }; # TODO: ignore_fs = ["tmpfs", "devtmpfs", "devfs"]
         diskio = {
           devices = [ "sd[a-z]" ];
           skip_serial_number = false;
         };
         docker = { endpoint = "unix:///var/run/docker.sock"; };
-        interrupts = {};
-        kernel = {};
-        mem = {};
-        net = {}; # TODO: interfaces
-        netstat = {};
-        processes = {};
-        sensors = {};
+        interrupts = { };
+        kernel = { };
+        mem = { };
+        net = { }; # TODO: interfaces
+        netstat = { };
+        processes = { };
+        sensors = { };
         smart = { use_sudo = true; };
-        swap = {};
-        system = {};
+        swap = { };
+        system = { };
         zfs = { poolMetrics = true; };
       };
       outputs = {
         influxdb = {
           database = "telegraf";
-          urls = [ "http://elena.lan:8086" ];
+          urls = [ "http://10.0.0.10:8086" ];
         };
       };
     };

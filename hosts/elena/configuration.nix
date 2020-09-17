@@ -97,7 +97,7 @@
   };
 
   fileSystems."/srv/nfs/media" = {
-    device = "/storage/media-union";
+    device = "/storage/media";
     options = [ "bind" ];
   };
 
@@ -110,10 +110,10 @@
     enable = true;
     # TODO: limit to vlan
     exports = ''
-      /srv/nfs          10.0.0.0/24(insecure,rw,fsid=0)
-      /srv/nfs/images   10.0.0.0/24(insecure,no_root_squash,rw)
-      /srv/nfs/media    10.0.0.0/24(insecure,rw)
-      /srv/nfs/personal 10.0.0.0/24(insecure,rw)
+      /srv/nfs             10.0.0.0/24(insecure,rw,fsid=0)
+      /srv/nfs/images      10.0.0.0/24(insecure,no_root_squash,rw)
+      /srv/nfs/media       10.0.0.0/24(insecure,rw)
+      /srv/nfs/personal    10.0.0.0/24(insecure,rw)
     '';
   };
 
