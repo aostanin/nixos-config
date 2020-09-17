@@ -48,6 +48,7 @@ with lib;
       ipmitool
       lazygit
       lftp
+      nsz
       (p7zip.override { enableUnfree = true; })
       personal-scripts
       pv
