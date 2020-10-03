@@ -44,6 +44,7 @@ with lib;
       exa
       fd
       ffmpeg
+      github-cli
       gpsbabel
       ipmitool
       lazygit
