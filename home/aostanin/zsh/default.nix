@@ -32,6 +32,7 @@ in
       la = "ls -a";
       lt = "ls --tree";
       lla = "ls -la";
+      ncdu = "ncdu --color dark";
     };
   };
 }
