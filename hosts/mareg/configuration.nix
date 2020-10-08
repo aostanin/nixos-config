@@ -24,7 +24,16 @@
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
-    extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+    kernelModules = [
+      "v4l2loopback"
+    ];
+    extraModulePackages = with config.boot.kernelPackages; [
+      exfat-nofuse
+      v4l2loopback
+    ];
+    extraModprobeConfig = ''
+      options v4l2loopback video_nr=10 card_label="OBS Studio" exclusive_caps=1
+    '';
 
     kernelParams = [
       "zfs.zfs_arc_max=2147483648"

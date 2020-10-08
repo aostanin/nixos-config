@@ -24,9 +24,14 @@
     kernelModules = [
       "i2c-dev" # for ddcutil
       "it87"
+      "v4l2loopback"
+    ];
+    extraModulePackages = with config.boot.kernelPackages; [
+      v4l2loopback
     ];
     extraModprobeConfig = ''
       options bonding max_bonds=0
+      options v4l2loopback video_nr=10 card_label="OBS Studio" exclusive_caps=1
     '';
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };

@@ -18,6 +18,7 @@ with lib;
     ./chrome
     ./electronics
     ./gnupg
+    ./obs-studio
     ./vscode
   ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable [
     ./autorandr
@@ -38,7 +39,9 @@ with lib;
   home = {
     packages = with pkgs; [
       bat
+      (beets.override { enableSonosUpdate = false; })
       catt
+      cksfv
       ctop
       dhex
       exa
@@ -65,10 +68,6 @@ with lib;
       wol
       youtube-dl
       unstable.ytop # TODO: switch to stable once it no longer crashes on elena
-
-      # Sailing the seven seas
-      (beets.override { enableSonosUpdate = false; })
-      cksfv
     ] ++ optionals sysconfig.services.xserver.enable [
       # GUI
       barrier
