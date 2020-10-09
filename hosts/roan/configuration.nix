@@ -24,7 +24,6 @@
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
-    extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
     kernelParams = [
       "zfs.zfs_arc_max=2147483648"
     ];
