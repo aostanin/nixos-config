@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
-
+let
+  secrets = import ../../secrets;
+in
 {
   services.telegraf = {
     enable = true;
@@ -27,7 +29,7 @@
       outputs = {
         influxdb = {
           database = "telegraf";
-          urls = [ "http://10.0.0.10:8086" ];
+          urls = [ "http://${secrets.network.home.hosts.elena.address}:8086" ];
         };
       };
     };

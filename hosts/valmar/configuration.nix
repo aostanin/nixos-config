@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
-
+let
+  secrets = import ../../secrets;
+in
 {
   imports = [
     <nixos-hardware/common/cpu/amd>
@@ -37,15 +39,15 @@
       rstp = true;
     };
     interfaces.br0 = {
-      macAddress = "6a:c7:9c:df:fc:96";
+      macAddress = secrets.network.home.hosts.valmar.macAddress;
       ipv4.addresses = [{
-        address = "10.0.0.12";
+        address = secrets.network.home.hosts.valmar.address;
         prefixLength = 24;
       }];
     };
 
-    defaultGateway = "10.0.0.1";
-    nameservers = [ "10.0.0.10" ];
+    defaultGateway = secrets.network.home.defaultGateway;
+    nameservers = [ secrets.network.home.nameserverPihole ];
   };
 
   services = {
@@ -106,17 +108,17 @@
   };
 
   fileSystems."/var/lib/libvirt/images/remote" = {
-    device = "10.0.0.10:/images";
+    device = "${secrets.network.home.hosts.elena.address}:/images";
     fsType = "nfs";
   };
 
   fileSystems."/mnt/media" = {
-    device = "10.0.0.10:/media";
+    device = "${secrets.network.home.hosts.elena.address}:/media";
     fsType = "nfs";
   };
 
   fileSystems."/mnt/personal" = {
-    device = "10.0.0.10:/personal";
+    device = "${secrets.network.home.hosts.elena.address}:/personal";
     fsType = "nfs";
   };
 

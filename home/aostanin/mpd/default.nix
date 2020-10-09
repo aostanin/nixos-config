@@ -1,12 +1,14 @@
 { pkgs, config, lib, ... }:
-
+let
+  secrets = import ../../../secrets;
+in
 {
   home.packages = with pkgs; [
     ncmpcpp
   ];
 
   xdg.configFile."ncmpcpp/config".text = ''
-    mpd_host = elena.lan
+    mpd_host = ${secrets.network.zerotier.hosts.elena.address}
     user_interface = alternative
   '';
 
@@ -14,7 +16,7 @@
   # programs.ncmpcpp = {
   #   enable = true;
   #   settings = {
-  #     mpd_host = "elena.lan";
+  #     mpd_host = secrets.network.zerotier.hosts.elena.address;
   #     user_interface = "alternative";
   #   };
   # };

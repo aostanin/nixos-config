@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
-
+let
+  secrets = import ../../secrets;
+in
 {
   imports = [
     <nixos-hardware/common/cpu/intel>
@@ -28,7 +30,7 @@
       "intel_iommu=on"
       "iommu=pt"
       "console=tty0"
-      "console=ttyS1,115200"
+      "console=ttyS1,115200" # IPMI
     ];
     extraModprobeConfig = ''
       options kvm ignore_msrs=1
@@ -46,9 +48,9 @@
     # Home LAN, IPoE uplink
     bridges.br0.interfaces = [ "enp6s0f0" ];
     interfaces.br0 = {
-      macAddress = "7a:72:12:cc:08:19";
+      macAddress = secrets.network.home.hosts.elena.macAddress;
       ipv4.addresses = [{
-        address = "10.0.0.10";
+        address = secrets.network.home.hosts.elena.address;
         prefixLength = 24;
       }];
     };
@@ -56,15 +58,15 @@
     # Server LAN, PPPoE uplink
     bridges.br1.interfaces = [ ];
     interfaces.br1 = {
-      macAddress = "7a:72:12:cc:08:20";
+      macAddress = secrets.network.server.hosts.elena.macAddress;
       ipv4.addresses = [{
-        address = "10.0.30.10";
+        address = secrets.network.server.hosts.elena.address;
         prefixLength = 24;
       }];
     };
 
-    defaultGateway = "10.0.30.1";
-    nameservers = [ "10.0.0.1" ];
+    defaultGateway = secrets.network.server.defaultGateway;
+    nameservers = [ secrets.network.home.nameserver ];
   };
 
   services.zfs = {
@@ -86,7 +88,7 @@
     storageDriver = "zfs";
     # Docker defaults to Google's DNS
     extraOptions = ''
-      --dns 10.0.0.1 \
+      --dns ${secrets.network.home.nameserver} \
       --dns-search lan
     '';
   };
@@ -110,10 +112,10 @@
     enable = true;
     # TODO: limit to vlan
     exports = ''
-      /srv/nfs             10.0.0.0/24(insecure,rw,fsid=0)
-      /srv/nfs/images      10.0.0.0/24(insecure,no_root_squash,rw)
-      /srv/nfs/media       10.0.0.0/24(insecure,rw)
-      /srv/nfs/personal    10.0.0.0/24(insecure,rw)
+      /srv/nfs             ${secrets.network.home.defaultGateway}/24(insecure,rw,fsid=0)
+      /srv/nfs/images      ${secrets.network.home.defaultGateway}/24(insecure,no_root_squash,rw)
+      /srv/nfs/media       ${secrets.network.home.defaultGateway}/24(insecure,rw)
+      /srv/nfs/personal    ${secrets.network.home.defaultGateway}/24(insecure,rw)
     '';
   };
 
