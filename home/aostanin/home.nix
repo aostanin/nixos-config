@@ -75,6 +75,7 @@ with lib;
       unstable.etcher
       filezilla
       gimp
+      gparted
       unstable.jellyfin-mpv-shim
       keepassxc
       krita
