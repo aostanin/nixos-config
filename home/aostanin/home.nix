@@ -94,6 +94,9 @@ with lib;
       slack
       tdesktop
       unstable.zoom-us
+    ] ++ optionals (elem "nvidia" sysconfig.services.xserver.videoDrivers) [
+      # Nvidia drivers installed
+      nvtop
     ];
 
     sessionVariables = {
