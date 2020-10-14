@@ -8,7 +8,7 @@ in
   ];
 
   xdg.configFile."ncmpcpp/config".text = ''
-    mpd_host = ${secrets.network.zerotier.hosts.elena.address}
+    mpd_host = ${secrets.network.home.hosts.elena.address}
     user_interface = alternative
   '';
 
@@ -16,7 +16,7 @@ in
   # programs.ncmpcpp = {
   #   enable = true;
   #   settings = {
-  #     mpd_host = secrets.network.zerotier.hosts.elena.address;
+  #     mpd_host = secrets.network.home.hosts.elena.address;
   #     user_interface = "alternative";
   #   };
   # };
