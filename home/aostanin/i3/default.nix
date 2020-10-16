@@ -136,9 +136,6 @@ in
                 block = "sound"
 
                 [[block]]
-                block = "music"
-
-                [[block]]
                 block = "time"
                 interval = 5
                 format = "%a %-m/%-d %-H:%M"
