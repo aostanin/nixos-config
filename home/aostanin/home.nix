@@ -9,7 +9,6 @@ with lib;
     ./git
     ./mpd
     ./neovim
-    ./newsboat
     ./ssh
     ./tmux
     ./zsh
