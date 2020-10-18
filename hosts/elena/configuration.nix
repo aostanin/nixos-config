@@ -119,6 +119,10 @@ in
     '';
   };
 
+  environment.systemPackages = with pkgs; [
+    targetcli
+  ];
+
   hardware.pulseaudio = {
     enable = true;
     systemWide = true;
