@@ -25,10 +25,18 @@ in
       "hugepagesz=1G"
       "hugepages=32"
       #"vfio-pci.ids=10de:1b81,10de:10f0" # GTX 1070
-      "vfio-pci.ids=10de:1e84,10de:10f8,10de:1ad8,10de:1ad9" # RTX 2070 Super
+      #"vfio-pci.ids=10de:1e84,10de:10f8,10de:1ad8,10de:1ad9" # RTX 2070 Super
     ];
     extraModprobeConfig = ''
       options kvm-amd nested=1
+    '';
+  };
+
+  services.xserver = {
+    deviceSection = ''
+      # Specify a GPU to avoid using the passthrough GPU
+      BusID "PCI:11:0:0"
+      Option "ProbeAllGpus" "off"
     '';
   };
 
