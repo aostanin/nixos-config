@@ -58,6 +58,11 @@ in
   };
 
   services = {
+    udev.extraRules = ''
+      # Disable Bluetooth dongle passed to Windows VM
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="0a12", ATTRS{idProduct}=="0001", ATTRS{busnum}=="1", ATTR{authorized}="0"
+    '';
+
     wakeonlan.interfaces = [
       {
         interface = "enp6s0";
