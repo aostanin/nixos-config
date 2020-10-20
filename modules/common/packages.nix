@@ -12,6 +12,7 @@
     htop
     ncdu
     neovim
+    psmisc
     tmux
     wget
     which
