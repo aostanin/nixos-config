@@ -14,13 +14,11 @@ in
     ../../modules/zerotier
     ../../home
     ./ipxe.nix
-    ./telegraf.nix
     ./vfio.nix
   ];
 
   boot = {
     loader = {
-      #systemd-boot.enable = true; # TODO: Switch back to systemd-boot when ipxe can be added
       grub = {
         enable = true;
         efiSupport = true;
