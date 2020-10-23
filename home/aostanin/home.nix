@@ -39,6 +39,7 @@ with lib;
     packages = with pkgs; [
       bat
       (beets.override { enableSonosUpdate = false; })
+      unstable.bottom # TODO: switch to stable
       catt
       cksfv
       ctop
@@ -66,7 +67,6 @@ with lib;
       tuir
       wol
       youtube-dl
-      unstable.ytop # TODO: switch to stable once it no longer crashes on elena
     ] ++ optionals sysconfig.services.xserver.enable [
       # GUI
       barrier
