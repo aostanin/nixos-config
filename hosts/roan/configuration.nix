@@ -38,19 +38,19 @@
   services = {
     tlp = {
       enable = true;
-      extraConfig = ''
-        USB_AUTOSUSPEND=0
-        START_CHARGE_THRESH_BAT0=75
-        STOP_CHARGE_THRESH_BAT0=80
-        START_CHARGE_THRESH_BAT1=75
-        STOP_CHARGE_THRESH_BAT1=80
-      '';
+      settings = {
+        USB_AUTOSUSPEND = 0;
+        START_CHARGE_THRESH_BAT0 = 75;
+        STOP_CHARGE_THRESH_BAT0 = 80;
+        START_CHARGE_THRESH_BAT1 = 75;
+        STOP_CHARGE_THRESH_BAT1 = 80;
+      };
     };
 
     undervolt = {
       enable = true;
-      coreOffset = "-40";
-      gpuOffset = "-30";
+      coreOffset = -40;
+      gpuOffset = -30;
     };
 
     xserver = {
