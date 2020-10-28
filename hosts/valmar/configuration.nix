@@ -59,6 +59,8 @@ in
     udev.extraRules = ''
       # Disable Bluetooth dongle passed to Windows VM
       SUBSYSTEM=="usb", ATTRS{idVendor}=="0a12", ATTRS{idProduct}=="0001", ATTRS{busnum}=="1", ATTR{authorized}="0"
+
+      ACTION=="add", SUBSYSTEM=="net", ENV{ID_NET_DRIVER}=="ixgbe", ATTR{device/sriov_numvfs}="32"
     '';
 
     wakeonlan.interfaces = [

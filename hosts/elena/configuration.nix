@@ -69,16 +69,22 @@ in
     nameservers = [ secrets.network.home.nameserver ];
   };
 
-  services.zfs = {
-    autoScrub = {
-      enable = true;
-      interval = "monthly";
+  services = {
+    udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="net", ENV{ID_NET_DRIVER}=="ixgbe", ATTR{device/sriov_numvfs}="32"
+    '';
+
+    zfs = {
+      autoScrub = {
+        enable = true;
+        interval = "monthly";
+      };
+      autoSnapshot = {
+        enable = true;
+        monthly = 0;
+      };
+      trim.enable = true;
     };
-    autoSnapshot = {
-      enable = true;
-      monthly = 0;
-    };
-    trim.enable = true;
   };
 
   virtualisation.libvirtd.enable = true;
