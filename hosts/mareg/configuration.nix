@@ -40,11 +40,11 @@
   services = {
     tlp = {
       enable = true;
-      extraConfig = ''
-        USB_AUTOSUSPEND=0
-        START_CHARGE_THRESH_BAT0=75
-        STOP_CHARGE_THRESH_BAT0=80
-      '';
+      settings = {
+        USB_AUTOSUSPEND = 0;
+        START_CHARGE_THRESH_BAT0 = 75;
+        STOP_CHARGE_THRESH_BAT0 = 80;
+      };
     };
 
     xserver = {

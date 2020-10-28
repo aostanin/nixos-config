@@ -3,9 +3,9 @@ sysconfig:
 
 with lib;
 let
-  rofiWithPlugins = pkgs.unstable.rofi.override {
+  rofiWithPlugins = with pkgs; rofi.override {
     plugins = [
-      pkgs.unstable.rofi-calc
+      rofi-calc
     ];
   };
 in
