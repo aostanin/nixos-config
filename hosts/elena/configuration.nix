@@ -108,6 +108,11 @@ in
     options = [ "bind" ];
   };
 
+  fileSystems."/srv/nfs/games" = {
+    device = "/storage/appdata/games";
+    options = [ "bind" ];
+  };
+
   services.nfs.server = {
     enable = true;
     # TODO: limit to vlan
@@ -116,6 +121,7 @@ in
       /srv/nfs/images      ${secrets.network.home.defaultGateway}/24(insecure,no_root_squash,rw)
       /srv/nfs/media       ${secrets.network.home.defaultGateway}/24(insecure,rw)
       /srv/nfs/personal    ${secrets.network.home.defaultGateway}/24(insecure,rw)
+      /srv/nfs/games       ${secrets.network.home.defaultGateway}/24(insecure,rw)
     '';
   };
 
