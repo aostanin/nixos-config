@@ -39,7 +39,6 @@ with lib;
     packages = with pkgs; [
       bat
       (beets.override { enableSonosUpdate = false; })
-      unstable.bottom # TODO: switch to stable
       catt
       cksfv
       ctop
@@ -67,15 +66,16 @@ with lib;
       tuir
       wol
       youtube-dl
+      ytop
     ] ++ optionals sysconfig.services.xserver.enable [
       # GUI
       barrier
       bitwarden
-      unstable.etcher
+      etcher
       filezilla
       gimp
       gparted
-      unstable.jellyfin-mpv-shim
+      jellyfin-mpv-shim
       keepassxc
       krita
       libreoffice
@@ -89,10 +89,10 @@ with lib;
 
       # Chat
       discord
-      unstable.element-desktop
+      element-desktop
       slack
       tdesktop
-      unstable.zoom-us
+      zoom-us
     ] ++ optionals (elem "nvidia" sysconfig.services.xserver.videoDrivers) [
       # Nvidia drivers installed
       nvtop
