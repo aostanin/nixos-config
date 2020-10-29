@@ -124,8 +124,8 @@ in
     # TODO: limit to vlan
     exports = ''
       /srv/nfs             ${secrets.network.home.defaultGateway}/24(insecure,rw,fsid=0)
-      /srv/nfs/images      ${secrets.network.home.defaultGateway}/24(insecure,no_root_squash,rw)
-      /srv/nfs/media       ${secrets.network.home.defaultGateway}/24(insecure,rw)
+      /srv/nfs/images      ${secrets.network.home.defaultGateway}/24(insecure,no_root_squash,rw,crossmnt)
+      /srv/nfs/media       ${secrets.network.home.defaultGateway}/24(insecure,rw,crossmnt)
       /srv/nfs/personal    ${secrets.network.home.defaultGateway}/24(insecure,rw)
       /srv/nfs/games       ${secrets.network.home.defaultGateway}/24(insecure,rw)
     '';
@@ -186,6 +186,20 @@ in
                 os.remove(file)
           '';
         };
+      };
+      iscsi-target = {
+        description = "Restore LIO kernel target configuration";
+        after = [ "sys-kernel-config.mount" "network.target" "local-fs.target" ];
+        requires = [ "sys-kernel-config.mount" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = "yes";
+          ExecStart = "${pkgs.pythonPackages.rtslib}/bin/targetctl restore /etc/target/saveconfig.json";
+          ExecStop = "${pkgs.pythonPackages.rtslib}/bin/targetctl clear";
+          SyslogIdentifier = "target";
+        };
+        wantedBy = [ "multi-user.target" ];
+        path = with pkgs; [ kmod utillinux ];
       };
     };
   };
