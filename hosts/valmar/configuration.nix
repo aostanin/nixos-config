@@ -134,6 +134,11 @@ in
     fsType = "nfs";
   };
 
+  fileSystems."/mnt/games" = {
+    device = "${secrets.network.home.hosts.elena.address}:/games";
+    fsType = "nfs";
+  };
+
   programs.adb.enable = true;
 
   virtualisation.docker = {
