@@ -217,7 +217,6 @@ in
 
     picom = {
       enable = true;
-      backend = "xrender";
       blur = true;
       shadow = true;
     };

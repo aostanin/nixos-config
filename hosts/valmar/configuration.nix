@@ -29,11 +29,20 @@ in
     };
     supportedFilesystems = [ "zfs" ];
     kernelModules = [
+      "amdgpu"
       "i2c-dev" # for ddcutil
       "it87"
     ];
+    blacklistedKernelModules = [
+      "nouveau"
+    ];
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
+
+  hardware.opengl.extraPackages = with pkgs; [
+    amdvlk
+    rocm-opencl-icd
+  ];
 
   networking = {
     hostName = "valmar";
@@ -71,12 +80,30 @@ in
     ];
 
     xserver = {
-      videoDrivers = [ "nvidia" ];
-      xkbOptions = "ctrl:nocaps, shift:both_capslock";
-      screenSection = ''
-        # Fix for screen tearing: https://wiki.archlinux.org/index.php/NVIDIA/Troubleshooting#Avoid_screen_tearing
-        Option "metamodes" "DPY-0: nvidia-auto-select +440+0 {ForceFullCompositionPipeline=On}, DPY-1: nvidia-auto-select +0+1440 {ForceFullCompositionPipeline=On}"
+      videoDrivers = [ "amdgpu" /* "nvidia" */ ];
+      deviceSection = ''
+        Option "TearFree" "true"
       '';
+      xkbOptions = "ctrl:nocaps, shift:both_capslock";
+      xrandrHeads = [
+        {
+          output = "HDMI-A-0";
+          primary = true;
+          monitorConfig = ''
+            Option "Position" "0 1440"
+          '';
+        }
+        {
+          output = "DVI-D-0";
+          monitorConfig = ''
+            Option "Position" "440 0"
+          '';
+        }
+      ];
+      # screenSection = ''
+      #   # Fix for screen tearing: https://wiki.archlinux.org/index.php/NVIDIA/Troubleshooting#Avoid_screen_tearing
+      #   Option "metamodes" "DPY-0: nvidia-auto-select +440+0 {ForceFullCompositionPipeline=On}, DPY-1: nvidia-auto-select +0+1440 {ForceFullCompositionPipeline=On}"
+      # '';
     };
 
     zfs = {
