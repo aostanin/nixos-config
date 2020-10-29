@@ -187,27 +187,6 @@ in
           '';
         };
       };
-      # TODO: Clean this up
-      media-union-mount = {
-        description = "rclone mount media-union";
-        documentation = [ "http://rclone.org/docs/" ];
-        after = [ "network-online.target" ];
-        before = [ "docker.service" ];
-        wantedBy = [ "multi-user.target" ];
-        path = [ "${config.security.wrapperDir}/.." ];
-        serviceConfig = {
-          Type = "notify";
-          User = "aostanin";
-          Group = "users";
-          ExecStart = ''
-            ${pkgs.rclone}/bin/rclone mount media-union: /storage/media-union \
-              --allow-other
-          '';
-          ExecStop = "${config.security.wrapperDir}/fusermount -uz /storage/media-union";
-          Restart = "on-failure";
-          RestartSec = 5;
-        };
-      };
     };
   };
 
