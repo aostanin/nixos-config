@@ -34,6 +34,9 @@ in
           "${modifier}+bar" = "split h";
           "${modifier}+underscore" = "split v";
           "${modifier}+a" = "focus parent";
+          # TODO: Temporary workaround for https://github.com/nix-community/home-manager/issues/695
+          "${modifier}+0" = null;
+          "${modifier}+Shift+0" = null;
         };
       modes.resize = {
         "h" = "resize shrink width 10 px or 10 ppt";
