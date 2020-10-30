@@ -90,11 +90,6 @@ in
                 theme = "gruvbox-dark"
                 icons = "awesome"
 
-                # This doesn't seem to work at the moment
-                #[[block]]
-                #block = "focused_window"
-                #max_width = 50
-
                 [[block]]
                 block = "disk_space"
                 path = "/"
