@@ -8,6 +8,9 @@ in
     userName = secrets.user.fullName;
     userEmail = secrets.user.emailAddress;
     extraConfig = {
+      pull = {
+        ff = "only";
+      };
       push = {
         default = "current";
       };
