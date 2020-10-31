@@ -48,14 +48,19 @@ in
     hostName = "valmar";
     hostId = "203d588e";
 
-    bridges.br0 = {
-      interfaces = [ "enp4s0f0" ];
-      rstp = true;
-    };
+    bridges.br0.interfaces = [ "enp4s0f0" ];
     interfaces.br0 = {
       macAddress = secrets.network.home.hosts.valmar.macAddress;
       ipv4.addresses = [{
         address = secrets.network.home.hosts.valmar.address;
+        prefixLength = 24;
+      }];
+    };
+
+    interfaces.enp4s0f1 = {
+      mtu = 9000;
+      ipv4.addresses = [{
+        address = secrets.network.storage.hosts.valmar.address;
         prefixLength = 24;
       }];
     };
@@ -69,7 +74,9 @@ in
       # Disable Bluetooth dongle passed to Windows VM
       SUBSYSTEM=="usb", ATTRS{idVendor}=="0a12", ATTRS{idProduct}=="0001", ATTRS{busnum}=="1", ATTR{authorized}="0"
 
-      ACTION=="add", SUBSYSTEM=="net", ENV{ID_NET_DRIVER}=="ixgbe", ATTR{device/sriov_numvfs}="32"
+      ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:04:00.0", ATTR{device/sriov_numvfs}="32"
+      # TODO: Temporary workaround for MTU not being set
+      ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:04:00.1", ATTR{mtu}="9000"
     '';
 
     wakeonlan.interfaces = [
@@ -100,10 +107,6 @@ in
           '';
         }
       ];
-      # screenSection = ''
-      #   # Fix for screen tearing: https://wiki.archlinux.org/index.php/NVIDIA/Troubleshooting#Avoid_screen_tearing
-      #   Option "metamodes" "DPY-0: nvidia-auto-select +440+0 {ForceFullCompositionPipeline=On}, DPY-1: nvidia-auto-select +0+1440 {ForceFullCompositionPipeline=On}"
-      # '';
     };
 
     zfs = {
@@ -147,22 +150,22 @@ in
   };
 
   fileSystems."/var/lib/libvirt/images/remote" = {
-    device = "${secrets.network.home.hosts.elena.address}:/images";
+    device = "${secrets.network.storage.hosts.elena.address}:/images";
     fsType = "nfs";
   };
 
   fileSystems."/mnt/media" = {
-    device = "${secrets.network.home.hosts.elena.address}:/media";
+    device = "${secrets.network.storage.hosts.elena.address}:/media";
     fsType = "nfs";
   };
 
   fileSystems."/mnt/personal" = {
-    device = "${secrets.network.home.hosts.elena.address}:/personal";
+    device = "${secrets.network.storage.hosts.elena.address}:/personal";
     fsType = "nfs";
   };
 
   fileSystems."/mnt/games" = {
-    device = "${secrets.network.home.hosts.elena.address}:/games";
+    device = "${secrets.network.storage.hosts.elena.address}:/games";
     fsType = "nfs";
   };
 

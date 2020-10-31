@@ -65,13 +65,23 @@ in
       }];
     };
 
+    interfaces.enp6s0f1 = {
+      mtu = 9000;
+      ipv4.addresses = [{
+        address = secrets.network.storage.hosts.elena.address;
+        prefixLength = 24;
+      }];
+    };
+
     defaultGateway = secrets.network.server.defaultGateway;
     nameservers = [ secrets.network.home.nameserver ];
   };
 
   services = {
     udev.extraRules = ''
-      ACTION=="add", SUBSYSTEM=="net", ENV{ID_NET_DRIVER}=="ixgbe", ATTR{device/sriov_numvfs}="32"
+      ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:06:00.0", ATTR{device/sriov_numvfs}="32"
+      # TODO: Temporary workaround for MTU not being set
+      ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:06:00.1", ATTR{mtu}="9000"
     '';
 
     zfs = {
@@ -121,13 +131,12 @@ in
 
   services.nfs.server = {
     enable = true;
-    # TODO: limit to vlan
     exports = ''
-      /srv/nfs             ${secrets.network.home.defaultGateway}/24(insecure,rw,fsid=0)
-      /srv/nfs/images      ${secrets.network.home.defaultGateway}/24(insecure,no_root_squash,rw,crossmnt)
-      /srv/nfs/media       ${secrets.network.home.defaultGateway}/24(insecure,rw,crossmnt)
-      /srv/nfs/personal    ${secrets.network.home.defaultGateway}/24(insecure,rw)
-      /srv/nfs/games       ${secrets.network.home.defaultGateway}/24(insecure,rw)
+      /srv/nfs             ${secrets.network.storage.hosts.elena.address}/24(insecure,rw,fsid=0)
+      /srv/nfs/images      ${secrets.network.storage.hosts.elena.address}/24(insecure,no_root_squash,rw,crossmnt)
+      /srv/nfs/media       ${secrets.network.storage.hosts.elena.address}/24(insecure,rw,crossmnt)
+      /srv/nfs/personal    ${secrets.network.storage.hosts.elena.address}/24(insecure,rw)
+      /srv/nfs/games       ${secrets.network.storage.hosts.elena.address}/24(insecure,rw)
     '';
   };
 
