@@ -56,12 +56,6 @@
       fsType = "zfs";
     };
 
-  fileSystems."/storage/recorded" =
-    {
-      device = "/dev/disk/by-label/recorded";
-      fsType = "xfs";
-    };
-
   swapDevices =
     [
       { device = "/dev/disk/by-uuid/7150d268-bc6c-430c-a8f0-eeacf879b9d9"; }

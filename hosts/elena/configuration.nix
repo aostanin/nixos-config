@@ -177,12 +177,12 @@ in
             import os
 
             DIR = '/storage/recorded'
-            MIN_FREE_RATIO = 0.1
+            MAX_USED_SPACE = 2 * 1024 * 1024 * 1024 * 1024  # 2 TB
 
 
-            def free_ratio():
-                statvfs = os.statvfs(DIR)
-                return statvfs.f_bavail / statvfs.f_blocks
+            def used_space():
+                files = glob.glob(f'{DIR}/**/*', recursive=True)
+                return sum([os.stat(file).st_size for file in files])
 
 
             def oldest_file():
@@ -190,7 +190,7 @@ in
                 return sorted(files, key=os.path.getctime)[0]
 
 
-            while free_ratio() < MIN_FREE_RATIO:
+            while used_space() > MAX_USED_SPACE:
                 file = oldest_file()
                 os.remove(file)
           '';
