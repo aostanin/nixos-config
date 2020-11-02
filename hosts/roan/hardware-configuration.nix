@@ -18,18 +18,21 @@
     {
       device = "rpool/root/nixos";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   fileSystems."/nix" =
     {
       device = "rpool/root/nix";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   fileSystems."/home" =
     {
       device = "rpool/home";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   fileSystems."/boot" =
@@ -42,6 +45,7 @@
     {
       device = "rpool/docker";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   swapDevices =

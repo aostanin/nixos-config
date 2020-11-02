@@ -18,12 +18,14 @@
     {
       device = "tank/root/nixos";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   fileSystems."/nix" =
     {
       device = "tank/root/nix";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   fileSystems."/boot" =
@@ -36,24 +38,28 @@
     {
       device = "tank/home";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   fileSystems."/var/lib/libvirt" =
     {
       device = "tank/virtualization/libvirt";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   fileSystems."/var/lib/libvirt/images" =
     {
       device = "tank/virtualization/libvirt/images";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   fileSystems."/var/lib/libvirt/images/ssd" =
     {
       device = "tank/virtualization/libvirt/images/ssd";
       fsType = "zfs";
+      options = [ "noatime" "nodiratime" ];
     };
 
   swapDevices =
