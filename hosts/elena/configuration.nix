@@ -95,6 +95,54 @@ in
       };
       trim.enable = true;
     };
+
+    znapzend = {
+      enable = true;
+      pure = true;
+      autoCreation = true;
+      features = {
+        compressed = true;
+        recvu = true;
+        zfsGetType = true;
+      };
+      zetup = {
+        "tank/home" = {
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "valmar";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/home";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
+        "tank/nixos" = {
+          recursive = true;
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "valmar";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/root/nixos";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
+        "tank/appdata/docker" = {
+          recursive = true;
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "valmar";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/appdata/docker";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
+        "tank/personal" = {
+          recursive = true;
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "valmar";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/personal";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
+      };
+    };
   };
 
   virtualisation.libvirtd.enable = true;
