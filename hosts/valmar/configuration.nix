@@ -37,6 +37,7 @@ in
       "nouveau"
     ];
     binfmt.emulatedSystems = [ "aarch64-linux" ];
+    zfs.extraPools = [ "tank" ];
   };
 
   hardware.opengl.extraPackages = with pkgs; [
