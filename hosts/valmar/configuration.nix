@@ -118,6 +118,11 @@ in
       enable = true;
       pure = true;
       autoCreation = true;
+      features = {
+        compressed = true;
+        recvu = true;
+        zfsGetType = true;
+      };
       zetup = {
         "rpool/home" = {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
