@@ -30,12 +30,16 @@ in
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
+    extraModulePackages = with config.boot.kernelPackages; [
+      zenpower
+    ];
     kernelModules = [
       "amdgpu"
       "i2c-dev" # for ddcutil
       "it87"
     ];
     blacklistedKernelModules = [
+      "k10temp" # Use zenpower
       "nouveau"
     ];
     binfmt.emulatedSystems = [ "aarch64-linux" ];
