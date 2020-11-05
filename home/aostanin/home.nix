@@ -93,8 +93,11 @@ with lib;
       slack
       tdesktop
       zoom-us
+    ] ++ optionals (elem "amdgpu" sysconfig.services.xserver.videoDrivers) [
+      radeontop
+    ] ++ optionals (elem "intel" sysconfig.services.xserver.videoDrivers) [
+      intel-gpu-tools
     ] ++ optionals (elem "nvidia" sysconfig.services.xserver.videoDrivers) [
-      # Nvidia drivers installed
       nvtop
     ];
 
