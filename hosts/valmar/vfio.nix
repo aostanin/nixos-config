@@ -2,6 +2,7 @@
 let
   screamReceivers = (pkgs.scream-receivers.override { pulseSupport = true; });
   lookingGlassClient = (pkgs.callPackage ../../packages/looking-glass-client { });
+  vfio-isolate = pkgs.python3Packages.callPackage ../../packages/vfio-isolate { };
   gameScript = pkgs.writeScriptBin "game" ''
     #!${pkgs.stdenv.shell}
 
@@ -36,6 +37,7 @@ in
     gameScript
     lookingGlassClient
     screamReceivers
+    vfio-isolate
     virtmanager
   ];
 

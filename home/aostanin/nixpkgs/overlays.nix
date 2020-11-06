@@ -12,6 +12,7 @@
       personal-scripts = super.callPackage ../../../packages/personal-scripts { };
       pidcat = super.callPackage ../../../packages/pidcat { };
       splitNSP = super.callPackage ../../../packages/splitNSP { };
+      vfio-isolate = super.python3Packages.callPackage ../../../packages/vfio-isolate { };
 
       looking-glass-client = super.callPackage ../../../packages/looking-glass-client { };
     }
