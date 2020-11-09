@@ -24,6 +24,7 @@ in
         smart = { use_sudo = true; };
         swap = { };
         system = { };
+        temp = { };
         zfs = { poolMetrics = true; };
       };
       outputs = {
