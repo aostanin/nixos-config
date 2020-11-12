@@ -75,6 +75,10 @@ in
 
     zfs = {
       autoScrub.enable = true;
+      autoSnapshot = {
+        enable = true;
+        monthly = 0;
+      };
       trim.enable = true;
       zed.settings = {
         ZED_EMAIL_ADDR = secrets.user.emailAddress;
