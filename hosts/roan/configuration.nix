@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
-
+let
+  secrets = import ../../secrets;
+in
 {
   imports = [
     <nixos-hardware/lenovo/thinkpad/x250>
@@ -8,6 +10,7 @@
     ../../modules/variables
     ../../modules/common
     ../../modules/desktop
+    ../../modules/ssmtp
     ../../modules/syncthing
     ../../modules/zerotier
     ../../home
@@ -73,6 +76,10 @@
     zfs = {
       autoScrub.enable = true;
       trim.enable = true;
+      zed.settings = {
+        ZED_EMAIL_ADDR = secrets.user.emailAddress;
+        ZED_NOTIFY_VERBOSE = true;
+      };
     };
 
     znapzend = {

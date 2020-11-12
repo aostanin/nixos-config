@@ -9,6 +9,7 @@ in
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
+    ../../modules/ssmtp
     ../../modules/zerotier
     ../../home
     ./telegraf.nix
@@ -94,6 +95,10 @@ in
         monthly = 0;
       };
       trim.enable = true;
+      zed.settings = {
+        ZED_EMAIL_ADDR = secrets.user.emailAddress;
+        ZED_NOTIFY_VERBOSE = true;
+      };
     };
 
     znapzend = {

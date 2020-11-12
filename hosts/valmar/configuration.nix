@@ -10,6 +10,7 @@ in
     ../../modules/variables
     ../../modules/common
     ../../modules/desktop
+    ../../modules/ssmtp
     ../../modules/syncthing
     ../../modules/zerotier
     ../../home
@@ -119,6 +120,10 @@ in
     zfs = {
       autoScrub.enable = true;
       trim.enable = true;
+      zed.settings = {
+        ZED_EMAIL_ADDR = secrets.user.emailAddress;
+        ZED_NOTIFY_VERBOSE = true;
+      };
     };
 
     znapzend = {
