@@ -170,25 +170,16 @@ in
     };
   };
 
-  fileSystems."/var/lib/libvirt/images/remote" = {
-    device = "${secrets.network.storage.hosts.elena.address}:/images";
+  fileSystems = let nfsFilesystem = path: {
+    device = "${secrets.network.storage.hosts.elena.address}:${path}";
     fsType = "nfs";
-  };
-
-  fileSystems."/mnt/media" = {
-    device = "${secrets.network.storage.hosts.elena.address}:/media";
-    fsType = "nfs";
-  };
-
-  fileSystems."/mnt/personal" = {
-    device = "${secrets.network.storage.hosts.elena.address}:/personal";
-    fsType = "nfs";
-  };
-
-  fileSystems."/mnt/games" = {
-    device = "${secrets.network.storage.hosts.elena.address}:/games";
-    fsType = "nfs";
-  };
+  }; in
+    {
+      "/var/lib/libvirt/images/remote" = nfsFilesystem "/images";
+      "/mnt/media" = nfsFilesystem "/media";
+      "/mnt/personal" = nfsFilesystem "/personal";
+      "/mnt/games" = nfsFilesystem "/games";
+    };
 
   programs.adb.enable = true;
 
