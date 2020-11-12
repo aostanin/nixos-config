@@ -2,7 +2,13 @@
 # and may be overwritten by future invocations.  Please make changes
 # to /etc/nixos/configuration.nix instead.
 { config, lib, pkgs, ... }:
-
+let
+  zfsFilesystem = device: {
+    inherit device;
+    fsType = "zfs";
+    options = [ "noatime" "nodiratime" ];
+  };
+in
 {
   imports =
     [
@@ -14,53 +20,28 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    {
-      device = "tank/root/nixos";
-      fsType = "zfs";
-      options = [ "noatime" "nodiratime" ];
-    };
-
-  fileSystems."/nix" =
-    {
-      device = "tank/root/nix";
-      fsType = "zfs";
-      options = [ "noatime" "nodiratime" ];
-    };
-
-  fileSystems."/boot" =
-    {
-      device = "/dev/disk/by-uuid/3E1E-2057";
-      fsType = "vfat";
-    };
-
-  fileSystems."/home" =
-    {
-      device = "tank/home";
-      fsType = "zfs";
-      options = [ "noatime" "nodiratime" ];
-    };
-
-  fileSystems."/var/lib/libvirt" =
-    {
-      device = "tank/virtualization/libvirt";
-      fsType = "zfs";
-      options = [ "noatime" "nodiratime" ];
-    };
-
-  fileSystems."/var/lib/libvirt/images" =
-    {
-      device = "tank/virtualization/libvirt/images";
-      fsType = "zfs";
-      options = [ "noatime" "nodiratime" ];
-    };
-
-  fileSystems."/var/lib/libvirt/images/ssd" =
-    {
-      device = "tank/virtualization/libvirt/images/ssd";
-      fsType = "zfs";
-      options = [ "noatime" "nodiratime" ];
-    };
+  fileSystems = {
+    "/boot" = { device = "/dev/disk/by-uuid/3E1E-2057"; fsType = "vfat"; };
+    "/" = zfsFilesystem "tank/root/nixos";
+    "/nix" = zfsFilesystem "tank/root/nix";
+    "/home" = zfsFilesystem "tank/home";
+    "/var/lib/libvirt" = zfsFilesystem "tank/virtualization/libvirt";
+    "/var/lib/libvirt/images" = zfsFilesystem "tank/virtualization/libvirt/images";
+    "/var/lib/libvirt/images/ssd" = zfsFilesystem "tank/virtualization/libvirt/images/ssd";
+    "/storage/appdata/docker" = zfsFilesystem "tank/appdata/docker";
+    "/storage/appdata/games" = zfsFilesystem "tank/appdata/games";
+    "/storage/appdata/rclone" = zfsFilesystem "tank/appdata/rclone";
+    "/storage/backup/devices" = zfsFilesystem "tank/backup/devices";
+    "/storage/download" = zfsFilesystem "tank/download";
+    "/storage/media/books" = zfsFilesystem "tank/media/books";
+    "/storage/media/music" = zfsFilesystem "tank/media/music";
+    "/storage/media/recorded" = zfsFilesystem "tank/media/recorded";
+    "/storage/media/software" = zfsFilesystem "tank/media/software";
+    "/storage/media/videos" = zfsFilesystem "tank/media/videos";
+    "/storage/personal" = zfsFilesystem "tank/personal";
+    "/var/lib/containers" = zfsFilesystem "tank/virtualization/containers";
+    "/var/lib/docker" = zfsFilesystem "tank/virtualization/docker";
+  };
 
   swapDevices =
     [
