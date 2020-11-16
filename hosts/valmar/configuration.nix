@@ -199,6 +199,7 @@ in
           --device=/dev/sdb \
           --device=/dev/sdc \
           -e SCRUTINY_API_ENDPOINT=http://${secrets.network.home.hosts.elena.address}:8081 \
+          -e COLLECTOR_HOST_ID=${config.networking.hostName} \
           --name scrutiny-collector \
           analogj/scrutiny:collector \
           /scrutiny/bin/scrutiny-collector-metrics run
