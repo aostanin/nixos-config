@@ -194,10 +194,7 @@ in
           -v /run/udev:/run/udev:ro \
           --cap-add SYS_RAWIO \
           --cap-add SYS_ADMIN \
-          --device=/dev/nvme0 \
-          --device=/dev/sda \
-          --device=/dev/sdb \
-          --device=/dev/sdc \
+          $(find /dev \( -name "sd[a-z]" -o -name "nvme[0-9]" \) -printf "--device=%p ") \
           -e SCRUTINY_API_ENDPOINT=http://${secrets.network.home.hosts.elena.address}:8081 \
           -e COLLECTOR_HOST_ID=${config.networking.hostName} \
           --name scrutiny-collector \
