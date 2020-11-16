@@ -181,6 +181,31 @@ in
       "/mnt/games" = nfsFilesystem "/games";
     };
 
+  systemd = {
+    timers.scrutiny-collector = {
+      wantedBy = [ "timers.target" ];
+      partOf = [ "scrutiny-collector.service" ];
+      timerConfig.OnCalendar = "daily";
+    };
+    services.scrutiny-collector = {
+      serviceConfig.Type = "oneshot";
+      script = ''
+        ${pkgs.docker}/bin/docker run --rm \
+          -v /run/udev:/run/udev:ro \
+          --cap-add SYS_RAWIO \
+          --cap-add SYS_ADMIN \
+          --device=/dev/nvme0 \
+          --device=/dev/sda \
+          --device=/dev/sdb \
+          --device=/dev/sdc \
+          -e SCRUTINY_API_ENDPOINT=http://${secrets.network.home.hosts.elena.address}:8081 \
+          --name scrutiny-collector \
+          analogj/scrutiny:collector \
+          /scrutiny/bin/scrutiny-collector-metrics run
+      '';
+    };
+  };
+
   programs.adb.enable = true;
 
   virtualisation.docker = {
