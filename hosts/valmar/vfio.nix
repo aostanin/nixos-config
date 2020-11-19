@@ -1,17 +1,12 @@
 { config, pkgs, ... }:
 let
-  screamReceivers = (pkgs.scream-receivers.override { pulseSupport = true; });
   lookingGlassClient = (pkgs.callPackage ../../packages/looking-glass-client { });
   vfio-isolate = pkgs.python3Packages.callPackage ../../packages/vfio-isolate { };
   gameScript = pkgs.writeScriptBin "game" ''
     #!${pkgs.stdenv.shell}
 
     virsh start win10-play
-    ${lookingGlassClient}/bin/looking-glass-client &
-    ${screamReceivers}/bin/scream-pulse &
-
-    wait -n
-    pkill -P $$
+    ${lookingGlassClient}/bin/looking-glass-client
   '';
   # https://github.com/PassthroughPOST/VFIO-Tools/blob/master/libvirt_hooks/qemu
   qemuHook = pkgs.writeShellScript "qemu" ''
@@ -58,10 +53,7 @@ in
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
-      "default_hugepagesz=1G"
-      "hugepagesz=1G"
-      "hugepages=32"
-      #"vfio-pci.ids=1458:22f7,1458:aaf0" # RX 570
+      # "vfio-pci.ids=1458:22f7,1458:aaf0" # RX 570
       "vfio-pci.ids=10de:1e84,10de:10f8,10de:1ad8,10de:1ad9" # RTX 2070 Super
     ];
     extraModprobeConfig = ''
@@ -72,7 +64,6 @@ in
   environment.systemPackages = with pkgs; [
     gameScript
     lookingGlassClient
-    screamReceivers
     vfio-isolate
     virtmanager
   ];
