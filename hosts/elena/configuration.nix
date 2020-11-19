@@ -9,6 +9,7 @@ in
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
+    ../../modules/scrutiny
     ../../modules/ssmtp
     ../../modules/zerotier
     ../../home
