@@ -33,6 +33,7 @@ in
     "/storage/appdata/rclone" = zfsFilesystem "tank/appdata/rclone";
     "/storage/backup/devices" = zfsFilesystem "tank/backup/devices";
     "/storage/download" = zfsFilesystem "tank/download";
+    "/storage/media/adult" = zfsFilesystem "tank/media/adult";
     "/storage/media/books" = zfsFilesystem "tank/media/books";
     "/storage/media/music" = zfsFilesystem "tank/media/music";
     "/storage/media/recorded" = zfsFilesystem "tank/media/recorded";
