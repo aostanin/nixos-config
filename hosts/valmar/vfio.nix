@@ -99,5 +99,25 @@ in
         "/dev/input/by-id/usb-SINOWEALTH_Wired_Gaming_Mouse-event-mouse"
       ]
     '';
+    qemuPackage = (pkgs.qemu.overrideAttrs (attrs: {
+      patches = attrs.patches ++ [
+        # Workaround for RDR2 https://www.reddit.com/r/VFIO/comments/jy8ri4/a_possible_solution_to_red_dead_redemption_2_not/
+        (pkgs.writeText "fix-rdr2.patch" ''
+          --- a/include/hw/acpi/aml-build.h
+          +++ b/include/hw/acpi/aml-build.h
+          @@ -7,8 +7,8 @@
+           /* Reserve RAM space for tables: add another order of magnitude. */
+           #define ACPI_BUILD_TABLE_MAX_SIZE         0x200000
+
+          -#define ACPI_BUILD_APPNAME6 "BOCHS "
+          -#define ACPI_BUILD_APPNAME4 "BXPC"
+          +#define ACPI_BUILD_APPNAME6 "FUCK  "
+          +#define ACPI_BUILD_APPNAME4 "RCKS"
+
+           #define ACPI_BUILD_TABLE_FILE "etc/acpi/tables"
+           #define ACPI_BUILD_RSDP_FILE "etc/acpi/rsdp"
+        '')
+      ];
+    }));
   };
 }
