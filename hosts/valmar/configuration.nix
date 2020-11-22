@@ -37,7 +37,6 @@ in
     ];
     kernelModules = [
       "amdgpu"
-      "i2c-dev" # for ddcutil
       "it87"
     ];
     blacklistedKernelModules = [

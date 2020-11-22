@@ -137,15 +137,6 @@ with lib;
               "${pamixer}/bin/pamixer -t";
             "{XF86MonBrightnessUp,XF86MonBrightnessDown}" =
               "${xorg.xbacklight}/bin/xbacklight -{inc,dec} 10";
-          }
-          // optionalAttrs (sysconfig.networking.hostName == "valmar") {
-            "ctrl + alt + {1,2,3,4}" = # input switching
-              "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 3 setvcp 60 0x0{1,3,4,f}";
-            "ctrl + alt + 0" = concatStringsSep " && " [
-              # turn off display
-              "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 0 setvcp d6 0x05"
-              "/run/wrappers/bin/sudo ${ddcutil}/bin/ddcutil --bus 3 setvcp d6 0x05"
-            ];
           };
       };
 
