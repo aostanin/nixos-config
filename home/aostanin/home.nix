@@ -14,7 +14,7 @@ with lib;
     ./zsh
   ] ++ optionals sysconfig.services.xserver.enable [
     ./alacritty
-    ./chrome
+    ./chromium
     ./electronics
     ./gnupg
     ./obs-studio
