@@ -32,6 +32,7 @@
 
   # Fix for USB redirection in virt-manager
   # ref: https://github.com/NixOS/nixpkgs/issues/39618
+  # TODO: Once stable, switch to virtualisation.spiceUSBRedirection.enable
   security.wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice_gtk}/bin/spice-client-glib-usb-acl-helper";
 
   environment.systemPackages = with pkgs; [
