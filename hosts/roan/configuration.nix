@@ -74,7 +74,10 @@ in
     };
 
     zfs = {
-      autoScrub.enable = true;
+      autoScrub = {
+        enable = true;
+        interval = "monthly";
+      };
       autoSnapshot = {
         enable = true;
         monthly = 0;
