@@ -13,6 +13,7 @@ with lib;
     ./tmux
     ./zsh
   ] ++ optionals sysconfig.services.xserver.enable [
+    ./3dprinting
     ./alacritty
     ./chromium
     ./electronics
