@@ -90,6 +90,7 @@ with lib;
       # Chat
       discord
       element-desktop
+      skypeforlinux
       slack
       tdesktop
       zoom-us
