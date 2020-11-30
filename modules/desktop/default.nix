@@ -45,10 +45,19 @@
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # Needed for Flatpak
 
   services = {
+    avahi = {
+      enable = true;
+      nssmdns = true;
+    };
+
     blueman.enable = true;
     flatpak.enable = true;
     gnome3.gnome-keyring.enable = true;
-    printing.enable = true;
+
+    printing = {
+      enable = true;
+      drivers = [ pkgs.brlaser ];
+    };
 
     redshift = {
       enable = true;
