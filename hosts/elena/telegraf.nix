@@ -13,6 +13,11 @@
         };
         docker = { endpoint = "unix:///var/run/docker.sock"; };
         interrupts = { };
+        ipmi_sensor = {
+          interval = "30s";
+          timeout = "20s";
+          use_sudo = true;
+        };
         kernel = { };
         mem = { };
         net = { }; # TODO: interfaces
@@ -42,6 +47,10 @@
     {
       commands = [
         {
+          command = "${pkgs.ipmitool}/bin/ipmitool";
+          options = [ "NOPASSWD" ];
+        }
+        {
           command = "${pkgs.smartmontools}/bin/smartctl";
           options = [ "NOPASSWD" ];
         }
@@ -51,6 +60,7 @@
   ];
 
   systemd.services.telegraf.path = with pkgs; [
+    ipmitool
     lm_sensors
     smartmontools
     "/run/wrappers"
