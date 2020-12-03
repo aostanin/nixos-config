@@ -6,5 +6,6 @@
     freecad
     meshlab
     openscad
+    prusa-slicer
   ];
 }
