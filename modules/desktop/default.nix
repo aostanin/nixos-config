@@ -42,7 +42,10 @@
 
   location.provider = "geoclue2";
 
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # Needed for Flatpak
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # Needed for Flatpak
+  };
 
   services = {
     avahi = {
@@ -84,8 +87,11 @@
       layout = "jp";
 
       displayManager.lightdm.enable = true;
-      desktopManager.plasma5.enable = true;
       windowManager.i3.enable = true;
+
+      desktopManager.xfce.thunarPlugins = [
+        pkgs.xfce.thunar-archive-plugin
+      ];
     };
   };
 

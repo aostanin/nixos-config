@@ -24,8 +24,6 @@ with lib;
     ./autorandr
     ./dunst
     (import ./i3 (sysconfig))
-  ] ++ optionals sysconfig.services.xserver.desktopManager.plasma5.enable [
-    ./plasma
   ] ++ optionals sysconfig.programs.adb.enable [
     ./android
   ];
@@ -87,6 +85,7 @@ with lib;
       virtmanager
       wineWowPackages.stable
       xclip
+      xfce.thunar
 
       # Chat
       discord
@@ -95,6 +94,15 @@ with lib;
       slack
       tdesktop
       zoom-us
+
+      # Plasma
+      (ark.override { unfreeEnableUnrar = true; })
+      gwenview
+      kate
+      krdc
+      okular
+      plasma-browser-integration
+      spectacle
     ] ++ optionals (elem "amdgpu" sysconfig.services.xserver.videoDrivers) [
       radeontop
     ] ++ optionals (elem "intel" sysconfig.services.xserver.videoDrivers) [
