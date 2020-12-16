@@ -170,7 +170,6 @@ in
       ];
     };
     extraConfig = ''
-      exec --no-startup-id xset dpms 600
       exec --no-startup-id ${pkgs.autorandr}/bin/autorandr --change
       ${optionalString sysconfig.networking.networkmanager.enable ''
         exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable

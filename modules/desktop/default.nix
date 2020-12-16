@@ -85,6 +85,9 @@
     xserver = {
       enable = true;
       layout = "jp";
+      serverFlagsSection = ''
+        Option "OffTime" "5"
+      '';
 
       displayManager.lightdm.enable = true;
       windowManager.i3.enable = true;
