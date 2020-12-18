@@ -18,6 +18,7 @@ with lib;
     ./chromium
     ./electronics
     ./gnupg
+    ./gtk
     ./obs-studio
     ./vscode
   ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable [
