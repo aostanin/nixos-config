@@ -86,7 +86,6 @@ with lib;
       virtmanager
       wineWowPackages.stable
       xclip
-      xfce.thunar
 
       # Chat
       discord

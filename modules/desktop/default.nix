@@ -92,9 +92,15 @@
       displayManager.lightdm.enable = true;
       windowManager.i3.enable = true;
 
-      desktopManager.xfce.thunarPlugins = [
-        pkgs.xfce.thunar-archive-plugin
-      ];
+      desktopManager.xfce = {
+        enable = true;
+        noDesktop = true;
+        thunarPlugins = with pkgs.xfce; [
+          thunar-archive-plugin
+          thunar_volman
+          tumbler
+        ];
+      };
     };
   };
 
