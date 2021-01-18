@@ -30,6 +30,10 @@ in
       automatic = true;
       options = "--delete-older-than 30d";
     };
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
   };
 
   nixpkgs.config.allowUnfree = true;

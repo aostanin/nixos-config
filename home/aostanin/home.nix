@@ -122,7 +122,11 @@ with lib;
 
   programs =
     {
-      direnv.enable = true;
+      direnv = {
+        enable = true;
+        enableNixDirenvIntegration = true;
+      };
+
       starship.enable = true;
     }
     // optionalAttrs sysconfig.services.xserver.enable {
