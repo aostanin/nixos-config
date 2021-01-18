@@ -17,6 +17,7 @@ with lib;
     ./alacritty
     ./chromium
     ./electronics
+    ./firefox
     ./gnupg
     ./gtk
     ./obs-studio
@@ -101,7 +102,6 @@ with lib;
       kate
       krdc
       okular
-      plasma-browser-integration
       spectacle
     ] ++ optionals (elem "amdgpu" sysconfig.services.xserver.videoDrivers) [
       radeontop
@@ -112,6 +112,7 @@ with lib;
     ];
 
     sessionVariables = {
+      BROWSER = "firefox";
       EDITOR = "vi";
       VISUAL = config.home.sessionVariables.EDITOR;
       MANPAGER = "sh -c 'col -bx | ${pkgs.bat}/bin/bat -l man -p'";
@@ -124,7 +125,6 @@ with lib;
       starship.enable = true;
     }
     // optionalAttrs sysconfig.services.xserver.enable {
-      firefox.enable = true;
       mpv.enable = true;
     };
 
