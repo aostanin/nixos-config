@@ -60,6 +60,7 @@ with lib;
       ranger
       rclone
       ripgrep
+      tealdeer
       tig
       tmuxp
       tokei
