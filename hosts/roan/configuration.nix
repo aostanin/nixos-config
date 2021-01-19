@@ -1,11 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, hardwareModulesPath, ... }:
 let
   secrets = import ../../secrets;
 in
 {
   imports = [
-    <nixos-hardware/lenovo/thinkpad/x250>
-    <nixos-hardware/common/pc/laptop/ssd>
+    "${hardwareModulesPath}/lenovo/thinkpad/x250"
+    "${hardwareModulesPath}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
@@ -13,7 +13,6 @@ in
     ../../modules/ssmtp
     ../../modules/syncthing
     ../../modules/zerotier
-    ../../home
   ];
 
   variables = {
