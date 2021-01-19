@@ -13,6 +13,9 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, nur, deploy-rs }: {
     nixosConfigurations.mareg = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
+      specialArgs = {
+        hardwareModulesPath = nixos-hardware;
+      };
       modules = [
         {
           nixpkgs = {
@@ -28,8 +31,6 @@
             ] ++ (import ./home/aostanin/nixpkgs/overlays.nix);
           };
         }
-        nixos-hardware.nixosModules.lenovo-thinkpad-t440p
-        nixos-hardware.nixosModules.common-pc-laptop-ssd
         ./hosts/mareg/configuration.nix
         home-manager.nixosModules.home-manager
         {
