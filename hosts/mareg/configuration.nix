@@ -1,9 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, hardwareModulesPath, ... }:
 let
   secrets = import ../../secrets;
 in
 {
   imports = [
+    "${hardwareModulesPath}/lenovo/thinkpad/t440p"
+    "${hardwareModulesPath}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
