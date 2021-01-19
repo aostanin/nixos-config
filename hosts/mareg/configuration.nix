@@ -4,8 +4,6 @@ let
 in
 {
   imports = [
-    <nixos-hardware/lenovo/thinkpad/t440p>
-    <nixos-hardware/common/pc/laptop/ssd>
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
@@ -13,7 +11,6 @@ in
     ../../modules/ssmtp
     ../../modules/syncthing
     ../../modules/zerotier
-    ../../home
   ];
 
   variables = {

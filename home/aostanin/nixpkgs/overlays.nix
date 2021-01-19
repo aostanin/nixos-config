@@ -1,8 +1,6 @@
 [
   (
     self: super: {
-      unstable = import <unstable> { };
-
       # TODO: Make this compatible with host systems
       crazydiskinfo = super.callPackage ../../../packages/crazydiskinfo { };
       dedbae = super.callPackage ../../../packages/dedbae { };

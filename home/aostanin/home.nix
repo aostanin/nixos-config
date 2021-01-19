@@ -1,5 +1,4 @@
-sysconfig:
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, nixosConfig, ... }:
 
 with lib;
 
@@ -12,7 +11,7 @@ with lib;
     ./ssh
     ./tmux
     ./zsh
-  ] ++ optionals sysconfig.services.xserver.enable [
+  ] ++ optionals nixosConfig.services.xserver.enable [
     ./3dprinting
     ./alacritty
     ./chromium
@@ -22,18 +21,15 @@ with lib;
     ./gtk
     ./obs-studio
     ./vscode
-  ] ++ optionals sysconfig.services.xserver.windowManager.i3.enable [
+  ] ++ optionals nixosConfig.services.xserver.windowManager.i3.enable [
     ./autorandr
     ./dunst
-    (import ./i3 (sysconfig))
-  ] ++ optionals sysconfig.programs.adb.enable [
+    ./i3
+  ] ++ optionals nixosConfig.programs.adb.enable [
     ./android
   ];
 
-  nixpkgs.config = import ./nixpkgs/config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs/config.nix;
-
-  nixpkgs.overlays = import ./nixpkgs/overlays.nix;
   xdg.configFile."nixpkgs/overlays.nix".source = ./nixpkgs/overlays.nix;
 
   home = {
@@ -69,7 +65,7 @@ with lib;
       wol
       youtube-dl
       ytop
-    ] ++ optionals sysconfig.services.xserver.enable [
+    ] ++ optionals nixosConfig.services.xserver.enable [
       # GUI
       barrier
       bitwarden
@@ -104,11 +100,11 @@ with lib;
       krdc
       okular
       spectacle
-    ] ++ optionals (elem "amdgpu" sysconfig.services.xserver.videoDrivers) [
+    ] ++ optionals (elem "amdgpu" nixosConfig.services.xserver.videoDrivers) [
       radeontop
-    ] ++ optionals (elem "intel" sysconfig.services.xserver.videoDrivers) [
+    ] ++ optionals (elem "intel" nixosConfig.services.xserver.videoDrivers) [
       intel-gpu-tools
-    ] ++ optionals (elem "nvidia" sysconfig.services.xserver.videoDrivers) [
+    ] ++ optionals (elem "nvidia" nixosConfig.services.xserver.videoDrivers) [
       nvtop
     ];
 
@@ -129,7 +125,7 @@ with lib;
 
       starship.enable = true;
     }
-    // optionalAttrs sysconfig.services.xserver.enable {
+    // optionalAttrs nixosConfig.services.xserver.enable {
       mpv.enable = true;
     };
 
@@ -137,7 +133,7 @@ with lib;
     {
       lorri.enable = true;
     }
-    // optionalAttrs sysconfig.services.xserver.enable {
+    // optionalAttrs nixosConfig.services.xserver.enable {
       blueman-applet.enable = true;
 
       sxhkd = {
