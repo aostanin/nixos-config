@@ -34,6 +34,7 @@
                 })
               ] ++ (import ./home/aostanin/nixpkgs/overlays.nix);
             };
+            system.stateVersion = "20.09";
           }
           (./hosts + "/${hostname}/configuration.nix")
           home-manager.nixosModules.home-manager
