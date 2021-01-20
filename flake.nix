@@ -14,11 +14,11 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, nur, deploy-rs, flake-utils }:
     let
       secrets = import ./secrets;
-      system = "x86_64-linux";
-      mkNixosSystem = hostname: nixpkgs.lib.nixosSystem {
+      mkNixosSystem = { hostname, system ? "x86_64-linux", extraModules ? [ ] }: nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
           hardwareModulesPath = nixos-hardware;
+          homeModulesPath = home-manager.nixosModules;
         };
         modules = [
           {
@@ -43,9 +43,9 @@
             home-manager.useUserPackages = true;
             home-manager.users = import ./home;
           }
-        ];
+        ] ++ extraModules;
       };
-      mkNode = hostname: {
+      mkNode = { hostname }: {
         hostname = secrets.network.zerotier.hosts."${hostname}".address;
         sshUser = "aostanin";
         fastConnection = true;
@@ -60,17 +60,17 @@
     in
     {
       nixosConfigurations = {
-        elena = mkNixosSystem "elena";
-        mareg = mkNixosSystem "mareg";
-        roan = mkNixosSystem "roan";
-        valmar = mkNixosSystem "valmar";
+        elena = mkNixosSystem { hostname = "elena"; };
+        mareg = mkNixosSystem { hostname = "mareg"; };
+        roan = mkNixosSystem { hostname = "roan"; };
+        valmar = mkNixosSystem { hostname = "valmar"; };
       };
 
       deploy.nodes = {
-        elena = mkNode "elena";
-        mareg = mkNode "mareg";
-        roan = mkNode "roan";
-        valmar = mkNode "valmar";
+        elena = mkNode { hostname = "elena"; };
+        mareg = mkNode { hostname = "mareg"; };
+        roan = mkNode { hostname = "roan"; };
+        valmar = mkNode { hostname = "valmar"; };
       };
 
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
