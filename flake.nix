@@ -50,7 +50,7 @@
       };
       mkNode = { hostname }: {
         hostname = secrets.network.zerotier.hosts."${hostname}".address;
-        sshUser = "aostanin";
+        sshUser = "root";
         fastConnection = true;
 
         profiles = {
