@@ -8,9 +8,10 @@
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager/release-20.09";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, nur, deploy-rs }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, nur, deploy-rs, flake-utils }:
     let
       secrets = import ./secrets;
       system = "x86_64-linux";
@@ -74,5 +75,20 @@
       };
 
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+
+      devShell = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (system:
+        with nixpkgs.legacyPackages.${system}; mkShell {
+          buildInputs = [
+            cargo # For nixpkgs-fmt
+            git-crypt
+            nixos-generators
+            pre-commit
+            deploy-rs.defaultPackage.${system} # TODO: There has to be a better way to write this?
+          ];
+
+          shellHook = ''
+            pre-commit install -f --hook-type pre-commit
+          '';
+        });
     };
 }
