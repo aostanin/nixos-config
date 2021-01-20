@@ -1,8 +1,5 @@
 { pkgs, config, lib, ... }:
 let
-  nur = import <nur> {
-    inherit pkgs;
-  };
   defaultSettings = {
     "identity.sync.tokenserver.uri" = "***REMOVED***";
     "browser.aboutConfig.showWarning" = false;
@@ -22,7 +19,7 @@ in
         settings = defaultSettings // { };
       };
     };
-    extensions = with nur.repos.rycee.firefox-addons; [
+    extensions = with pkgs.nur.repos.rycee.firefox-addons; [
       bitwarden
       clearurls
       decentraleyes

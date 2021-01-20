@@ -1,11 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, hardwareModulesPath, ... }:
 let
   secrets = import ../../secrets;
 in
 {
   imports = [
-    <nixos-hardware/common/cpu/amd>
-    <nixos-hardware/common/pc/ssd>
+    "${hardwareModulesPath}/common/cpu/amd"
+    "${hardwareModulesPath}/common/pc/ssd"
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
@@ -14,7 +14,6 @@ in
     ../../modules/ssmtp
     ../../modules/syncthing
     ../../modules/zerotier
-    ../../home
     ./ipxe.nix
     ./telegraf.nix
     ./vfio.nix

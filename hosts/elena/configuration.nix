@@ -1,18 +1,17 @@
-{ config, pkgs, ... }:
+{ config, pkgs, hardwareModulesPath, ... }:
 let
   secrets = import ../../secrets;
 in
 {
   imports = [
-    <nixos-hardware/common/cpu/intel>
-    <nixos-hardware/common/pc/ssd>
+    "${hardwareModulesPath}/common/cpu/intel"
+    "${hardwareModulesPath}/common/pc/ssd"
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
     ../../modules/scrutiny
     ../../modules/ssmtp
     ../../modules/zerotier
-    ../../home
     ./telegraf.nix
   ];
 
@@ -281,32 +280,6 @@ in
         };
         wantedBy = [ "multi-user.target" ];
         path = with pkgs; [ kmod utillinux ];
-      };
-    };
-  };
-
-  containers.shell = {
-    autoStart = true;
-    privateNetwork = true;
-    hostBridge = "br0";
-
-    bindMounts = {
-      "/home" = { hostPath = "/home"; isReadOnly = false; };
-      "/storage/download" = { hostPath = "/storage/download"; isReadOnly = false; };
-      "/storage/media" = { hostPath = "/storage/media"; isReadOnly = false; };
-      "/storage/personal" = { hostPath = "/storage/personal"; isReadOnly = false; };
-    };
-
-    config = { config, pkgs, ... }: {
-      imports = [
-        ../../modules/common
-        ../../home
-      ];
-
-      networking = {
-        hostName = "aostanin-shell";
-        hostId = "1a2fc380";
-        interfaces.eth0.useDHCP = true;
       };
     };
   };

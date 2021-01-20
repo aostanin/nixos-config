@@ -1,5 +1,4 @@
-sysconfig:
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, nixosConfig, ... }:
 
 with lib;
 let
@@ -116,7 +115,7 @@ in
                 interval = 1
                 format = "{1m}"
 
-                ${optionalString sysconfig.variables.hasBattery ''
+                ${optionalString nixosConfig.variables.hasBattery ''
                   [[block]]
                   block = "battery"
                   driver = "upower"
@@ -125,7 +124,7 @@ in
                   format = "{percentage}%"
                 ''}
 
-                ${optionalString sysconfig.variables.hasBacklightControl ''
+                ${optionalString nixosConfig.variables.hasBacklightControl ''
                   [[block]]
                   block = "backlight"
                 ''}
@@ -171,7 +170,7 @@ in
     };
     extraConfig = ''
       exec --no-startup-id ${pkgs.autorandr}/bin/autorandr --change
-      ${optionalString sysconfig.networking.networkmanager.enable ''
+      ${optionalString nixosConfig.networking.networkmanager.enable ''
         exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable
       ''}
       exec --no-startup-id ${pkgs.pasystray}/bin/pasystray --notify=none
