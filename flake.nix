@@ -47,10 +47,8 @@
       };
       mkNode = hostname: {
         hostname = secrets.network.zerotier.hosts."${hostname}".address;
-        sshUser = "root";
+        sshUser = "aostanin";
         fastConnection = true;
-        autoRollback = false;
-        magicRollback = false;
 
         profiles = {
           system = {
