@@ -283,30 +283,4 @@ in
       };
     };
   };
-
-  containers.shell = {
-    autoStart = true;
-    privateNetwork = true;
-    hostBridge = "br0";
-
-    bindMounts = {
-      "/home" = { hostPath = "/home"; isReadOnly = false; };
-      "/storage/download" = { hostPath = "/storage/download"; isReadOnly = false; };
-      "/storage/media" = { hostPath = "/storage/media"; isReadOnly = false; };
-      "/storage/personal" = { hostPath = "/storage/personal"; isReadOnly = false; };
-    };
-
-    config = { config, pkgs, ... }: {
-      imports = [
-        ../../modules/common
-        ../../home
-      ];
-
-      networking = {
-        hostName = "aostanin-shell";
-        hostId = "1a2fc380";
-        interfaces.eth0.useDHCP = true;
-      };
-    };
-  };
 }
