@@ -6,7 +6,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.09";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
-    home-manager.url = "github:nix-community/home-manager/release-20.09";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-20.09";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     flake-utils.url = "github:numtide/flake-utils";
   };
