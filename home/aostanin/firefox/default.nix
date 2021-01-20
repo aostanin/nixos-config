@@ -1,8 +1,5 @@
 { pkgs, config, lib, ... }:
 let
-  nur = import <nur> {
-    inherit pkgs;
-  };
   defaultSettings = {
     "identity.sync.tokenserver.uri" = "https://firefox-sync.ostan.in/token/1.0/sync/1.5";
     "browser.aboutConfig.showWarning" = false;
@@ -22,7 +19,7 @@ in
         settings = defaultSettings // { };
       };
     };
-    extensions = with nur.repos.rycee.firefox-addons; [
+    extensions = with pkgs.nur.repos.rycee.firefox-addons; [
       bitwarden
       clearurls
       decentraleyes
