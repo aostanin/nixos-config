@@ -35,6 +35,7 @@ in
     "/storage/media/music" = zfsFilesystem "tank/media/music";
     "/storage/media/recorded" = zfsFilesystem "tank/media/recorded";
     "/storage/media/software" = zfsFilesystem "tank/media/software";
+    "/storage/media/streams" = zfsFilesystem "tank/media/streams";
     "/storage/media/videos" = zfsFilesystem "tank/media/videos";
     "/storage/personal" = zfsFilesystem "tank/personal";
     "/var/lib/containers" = zfsFilesystem "tank/virtualization/containers";
