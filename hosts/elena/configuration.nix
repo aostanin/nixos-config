@@ -231,12 +231,22 @@ in
   '';
 
   systemd = {
-    timers.cleanup-recorded-videos = {
-      wantedBy = [ "timers.target" ];
-      partOf = [ "cleanup-recorded-videos.service" ];
-      timerConfig = {
-        OnCalendar = "daily";
-        RandomizedDelaySec = "5h";
+    timers = {
+      cleanup-recorded-videos = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "cleanup-recorded-videos.service" ];
+        timerConfig = {
+          OnCalendar = "daily";
+          RandomizedDelaySec = "5h";
+        };
+      };
+      sync-youtube = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "sync-youtube.service" ];
+        timerConfig = {
+          OnCalendar = "hourly";
+          RandomizedDelaySec = "30m";
+        };
       };
     };
     services = {
@@ -266,6 +276,14 @@ in
                 os.remove(file)
           '';
         };
+      };
+      sync-youtube = {
+        serviceConfig = {
+          Type = "oneshot";
+          User = "aostanin";
+          ExecStart = "/storage/media/streams/youtube/sync.sh";
+        };
+        path = with pkgs; [ youtube-dl ];
       };
       iscsi-target = {
         description = "Restore LIO kernel target configuration";
