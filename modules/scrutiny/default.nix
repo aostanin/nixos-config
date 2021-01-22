@@ -7,7 +7,10 @@ in
     timers.scrutiny-collector = {
       wantedBy = [ "timers.target" ];
       partOf = [ "scrutiny-collector.service" ];
-      timerConfig.OnCalendar = "daily";
+      timerConfig = {
+        OnCalendar = "daily";
+        RandomizedDelaySec = "5h";
+      };
     };
     services.scrutiny-collector = {
       serviceConfig.Type = "oneshot";
