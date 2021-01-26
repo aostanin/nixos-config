@@ -13,6 +13,10 @@
       vfio-isolate = super.python3Packages.callPackage ../../../packages/vfio-isolate { };
 
       looking-glass-client = super.callPackage ../../../packages/looking-glass-client { };
+
+      # TODO: Temporarily import from https://github.com/NixOS/nixpkgs/pull/89689
+      minipro = super.callPackage ../../../packages/minipro { };
+      minipro-unstable = super.callPackage ../../../packages/minipro/unstable.nix { };
     }
   )
 ]
