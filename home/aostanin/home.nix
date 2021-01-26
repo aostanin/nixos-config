@@ -82,6 +82,7 @@ with lib;
       syncthing-gtk
       thunderbird
       virtmanager
+      virtscreen
       wineWowPackages.stable
       xclip
 
