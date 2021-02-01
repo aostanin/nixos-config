@@ -4,6 +4,10 @@ let
     "identity.sync.tokenserver.uri" = "***REMOVED***";
     "browser.aboutConfig.showWarning" = false;
     "browser.tabs.warnOnClose" = false;
+
+    # Performance
+    "layers.acceleration.force-enabled" = true;
+    "gfx.webrender.all" = true;
   };
 in
 {
