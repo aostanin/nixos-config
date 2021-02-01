@@ -4,6 +4,10 @@ let
     "identity.sync.tokenserver.uri" = "https://firefox-sync.ostan.in/token/1.0/sync/1.5";
     "browser.aboutConfig.showWarning" = false;
     "browser.tabs.warnOnClose" = false;
+
+    # Performance
+    "layers.acceleration.force-enabled" = true;
+    "gfx.webrender.all" = true;
   };
 in
 {
