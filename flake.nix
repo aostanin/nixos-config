@@ -52,6 +52,8 @@
         hostname = secrets.network.zerotier.hosts."${hostname}".address;
         sshUser = "root";
         fastConnection = true;
+        autoRollback = false;
+        magicRollback = false;
 
         profiles = {
           system = {
