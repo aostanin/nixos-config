@@ -240,14 +240,6 @@ in
           RandomizedDelaySec = "5h";
         };
       };
-      sync-youtube = {
-        wantedBy = [ "timers.target" ];
-        partOf = [ "sync-youtube.service" ];
-        timerConfig = {
-          OnCalendar = "hourly";
-          RandomizedDelaySec = "30m";
-        };
-      };
     };
     services = {
       cleanup-recorded-videos = {
@@ -276,14 +268,6 @@ in
                 os.remove(file)
           '';
         };
-      };
-      sync-youtube = {
-        serviceConfig = {
-          Type = "oneshot";
-          User = "aostanin";
-          ExecStart = "/storage/media/streams/youtube/sync.sh";
-        };
-        path = with pkgs; [ youtube-dl ];
       };
       iscsi-target = {
         description = "Restore LIO kernel target configuration";
