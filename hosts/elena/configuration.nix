@@ -249,7 +249,7 @@ in
             import glob
             import os
 
-            DIR = '/storage/recorded'
+            DIR = '/storage/media/recorded'
             MAX_USED_SPACE = 2 * 1024 * 1024 * 1024 * 1024  # 2 TB
 
 
