@@ -40,7 +40,7 @@ in
     '';
   };
 
-  services.mingetty.serialSpeed = [ 115200 ];
+  services.getty.serialSpeed = [ 115200 ];
 
   networking = {
     hostName = "elena";

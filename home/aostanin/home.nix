@@ -36,6 +36,7 @@ with lib;
     packages = with pkgs; [
       bat
       (beets.override { enableSonosUpdate = false; })
+      bottom
       catt
       cksfv
       ctop
@@ -64,7 +65,6 @@ with lib;
       tuir
       wol
       youtube-dl
-      ytop
     ] ++ optionals nixosConfig.services.xserver.enable [
       # GUI
       barrier

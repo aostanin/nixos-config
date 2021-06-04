@@ -17,7 +17,6 @@ in
     viAlias = true;
     vimAlias = true;
     withNodeJs = false;
-    withPython = false;
     withPython3 = false;
     withRuby = false;
     plugins = with pkgs.vimPlugins; [
