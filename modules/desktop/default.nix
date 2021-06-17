@@ -3,7 +3,6 @@
 {
   boot = {
     extraModulePackages = with config.boot.kernelPackages; [
-      exfat-nofuse
       v4l2loopback
     ];
     kernelModules = [
