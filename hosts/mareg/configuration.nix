@@ -11,7 +11,6 @@ in
     ../../modules/common
     ../../modules/desktop
     ../../modules/ssmtp
-    ../../modules/syncthing
     ../../modules/zerotier
   ];
 

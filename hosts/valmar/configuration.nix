@@ -12,7 +12,6 @@ in
     ../../modules/desktop
     ../../modules/scrutiny
     ../../modules/ssmtp
-    ../../modules/syncthing
     ../../modules/zerotier
     ./ipxe.nix
     ./telegraf.nix

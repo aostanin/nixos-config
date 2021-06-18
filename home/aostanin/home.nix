@@ -20,6 +20,7 @@ with lib;
     ./gnupg
     ./gtk
     ./obs-studio
+    ./syncthing
     ./vscode
   ] ++ optionals nixosConfig.services.xserver.windowManager.i3.enable [
     ./autorandr
@@ -79,7 +80,6 @@ with lib;
       libreoffice
       peek
       steam
-      syncthing-gtk
       thunderbird
       virtmanager
       virtscreen

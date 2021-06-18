@@ -39,7 +39,6 @@ in
   nixpkgs.config = {
     allowUnfree = true;
     joypixels.acceptLicense = true;
-    allowBroken = true;
   };
 
   security.sudo.wheelNeedsPassword = false;
