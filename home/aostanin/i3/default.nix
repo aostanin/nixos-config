@@ -13,6 +13,7 @@ in
     enable = true;
     config = {
       modifier = "Mod4";
+      terminal = "alacritty";
       focus.followMouse = false;
       keybindings =
         let
@@ -173,6 +174,7 @@ in
       ];
     };
     extraConfig = ''
+      exec systemctl --user import-environment
       exec --no-startup-id ${pkgs.autorandr}/bin/autorandr --change
       ${optionalString nixosConfig.networking.networkmanager.enable ''
         exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable
