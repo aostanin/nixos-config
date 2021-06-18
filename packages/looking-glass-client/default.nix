@@ -1,4 +1,5 @@
 { stdenv
+, lib
 , fetchFromGitHub
 , fetchpatch
 , cmake
@@ -66,7 +67,7 @@ stdenv.mkDerivation rec {
     mv looking-glass-client $out/bin
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A KVM Frame Relay (KVMFR) implementation";
     longDescription = ''
       Looking Glass is an open source application that allows the use of a KVM
