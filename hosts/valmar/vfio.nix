@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  lookingGlassClient = (pkgs.callPackage ../../packages/looking-glass-client { });
+  lookingGlassClient = pkgs.looking-glass-client;
   vfio-isolate = pkgs.python3Packages.callPackage ../../packages/vfio-isolate { };
   gameScript = pkgs.writeScriptBin "game" ''
     #!${pkgs.stdenv.shell}
