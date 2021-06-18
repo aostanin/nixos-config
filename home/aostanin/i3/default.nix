@@ -105,8 +105,8 @@ in
                 [[block]]
                 block = "memory"
                 display_type = "memory"
-                format_mem = "{Mup}%"
-                format_swap = "{SUp}%"
+                format_mem = "{mem_used_percents}%"
+                format_swap = "{swap_used_percents}%"
 
                 [[block]]
                 block = "cpu"
@@ -174,15 +174,12 @@ in
       ];
     };
     extraConfig = ''
-      exec systemctl --user import-environment
       exec --no-startup-id ${pkgs.autorandr}/bin/autorandr --change
       ${optionalString nixosConfig.networking.networkmanager.enable ''
         exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable
       ''}
       exec --no-startup-id ${pkgs.pasystray}/bin/pasystray --notify=none
       exec --no-startup-id ${pkgs.barrier}/bin/barrier
-      exec --no-startup-id ${pkgs.syncthing-gtk}/bin/syncthing-gtk --minimized
-      exec --no-startup-id ${pkgs.flameshot}/bin/flameshot
 
       for_window [class="mpv"] floating enable border none
       for_window [class=".*scrcpy.*"] floating enable border none
@@ -212,6 +209,8 @@ in
   };
 
   services = {
+    flameshot.enable = true;
+
     kdeconnect = {
       enable = true;
       indicator = true;
