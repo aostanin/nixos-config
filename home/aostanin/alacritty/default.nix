@@ -1,10 +1,6 @@
 { pkgs, config, lib, ... }:
 
 {
-  pam.sessionVariables = {
-    TERMINAL = "${pkgs.alacritty}/bin/alacritty";
-  };
-
   programs.alacritty = {
     enable = true;
     settings = {
