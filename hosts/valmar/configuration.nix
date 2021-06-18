@@ -16,7 +16,7 @@ in
     ../../modules/zerotier
     ./ipxe.nix
     ./telegraf.nix
-    # ./vfio.nix
+    ./vfio.nix
   ];
 
   boot = {

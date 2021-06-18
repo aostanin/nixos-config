@@ -11,6 +11,12 @@ buildPythonPackage rec {
     sha256 = "03n53ylrdsp7qpcyra7qmx8gbjrf16hyipm0777kqfy1qy8pmv45";
   };
 
+  preConfigure = ''
+    sed -i \
+      -e 's/psutil~=5.7.0/psutil~=5.8.0/' \
+      setup.py
+  '';
+
   propagatedBuildInputs = [
     click
     parsimonious
