@@ -35,7 +35,7 @@ with lib;
   home = {
     packages = with pkgs; [
       bat
-      (beets.override { enableSonosUpdate = false; })
+      beets
       bottom
       catt
       cksfv

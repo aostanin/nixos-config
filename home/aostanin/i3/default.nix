@@ -49,7 +49,9 @@ in
         "Escape" = "mode default";
         "Return" = "mode default";
       };
-      fonts = [ "Hack Nerd Font 9" ];
+      fonts = {
+        names = [ "Hack Nerd Font 9" ];
+      };
       colors = {
         focused = {
           border = "#689d6a";
@@ -139,7 +141,9 @@ in
               '';
             in
             "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
-          fonts = [ "Hack Nerd Font 10" ];
+          fonts = {
+            names = [ "Hack Nerd Font 10" ];
+          };
           colors = {
             separator = "#928374";
             background = "#282828";
@@ -196,12 +200,12 @@ in
     rofi = {
       enable = true;
       theme = "gruvbox-dark";
-      extraConfig = ''
-        rofi.modi: window,drun,run,ssh,combi
-        rofi.combi-modi: window,drun,ssh
-        rofi.show-icons: true
-        rofi.parse-known-hosts: false
-      '';
+      extraConfig = {
+        modi = "window,drun,run,ssh,combi";
+        combi-modi = "window,drun,ssh";
+        show-icons = true;
+        parse-known-hosts = false;
+      };
     };
   };
 
