@@ -16,7 +16,6 @@ stdenv.mkDerivation rec {
       androidenv.androidPkgs_9_0.platform-tools
       ffmpeg
       hplip
-      qt5.qttools
       xclip
     ]}
     done
