@@ -11,7 +11,6 @@ in
     ../../modules/common
     ../../modules/desktop
     ../../modules/ssmtp
-    ../../modules/syncthing
     ../../modules/zerotier
   ];
 
@@ -57,13 +56,12 @@ in
       xkbOptions = "ctrl:nocaps, shift:both_capslock";
       libinput = {
         enable = true;
-        clickMethod = "clickfinger";
-        naturalScrolling = true;
-        tapping = false;
+        touchpad = {
+          clickMethod = "clickfinger";
+          naturalScrolling = true;
+          tapping = false;
+        };
       };
-      displayManager.sessionCommands = ''
-        xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Natural Scrolling Enabled" 0
-      '';
     };
 
     zfs = {

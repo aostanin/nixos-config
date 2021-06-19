@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  lookingGlassClient = (pkgs.callPackage ../../packages/looking-glass-client { });
+  lookingGlassClient = pkgs.looking-glass-client;
   vfio-isolate = pkgs.python3Packages.callPackage ../../packages/vfio-isolate { };
   gameScript = pkgs.writeScriptBin "game" ''
     #!${pkgs.stdenv.shell}
@@ -74,6 +74,10 @@ in
   ];
 
   systemd = {
+    # TODO: vfio-isolate doesn't support cgroups v2 yet
+    # ref: https://github.com/spheenik/vfio-isolate/issues/6
+    enableUnifiedCgroupHierarchy = false;
+
     services.libvirtd = {
       path = with pkgs; [
         stdenv.shell
