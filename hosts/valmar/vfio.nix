@@ -74,6 +74,10 @@ in
   ];
 
   systemd = {
+    # TODO: vfio-isolate doesn't support cgroups v2 yet
+    # ref: https://github.com/spheenik/vfio-isolate/issues/6
+    enableUnifiedCgroupHierarchy = false;
+
     services.libvirtd = {
       path = with pkgs; [
         stdenv.shell
