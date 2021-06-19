@@ -20,6 +20,7 @@ with lib;
     ./gnupg
     ./gtk
     ./obs-studio
+    ./syncthing
     ./vscode
   ] ++ optionals nixosConfig.services.xserver.windowManager.i3.enable [
     ./autorandr
@@ -35,7 +36,8 @@ with lib;
   home = {
     packages = with pkgs; [
       bat
-      (beets.override { enableSonosUpdate = false; })
+      beets
+      bottom
       catt
       cksfv
       ctop
@@ -64,7 +66,6 @@ with lib;
       tuir
       wol
       youtube-dl
-      ytop
     ] ++ optionals nixosConfig.services.xserver.enable [
       # GUI
       barrier
@@ -79,7 +80,6 @@ with lib;
       libreoffice
       peek
       steam
-      syncthing-gtk
       thunderbird
       virtmanager
       virtscreen

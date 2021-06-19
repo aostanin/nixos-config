@@ -3,7 +3,6 @@
 {
   boot = {
     extraModulePackages = with config.boot.kernelPackages; [
-      exfat-nofuse
       v4l2loopback
     ];
     kernelModules = [
@@ -55,7 +54,7 @@
 
     blueman.enable = true;
     flatpak.enable = true;
-    gnome3.gnome-keyring.enable = true;
+    gnome.gnome-keyring.enable = true;
 
     printing = {
       enable = true;
