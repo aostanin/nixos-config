@@ -105,12 +105,12 @@ in
                 [[block]]
                 block = "memory"
                 display_type = "memory"
-                format_mem = "{mem_used_percents}%"
-                format_swap = "{swap_used_percents}%"
+                format_mem = "{mem_used_percents}"
+                format_swap = "{swap_used_percents}"
 
                 [[block]]
                 block = "cpu"
-                format = "{utilization}%"
+                format = "{utilization}"
                 interval = 1
 
                 [[block]]
@@ -124,7 +124,7 @@ in
                   driver = "upower"
                   device = "DisplayDevice"
                   interval = 10
-                  format = "{percentage}%"
+                  format = "{percentage}"
                 ''}
 
                 ${optionalString nixosConfig.variables.hasBacklightControl ''
