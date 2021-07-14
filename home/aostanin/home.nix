@@ -40,6 +40,7 @@ with lib;
       bottom
       catt
       cksfv
+      nur.repos.xe.comma
       ctop
       dhex
       exa
