@@ -165,9 +165,8 @@ with lib;
       device = up
 
       [aliases]
-      up = Upstairs TV
-      down = Downstairs Home Hub
-      stereo = Upstairs Stereo
+      kitchen = Kitchen Home Hub Max
+      bedroom = Bedroom TV
     '';
 
     "libvirt/libvirt.conf".text = ''
