@@ -2,13 +2,13 @@
 
 buildPythonPackage rec {
   pname = "vfio-isolate";
-  version = "master";
+  version = "0.4.0";
 
   src = fetchFromGitHub {
     owner = "spheenik";
     repo = pname;
-    rev = "6c16cf363a627f02202586a17df58522e097ef10";
-    sha256 = "03n53ylrdsp7qpcyra7qmx8gbjrf16hyipm0777kqfy1qy8pmv45";
+    rev = "20cc2e4a6dd863f563c07b9cda1617dbe729fbf8";
+    sha256 = "1nlg3p8j91p9cw6cxbf1k7m45kagdm4zs01bi6ilzw9mqk6c7h1b";
   };
 
   preConfigure = ''
@@ -22,4 +22,7 @@ buildPythonPackage rec {
     parsimonious
     psutil
   ];
+
+  # Will fail if cgroups aren't mounted
+  doCheck = false;
 }
