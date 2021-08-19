@@ -87,6 +87,8 @@
             git-crypt
             nixos-generators
             pre-commit
+          ] ++ lib.optionals (builtins.hasAttr system deploy-rs.defaultPackage) [
+            # deploy-rs is missing aarch64-darwin
             deploy-rs.defaultPackage.${system} # TODO: There has to be a better way to write this?
           ];
 
