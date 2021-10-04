@@ -124,9 +124,12 @@ in
         monthly = 0;
       };
       trim.enable = true;
-      zed.settings = {
-        ZED_EMAIL_ADDR = secrets.user.emailAddress;
-        ZED_NOTIFY_VERBOSE = true;
+      zed = {
+        enableMail = true;
+        settings = {
+          ZED_EMAIL_ADDR = secrets.user.emailAddress;
+          ZED_NOTIFY_VERBOSE = true;
+        };
       };
     };
 
