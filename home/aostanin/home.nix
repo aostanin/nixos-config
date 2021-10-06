@@ -81,6 +81,7 @@ with lib;
       libreoffice
       peek
       steam
+      (sublime-music.override { chromecastSupport = true; })
       thunderbird
       virtmanager
       virtscreen
