@@ -158,6 +158,15 @@ in
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
+        "tank/media/audiobooks" = {
+          recursive = true;
+          plan = "1day=>1hour,1week=>1day,1month=>1week";
+          destinations.remote = {
+            host = "valmar";
+            dataset = "tank/backup/hosts/${config.networking.hostName}/media/audiobooks";
+            plan = "1week=>1day,1month=>1week,3month=>1month";
+          };
+        };
         "tank/media/books" = {
           recursive = true;
           plan = "1day=>1hour,1week=>1day,1month=>1week";
