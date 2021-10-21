@@ -75,6 +75,7 @@ with lib;
       filezilla
       gimp
       gparted
+      immersed
       jellyfin-mpv-shim
       keepassxc
       krita
