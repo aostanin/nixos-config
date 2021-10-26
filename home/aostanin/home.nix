@@ -80,6 +80,7 @@ with lib;
       keepassxc
       krita
       libreoffice
+      moonlight-qt
       peek
       steam
       (sublime-music.override { chromecastSupport = true; })
