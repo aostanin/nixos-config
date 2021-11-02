@@ -75,6 +75,7 @@ with lib;
       filezilla
       gimp
       gparted
+      gtkpod
       immersed
       jellyfin-mpv-shim
       keepassxc
