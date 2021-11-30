@@ -76,7 +76,6 @@ with lib;
       gimp
       gparted
       gtkpod
-      immersed
       jellyfin-mpv-shim
       keepassxc
       krita
