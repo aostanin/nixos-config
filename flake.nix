@@ -3,11 +3,11 @@
 
   inputs = {
     deploy-rs.url = "github:serokell/deploy-rs";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
     home-manager = {
-      url = "github:nix-community/home-manager/release-21.05";
+      url = "github:nix-community/home-manager/release-21.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
@@ -37,7 +37,7 @@
                 })
               ] ++ (import ./home/aostanin/nixpkgs/overlays.nix);
             };
-            system.stateVersion = "21.05";
+            system.stateVersion = "21.11";
           }
           (./hosts + "/${hostname}/configuration.nix")
           home-manager.nixosModules.home-manager

@@ -40,8 +40,6 @@ in
     '';
   };
 
-  services.getty.serialSpeed = [ 115200 ];
-
   networking = {
     hostName = "elena";
     hostId = "4446d154";

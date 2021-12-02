@@ -93,7 +93,7 @@ in
 
   virtualisation.libvirtd = {
     enable = true;
-    qemuVerbatimConfig = ''
+    qemu.verbatimConfig = ''
       user = "aostanin"
       cgroup_device_acl = [
         "/dev/null", "/dev/full", "/dev/zero",

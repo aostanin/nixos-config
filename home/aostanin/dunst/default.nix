@@ -5,6 +5,7 @@
     enable = true;
     settings = {
       global = {
+        font = "Monospace 11";
         markup = "full";
         format = "<b>%s</b>\n%b";
         icon_position = "left";

@@ -55,20 +55,26 @@ in
     hostId = "203d588e";
 
     bridges.br0.interfaces = [ "enp4s0f0" ];
-    interfaces.br0 = {
-      macAddress = secrets.network.home.hosts.valmar.macAddress;
-      ipv4.addresses = [{
-        address = secrets.network.home.hosts.valmar.address;
-        prefixLength = 24;
-      }];
-    };
+    interfaces = {
+      br0 = {
+        macAddress = secrets.network.home.hosts.valmar.macAddress;
+        ipv4.addresses = [{
+          address = secrets.network.home.hosts.valmar.address;
+          prefixLength = 24;
+        }];
+      };
 
-    interfaces.enp4s0f1 = {
-      mtu = 9000;
-      ipv4.addresses = [{
-        address = secrets.network.storage.hosts.valmar.address;
-        prefixLength = 24;
-      }];
+      enp4s0f1 = {
+        mtu = 9000;
+        ipv4.addresses = [{
+          address = secrets.network.storage.hosts.valmar.address;
+          prefixLength = 24;
+        }];
+      };
+
+      enp6s0 = {
+        wakeOnLan.enable = true;
+      };
     };
 
     defaultGateway = secrets.network.home.defaultGateway;
@@ -83,13 +89,6 @@ in
       # TODO: Temporary workaround for MTU not being set
       ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:04:00.1", ATTR{mtu}="9000"
     '';
-
-    wakeonlan.interfaces = [
-      {
-        interface = "enp6s0";
-        method = "magicpacket";
-      }
-    ];
 
     xserver = {
       videoDrivers = [ "amdgpu" ];
