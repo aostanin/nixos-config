@@ -72,7 +72,7 @@ in
         }];
       };
 
-      enp6s0 = {
+      enp5s0 = {
         wakeOnLan.enable = true;
       };
     };
