@@ -57,8 +57,10 @@ buildPythonPackage rec {
     zstandard
   ];
 
-  src = fetchPypi {
-    inherit pname version;
-    sha256 = "1gckszvkjklrslidpfidbzcigpwwj4s0chrnrg16wvh3r93aiaci";
+  src = fetchFromGitHub {
+    owner = "nicoboss";
+    repo = "nsz";
+    rev = "2e1265c261b261909e22e442c95240af142ee15f";
+    hash = "sha256-6iYms0+46hsRoaF2wrASB6/NP4S1z5/2FGBKJqy+ksA=";
   };
 }
