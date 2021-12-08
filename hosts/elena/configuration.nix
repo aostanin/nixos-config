@@ -260,7 +260,7 @@ in
             import os
 
             DIR = '/storage/media/recorded'
-            MAX_USED_SPACE = 2 * 1024 * 1024 * 1024 * 1024  # 2 TB
+            MAX_USED_SPACE = 1 * 1024 * 1024 * 1024 * 1024  # 1 TB
 
 
             def used_space():
