@@ -165,7 +165,7 @@ with lib;
   xdg.configFile = {
     "catt/catt.cfg".text = ''
       [options]
-      device = up
+      device = bedroom
 
       [aliases]
       kitchen = Kitchen Home Hub Max
