@@ -20,9 +20,9 @@ in
 
   boot = {
     loader = {
-      #systemd-boot.enable = true; # TODO: Switch back to systemd-boot when ipxe can be added
+      systemd-boot.enable = true; # TODO: Switch back to systemd-boot when ipxe can be added
       grub = {
-        enable = true;
+        #enable = true; # TODO: Disabled due to bug https://github.com/NixOS/nixpkgs/issues/127925
         efiSupport = true;
         device = "nodev";
         copyKernels = true; # Workaround ZFS issue https://nixos.wiki/wiki/NixOS_on_ZFS#Known_issues
