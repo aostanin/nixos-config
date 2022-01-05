@@ -48,23 +48,15 @@
     };
 
     blueman.enable = true;
+
     flatpak.enable = true;
+
     gnome.gnome-keyring.enable = true;
 
     printing = {
       enable = true;
       drivers = [ pkgs.brlaser ];
     };
-
-    redshift = {
-      enable = true;
-      temperature = {
-        day = 5500;
-        night = 3000;
-      };
-    };
-
-    xbanish.enable = true;
 
     udev.extraRules = ''
       # MiniPro
@@ -75,6 +67,8 @@
     '';
 
     upower.enable = true;
+
+    xbanish.enable = true;
 
     xserver = {
       enable = true;
