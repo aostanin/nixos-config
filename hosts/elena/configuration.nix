@@ -225,16 +225,6 @@ in
     targetcli
   ];
 
-  hardware.pulseaudio = {
-    enable = true;
-    systemWide = true;
-    tcp = {
-      enable = true;
-      anonymousClients.allowAll = true;
-    };
-    zeroconf.publish.enable = true;
-  };
-
   # Needed for rclone mount
   environment.etc."fuse.conf".text = ''
     user_allow_other

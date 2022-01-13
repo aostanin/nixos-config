@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./audio.nix
+  ];
+
   boot = {
     extraModulePackages = with config.boot.kernelPackages; [
       v4l2loopback
@@ -92,19 +96,9 @@
     };
   };
 
-  sound.enable = true;
-
   hardware = {
     bluetooth.enable = true;
     opengl.driSupport32Bit = true; # Needed for Steam
-    pulseaudio = {
-      enable = true;
-      extraModules = [ pkgs.pulseaudio-modules-bt ];
-      package = pkgs.pulseaudioFull;
-      zeroconf = {
-        discovery.enable = true;
-      };
-    };
   };
 
   programs = {

@@ -144,6 +144,8 @@ with lib;
     // optionalAttrs nixosConfig.services.xserver.enable {
       blueman-applet.enable = true;
 
+      mpris-proxy.enable = true;
+
       sxhkd = {
         enable = true;
         keybindings = with pkgs;

@@ -118,10 +118,6 @@ in
 
   hardware = {
     nvidiaOptimus.disable = true;
-
-    pulseaudio.extraConfig = ''
-      load-module module-simple-protocol-tcp source=alsa_output.pci-0000_00_1b.0.analog-stereo.monitor record=true
-    '';
   };
 
   programs.adb.enable = true;
