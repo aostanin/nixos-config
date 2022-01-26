@@ -36,4 +36,14 @@ in
       vimium
     ];
   };
+
+  xdg.desktopEntries.firefox-work = {
+    name = "Firefox (Work)";
+    genericName = "Web Browser";
+    exec = "firefox -P work %U";
+    icon = "firefox";
+    terminal = false;
+    type = "Application";
+    categories = [ "Network" "WebBrowser" ];
+  };
 }
