@@ -95,7 +95,6 @@ with lib;
       schildichat-desktop
       skypeforlinux
       slack
-      tdesktop
       zoom-us
 
       # Plasma
