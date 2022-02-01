@@ -92,7 +92,7 @@ with lib;
 
       # Chat
       discord
-      element-desktop
+      schildichat-desktop
       skypeforlinux
       slack
       tdesktop
