@@ -32,6 +32,7 @@ in
       https-everywhere
       i-dont-care-about-cookies
       multi-account-containers
+      sponsorblock
       temporary-containers
       ublock-origin
       vimium
