@@ -20,6 +20,7 @@ with lib;
     ./gnupg
     ./gtk
     ./obs-studio
+    ./qt
     ./syncthing
     ./vscode
   ] ++ optionals nixosConfig.services.xserver.windowManager.i3.enable [
