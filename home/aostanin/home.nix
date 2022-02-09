@@ -34,6 +34,8 @@ with lib;
   xdg.configFile."nixpkgs/overlays.nix".source = ./nixpkgs/overlays.nix;
 
   home = {
+    stateVersion = nixosConfig.system.stateVersion;
+
     packages = with pkgs; [
       bat
       beets
@@ -177,4 +179,6 @@ with lib;
       uri_default='qemu:///system'
     '';
   };
+
+  xsession.enable = true;
 }
