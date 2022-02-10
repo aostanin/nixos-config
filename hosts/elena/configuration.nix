@@ -21,6 +21,9 @@ in
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
+    initrd.kernelModules = [
+      "vfio_pci"
+    ];
     kernelModules = [
       "nct6775" # For lm-sensors
       "vfio_pci"
@@ -32,6 +35,7 @@ in
       "iommu=pt"
       "console=tty0"
       "console=ttyS1,115200" # IPMI
+      "vfio-pci.ids=1912:0014" # USB
     ];
     extraModprobeConfig = ''
       options kvm ignore_msrs=1

@@ -47,6 +47,9 @@ let
 in
 {
   boot = {
+    initrd.kernelModules = [
+      "vfio_pci"
+    ];
     kernelModules = [
       "vfio_pci"
     ];
