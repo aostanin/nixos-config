@@ -24,6 +24,7 @@ in
           "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
           "${modifier}+c" = "exec ${rofiWithPlugins}/bin/rofi -show calc -modi calc -no-show-match -no-sort";
           "${modifier}+period" = "exec ${pkgs.rofimoji}/bin/rofimoji";
+          "${modifier}+Shift+s" = "sticky toggle";
           "${modifier}+h" = "focus left";
           "${modifier}+j" = "focus down";
           "${modifier}+k" = "focus up";
