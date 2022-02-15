@@ -26,6 +26,7 @@ in
     "/var/lib/libvirt/images" = zfsFilesystem "tank/virtualization/libvirt/images";
     "/var/lib/libvirt/images/ssd" = zfsFilesystem "tank/virtualization/libvirt/images/ssd";
     "/storage/appdata/docker" = zfsFilesystem "tank/appdata/docker";
+    "/storage/appdata/docker/ssd" = zfsFilesystem "tank/appdata/docker/ssd";
     "/storage/appdata/games" = zfsFilesystem "tank/appdata/games";
     "/storage/appdata/rclone" = zfsFilesystem "tank/appdata/rclone";
     "/storage/backup/devices" = zfsFilesystem "tank/backup/devices";
