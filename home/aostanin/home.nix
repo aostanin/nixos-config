@@ -85,6 +85,7 @@ with lib;
       libreoffice
       moonlight-qt
       peek
+      qdirstat
       steam
       (sublime-music.override { chromecastSupport = true; })
       thunderbird
