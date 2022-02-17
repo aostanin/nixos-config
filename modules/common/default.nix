@@ -39,6 +39,9 @@ in
   nixpkgs.config = {
     allowUnfree = true;
     joypixels.acceptLicense = true;
+    permittedInsecurePackages = [
+      "electron-13.6.9" # TODO: Needed for SchildiChat
+    ];
   };
 
   security.sudo.wheelNeedsPassword = false;
