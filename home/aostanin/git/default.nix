@@ -8,6 +8,9 @@ in
     userName = secrets.user.fullName;
     userEmail = secrets.user.emailAddress;
     extraConfig = {
+      init = {
+        defaultBranch = "master";
+      };
       pull = {
         ff = "only";
       };
