@@ -50,6 +50,7 @@ with lib;
       fd
       ffmpeg
       github-cli
+      gitui
       gpsbabel
       ipmitool
       lazygit
