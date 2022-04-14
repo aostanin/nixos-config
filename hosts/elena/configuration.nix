@@ -187,6 +187,13 @@ in
   virtualisation.docker = {
     enable = true;
     storageDriver = "zfs";
+    autoPrune = {
+      enable = true;
+      flags = [
+        "--all"
+        "--filter \"until=168h\""
+      ];
+    };
     # Docker defaults to Google's DNS
     extraOptions = ''
       --dns ${secrets.network.home.nameserver} \

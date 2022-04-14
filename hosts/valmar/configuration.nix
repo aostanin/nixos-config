@@ -194,5 +194,12 @@ in
     enable = true;
     enableNvidia = true;
     storageDriver = "zfs";
+    autoPrune = {
+      enable = true;
+      flags = [
+        "--all"
+        "--filter \"until=168h\""
+      ];
+    };
   };
 }

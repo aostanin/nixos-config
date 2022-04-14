@@ -128,6 +128,13 @@ in
     docker = {
       enable = true;
       storageDriver = "zfs";
+      autoPrune = {
+        enable = true;
+        flags = [
+          "--all"
+          "--filter \"until=168h\""
+        ];
+      };
     };
   };
 }
