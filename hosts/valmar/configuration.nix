@@ -16,6 +16,7 @@ in
     ./ipxe.nix
     ./telegraf.nix
     ./vfio.nix
+    ./tdarr.nix
   ];
 
   boot = {
@@ -185,7 +186,7 @@ in
       "/var/lib/libvirt/images/remote" = nfsFilesystem "/images";
       "/mnt/media" = nfsFilesystem "/media";
       "/mnt/personal" = nfsFilesystem "/personal";
-      "/mnt/games" = nfsFilesystem "/games";
+      "/mnt/appdata" = nfsFilesystem "/appdata";
     };
 
   programs.adb.enable = true;
