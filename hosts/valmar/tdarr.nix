@@ -17,7 +17,7 @@ in
       serverPort = "8266";
     };
     ports = [
-      "8267:8267"
+      "${secrets.network.storage.hosts.valmar.address}:8267:8267"
     ];
     volumes = [
       "/storage/appdata/docker/tdarr/configs:/app/configs"
