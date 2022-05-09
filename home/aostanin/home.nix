@@ -70,7 +70,7 @@ with lib;
       translate-shell
       tuir
       wol
-      youtube-dl
+      yt-dlp
     ] ++ optionals nixosConfig.services.xserver.enable [
       # GUI
       barrier
