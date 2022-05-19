@@ -26,4 +26,9 @@ in
       "/mnt/media:/media"
     ];
   };
+
+  systemd.services.docker-tdarr-node.requires = [
+    "mnt-appdata-temp.mount"
+    "mnt-media.mount"
+  ];
 }

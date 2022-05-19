@@ -187,6 +187,7 @@ in
       "/mnt/media" = nfsFilesystem "/media";
       "/mnt/personal" = nfsFilesystem "/personal";
       "/mnt/appdata" = nfsFilesystem "/appdata";
+      "/mnt/appdata/temp" = nfsFilesystem "/appdata/temp";
     };
 
   programs.adb.enable = true;
