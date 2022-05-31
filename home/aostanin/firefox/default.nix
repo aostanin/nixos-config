@@ -26,14 +26,9 @@ in
     };
     extensions = with pkgs.nur.repos.rycee.firefox-addons; [
       bitwarden
-      clearurls
-      decentraleyes
       h264ify
-      https-everywhere
-      i-dont-care-about-cookies
       multi-account-containers
       sponsorblock
-      temporary-containers
       ublock-origin
       vimium
     ];
