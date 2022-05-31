@@ -84,6 +84,7 @@
         with nixpkgs.legacyPackages.${system}; mkShell {
           buildInputs = [
             cargo # For nixpkgs-fmt
+            deploy-rs.defaultPackage.${system}
             git-crypt
             nixos-generators
           ] ++ lib.optionals (system != "i686-linux") [
