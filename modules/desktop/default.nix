@@ -35,7 +35,7 @@
 
   environment.systemPackages = with pkgs; [
     kde-gtk-config
-    spice_gtk # Fix for USB redirection in virt-manager
+    spice-gtk # Fix for USB redirection in virt-manager
   ];
 
   location.provider = "geoclue2";
@@ -89,7 +89,7 @@
         noDesktop = true;
         thunarPlugins = with pkgs.xfce; [
           thunar-archive-plugin
-          thunar_volman
+          thunar-volman
           tumbler
         ];
       };

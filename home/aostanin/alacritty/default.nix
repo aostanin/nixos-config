@@ -18,7 +18,9 @@
           family = "Hack Nerd Font";
         };
       };
-      background_opacity = 0.95;
+      window = {
+        opacity = 0.95;
+      };
       colors = {
         primary = {
           background = "#282828";

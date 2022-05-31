@@ -10,7 +10,7 @@ in
     ../../modules/variables
     ../../modules/common
     ../../modules/desktop
-    ../../modules/ssmtp
+    ../../modules/msmtp
     ../../modules/zerotier
   ];
 

@@ -129,10 +129,7 @@ with lib;
     {
       direnv = {
         enable = true;
-        nix-direnv = {
-          enable = true;
-          enableFlakes = true;
-        };
+        nix-direnv.enable = true;
       };
 
       starship.enable = true;

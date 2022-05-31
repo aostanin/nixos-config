@@ -9,8 +9,8 @@ in
     ./hardware-configuration.nix
     ../../modules/variables
     ../../modules/common
+    ../../modules/msmtp
     ../../modules/scrutiny
-    ../../modules/ssmtp
     ../../modules/zerotier
     ./telegraf.nix
   ];

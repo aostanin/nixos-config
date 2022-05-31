@@ -10,8 +10,8 @@ in
     ../../modules/variables
     ../../modules/common
     ../../modules/desktop
+    ../../modules/msmtp
     ../../modules/scrutiny
-    ../../modules/ssmtp
     ../../modules/zerotier
     ./ipxe.nix
     ./telegraf.nix
@@ -191,6 +191,8 @@ in
     };
 
   programs.adb.enable = true;
+
+  virtualisation.oci-containers.backend = "docker";
 
   virtualisation.docker = {
     enable = true;

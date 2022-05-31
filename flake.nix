@@ -3,11 +3,11 @@
 
   inputs = {
     deploy-rs.url = "github:serokell/deploy-rs";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
     home-manager = {
-      url = "github:nix-community/home-manager/release-21.11";
+      url = "github:nix-community/home-manager/release-22.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
@@ -37,7 +37,7 @@
                 })
               ] ++ (import ./home/aostanin/nixpkgs/overlays.nix);
             };
-            system.stateVersion = "21.11";
+            system.stateVersion = "22.05";
           }
           (./hosts + "/${hostname}/configuration.nix")
           home-manager.nixosModules.home-manager
@@ -86,10 +86,9 @@
             cargo # For nixpkgs-fmt
             git-crypt
             nixos-generators
+          ] ++ lib.optionals (system != "i686-linux") [
+            # pre-commit is missing i686-linux https://github.com/NixOS/nixpkgs/issues/174847
             pre-commit
-          ] ++ lib.optionals (builtins.hasAttr system deploy-rs.defaultPackage) [
-            # deploy-rs is missing aarch64-darwin
-            deploy-rs.defaultPackage.${system} # TODO: There has to be a better way to write this?
           ];
 
           shellHook = ''

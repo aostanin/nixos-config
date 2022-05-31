@@ -40,6 +40,7 @@ in
     allowUnfree = true;
     joypixels.acceptLicense = true;
     permittedInsecurePackages = [
+      "electron-12.2.3"
       "electron-13.6.9" # TODO: Needed for SchildiChat
       "electron-14.2.9" # TODO: Needed for something?
     ];
