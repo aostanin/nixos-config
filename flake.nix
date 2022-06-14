@@ -2,7 +2,13 @@
   description = "NixOS Configuration";
 
   inputs = {
-    deploy-rs.url = "github:serokell/deploy-rs";
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        utils.follows = "flake-utils";
+      };
+    };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
@@ -87,8 +93,11 @@
             deploy-rs.defaultPackage.${system}
             git-crypt
             nixos-generators
-          ] ++ lib.optionals (system != "i686-linux") [
+          ] ++ lib.optionals
+            (system != "i686-linux" &&
+              !(lib.strings.hasSuffix "-darwin" system)) [
             # pre-commit is missing i686-linux https://github.com/NixOS/nixpkgs/issues/174847
+            # dotnet is marked broken on darwin on nixos-22.05 https://github.com/NixOS/nixpkgs/pull/176000
             pre-commit
           ];
 
