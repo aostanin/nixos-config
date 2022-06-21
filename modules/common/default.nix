@@ -70,7 +70,11 @@ in
     forwardX11 = true;
   };
 
-  programs.zsh.enable = true;
+  programs = {
+    mosh.enable = true;
+
+    zsh.enable = true;
+  };
 
   users.users.aostanin = {
     isNormalUser = true;
