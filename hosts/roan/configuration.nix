@@ -98,6 +98,7 @@ in
       features = {
         compressed = true;
         recvu = true;
+        skipIntermediates = true;
         zfsGetType = true;
       };
       zetup = {
