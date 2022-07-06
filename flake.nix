@@ -55,7 +55,9 @@
         ] ++ extraModules;
       };
       mkNode = { hostname }: {
-        hostname = secrets.network.zerotier.hosts."${hostname}".address;
+        # TODO: For some reason, router only connects through the proxy
+        #hostname = secrets.network.zerotier.hosts."${hostname}".address;
+        hostname = hostname;
         sshUser = "root";
         fastConnection = true;
         autoRollback = false;
@@ -74,6 +76,7 @@
         elena = mkNixosSystem { hostname = "elena"; };
         mareg = mkNixosSystem { hostname = "mareg"; };
         roan = mkNixosSystem { hostname = "roan"; };
+        router = mkNixosSystem { hostname = "router"; };
         valmar = mkNixosSystem { hostname = "valmar"; };
       };
 
@@ -81,6 +84,7 @@
         elena = mkNode { hostname = "elena"; };
         mareg = mkNode { hostname = "mareg"; };
         roan = mkNode { hostname = "roan"; };
+        router = mkNode { hostname = "router"; };
         valmar = mkNode { hostname = "valmar"; };
       };
 
