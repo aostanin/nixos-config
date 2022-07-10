@@ -57,6 +57,8 @@
 
     gnome.gnome-keyring.enable = true;
 
+    mullvad-vpn.enable = true;
+
     printing = {
       enable = true;
       drivers = [ pkgs.brlaser ];

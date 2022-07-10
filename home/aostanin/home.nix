@@ -85,6 +85,7 @@ with lib;
       krita
       libreoffice
       moonlight-qt
+      mullvad-vpn
       peek
       qdirstat
       steam
