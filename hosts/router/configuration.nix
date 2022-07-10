@@ -1,4 +1,4 @@
-{ config, pkgs, hardwareModulesPath, ... }:
+{ config, pkgs, lib, hardwareModulesPath, ... }:
 let
   secrets = import ../../secrets;
   iface = "enp1s0";
@@ -18,6 +18,10 @@ in
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
+    };
+    kernel.sysctl = {
+      "net.ipv4.conf.all.forwarding" = true;
+      "net.ipv6.conf.all.forwarding" = true;
     };
     kernelParams = [
       # For virsh console
@@ -39,30 +43,47 @@ in
 
     nameservers = [
       "8.8.8.8"
+      "8.8.4.4"
     ];
 
     useNetworkd = true;
     useDHCP = false;
 
+    vlans = {
+      wan6 = { id = 10; interface = iface; };
+      # guest = { id = 20; interface = iface; };
+      # iot = { id = 40; interface = iface; };
+    };
+
+    # TODO: Switch to iface once ready
+    # bridges.lan.interfaces = [ iface ];
     bridges.lan.interfaces = [ iface_lan ];
     interfaces.lan = {
       ipv4.addresses = [{
-        address = "192.168.0.1";
+        address = "10.0.0.1";
         prefixLength = 24;
       }];
     };
 
-    vlans = {
-      wan = { id = 10; interface = iface; };
-      #guest = { id = 20; interface = iface; };
-      #iot = { id = 40; interface = iface; };
-    };
+    # interfaces.guest = {
+    #   ipv4.addresses = [{
+    #     address = "10.0.20.1";
+    #     prefixLength = 24;
+    #   }];
+    # };
+
+    # interfaces.iot = {
+    #   ipv4.addresses = [{
+    #     address = "10.0.40.1";
+    #     prefixLength = 24;
+    #   }];
+    # };
   };
 
   systemd.network = {
-    netdevs.transix = {
+    netdevs.wan_dslite = {
       netdevConfig = {
-        Name = "transix";
+        Name = "wan_dslite";
         Kind = "ip6tnl";
       };
       tunnelConfig = {
@@ -71,32 +92,36 @@ in
         Local = "slaac";
       };
     };
-    networks.transix = {
-      matchConfig.Name = "transix";
+
+    networks.wan_dslite = {
+      matchConfig.Name = "wan_dslite";
       networkConfig = {
         IPForward = "ipv4";
         Address = "192.0.0.2";
+        LinkLocalAddressing = "no";
       };
       routes = [
         { routeConfig = { Destination = "0.0.0.0/0"; }; }
       ];
     };
 
-    networks.wan = {
-      matchConfig.Name = "wan";
+    networks.wan6 = {
+      matchConfig.Name = "wan6";
       networkConfig = {
-        Tunnel = "transix";
+        Tunnel = "wan_dslite";
+        IPv6AcceptRA = "yes";
       };
     };
   };
 
   services.pppd = {
-    #enable = true;
+    # TODO: Use as fallback?
+    # enable = true;
     peers.iij = {
       autostart = true;
       enable = true;
       config = ''
-        plugin rp-pppoe.so wan
+        plugin rp-pppoe.so wan6
 
         name "${secrets.pppoe.username}"
         password "${secrets.pppoe.password}"
@@ -118,10 +143,104 @@ in
       "8.8.4.4"
     ];
     extraConfig = ''
+      dhcp-authoritative
+      domain-needed
+      localise-queries
+      expand-hosts
+      domain=lan
+      stop-dns-rebind
+      rebind-localhost-ok
+      bogus-priv
+
       interface=lan
-      dhcp-range=192.168.0.100,192.168.0.254,24h
+      interface=guest
+      interface=iot
+
+      dhcp-range=set:lan,10.0.0.100,10.0.0.254,24h
+      dhcp-range=set:guest,10.0.20.100,10.0.20.254,24h
+      dhcp-range=set:iot,10.0.40.100,10.0.40.254,24h
+
+      # TODO: Set up AdGuard Home
+      dhcp-option=tag:lan,option:dns-server,10.0.0.10
+
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: lease:
+        "dhcp-host=${lease.macAddress},${lease.ipAddress},${hostname}"
+      ) secrets.leases)}
     '';
   };
-  # TODO: Why is this enabled in the first place?
-  systemd.services.systemd-resolved.enable = false;
+  services.resolved.enable = false;
+
+  services.ndppd = {
+    # TODO: Not working for now
+    # enable = true;
+    # configFile = pkgs.writeText "ndppd.conf" ''
+    #   proxy wan6 {
+    #     router no
+    #     timeout 500
+    #     autowire yes
+    #     keepalive yes
+    #     retries 3
+    #     ttl 30000
+    #     rule ::/0 {
+    #       iface lan
+    #     }
+    #   }
+
+    #   proxy lan {
+    #     router yes
+    #     timeout 500
+    #     autowire yes
+    #     keepalive yes
+    #     retries 3
+    #     ttl 30000
+    #     rule ::/0 {
+    #       iface wan6
+    #     }
+    #   }
+    # '';
+    proxies = {
+      wan6 = {
+        router = false;
+        rules."::/0" = {
+          method = "iface";
+          interface = "lan";
+        };
+      };
+      lan = {
+        router = true;
+        rules."::/0" = {
+          method = "iface";
+          interface = "wan6";
+        };
+      };
+    };
+  };
+
+  networking.nftables = {
+    enable = true;
+    ruleset = ''
+      # ref: https://wiki.gentoo.org/wiki/Nftables/Examples
+
+      table ip filter {
+        # allow all packets sent by the firewall machine itself
+        chain output {
+          type filter hook output priority 100; policy accept;
+        }
+
+        # allow LAN to firewall, disallow WAN to firewall
+        chain input {
+          type filter hook input priority 0; policy accept;
+          iifname "lan0" accept
+          iifname "wan0" drop
+        }
+
+        # allow packets from LAN to WAN, and WAN to LAN if LAN initiated the connection
+        chain forward {
+          type filter hook forward priority 0; policy drop;
+          iifname "lan0" oifname "wan0" accept
+          iifname "wan0" oifname "lan0" ct state related,established accept
+        }
+      }
+    '';
+  };
 }
