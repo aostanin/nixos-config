@@ -82,7 +82,6 @@ in
 
   services = {
     udev.extraRules = ''
-      ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:06:00.0", ATTR{device/sriov_numvfs}="32"
       # TODO: Temporary workaround for MTU not being set
       ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:06:00.1", ATTR{mtu}="9000"
     '';
