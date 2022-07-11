@@ -35,6 +35,7 @@ in
     "/storage/media/adult" = zfsFilesystem "tank/media/adult";
     "/storage/media/audiobooks" = zfsFilesystem "tank/media/audiobooks";
     "/storage/media/books" = zfsFilesystem "tank/media/books";
+    "/storage/media/manga" = zfsFilesystem "tank/media/manga";
     "/storage/media/music" = zfsFilesystem "tank/media/music";
     "/storage/media/recorded" = zfsFilesystem "tank/media/recorded";
     "/storage/media/software" = zfsFilesystem "tank/media/software";
