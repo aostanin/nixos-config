@@ -4,7 +4,8 @@ let
 in
 {
   virtualisation.oci-containers.containers.tdarr-node = {
-    image = "ghcr.io/haveagitgat/tdarr_node:2.00.18";
+    autoStart = false;
+    image = "ghcr.io/haveagitgat/tdarr_node";
     environment = {
       TZ = config.time.timeZone;
       PUID = "1000";
