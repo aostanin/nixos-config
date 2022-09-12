@@ -1,8 +1,10 @@
 { pkgs, config, lib, ... }:
-
+let
+  ssh_config = import ../../../secrets/ssh;
+in
 {
-  home.file = {
-    # TODO: nixify ssh config
-    ".ssh/config".source = ../../../secrets/ssh/ssh_config;
+  programs.ssh = {
+    enable = true;
+    matchBlocks = ssh_config.matchBlocks;
   };
 }
