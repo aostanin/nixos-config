@@ -29,6 +29,7 @@ in
     "/storage/appdata/docker/ssd" = zfsFilesystem "tank/appdata/docker/ssd";
     "/storage/appdata/games" = zfsFilesystem "tank/appdata/games";
     "/storage/appdata/rclone" = zfsFilesystem "tank/appdata/rclone";
+    "/storage/appdata/scripts" = zfsFilesystem "tank/appdata/scripts";
     "/storage/appdata/temp" = zfsFilesystem "tank/appdata/temp";
     "/storage/backup/devices" = zfsFilesystem "tank/backup/devices";
     "/storage/download" = zfsFilesystem "tank/download";

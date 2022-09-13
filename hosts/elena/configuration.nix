@@ -251,7 +251,17 @@ in
           RandomizedDelaySec = "5h";
         };
       };
+
+      update-mam = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "update-mam.service" ];
+        timerConfig = {
+          OnCalendar = "0/2:00";
+          RandomizedDelaySec = "30m";
+        };
+      };
     };
+
     services = {
       cleanup-recorded-videos = {
         serviceConfig = {
@@ -280,6 +290,7 @@ in
           '';
         };
       };
+
       iscsi-target = {
         description = "Restore LIO kernel target configuration";
         after = [ "sys-kernel-config.mount" "network.target" "local-fs.target" ];
@@ -293,6 +304,14 @@ in
         };
         wantedBy = [ "multi-user.target" ];
         path = with pkgs; [ kmod utillinux ];
+      };
+
+      update-mam = {
+        serviceConfig = {
+          Type = "oneshot";
+          WorkingDirectory = "/storage/appdata/scripts/mam";
+          ExecStart = "/storage/appdata/scripts/mam/update_mam.sh";
+        };
       };
     };
   };
