@@ -47,7 +47,7 @@ let
 in
 buildPythonPackage rec {
   pname = "nsz";
-  version = "4.0.0";
+  version = "4.1.0";
 
   doCheck = false;
 
@@ -60,7 +60,7 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "nicoboss";
     repo = "nsz";
-    rev = "2e1265c261b261909e22e442c95240af142ee15f";
-    hash = "sha256-6iYms0+46hsRoaF2wrASB6/NP4S1z5/2FGBKJqy+ksA=";
+    rev = version;
+    hash = "sha256-tdngXV+VUOAkg3lF2NOmw0mBeSEE+YpUfuKukTKcPnM=";
   };
 }
