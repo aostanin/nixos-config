@@ -38,8 +38,6 @@
     spice-gtk # Fix for USB redirection in virt-manager
   ];
 
-  location.provider = "geoclue2";
-
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # Needed for Flatpak

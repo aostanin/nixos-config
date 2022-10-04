@@ -225,16 +225,6 @@ in
       shadow = true;
     };
 
-    redshift = {
-      enable = true;
-      provider = "geoclue2";
-      tray = true;
-      temperature = {
-        day = 6500;
-        night = 3000;
-      };
-    };
-
     udiskie = {
       enable = true;
       automount = false;
