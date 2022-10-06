@@ -2,7 +2,6 @@
 let
   secrets = import ../../../secrets;
   defaultSettings = {
-    "identity.sync.tokenserver.uri" = secrets.firefox.syncUrl;
     "browser.aboutConfig.showWarning" = false;
     "browser.tabs.warnOnClose" = false;
 
