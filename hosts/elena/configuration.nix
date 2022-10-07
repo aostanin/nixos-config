@@ -29,6 +29,7 @@ in
       "vfio_pci"
     ];
     kernelParams = [
+      "intel_pstate=active"
       "zfs.zfs_arc_min=68719476736"
       "zfs.zfs_arc_max=103079215104"
       "intel_iommu=on"

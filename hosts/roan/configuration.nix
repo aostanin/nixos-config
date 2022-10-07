@@ -26,6 +26,7 @@ in
     };
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
+      "intel_pstate=active"
       "zfs.zfs_arc_max=2147483648"
     ];
   };
