@@ -62,9 +62,7 @@
         ] ++ extraModules;
       };
       mkNode = { hostname }: {
-        # TODO: For some reason, router only connects through the proxy
-        #hostname = secrets.network.zerotier.hosts."${hostname}".address;
-        hostname = hostname;
+        hostname = secrets.network.zerotier.hosts."${hostname}".address;
         sshUser = "root";
         fastConnection = true;
         autoRollback = false;
