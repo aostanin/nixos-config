@@ -47,9 +47,15 @@
 
             # Use same nixpkgs for flakes and system
             # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
-            nix.registry.nixpkgs.flake = nixpkgs;
-            nix.registry.unstable.flake = nixpkgs-unstable;
-            nix.nixPath = [ "nixpkgs=/etc/channels/nixpkgs" "nixos-config=/etc/nixos/configuration.nix" "/nix/var/nix/profiles/per-user/root/channels" ];
+            nix = {
+              registry.nixpkgs.flake = nixpkgs;
+              registry.unstable.flake = nixpkgs-unstable;
+              nixPath = [
+                "nixpkgs=/etc/channels/nixpkgs"
+                "nixos-config=/etc/nixos/configuration.nix"
+                "/nix/var/nix/profiles/per-user/root/channels"
+              ];
+            };
             environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
           }
           (./hosts + "/${hostname}/configuration.nix")
