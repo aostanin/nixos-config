@@ -46,6 +46,9 @@
       "update.mode" = "none";
       "vim.useCtrlKeys" = false;
       "workbench.colorTheme" = "Gruvbox Dark (Medium)";
+
+      # Workaround for terminal not working https://github.com/NixOS/nixpkgs/issues/181610
+      "terminal.integrated.shellIntegration.enabled" = false;
     };
   };
 }
