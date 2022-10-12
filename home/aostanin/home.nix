@@ -41,6 +41,7 @@ with lib;
       bat
       beets
       bottom
+      btop
       catt
       cksfv
       nur.repos.xe.comma
