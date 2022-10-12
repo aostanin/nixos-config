@@ -49,7 +49,7 @@
             # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
             nix = {
               registry.nixpkgs.flake = nixpkgs;
-              registry.unstable.flake = nixpkgs-unstable;
+              registry.nixpkgs-unstable.flake = nixpkgs-unstable;
               nixPath = [
                 "nixpkgs=/etc/channels/nixpkgs"
                 "nixos-config=/etc/nixos/configuration.nix"
