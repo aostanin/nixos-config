@@ -6,7 +6,7 @@ let
     "browser.tabs.warnOnClose" = false;
 
     # Fixed location ref: https://security.stackexchange.com/a/147176
-    "geo.provider.network.url" = "data:application/json,{\"location\": {\"lat\": ${toString secrets.location.latitude}, \"lng\": ${toString secrets.location.longitude}}, \"accuracy\": 27000.0}";
+    "geo.provider.network.url" = "data:application/json,{\"location\": {\"lat\": ${toString secrets.location.coarse.latitude}, \"lng\": ${toString secrets.location.coarse.longitude}}, \"accuracy\": 27000.0}";
 
     # Privacy
     "privacy.query_stripping.enabled" = true;
