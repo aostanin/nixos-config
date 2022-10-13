@@ -6,6 +6,7 @@
     package = pkgs.brave;
     extensions = [
       { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
+      { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
     ];
   };
 }
