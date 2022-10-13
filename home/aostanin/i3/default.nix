@@ -15,6 +15,7 @@ in
       modifier = "Mod4";
       terminal = "alacritty";
       focus.followMouse = false;
+      workspaceAutoBackAndForth = true;
       keybindings =
         let
           modifier = config.xsession.windowManager.i3.config.modifier;
@@ -36,6 +37,7 @@ in
           "${modifier}+bar" = "split h";
           "${modifier}+underscore" = "split v";
           "${modifier}+a" = "focus parent";
+          "${modifier}+x" = "[urgent=latest] focus";
           # TODO: Temporary workaround for https://github.com/nix-community/home-manager/issues/695
           "${modifier}+0" = null;
           "${modifier}+Shift+0" = null;
@@ -174,22 +176,44 @@ in
           };
         }
       ];
+      startup = [
+        { command = "${pkgs.autorandr}/bin/autorandr --change"; notification = false; }
+        { command = "${pkgs.pasystray}/bin/pasystray --notify=none"; notification = false; }
+        { command = "${pkgs.barrier}/bin/barrier"; notification = false; }
+      ] ++ optionals nixosConfig.networking.networkmanager.enable [
+        { command = "${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable"; notification = false; }
+      ];
+      assigns = {
+        "2" = [
+          { class = "^discord$"; }
+          { class = "^SchildiChat$"; }
+          { class = "^Skype$"; }
+          { class = "^Slack$"; }
+          { class = "^thunderbird$"; }
+        ];
+      };
+      floating = {
+        border = 1;
+        titlebar = true;
+        criteria = [
+          { class = "mpv"; }
+          { class = ".*scrcpy.*"; }
+          { class = "Android Emulator - .*"; }
+          { class = "Picture-in-Picture"; }
+        ];
+      };
+      window = {
+        border = 1;
+        hideEdgeBorders = "smart";
+        commands = [
+          { criteria = { class = "looking-glass-client"; }; command = "border none, move container to workspace 9, workspace 9, move workspace to output primary, focus, fullscreen enable"; }
+          { criteria = { class = "mpv"; }; command = "border none"; }
+          { criteria = { class = ".*scrcpy.*"; }; command = "border none"; }
+          { criteria = { class = "Android Emulator - .*"; }; command = "border none"; }
+          { criteria = { class = "Picture-in-Picture"; }; command = "border none"; }
+        ];
+      };
     };
-    extraConfig = ''
-      exec --no-startup-id ${pkgs.autorandr}/bin/autorandr --change
-      ${optionalString nixosConfig.networking.networkmanager.enable ''
-        exec --no-startup-id ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable
-      ''}
-      exec --no-startup-id ${pkgs.pasystray}/bin/pasystray --notify=none
-      exec --no-startup-id ${pkgs.barrier}/bin/barrier
-
-      for_window [class="mpv"] floating enable border none
-      for_window [class=".*scrcpy.*"] floating enable border none
-      for_window [title="Android Emulator - .*"] floating enable border none
-      for_window [title="Picture-in-Picture"] floating enable border none
-
-      for_window [class="looking-glass-client"] border none, move container to workspace 9, workspace 9, move workspace to output primary, focus, fullscreen enable
-    '';
   };
 
   home.packages = with pkgs; [
