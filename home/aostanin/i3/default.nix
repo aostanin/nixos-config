@@ -230,5 +230,19 @@ in
       automount = false;
       tray = "always";
     };
+
+    xidlehook = {
+      enable = true;
+      # TODO: Enable when released: https://github.com/nix-community/home-manager/pull/3165
+      #detect-sleep = true;
+      not-when-audio = true;
+      timers = [
+        {
+          delay = 300;
+          command = "${pkgs.xorg.xset}/bin/xset dpms force off";
+          canceller = "${pkgs.xorg.xset}/bin/xset dpms force on";
+        }
+      ];
+    };
   };
 }
