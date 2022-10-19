@@ -237,11 +237,6 @@ in
     targetcli
   ];
 
-  # Needed for rclone mount
-  environment.etc."fuse.conf".text = ''
-    user_allow_other
-  '';
-
   systemd = {
     timers = {
       cleanup-recorded-videos = {
