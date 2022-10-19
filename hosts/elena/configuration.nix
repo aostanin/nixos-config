@@ -233,10 +233,6 @@ in
     '';
   };
 
-  environment.systemPackages = with pkgs; [
-    targetcli
-  ];
-
   systemd = {
     timers = {
       cleanup-recorded-videos = {
@@ -285,21 +281,6 @@ in
                 os.remove(file)
           '';
         };
-      };
-
-      iscsi-target = {
-        description = "Restore LIO kernel target configuration";
-        after = [ "sys-kernel-config.mount" "network.target" "local-fs.target" ];
-        requires = [ "sys-kernel-config.mount" ];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = "yes";
-          ExecStart = "${pkgs.pythonPackages.rtslib}/bin/targetctl restore /etc/target/saveconfig.json";
-          ExecStop = "${pkgs.pythonPackages.rtslib}/bin/targetctl clear";
-          SyslogIdentifier = "target";
-        };
-        wantedBy = [ "multi-user.target" ];
-        path = with pkgs; [ kmod utillinux ];
       };
 
       update-mam = {
