@@ -1,12 +1,46 @@
 { config, pkgs, ... }:
 let
-  lookingGlassClient = pkgs.looking-glass-client;
+  vmName = "win10-play";
+  lookingGlassClient = pkgs.looking-glass-client.overrideAttrs (old: rec {
+    # TODO: Remove once merged https://github.com/NixOS/nixpkgs/pull/192430
+    version = "B6-rc1";
+    src = pkgs.fetchFromGitHub {
+      owner = "gnif";
+      repo = "LookingGlass";
+      rev = version;
+      sha256 = "sha256-FZjwLY2XtPGhwc/GyAAH2jvFOp61lSqXqXjz0UBr7uw=";
+      fetchSubmodules = true;
+    };
+    buildInputs = old.buildInputs ++ (with pkgs; [
+      pipewire
+      libpulseaudio
+      libsamplerate
+    ]);
+  });
   vfio-isolate = pkgs.python3Packages.callPackage ../../packages/vfio-isolate { };
   gameScript = pkgs.writeScriptBin "game" ''
     #!${pkgs.stdenv.shell}
 
-    virsh start win10-play
+    virsh start ${vmName}
     ${lookingGlassClient}/bin/looking-glass-client
+  '';
+  # https://gist.github.com/Roliga/928cd44440f4df74e796e4e1315034bf
+  hibernateScript = pkgs.writeScriptBin "hibernate-vm" ''
+    #!${pkgs.stdenv.shell}
+
+    #
+    # Usage: hibernate-vm NAME
+    #
+    # Hibernates the VM specified in NAME and waits for it to finish shutting down
+    #
+
+    if ${pkgs.libvirt}/bin/virsh dompmsuspend "$1" disk; then
+      echo "Waiting for domain to finish shutting down.." >&2
+      while ! [ "$(${pkgs.libvirt}/bin/virsh domstate "$1")" == 'shut off' ]; do
+        sleep 1
+      done
+      echo "Domain finished shutting down" >&2
+    fi
   '';
   # https://github.com/PassthroughPOST/VFIO-Tools/blob/master/libvirt_hooks/qemu
   qemuHook = pkgs.writeShellScript "qemu" ''
@@ -92,6 +126,34 @@ in
     tmpfiles.rules = [
       "f /dev/shm/looking-glass 0660 aostanin qemu-libvirtd -"
     ];
+
+    services."hibernate-vm-shutdown-${vmName}" = {
+      description = "Hibernate VM ${vmName} when host shuts down";
+      requires = [ "virt-guest-shutdown.target" ];
+      after = [
+        "libvirt-guests.service"
+        "libvirtd.service"
+        "virt-guest-shutdown.target"
+      ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStop = "${hibernateScript}/bin/hibernate-vm ${vmName}";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
+    services."hibernate-vm-sleep-${vmName}" = {
+      description = "Hibernate VM ${vmName} when host goes to sleep";
+      before = [ "sleep.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${hibernateScript}/bin/hibernate-vm ${vmName}";
+      };
+      wantedBy = [ "sleep.target" ];
+    };
+
+    services."hibernate-vm-shutdown@${vmName}".enable = true;
+    services."hibernate-vm-sleep@${vmName}".enable = true;
   };
 
   virtualisation.libvirtd = {
