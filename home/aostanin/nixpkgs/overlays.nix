@@ -12,6 +12,7 @@
       pidcat = super.callPackage ../../../packages/pidcat { };
       splitNSP = super.callPackage ../../../packages/splitNSP { };
       vfio-isolate = super.python3Packages.callPackage ../../../packages/vfio-isolate { };
+      virtwold = super.callPackage ../../../packages/virtwold { };
 
       zfs = super.zfs.override {
         # Needed for zed to send emails: https://github.com/NixOS/nixpkgs/issues/132464

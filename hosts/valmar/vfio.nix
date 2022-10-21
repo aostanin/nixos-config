@@ -151,9 +151,6 @@ in
       };
       wantedBy = [ "sleep.target" ];
     };
-
-    services."hibernate-vm-shutdown@${vmName}".enable = true;
-    services."hibernate-vm-sleep@${vmName}".enable = true;
   };
 
   virtualisation.libvirtd = {
