@@ -303,6 +303,44 @@ in
           ExecStart = "/storage/appdata/scripts/mam/update_mam.sh";
         };
       };
+
+      hibernate-vm-shutdown-win10-work =
+        let
+          vmName = "win10-work";
+          # TODO: Move to module, shared with VFIO
+          hibernateScript = pkgs.writeScriptBin "hibernate-vm" ''
+            #!${pkgs.stdenv.shell}
+
+            #
+            # Usage: hibernate-vm NAME
+            #
+            # Hibernates the VM specified in NAME and waits for it to finish shutting down
+            #
+
+            if ${pkgs.libvirt}/bin/virsh dompmsuspend "$1" disk; then
+              echo "Waiting for domain to finish shutting down.." >&2
+              while ! [ "$(${pkgs.libvirt}/bin/virsh domstate "$1")" == 'shut off' ]; do
+                sleep 1
+              done
+              echo "Domain finished shutting down" >&2
+            fi
+          '';
+        in
+        {
+          description = "Hibernate VM ${vmName} when host shuts down";
+          requires = [ "virt-guest-shutdown.target" ];
+          after = [
+            "libvirt-guests.service"
+            "libvirtd.service"
+            "virt-guest-shutdown.target"
+          ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            ExecStop = "${hibernateScript}/bin/hibernate-vm ${vmName}";
+          };
+          wantedBy = [ "multi-user.target" ];
+        };
     };
   };
 }
