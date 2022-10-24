@@ -81,7 +81,24 @@ in
     nameservers = [ secrets.network.home.nameserver ];
   };
 
+  hardware = {
+    nvidia = {
+      nvidiaSettings = false;
+      nvidiaPersistenced = true;
+      package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
+        nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
+      };
+    };
+
+    opengl = {
+      enable = true;
+      driSupport32Bit = true;
+    };
+  };
+
   services = {
+    xserver.videoDrivers = [ "nvidia" ];
+
     zfs = {
       autoScrub = {
         enable = true;
@@ -182,6 +199,7 @@ in
 
   virtualisation.docker = {
     enable = true;
+    enableNvidia = true;
     storageDriver = "zfs";
     autoPrune = {
       enable = true;
