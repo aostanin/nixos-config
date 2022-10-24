@@ -50,7 +50,7 @@ in
     hostId = "4446d154";
 
     # Home LAN, IPoE uplink
-    bridges.br0.interfaces = [ "enp6s0f0" ];
+    bridges.br0.interfaces = [ "enp7s0f0" ];
     interfaces.br0 = {
       macAddress = secrets.network.home.hosts.elena.macAddress;
       ipv4.addresses = [{
@@ -69,7 +69,7 @@ in
       }];
     };
 
-    interfaces.enp6s0f1 = {
+    interfaces.enp7s0f1 = {
       mtu = 9000;
       ipv4.addresses = [{
         address = secrets.network.storage.hosts.elena.address;
@@ -82,11 +82,6 @@ in
   };
 
   services = {
-    udev.extraRules = ''
-      # TODO: Temporary workaround for MTU not being set
-      ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:06:00.1", ATTR{mtu}="9000"
-    '';
-
     zfs = {
       autoScrub = {
         enable = true;
