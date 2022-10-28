@@ -15,7 +15,6 @@ in
       modifier = "Mod4";
       terminal = "alacritty";
       focus.followMouse = false;
-      workspaceAutoBackAndForth = true;
       keybindings =
         let
           modifier = config.xsession.windowManager.i3.config.modifier;
@@ -194,7 +193,7 @@ in
       };
       floating = {
         border = 1;
-        titlebar = true;
+        titlebar = false;
         criteria = [
           { class = "mpv"; }
           { class = ".*scrcpy.*"; }
@@ -204,6 +203,7 @@ in
       };
       window = {
         border = 1;
+        titlebar = false;
         hideEdgeBorders = "smart";
         commands = [
           { criteria = { class = "looking-glass-client"; }; command = "border none, move container to workspace 9, workspace 9, move workspace to output primary, focus, fullscreen enable"; }
@@ -218,6 +218,7 @@ in
 
   home.packages = with pkgs; [
     arandr
+    i3-swallow
     nitrogen
     pavucontrol
   ];
@@ -257,8 +258,6 @@ in
 
     xidlehook = {
       enable = true;
-      # TODO: Enable when released: https://github.com/nix-community/home-manager/pull/3165
-      #detect-sleep = true;
       not-when-audio = true;
       timers = [
         {

@@ -53,9 +53,11 @@ with lib;
       github-cli
       gitui
       gpsbabel
+      httm
       ipmitool
       lazygit
       lftp
+      miniserve
       nsz
       (p7zip.override { enableUnfree = true; })
       personal-scripts
@@ -129,21 +131,26 @@ with lib;
 
   programs =
     {
+      broot = {
+        enable = true;
+        modal = true;
+      };
+
       direnv = {
         enable = true;
         nix-direnv.enable = true;
       };
 
       starship.enable = true;
+
+      zoxide.enable = true;
     }
     // optionalAttrs nixosConfig.variables.hasDesktop {
       mpv.enable = true;
     };
 
   services =
-    {
-      lorri.enable = true;
-    }
+    { }
     // optionalAttrs nixosConfig.variables.hasDesktop {
       blueman-applet.enable = true;
 
