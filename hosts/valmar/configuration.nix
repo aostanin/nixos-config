@@ -1,4 +1,4 @@
-{ config, pkgs, hardwareModulesPath, ... }:
+{ config, pkgs, lib, hardwareModulesPath, ... }:
 let
   secrets = import ../../secrets;
 in
@@ -216,5 +216,15 @@ in
       ExecStart = "${pkgs.virtwold}/bin/virtwold -interface br0";
     };
     wantedBy = [ "multi-user.target" ];
+  };
+
+  # TODO: For temporary development, remove later
+  systemd.services.bluetooth = {
+    serviceConfig = {
+      ExecStart = lib.mkForce [
+        ""
+        "${pkgs.bluez}/libexec/bluetooth/bluetoothd --compat -f /etc/bluetooth/main.conf"
+      ];
+    };
   };
 }
