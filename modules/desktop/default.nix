@@ -38,11 +38,6 @@
     spice-gtk # Fix for USB redirection in virt-manager
   ];
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # Needed for Flatpak
-  };
-
   services = {
     avahi = {
       enable = true;
@@ -50,8 +45,6 @@
     };
 
     blueman.enable = true;
-
-    flatpak.enable = true;
 
     gnome.gnome-keyring.enable = true;
 
@@ -77,10 +70,6 @@
     xserver = {
       enable = true;
       layout = "jp";
-      serverFlagsSection = ''
-        Option "OffTime" "5"
-      '';
-
       displayManager.lightdm.enable = true;
       windowManager.i3.enable = true;
 
