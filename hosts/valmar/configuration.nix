@@ -18,6 +18,12 @@ in
     ./tdarr.nix
   ];
 
+  variables = {
+    hasBattery = false;
+    hasBacklightControl = false;
+    hasDesktop = true;
+  };
+
   boot = {
     loader = {
       systemd-boot.enable = true; # TODO: Switch back to systemd-boot when ipxe can be added

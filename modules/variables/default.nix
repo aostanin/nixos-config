@@ -7,6 +7,7 @@
       default = {
         hasBattery = false;
         hasBacklightControl = false;
+        hasDesktop = false;
       };
     };
   };

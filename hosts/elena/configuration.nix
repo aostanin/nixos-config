@@ -13,6 +13,7 @@ in
     ../../modules/scrutiny
     ../../modules/zerotier
     ./telegraf.nix
+    ./kodi.nix
   ];
 
   boot = {

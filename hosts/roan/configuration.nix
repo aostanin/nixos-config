@@ -17,6 +17,7 @@ in
   variables = {
     hasBattery = true;
     hasBacklightControl = true;
+    hasDesktop = true;
   };
 
   boot = {

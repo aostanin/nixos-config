@@ -11,7 +11,7 @@ with lib;
     ./ssh
     ./tmux
     ./zsh
-  ] ++ optionals nixosConfig.services.xserver.enable [
+  ] ++ optionals nixosConfig.variables.hasDesktop [
     ./3dprinting
     ./alacritty
     ./chromium
@@ -72,7 +72,7 @@ with lib;
       tuir
       wol
       yt-dlp
-    ] ++ optionals nixosConfig.services.xserver.enable [
+    ] ++ optionals nixosConfig.variables.hasDesktop [
       # GUI
       barrier
       bitwarden
@@ -136,7 +136,7 @@ with lib;
 
       starship.enable = true;
     }
-    // optionalAttrs nixosConfig.services.xserver.enable {
+    // optionalAttrs nixosConfig.variables.hasDesktop {
       mpv.enable = true;
     };
 
@@ -144,7 +144,7 @@ with lib;
     {
       lorri.enable = true;
     }
-    // optionalAttrs nixosConfig.services.xserver.enable {
+    // optionalAttrs nixosConfig.variables.hasDesktop {
       blueman-applet.enable = true;
 
       mpris-proxy.enable = true;
