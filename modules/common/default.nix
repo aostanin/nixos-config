@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   secrets = import ../../secrets;
 in
@@ -61,7 +61,7 @@ in
 
   networking = {
     useDHCP = false;
-    firewall.enable = false;
+    firewall.enable = lib.mkDefault false;
     resolvconf.dnsExtensionMechanism = false; # Disable edns0
   };
 

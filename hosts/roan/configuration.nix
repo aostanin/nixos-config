@@ -36,6 +36,31 @@ in
     hostName = "roan";
     hostId = "9bc52069";
     networkmanager.enable = true;
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [
+        22 # SSH
+      ];
+      allowedUDPPorts = [
+        5353 # Avahi
+        9993 # ZeroTier
+      ];
+      interfaces."${secrets.zerotier.interface}" = {
+        allowedTCPPorts = [
+          22000 # Syncthing
+        ];
+        allowedTCPPortRanges = [
+          { from = 1714; to = 1764; } # KDE Connect
+        ];
+        allowedUDPPorts = [
+          22000 # Syncthing
+          21027 # Syncthing
+        ];
+        allowedUDPPortRanges = [
+          { from = 1714; to = 1764; } # KDE Connect
+        ];
+      };
+    };
   };
 
   powerManagement.powertop.enable = true;
