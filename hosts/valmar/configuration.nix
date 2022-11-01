@@ -215,6 +215,22 @@ in
     wantedBy = [ "multi-user.target" ];
   };
 
+  systemd.services."hd-idle" = {
+    description = "hd-idle - spin down idle hard disks";
+    after = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" "suspend-then-hibernate.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart =
+        let drives = [
+          "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG052SA"
+          "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG2TT6A"
+          "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG2TV0A"
+        ];
+        in "${pkgs.hd-idle}/bin/hd-idle -i 0 ${lib.concatStringsSep " " (map (drive: "-a ${drive} -i 30") drives)}";
+    };
+    wantedBy = [ "multi-user.target" ];
+  };
+
   # TODO: For temporary development, remove later
   systemd.services.bluetooth = {
     serviceConfig = {
