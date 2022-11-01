@@ -86,9 +86,6 @@ in
       extraRules = ''
         # Disable Bluetooth dongle passed to Windows VM
         SUBSYSTEM=="usb", ATTRS{idVendor}=="0a12", ATTRS{idProduct}=="0001", ATTRS{busnum}=="1", ATTR{authorized}="0"
-
-        # TODO: Temporary workaround for MTU not being set
-        ACTION=="add", SUBSYSTEM=="net", KERNELS=="0000:04:00.1", ATTR{mtu}="9000"
       '';
       packages = [
         pkgs.stlink
