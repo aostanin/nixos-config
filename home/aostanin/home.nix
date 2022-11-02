@@ -83,7 +83,7 @@ with lib;
       gimp
       gparted
       gtkpod
-      jellyfin-mpv-shim
+      jellyfin-media-player
       keepassxc
       krita
       libreoffice
