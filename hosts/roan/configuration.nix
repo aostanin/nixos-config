@@ -26,6 +26,7 @@ in
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
+    tmpOnTmpfs = true;
     kernelParams = [
       "intel_pstate=active"
       "zfs.zfs_arc_max=2147483648"

@@ -21,6 +21,7 @@ in
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
+    tmpOnTmpfs = true;
     initrd.kernelModules = [
       "vfio_pci"
     ];

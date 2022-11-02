@@ -31,6 +31,7 @@ in
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "zfs" ];
+    tmpOnTmpfs = true;
     extraModulePackages = with config.boot.kernelPackages; [
       zenpower
     ];
