@@ -88,6 +88,9 @@ in
       extraRules = ''
         # Disable Bluetooth dongle passed to Windows VM
         SUBSYSTEM=="usb", ATTRS{idVendor}=="0a12", ATTRS{idProduct}=="0001", ATTRS{busnum}=="1", ATTR{authorized}="0"
+
+        # GPU lower power mode
+        KERNEL=="card0", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="low"
       '';
       packages = [
         pkgs.stlink
