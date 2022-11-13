@@ -49,7 +49,7 @@ in
     hostId = "4446d154";
 
     # Home LAN, IPoE uplink
-    bridges.br0.interfaces = [ "enp7s0f0" ];
+    bridges.br0.interfaces = [ "enp5s0f0" ];
     interfaces.br0 = {
       macAddress = secrets.network.home.hosts.elena.macAddress;
       ipv4.addresses = [{
@@ -68,7 +68,7 @@ in
       }];
     };
 
-    interfaces.enp7s0f1 = {
+    interfaces.enp5s0f1 = {
       mtu = 9000;
       ipv4.addresses = [{
         address = secrets.network.storage.hosts.elena.address;
