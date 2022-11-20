@@ -1,12 +1,16 @@
-{ stdenv, lib, pkgs, makeWrapper }:
-
+{
+  stdenv,
+  lib,
+  pkgs,
+  makeWrapper,
+}:
 stdenv.mkDerivation rec {
   pname = "personal-scripts";
   version = "1.0";
 
   src = ./.;
 
-  nativeBuildInputs = [ makeWrapper ];
+  nativeBuildInputs = [makeWrapper];
 
   installPhase = with pkgs; ''
     mkdir -p $out

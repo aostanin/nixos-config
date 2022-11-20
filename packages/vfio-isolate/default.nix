@@ -1,5 +1,11 @@
-{ buildPythonPackage, pkgs, fetchFromGitHub, click, parsimonious, psutil }:
-
+{
+  buildPythonPackage,
+  pkgs,
+  fetchFromGitHub,
+  click,
+  parsimonious,
+  psutil,
+}:
 buildPythonPackage rec {
   pname = "vfio-isolate";
   version = "0.4.0";

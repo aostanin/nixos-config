@@ -1,5 +1,9 @@
-{ pkgs, buildGoModule, fetchFromGitHub, libpcap }:
-
+{
+  pkgs,
+  buildGoModule,
+  fetchFromGitHub,
+  libpcap,
+}:
 buildGoModule rec {
   pname = "virtwold";
   version = "21.12.0";

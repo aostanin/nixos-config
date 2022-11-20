@@ -1,5 +1,13 @@
-{ stdenv, buildPythonPackage, fetchFromGitHub, fetchPypi, pycryptodome, wcwidth, six, hypothesis }:
-let
+{
+  stdenv,
+  buildPythonPackage,
+  fetchFromGitHub,
+  fetchPypi,
+  pycryptodome,
+  wcwidth,
+  six,
+  hypothesis,
+}: let
   blessed = buildPythonPackage rec {
     pname = "blessed";
     version = "1.17.10";
@@ -11,7 +19,7 @@ let
       sha256 = "09kcz6w87x34a3h4r142z3zgw0av19cxn9jrbz52wkpm1534dfaq";
     };
 
-    propagatedBuildInputs = [ wcwidth six ];
+    propagatedBuildInputs = [wcwidth six];
   };
 
   enlighten = buildPythonPackage rec {
@@ -43,24 +51,23 @@ let
       sha256 = "0lkn7n3bfp7zip6hkqwkqwc8pxmhhs4rr699k77h51rfln6kjllh";
     };
   };
-
 in
-buildPythonPackage rec {
-  pname = "nsz";
-  version = "4.1.0";
+  buildPythonPackage rec {
+    pname = "nsz";
+    version = "4.1.0";
 
-  doCheck = false;
+    doCheck = false;
 
-  propagatedBuildInputs = [
-    pycryptodome
-    enlighten
-    zstandard
-  ];
+    propagatedBuildInputs = [
+      pycryptodome
+      enlighten
+      zstandard
+    ];
 
-  src = fetchFromGitHub {
-    owner = "nicoboss";
-    repo = "nsz";
-    rev = version;
-    hash = "sha256-tdngXV+VUOAkg3lF2NOmw0mBeSEE+YpUfuKukTKcPnM=";
-  };
-}
+    src = fetchFromGitHub {
+      owner = "nicoboss";
+      repo = "nsz";
+      rev = version;
+      hash = "sha256-tdngXV+VUOAkg3lF2NOmw0mBeSEE+YpUfuKukTKcPnM=";
+    };
+  }

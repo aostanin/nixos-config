@@ -1,8 +1,10 @@
-{ config, pkgs, ... }:
-let
-  secrets = import ../../secrets;
-in
 {
+  config,
+  pkgs,
+  ...
+}: let
+  secrets = import ../../secrets;
+in {
   virtualisation.oci-containers.containers.tdarr-node = {
     autoStart = false;
     image = "ghcr.io/haveagitgat/tdarr_node";

@@ -1,24 +1,27 @@
-{ pkgs, config, lib, nixosConfig, ... }:
-
-with lib;
-let
-  rofiWithPlugins = with pkgs; rofi.override {
-    plugins = [
-      rofi-calc
-    ];
-  };
-in
 {
+  pkgs,
+  config,
+  lib,
+  nixosConfig,
+  ...
+}:
+with lib; let
+  rofiWithPlugins = with pkgs;
+    rofi.override {
+      plugins = [
+        rofi-calc
+      ];
+    };
+in {
   xsession.windowManager.i3 = {
     enable = true;
     config = {
       modifier = "Mod4";
       terminal = "alacritty";
       focus.followMouse = false;
-      keybindings =
-        let
-          modifier = config.xsession.windowManager.i3.config.modifier;
-        in
+      keybindings = let
+        modifier = config.xsession.windowManager.i3.config.modifier;
+      in
         mkOptionDefault {
           "Print" = "exec ${pkgs.flameshot}/bin/flameshot gui";
           "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
@@ -54,7 +57,7 @@ in
         "Return" = "mode default";
       };
       fonts = {
-        names = [ "Hack Nerd Font 9" ];
+        names = ["Hack Nerd Font 9"];
       };
       colors = {
         focused = {
@@ -89,64 +92,62 @@ in
       bars = [
         {
           trayOutput = "primary";
-          statusCommand =
-            let
-              config = pkgs.writeText "i3status-rust-config" ''
-                theme = "gruvbox-dark"
-                icons = "awesome"
+          statusCommand = let
+            config = pkgs.writeText "i3status-rust-config" ''
+              theme = "gruvbox-dark"
+              icons = "awesome"
 
+              [[block]]
+              block = "disk_space"
+              path = "/"
+              alias = "/"
+              info_type = "available"
+              unit = "GB"
+              interval = 20
+              warning = 20.0
+              alert = 10.0
+
+              [[block]]
+              block = "memory"
+              display_type = "memory"
+              format_mem = "{mem_used_percents}"
+              format_swap = "{swap_used_percents}"
+
+              [[block]]
+              block = "cpu"
+              format = "{utilization}"
+              interval = 1
+
+              [[block]]
+              block = "load"
+              interval = 1
+              format = "{1m}"
+
+              ${optionalString nixosConfig.variables.hasBattery ''
                 [[block]]
-                block = "disk_space"
-                path = "/"
-                alias = "/"
-                info_type = "available"
-                unit = "GB"
-                interval = 20
-                warning = 20.0
-                alert = 10.0
+                block = "battery"
+                driver = "upower"
+                device = "DisplayDevice"
+                interval = 10
+                format = "{percentage}"
+              ''}
 
+              ${optionalString nixosConfig.variables.hasBacklightControl ''
                 [[block]]
-                block = "memory"
-                display_type = "memory"
-                format_mem = "{mem_used_percents}"
-                format_swap = "{swap_used_percents}"
+                block = "backlight"
+              ''}
 
-                [[block]]
-                block = "cpu"
-                format = "{utilization}"
-                interval = 1
+              [[block]]
+              block = "sound"
 
-                [[block]]
-                block = "load"
-                interval = 1
-                format = "{1m}"
-
-                ${optionalString nixosConfig.variables.hasBattery ''
-                  [[block]]
-                  block = "battery"
-                  driver = "upower"
-                  device = "DisplayDevice"
-                  interval = 10
-                  format = "{percentage}"
-                ''}
-
-                ${optionalString nixosConfig.variables.hasBacklightControl ''
-                  [[block]]
-                  block = "backlight"
-                ''}
-
-                [[block]]
-                block = "sound"
-
-                [[block]]
-                block = "time"
-                interval = 5
-                format = "%a %-m/%-d %-H:%M"
-              '';
-            in
-            "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
+              [[block]]
+              block = "time"
+              interval = 5
+              format = "%a %-m/%-d %-H:%M"
+            '';
+          in "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
           fonts = {
-            names = [ "Hack Nerd Font 10" ];
+            names = ["Hack Nerd Font 10"];
           };
           colors = {
             separator = "#928374";
@@ -175,30 +176,44 @@ in
           };
         }
       ];
-      startup = [
-        { command = "${pkgs.autorandr}/bin/autorandr --change"; notification = false; }
-        { command = "${pkgs.pasystray}/bin/pasystray --notify=none"; notification = false; }
-        { command = "${pkgs.barrier}/bin/barrier"; notification = false; }
-      ] ++ optionals nixosConfig.networking.networkmanager.enable [
-        { command = "${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable"; notification = false; }
-      ];
+      startup =
+        [
+          {
+            command = "${pkgs.autorandr}/bin/autorandr --change";
+            notification = false;
+          }
+          {
+            command = "${pkgs.pasystray}/bin/pasystray --notify=none";
+            notification = false;
+          }
+          {
+            command = "${pkgs.barrier}/bin/barrier";
+            notification = false;
+          }
+        ]
+        ++ optionals nixosConfig.networking.networkmanager.enable [
+          {
+            command = "${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable";
+            notification = false;
+          }
+        ];
       assigns = {
         "2" = [
-          { class = "^discord$"; }
-          { class = "^SchildiChat$"; }
-          { class = "^Skype$"; }
-          { class = "^Slack$"; }
-          { class = "^thunderbird$"; }
+          {class = "^discord$";}
+          {class = "^SchildiChat$";}
+          {class = "^Skype$";}
+          {class = "^Slack$";}
+          {class = "^thunderbird$";}
         ];
       };
       floating = {
         border = 1;
         titlebar = false;
         criteria = [
-          { class = "mpv"; }
-          { class = ".*scrcpy.*"; }
-          { class = "Android Emulator - .*"; }
-          { class = "Picture-in-Picture"; }
+          {class = "mpv";}
+          {class = ".*scrcpy.*";}
+          {class = "Android Emulator - .*";}
+          {class = "Picture-in-Picture";}
         ];
       };
       window = {
@@ -206,11 +221,26 @@ in
         titlebar = false;
         hideEdgeBorders = "smart";
         commands = [
-          { criteria = { class = "looking-glass-client"; }; command = "border none, move container to workspace 9, workspace 9, move workspace to output primary, focus, fullscreen enable"; }
-          { criteria = { class = "mpv"; }; command = "border none"; }
-          { criteria = { class = ".*scrcpy.*"; }; command = "border none"; }
-          { criteria = { class = "Android Emulator - .*"; }; command = "border none"; }
-          { criteria = { class = "Picture-in-Picture"; }; command = "border none"; }
+          {
+            criteria = {class = "looking-glass-client";};
+            command = "border none, move container to workspace 9, workspace 9, move workspace to output primary, focus, fullscreen enable";
+          }
+          {
+            criteria = {class = "mpv";};
+            command = "border none";
+          }
+          {
+            criteria = {class = ".*scrcpy.*";};
+            command = "border none";
+          }
+          {
+            criteria = {class = "Android Emulator - .*";};
+            command = "border none";
+          }
+          {
+            criteria = {class = "Picture-in-Picture";};
+            command = "border none";
+          }
         ];
       };
     };

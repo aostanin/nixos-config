@@ -1,5 +1,9 @@
-{ pkgs, fetchFromGitHub, rustPlatform, libevdev }:
-
+{
+  pkgs,
+  fetchFromGitHub,
+  rustPlatform,
+  libevdev,
+}:
 rustPlatform.buildRustPackage rec {
   pname = "evsieve";
   version = "1.3.1";

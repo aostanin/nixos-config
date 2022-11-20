@@ -1,5 +1,10 @@
-{ buildPythonPackage, pkgs, fetchFromGitHub, fusepy, pycryptodomex }:
-
+{
+  buildPythonPackage,
+  pkgs,
+  fetchFromGitHub,
+  fusepy,
+  pycryptodomex,
+}:
 buildPythonPackage rec {
   pname = "ninfs";
   version = "1.7b2";
@@ -18,5 +23,5 @@ buildPythonPackage rec {
     pycryptodomex
   ];
 
-  makeWrapperArgs = [ "--prefix FUSE_LIBRARY_PATH : ${pkgs.fuse}/lib/libfuse.so" ];
+  makeWrapperArgs = ["--prefix FUSE_LIBRARY_PATH : ${pkgs.fuse}/lib/libfuse.so"];
 }

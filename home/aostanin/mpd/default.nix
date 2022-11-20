@@ -1,8 +1,11 @@
-{ pkgs, config, lib, ... }:
-let
-  secrets = import ../../../secrets;
-in
 {
+  pkgs,
+  config,
+  lib,
+  ...
+}: let
+  secrets = import ../../../secrets;
+in {
   programs.ncmpcpp = {
     enable = true;
     settings = {

@@ -1,5 +1,9 @@
-{ lib, fetchurl, appimageTools, pkgs }:
-let
+{
+  lib,
+  fetchurl,
+  appimageTools,
+  pkgs,
+}: let
   pname = "immersed";
   version = "6.8";
   name = "${pname}-${version}";
@@ -14,19 +18,20 @@ let
     inherit name src;
   };
 in
-appimageTools.wrapType2 {
-  inherit name src;
+  appimageTools.wrapType2 {
+    inherit name src;
 
-  multiPkgs = null; # no 32bit needed
-  extraPkgs = pkgs: (appimageTools.defaultFhsEnvArgs.multiPkgs pkgs)
-    ++ [ pkgs.libpulseaudio pkgs.libva ];
+    multiPkgs = null; # no 32bit needed
+    extraPkgs = pkgs:
+      (appimageTools.defaultFhsEnvArgs.multiPkgs pkgs)
+      ++ [pkgs.libpulseaudio pkgs.libva];
 
-  extraInstallCommands = ''
-    ln -s $out/bin/${name} $out/bin/${pname}
-    install -m 444 -D ${appimageContents}/Immersed.desktop $out/share/applications/immersed.desktop
-    install -m 444 -D ${appimageContents}/Immersed.png \
-      $out/share/icons/hicolor/512x512/apps/immersed.png
-    substituteInPlace $out/share/applications/immersed.desktop \
-      --replace 'Exec=AppRun' 'Exec=${pname}'
-  '';
-}
+    extraInstallCommands = ''
+      ln -s $out/bin/${name} $out/bin/${pname}
+      install -m 444 -D ${appimageContents}/Immersed.desktop $out/share/applications/immersed.desktop
+      install -m 444 -D ${appimageContents}/Immersed.png \
+        $out/share/icons/hicolor/512x512/apps/immersed.png
+      substituteInPlace $out/share/applications/immersed.desktop \
+        --replace 'Exec=AppRun' 'Exec=${pname}'
+    '';
+  }

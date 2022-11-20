@@ -1,8 +1,11 @@
-{ config, pkgs, hardwareModulesPath, ... }:
-let
-  secrets = import ../../secrets;
-in
 {
+  config,
+  pkgs,
+  hardwareModulesPath,
+  ...
+}: let
+  secrets = import ../../secrets;
+in {
   imports = [
     "${hardwareModulesPath}/lenovo/thinkpad/t440p"
     "${hardwareModulesPath}/common/pc/laptop/ssd"
@@ -25,7 +28,7 @@ in
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    supportedFilesystems = [ "zfs" ];
+    supportedFilesystems = ["zfs"];
     tmpOnTmpfs = true;
     kernelParams = [
       "intel_pstate=active"
@@ -54,14 +57,20 @@ in
           22000 # Syncthing
         ];
         allowedTCPPortRanges = [
-          { from = 1714; to = 1764; } # KDE Connect
+          {
+            from = 1714;
+            to = 1764;
+          } # KDE Connect
         ];
         allowedUDPPorts = [
           22000 # Syncthing
           21027 # Syncthing
         ];
         allowedUDPPortRanges = [
-          { from = 1714; to = 1764; } # KDE Connect
+          {
+            from = 1714;
+            to = 1764;
+          } # KDE Connect
         ];
       };
     };
@@ -80,7 +89,7 @@ in
     };
 
     xserver = {
-      videoDrivers = [ "intel" ];
+      videoDrivers = ["intel"];
       deviceSection = ''
         Option "TearFree" "true"
       '';

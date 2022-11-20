@@ -1,6 +1,9 @@
-{ pkgs, config, lib, ... }:
-
 {
+  pkgs,
+  config,
+  lib,
+  ...
+}: {
   gtk = {
     enable = true;
     theme.name = "Adwaita-dark";

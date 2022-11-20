@@ -1,8 +1,11 @@
-{ pkgs, config, lib, ... }:
-let
-  secrets = import ../../../secrets;
-in
 {
+  pkgs,
+  config,
+  lib,
+  ...
+}: let
+  secrets = import ../../../secrets;
+in {
   programs.git = {
     enable = true;
     userName = secrets.user.fullName;

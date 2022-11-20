@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
-let
+{
+  config,
+  pkgs,
+  ...
+}: let
   # gpuPciIds = "1458:22f7,1458:aaf0"; # RX 570
   gpuPciIds = "10de:1e84,10de:10f8,10de:1ad8,10de:1ad9"; # RTX 2070 Super
   usbPciIds = "1b73:1100";
@@ -15,13 +18,15 @@ let
       sha256 = "sha256-FZjwLY2XtPGhwc/GyAAH2jvFOp61lSqXqXjz0UBr7uw=";
       fetchSubmodules = true;
     };
-    buildInputs = old.buildInputs ++ (with pkgs; [
-      pipewire
-      libpulseaudio
-      libsamplerate
-    ]);
+    buildInputs =
+      old.buildInputs
+      ++ (with pkgs; [
+        pipewire
+        libpulseaudio
+        libsamplerate
+      ]);
   });
-  vfio-isolate = pkgs.python3Packages.callPackage ../../packages/vfio-isolate { };
+  vfio-isolate = pkgs.python3Packages.callPackage ../../packages/vfio-isolate {};
   gameScript = pkgs.writeScriptBin "game" ''
     #!${pkgs.stdenv.shell}
 
@@ -82,8 +87,7 @@ let
         done <<< "$(find -L "$HOOKPATH" -maxdepth 1 -type f -executable -print;)"
     fi
   '';
-in
-{
+in {
   boot = {
     initrd.kernelModules = [
       "vfio_pci"
@@ -134,7 +138,7 @@ in
 
     services."hibernate-vm-shutdown-${vmName}" = {
       description = "Hibernate VM ${vmName} when host shuts down";
-      requires = [ "virt-guest-shutdown.target" ];
+      requires = ["virt-guest-shutdown.target"];
       after = [
         "libvirt-guests.service"
         "libvirtd.service"
@@ -145,16 +149,16 @@ in
         RemainAfterExit = true;
         ExecStop = "${hibernateScript}/bin/hibernate-vm ${vmName}";
       };
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
     };
     services."hibernate-vm-sleep-${vmName}" = {
       description = "Hibernate VM ${vmName} when host goes to sleep";
-      before = [ "sleep.target" ];
+      before = ["sleep.target"];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${hibernateScript}/bin/hibernate-vm ${vmName}";
       };
-      wantedBy = [ "sleep.target" ];
+      wantedBy = ["sleep.target"];
     };
   };
 

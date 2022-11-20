@@ -1,5 +1,7 @@
-{ stdenv, fetchgit }:
-
+{
+  stdenv,
+  fetchgit,
+}:
 stdenv.mkDerivation {
   name = "dedbae";
 

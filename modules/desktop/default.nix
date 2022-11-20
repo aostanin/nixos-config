@@ -1,6 +1,8 @@
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ./audio.nix
   ];
@@ -19,7 +21,7 @@
 
   i18n.inputMethod = {
     enabled = "fcitx";
-    fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
+    fcitx.engines = with pkgs.fcitx-engines; [mozc];
   };
 
   fonts.fonts = with pkgs; [
@@ -52,7 +54,7 @@
 
     printing = {
       enable = true;
-      drivers = [ pkgs.brlaser ];
+      drivers = [pkgs.brlaser];
     };
 
     udev.extraRules = ''

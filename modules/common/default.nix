@@ -1,8 +1,11 @@
-{ config, pkgs, lib, ... }:
-let
-  secrets = import ../../secrets;
-in
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  secrets = import ../../secrets;
+in {
   imports = [
     ./packages.nix
   ];
@@ -56,7 +59,7 @@ in
       "net.bridge.bridge-nf-call-ip6tables" = 0;
     };
     # Load module needed to set above sysctl
-    kernelModules = [ "br_netfilter" ];
+    kernelModules = ["br_netfilter"];
   };
 
   networking = {
@@ -92,8 +95,8 @@ in
     ];
     shell = pkgs.zsh;
     hashedPassword = secrets.user.hashedPassword;
-    openssh.authorizedKeys.keys = [ secrets.user.sshKey ];
+    openssh.authorizedKeys.keys = [secrets.user.sshKey];
   };
 
-  users.users.root.openssh.authorizedKeys.keys = [ secrets.user.sshKey ];
+  users.users.root.openssh.authorizedKeys.keys = [secrets.user.sshKey];
 }

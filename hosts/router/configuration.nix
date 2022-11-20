@@ -1,10 +1,14 @@
-{ config, pkgs, lib, hardwareModulesPath, ... }:
-let
+{
+  config,
+  pkgs,
+  lib,
+  hardwareModulesPath,
+  ...
+}: let
   secrets = import ../../secrets;
   iface = "enp1s0";
   iface_lan = "enp7s0";
-in
-{
+in {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel"
     "${hardwareModulesPath}/common/pc/ssd"
@@ -32,11 +36,13 @@ in
   };
 
   systemd.package = pkgs.systemd.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++ [
-      # network: tunnel: automatic local address selection
-      # ref: https://github.com/systemd/systemd/pull/21648
-      ./patches/systemd-21648.patch
-    ];
+    patches =
+      (old.patches or [])
+      ++ [
+        # network: tunnel: automatic local address selection
+        # ref: https://github.com/systemd/systemd/pull/21648
+        ./patches/systemd-21648.patch
+      ];
   });
 
   networking = {
@@ -51,19 +57,24 @@ in
     useDHCP = false;
 
     vlans = {
-      wan6 = { id = 10; interface = iface; };
+      wan6 = {
+        id = 10;
+        interface = iface;
+      };
       # guest = { id = 20; interface = iface; };
       # iot = { id = 40; interface = iface; };
     };
 
     # TODO: Switch to iface once ready
     # bridges.lan.interfaces = [ iface ];
-    bridges.lan.interfaces = [ iface_lan ];
+    bridges.lan.interfaces = [iface_lan];
     interfaces.lan = {
-      ipv4.addresses = [{
-        address = "10.0.0.1";
-        prefixLength = 24;
-      }];
+      ipv4.addresses = [
+        {
+          address = "10.0.0.1";
+          prefixLength = 24;
+        }
+      ];
     };
 
     # interfaces.guest = {
@@ -102,7 +113,7 @@ in
         LinkLocalAddressing = "no";
       };
       routes = [
-        { routeConfig = { Destination = "0.0.0.0/0"; }; }
+        {routeConfig = {Destination = "0.0.0.0/0";};}
       ];
     };
 
@@ -163,10 +174,13 @@ in
 
       # TODO: Set up AdGuard Home
       dhcp-option=tag:lan,option:dns-server,10.0.0.10
+      # TODO: Forward all NTP traffic
+      dhcp-option=tag:lan,option:ntp-server,10.0.0.10
 
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: lease:
-        "dhcp-host=${lease.macAddress},${lease.ipAddress},${hostname}"
-      ) secrets.leases)}
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (
+          hostname: lease: "dhcp-host=${lease.macAddress},${lease.ipAddress},${hostname}"
+        )
+        secrets.leases)}
     '';
   };
   services.resolved.enable = false;
@@ -231,15 +245,27 @@ in
         # allow LAN to firewall, disallow WAN to firewall
         chain input {
           type filter hook input priority 0; policy accept;
-          iifname "lan0" accept
-          iifname "wan0" drop
+          iifname "lan" accept
+          iifname "wan" drop
         }
 
         # allow packets from LAN to WAN, and WAN to LAN if LAN initiated the connection
         chain forward {
           type filter hook forward priority 0; policy drop;
-          iifname "lan0" oifname "wan0" accept
-          iifname "wan0" oifname "lan0" ct state related,established accept
+          iifname "lan" oifname "wan" accept
+          iifname "wan" oifname "lan" ct state related,established accept
+        }
+      }
+
+      table ip nat {
+        chain prerouting {
+          type nat hook prerouting priority 0; policy accept;
+        }
+
+        # for all packets to WAN, after routing, replace source address with primary IP of WAN interface
+        chain postrouting {
+          type nat hook postrouting priority 100; policy accept;
+          oifname "wan0" masquerade
         }
       }
     '';

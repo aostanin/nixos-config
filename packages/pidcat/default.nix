@@ -1,5 +1,8 @@
-{ pkgs, stdenv, fetchFromGitHub }:
-
+{
+  pkgs,
+  stdenv,
+  fetchFromGitHub,
+}:
 stdenv.mkDerivation rec {
   pname = "pidcat";
   version = "2.1.0";

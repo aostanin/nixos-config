@@ -1,11 +1,15 @@
-{ config, pkgs, lib, hardwareModulesPath, ... }:
-let
+{
+  config,
+  pkgs,
+  lib,
+  hardwareModulesPath,
+  ...
+}: let
   secrets = import ../../secrets;
   iface = "enp4s0f0";
   ifaceStorage = "enp4s0f1";
   ifaceWol = "enp5s0";
-in
-{
+in {
   imports = [
     "${hardwareModulesPath}/common/cpu/amd"
     "${hardwareModulesPath}/common/pc/ssd"
@@ -33,7 +37,7 @@ in
       systemd-boot.enable = true; # TODO: Switch back to systemd-boot when ipxe can be added
       efi.canTouchEfiVariables = true;
     };
-    supportedFilesystems = [ "zfs" ];
+    supportedFilesystems = ["zfs"];
     tmpOnTmpfs = true;
     extraModulePackages = with config.boot.kernelPackages; [
       zenpower
@@ -46,8 +50,8 @@ in
       "k10temp" # Use zenpower
       "nouveau"
     ];
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
-    zfs.extraPools = [ "tank" ];
+    binfmt.emulatedSystems = ["aarch64-linux"];
+    zfs.extraPools = ["tank"];
   };
 
   hardware.opengl.extraPackages = with pkgs; [
@@ -59,34 +63,43 @@ in
     hostName = "valmar";
     hostId = "203d588e";
 
-    bridges.br0.interfaces = [ iface ];
+    bridges.br0.interfaces = [iface];
 
     vlans = {
-      vlan40 = { id = 40; interface = "br0"; };
+      vlan40 = {
+        id = 40;
+        interface = "br0";
+      };
     };
 
     interfaces = {
       br0 = {
         macAddress = secrets.network.home.hosts.valmar.macAddress;
-        ipv4.addresses = [{
-          address = secrets.network.home.hosts.valmar.address;
-          prefixLength = 24;
-        }];
+        ipv4.addresses = [
+          {
+            address = secrets.network.home.hosts.valmar.address;
+            prefixLength = 24;
+          }
+        ];
       };
 
       vlan40 = {
-        ipv4.addresses = [{
-          address = secrets.network.iot.hosts.valmar.address;
-          prefixLength = 24;
-        }];
+        ipv4.addresses = [
+          {
+            address = secrets.network.iot.hosts.valmar.address;
+            prefixLength = 24;
+          }
+        ];
       };
 
       "${ifaceStorage}" = {
         mtu = 9000;
-        ipv4.addresses = [{
-          address = secrets.network.storage.hosts.valmar.address;
-          prefixLength = 24;
-        }];
+        ipv4.addresses = [
+          {
+            address = secrets.network.storage.hosts.valmar.address;
+            prefixLength = 24;
+          }
+        ];
       };
 
       "${ifaceWol}" = {
@@ -95,7 +108,7 @@ in
     };
 
     defaultGateway = secrets.network.home.defaultGateway;
-    nameservers = [ secrets.network.home.nameserverPihole ];
+    nameservers = [secrets.network.home.nameserverPihole];
 
     firewall = {
       enable = true;
@@ -122,7 +135,7 @@ in
     };
 
     xserver = {
-      videoDrivers = [ "amdgpu" "nvidia" ];
+      videoDrivers = ["amdgpu" "nvidia"];
       deviceSection = ''
         Option "TearFree" "true"
       '';
@@ -204,17 +217,18 @@ in
     };
   };
 
-  fileSystems = let nfsFilesystem = path: {
-    device = "${secrets.network.storage.hosts.elena.address}:${path}";
-    fsType = "nfs";
-  }; in
-    {
-      "/var/lib/libvirt/images/remote" = nfsFilesystem "/images";
-      "/mnt/media" = nfsFilesystem "/media";
-      "/mnt/personal" = nfsFilesystem "/personal";
-      "/mnt/appdata" = nfsFilesystem "/appdata";
-      "/mnt/appdata/temp" = nfsFilesystem "/appdata/temp";
+  fileSystems = let
+    nfsFilesystem = path: {
+      device = "${secrets.network.storage.hosts.elena.address}:${path}";
+      fsType = "nfs";
     };
+  in {
+    "/var/lib/libvirt/images/remote" = nfsFilesystem "/images";
+    "/mnt/media" = nfsFilesystem "/media";
+    "/mnt/personal" = nfsFilesystem "/personal";
+    "/mnt/appdata" = nfsFilesystem "/appdata";
+    "/mnt/appdata/temp" = nfsFilesystem "/appdata/temp";
+  };
 
   programs.adb.enable = true;
 
@@ -236,13 +250,13 @@ in
 
   systemd.services."virtwold-br0" = {
     description = "libvirt wake on lan daemon";
-    after = [ "network.target" ];
-    wants = [ "libvirtd.service" ];
+    after = ["network.target"];
+    wants = ["libvirtd.service"];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.virtwold}/bin/virtwold -interface br0";
     };
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
   };
 
   # TODO: For temporary development, remove later

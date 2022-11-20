@@ -20,105 +20,130 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, nur, deploy-rs, flake-utils }:
-    let
-      secrets = import ./secrets;
-      mkNixosSystem = { hostname, system ? "x86_64-linux", extraModules ? [ ] }: nixpkgs.lib.nixosSystem {
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-unstable,
+    home-manager,
+    nixos-hardware,
+    nur,
+    deploy-rs,
+    flake-utils,
+  }: let
+    secrets = import ./secrets;
+    mkNixosSystem = {
+      hostname,
+      system ? "x86_64-linux",
+      extraModules ? [],
+    }:
+      nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
           hardwareModulesPath = nixos-hardware;
           homeModulesPath = home-manager.nixosModules;
         };
-        modules = [
-          {
-            nixpkgs = {
-              config = import ./home/aostanin/nixpkgs/config.nix;
-              overlays = [
-                nur.overlay
-                (final: prev: {
-                  unstable = import nixpkgs-unstable {
-                    inherit system;
-                    config = import ./home/aostanin/nixpkgs/config.nix;
-                  };
-                })
-              ] ++ (import ./home/aostanin/nixpkgs/overlays.nix);
-            };
-            system.stateVersion = "22.05";
+        modules =
+          [
+            {
+              nixpkgs = {
+                config = import ./home/aostanin/nixpkgs/config.nix;
+                overlays =
+                  [
+                    nur.overlay
+                    (final: prev: {
+                      unstable = import nixpkgs-unstable {
+                        inherit system;
+                        config = import ./home/aostanin/nixpkgs/config.nix;
+                      };
+                    })
+                  ]
+                  ++ (import ./home/aostanin/nixpkgs/overlays.nix);
+              };
+              system.stateVersion = "22.05";
 
-            # Use same nixpkgs for flakes and system
-            # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
-            nix = {
-              registry.nixpkgs.flake = nixpkgs;
-              registry.nixpkgs-unstable.flake = nixpkgs-unstable;
-              nixPath = [
-                "nixpkgs=/etc/channels/nixpkgs"
-                "nixos-config=/etc/nixos/configuration.nix"
-                "/nix/var/nix/profiles/per-user/root/channels"
-              ];
-            };
-            environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
-          }
-          (./hosts + "/${hostname}/configuration.nix")
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users = import ./home;
-          }
-        ] ++ extraModules;
+              # Use same nixpkgs for flakes and system
+              # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
+              nix = {
+                registry.nixpkgs.flake = nixpkgs;
+                registry.nixpkgs-unstable.flake = nixpkgs-unstable;
+                nixPath = [
+                  "nixpkgs=/etc/channels/nixpkgs"
+                  "nixos-config=/etc/nixos/configuration.nix"
+                  "/nix/var/nix/profiles/per-user/root/channels"
+                ];
+              };
+              environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
+            }
+            (./hosts + "/${hostname}/configuration.nix")
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users = import ./home;
+            }
+          ]
+          ++ extraModules;
       };
-      mkNode = { hostname }: {
-        hostname = secrets.network.zerotier.hosts."${hostname}".address;
-        sshUser = "root";
-        fastConnection = true;
-        autoRollback = false;
-        magicRollback = false;
+    mkNode = {hostname}: {
+      hostname = secrets.network.zerotier.hosts."${hostname}".address;
+      sshUser = "root";
+      fastConnection = true;
+      autoRollback = false;
+      magicRollback = false;
 
-        profiles = {
-          system = {
-            user = "root";
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."${hostname}";
-          };
+      profiles = {
+        system = {
+          user = "root";
+          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."${hostname}";
         };
       };
-    in
-    {
-      nixosConfigurations = {
-        elena = mkNixosSystem { hostname = "elena"; };
-        mareg = mkNixosSystem { hostname = "mareg"; };
-        roan = mkNixosSystem { hostname = "roan"; };
-        router = mkNixosSystem { hostname = "router"; };
-        valmar = mkNixosSystem { hostname = "valmar"; };
-      };
+    };
+  in {
+    nixosConfigurations = {
+      elena = mkNixosSystem {hostname = "elena";};
+      mareg = mkNixosSystem {hostname = "mareg";};
+      roan = mkNixosSystem {hostname = "roan";};
+      router = mkNixosSystem {hostname = "router";};
+      valmar = mkNixosSystem {hostname = "valmar";};
+    };
 
-      deploy.nodes = {
-        elena = mkNode { hostname = "elena"; };
-        mareg = mkNode { hostname = "mareg"; };
-        roan = mkNode { hostname = "roan"; };
-        router = mkNode { hostname = "router"; };
-        valmar = mkNode { hostname = "valmar"; };
-      };
+    deploy.nodes = {
+      elena = mkNode {hostname = "elena";};
+      mareg = mkNode {hostname = "mareg";};
+      roan = mkNode {hostname = "roan";};
+      router = mkNode {hostname = "router";};
+      valmar = mkNode {hostname = "valmar";};
+    };
 
-      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
 
-      devShell = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (system:
-        with nixpkgs.legacyPackages.${system}; mkShell {
-          buildInputs = [
-            cargo # For nixpkgs-fmt
-            deploy-rs.defaultPackage.${system}
-            git-crypt
-            nixos-generators
-          ] ++ lib.optionals
-            (system != "i686-linux" &&
-              !(lib.strings.hasSuffix "-darwin" system)) [
-            # pre-commit is missing i686-linux https://github.com/NixOS/nixpkgs/issues/174847
-            # dotnet is marked broken on darwin on nixos-22.05 https://github.com/NixOS/nixpkgs/pull/176000
-            pre-commit
-          ];
+    devShell = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (system:
+      with nixpkgs.legacyPackages.${system};
+        mkShell {
+          buildInputs =
+            [
+              cargo # For nixpkgs-fmt
+              deploy-rs.defaultPackage.${system}
+              git-crypt
+              nixos-generators
+            ]
+            ++ lib.optionals
+            (system
+              != "i686-linux"
+              && !(lib.strings.hasSuffix "-darwin" system)) [
+              # pre-commit is missing i686-linux https://github.com/NixOS/nixpkgs/issues/174847
+              # dotnet is marked broken on darwin on nixos-22.05 https://github.com/NixOS/nixpkgs/pull/176000
+              pre-commit
+            ];
 
           shellHook = ''
             pre-commit install -f --hook-type pre-commit
           '';
         });
-    };
+
+    formatter = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (
+      system:
+        nixpkgs.legacyPackages.${system}.alejandra
+    );
+  };
 }

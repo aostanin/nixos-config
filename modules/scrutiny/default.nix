@@ -1,12 +1,14 @@
-{ config, pkgs, ... }:
-let
-  secrets = import ../../secrets;
-in
 {
+  config,
+  pkgs,
+  ...
+}: let
+  secrets = import ../../secrets;
+in {
   systemd = {
     timers.scrutiny-collector = {
-      wantedBy = [ "timers.target" ];
-      partOf = [ "scrutiny-collector.service" ];
+      wantedBy = ["timers.target"];
+      partOf = ["scrutiny-collector.service"];
       timerConfig = {
         OnCalendar = "daily";
         RandomizedDelaySec = "5h";

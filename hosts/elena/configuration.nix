@@ -1,10 +1,13 @@
-{ config, pkgs, hardwareModulesPath, ... }:
-let
+{
+  config,
+  pkgs,
+  hardwareModulesPath,
+  ...
+}: let
   secrets = import ../../secrets;
   iface = "enp5s0f0";
   ifaceStorage = "enp5s0f1";
-in
-{
+in {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel"
     "${hardwareModulesPath}/common/pc/ssd"
@@ -22,7 +25,7 @@ in
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    supportedFilesystems = [ "zfs" ];
+    supportedFilesystems = ["zfs"];
     tmpOnTmpfs = true;
     initrd.kernelModules = [
       "vfio_pci"
@@ -49,36 +52,45 @@ in
     hostId = "4446d154";
 
     vlans = {
-      vlan40 = { id = 40; interface = "br0"; };
+      vlan40 = {
+        id = 40;
+        interface = "br0";
+      };
     };
 
     # Home LAN, IPoE uplink
-    bridges.br0.interfaces = [ iface ];
+    bridges.br0.interfaces = [iface];
     interfaces.br0 = {
       macAddress = secrets.network.home.hosts.elena.macAddress;
-      ipv4.addresses = [{
-        address = secrets.network.home.hosts.elena.address;
-        prefixLength = 24;
-      }];
+      ipv4.addresses = [
+        {
+          address = secrets.network.home.hosts.elena.address;
+          prefixLength = 24;
+        }
+      ];
     };
 
     interfaces.vlan40 = {
-      ipv4.addresses = [{
-        address = secrets.network.iot.hosts.elena.address;
-        prefixLength = 24;
-      }];
+      ipv4.addresses = [
+        {
+          address = secrets.network.iot.hosts.elena.address;
+          prefixLength = 24;
+        }
+      ];
     };
 
     interfaces."${ifaceStorage}" = {
       mtu = 9000;
-      ipv4.addresses = [{
-        address = secrets.network.storage.hosts.elena.address;
-        prefixLength = 24;
-      }];
+      ipv4.addresses = [
+        {
+          address = secrets.network.storage.hosts.elena.address;
+          prefixLength = 24;
+        }
+      ];
     };
 
     defaultGateway = secrets.network.home.defaultGateway;
-    nameservers = [ secrets.network.home.nameserver ];
+    nameservers = [secrets.network.home.nameserver];
 
     firewall = {
       enable = true;
@@ -110,7 +122,7 @@ in
   };
 
   services = {
-    xserver.videoDrivers = [ "intel" "nvidia" ];
+    xserver.videoDrivers = ["intel" "nvidia"];
 
     zfs = {
       autoScrub = {
@@ -231,22 +243,22 @@ in
 
   fileSystems."/srv/nfs/images" = {
     device = "/var/lib/libvirt/images";
-    options = [ "bind" ];
+    options = ["bind"];
   };
 
   fileSystems."/srv/nfs/media" = {
     device = "/storage/media";
-    options = [ "bind" ];
+    options = ["bind"];
   };
 
   fileSystems."/srv/nfs/personal" = {
     device = "/storage/personal";
-    options = [ "bind" ];
+    options = ["bind"];
   };
 
   fileSystems."/srv/nfs/appdata" = {
     device = "/storage/appdata";
-    options = [ "rbind" ];
+    options = ["rbind"];
   };
 
   services.nfs.server = {
@@ -263,8 +275,8 @@ in
   systemd = {
     timers = {
       cleanup-recorded-videos = {
-        wantedBy = [ "timers.target" ];
-        partOf = [ "cleanup-recorded-videos.service" ];
+        wantedBy = ["timers.target"];
+        partOf = ["cleanup-recorded-videos.service"];
         timerConfig = {
           OnCalendar = "daily";
           RandomizedDelaySec = "5h";
@@ -272,8 +284,8 @@ in
       };
 
       update-mam = {
-        wantedBy = [ "timers.target" ];
-        partOf = [ "update-mam.service" ];
+        wantedBy = ["timers.target"];
+        partOf = ["update-mam.service"];
         timerConfig = {
           OnCalendar = "0/2:00";
           RandomizedDelaySec = "30m";
@@ -285,7 +297,7 @@ in
       cleanup-recorded-videos = {
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = pkgs.writers.writePython3 "cleanup-recorded-videos" { } ''
+          ExecStart = pkgs.writers.writePython3 "cleanup-recorded-videos" {} ''
             import glob
             import os
 
@@ -318,43 +330,41 @@ in
         };
       };
 
-      hibernate-vm-shutdown-win10-work =
-        let
-          vmName = "win10-work";
-          # TODO: Move to module, shared with VFIO
-          hibernateScript = pkgs.writeScriptBin "hibernate-vm" ''
-            #!${pkgs.stdenv.shell}
+      hibernate-vm-shutdown-win10-work = let
+        vmName = "win10-work";
+        # TODO: Move to module, shared with VFIO
+        hibernateScript = pkgs.writeScriptBin "hibernate-vm" ''
+          #!${pkgs.stdenv.shell}
 
-            #
-            # Usage: hibernate-vm NAME
-            #
-            # Hibernates the VM specified in NAME and waits for it to finish shutting down
-            #
+          #
+          # Usage: hibernate-vm NAME
+          #
+          # Hibernates the VM specified in NAME and waits for it to finish shutting down
+          #
 
-            if ${pkgs.libvirt}/bin/virsh dompmsuspend "$1" disk; then
-              echo "Waiting for domain to finish shutting down.." >&2
-              while ! [ "$(${pkgs.libvirt}/bin/virsh domstate "$1")" == 'shut off' ]; do
-                sleep 1
-              done
-              echo "Domain finished shutting down" >&2
-            fi
-          '';
-        in
-        {
-          description = "Hibernate VM ${vmName} when host shuts down";
-          requires = [ "virt-guest-shutdown.target" ];
-          after = [
-            "libvirt-guests.service"
-            "libvirtd.service"
-            "virt-guest-shutdown.target"
-          ];
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-            ExecStop = "${hibernateScript}/bin/hibernate-vm ${vmName}";
-          };
-          wantedBy = [ "multi-user.target" ];
+          if ${pkgs.libvirt}/bin/virsh dompmsuspend "$1" disk; then
+            echo "Waiting for domain to finish shutting down.." >&2
+            while ! [ "$(${pkgs.libvirt}/bin/virsh domstate "$1")" == 'shut off' ]; do
+              sleep 1
+            done
+            echo "Domain finished shutting down" >&2
+          fi
+        '';
+      in {
+        description = "Hibernate VM ${vmName} when host shuts down";
+        requires = ["virt-guest-shutdown.target"];
+        after = [
+          "libvirt-guests.service"
+          "libvirtd.service"
+          "virt-guest-shutdown.target"
+        ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStop = "${hibernateScript}/bin/hibernate-vm ${vmName}";
         };
+        wantedBy = ["multi-user.target"];
+      };
     };
   };
 }

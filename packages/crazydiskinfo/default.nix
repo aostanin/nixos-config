@@ -1,5 +1,10 @@
-{ stdenv, fetchFromGitHub, cmake, libatasmart, ncurses5 }:
-
+{
+  stdenv,
+  fetchFromGitHub,
+  cmake,
+  libatasmart,
+  ncurses5,
+}:
 stdenv.mkDerivation rec {
   name = "crazydiskinfo";
 

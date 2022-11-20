@@ -1,36 +1,38 @@
-{ config, pkgs, ... }:
-let
-  secrets = import ../../secrets;
-in
 {
+  config,
+  pkgs,
+  ...
+}: let
+  secrets = import ../../secrets;
+in {
   services.telegraf = {
     enable = true;
     extraConfig = {
       inputs = {
-        cpu = { totalcpu = true; };
-        disk = { }; # TODO: ignore_fs = ["tmpfs", "devtmpfs", "devfs"]
+        cpu = {totalcpu = true;};
+        disk = {}; # TODO: ignore_fs = ["tmpfs", "devtmpfs", "devfs"]
         diskio = {
-          devices = [ "sd[a-z]" ];
+          devices = ["sd[a-z]"];
           skip_serial_number = false;
         };
-        docker = { endpoint = "unix:///var/run/docker.sock"; };
-        interrupts = { };
-        kernel = { };
-        mem = { };
-        net = { }; # TODO: interfaces
-        netstat = { };
-        processes = { };
-        sensors = { };
-        smart = { use_sudo = true; };
-        swap = { };
-        system = { };
-        temp = { };
-        zfs = { poolMetrics = true; };
+        docker = {endpoint = "unix:///var/run/docker.sock";};
+        interrupts = {};
+        kernel = {};
+        mem = {};
+        net = {}; # TODO: interfaces
+        netstat = {};
+        processes = {};
+        sensors = {};
+        smart = {use_sudo = true;};
+        swap = {};
+        system = {};
+        temp = {};
+        zfs = {poolMetrics = true;};
       };
       outputs = {
         influxdb = {
           database = "telegraf";
-          urls = [ "http://${secrets.network.home.hosts.elena.address}:8086" ];
+          urls = ["http://${secrets.network.home.hosts.elena.address}:8086"];
         };
       };
     };
@@ -45,10 +47,10 @@ in
       commands = [
         {
           command = "${pkgs.smartmontools}/bin/smartctl";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
       ];
-      users = [ "telegraf" ];
+      users = ["telegraf"];
     }
   ];
 

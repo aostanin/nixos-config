@@ -1,5 +1,8 @@
-{ pkgs, stdenv, fetchFromGitHub }:
-
+{
+  pkgs,
+  stdenv,
+  fetchFromGitHub,
+}:
 stdenv.mkDerivation {
   pname = "splitNSP";
   version = "1.0.1";
