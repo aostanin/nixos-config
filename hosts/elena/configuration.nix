@@ -37,7 +37,7 @@ in
       "i915.force_probe=4690" # TODO: Remove after upgrading to 5.16+ kernel
       "i915.enable_fbc=1"
       "i915.enable_guc=3"
-      "vfio-pci.ids=1912:0014" # USB
+      #"vfio-pci.ids=1912:0014" # USB
     ];
     extraModprobeConfig = ''
       options kvm-intel nested=1

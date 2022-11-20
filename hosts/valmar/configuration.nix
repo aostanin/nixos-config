@@ -113,7 +113,7 @@ in
     };
 
     xserver = {
-      videoDrivers = [ "amdgpu" ];
+      videoDrivers = [ "amdgpu" "nvidia" ];
       deviceSection = ''
         Option "TearFree" "true"
       '';

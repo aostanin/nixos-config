@@ -1,5 +1,9 @@
 { config, pkgs, ... }:
 let
+  # gpuPciIds = "1458:22f7,1458:aaf0"; # RX 570
+  gpuPciIds = "10de:1e84,10de:10f8,10de:1ad8,10de:1ad9"; # RTX 2070 Super
+  usbPciIds = "1b73:1100";
+  gpuBusId = "pci_0000_0b_00_0";
   vmName = "win10-play";
   lookingGlassClient = pkgs.looking-glass-client.overrideAttrs (old: rec {
     # TODO: Remove once merged https://github.com/NixOS/nixpkgs/pull/192430
@@ -87,20 +91,21 @@ in
     kernelModules = [
       "vfio_pci"
     ];
-    kernelParams =
-      let
-        # gpuPciIds = "1458:22f7,1458:aaf0"; # RX 570
-        gpuPciIds = "10de:1e84,10de:10f8,10de:1ad8,10de:1ad9"; # RTX 2070 Super
-        usbPciIds = "1b73:1100";
-      in
-      [
-        "amd_iommu=on"
-        "iommu=pt"
-        "vfio-pci.ids=${gpuPciIds},${usbPciIds}"
-      ];
+    kernelParams = [
+      "amd_iommu=on"
+      "iommu=pt"
+      #"vfio-pci.ids=${gpuPciIds},${usbPciIds}"
+      #"vfio-pci.ids=${usbPciIds}"
+    ];
     extraModprobeConfig = ''
       options kvm-amd nested=1
     '';
+  };
+
+  # Prevent Xorg from opening /dev/nvidia0 by binding to vfio_pci
+  services.xserver.displayManager = {
+    setupCommands = "${pkgs.libvirt}/bin/virsh nodedev-reattach ${gpuBusId}";
+    job.preStart = "${pkgs.libvirt}/bin/virsh nodedev-detach ${gpuBusId}";
   };
 
   environment.systemPackages = with pkgs; [
