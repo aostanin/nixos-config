@@ -1,6 +1,9 @@
 { config, pkgs, lib, hardwareModulesPath, ... }:
 let
   secrets = import ../../secrets;
+  iface = "enp4s0f0";
+  ifaceStorage = "enp4s0f1";
+  ifaceWol = "enp5s0";
 in
 {
   imports = [
@@ -56,7 +59,12 @@ in
     hostName = "valmar";
     hostId = "203d588e";
 
-    bridges.br0.interfaces = [ "enp4s0f0" ];
+    bridges.br0.interfaces = [ iface ];
+
+    vlans = {
+      vlan40 = { id = 40; interface = "br0"; };
+    };
+
     interfaces = {
       br0 = {
         macAddress = secrets.network.home.hosts.valmar.macAddress;
@@ -66,7 +74,14 @@ in
         }];
       };
 
-      enp4s0f1 = {
+      vlan40 = {
+        ipv4.addresses = [{
+          address = secrets.network.iot.hosts.valmar.address;
+          prefixLength = 24;
+        }];
+      };
+
+      "${ifaceStorage}" = {
         mtu = 9000;
         ipv4.addresses = [{
           address = secrets.network.storage.hosts.valmar.address;
@@ -74,7 +89,7 @@ in
         }];
       };
 
-      enp5s0 = {
+      "${ifaceWol}" = {
         wakeOnLan.enable = true;
       };
     };
@@ -194,7 +209,7 @@ in
 
   programs.adb.enable = true;
 
-  virtualisation.oci-containers.backend = "docker";
+  virtualisation.libvirtd.enable = true;
 
   virtualisation.docker = {
     enable = true;
