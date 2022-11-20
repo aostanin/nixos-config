@@ -1,6 +1,8 @@
 { config, pkgs, hardwareModulesPath, ... }:
 let
   secrets = import ../../secrets;
+  iface = "enp5s0f0";
+  ifaceStorage = "enp5s0f1";
 in
 {
   imports = [
@@ -30,16 +32,14 @@ in
       "vfio_pci"
     ];
     kernelParams = [
-      "intel_pstate=active"
       "intel_iommu=on"
       "iommu=pt"
-      "console=tty0"
-      "console=ttyS1,115200" # IPMI
+      "i915.force_probe=4690" # TODO: Remove after upgrading to 5.16+ kernel
+      "i915.enable_fbc=1"
+      "i915.enable_guc=3"
       "vfio-pci.ids=1912:0014" # USB
     ];
     extraModprobeConfig = ''
-      options kvm ignore_msrs=1
-      options kvm report_ignored_msrs=0
       options kvm-intel nested=1
     '';
   };
@@ -48,8 +48,12 @@ in
     hostName = "elena";
     hostId = "4446d154";
 
+    vlans = {
+      vlan40 = { id = 40; interface = "br0"; };
+    };
+
     # Home LAN, IPoE uplink
-    bridges.br0.interfaces = [ "enp5s0f0" ];
+    bridges.br0.interfaces = [ iface ];
     interfaces.br0 = {
       macAddress = secrets.network.home.hosts.elena.macAddress;
       ipv4.addresses = [{
@@ -58,17 +62,14 @@ in
       }];
     };
 
-    # Server LAN, PPPoE uplink
-    bridges.br1.interfaces = [ ];
-    interfaces.br1 = {
-      macAddress = secrets.network.server.hosts.elena.macAddress;
+    interfaces.vlan40 = {
       ipv4.addresses = [{
-        address = secrets.network.server.hosts.elena.address;
+        address = secrets.network.iot.hosts.elena.address;
         prefixLength = 24;
       }];
     };
 
-    interfaces.enp5s0f1 = {
+    interfaces."${ifaceStorage}" = {
       mtu = 9000;
       ipv4.addresses = [{
         address = secrets.network.storage.hosts.elena.address;
@@ -76,14 +77,13 @@ in
       }];
     };
 
-    defaultGateway = secrets.network.server.defaultGateway;
+    defaultGateway = secrets.network.home.defaultGateway;
     nameservers = [ secrets.network.home.nameserver ];
   };
 
   hardware = {
     nvidia = {
       nvidiaSettings = false;
-      nvidiaPersistenced = true;
       package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
         nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
       };
@@ -96,7 +96,7 @@ in
   };
 
   services = {
-    xserver.videoDrivers = [ "nvidia" ];
+    xserver.videoDrivers = [ "intel" "nvidia" ];
 
     zfs = {
       autoScrub = {
@@ -200,6 +200,7 @@ in
     enable = true;
     enableNvidia = true;
     storageDriver = "zfs";
+    liveRestore = false;
     autoPrune = {
       enable = true;
       flags = [

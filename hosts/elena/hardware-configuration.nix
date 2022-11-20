@@ -12,7 +12,7 @@ in
 {
   imports = [ "${modulesPath}/installer/scan/not-detected.nix" ];
 
-  boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "mpt3sas" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "mpt3sas" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -53,6 +53,6 @@ in
       { device = "/dev/disk/by-uuid/7150d268-bc6c-430c-a8f0-eeacf879b9d9"; }
     ];
 
-  nix.maxJobs = lib.mkDefault 16;
+  nix.maxJobs = lib.mkDefault 12;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }

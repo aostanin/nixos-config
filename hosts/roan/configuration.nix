@@ -29,6 +29,7 @@ in
     tmpOnTmpfs = true;
     kernelParams = [
       "intel_pstate=active"
+      "i915.enable_fbc=1"
       "zfs.zfs_arc_max=2147483648"
     ];
   };
@@ -158,6 +159,7 @@ in
     docker = {
       enable = true;
       storageDriver = "zfs";
+      liveRestore = false;
       autoPrune = {
         enable = true;
         flags = [

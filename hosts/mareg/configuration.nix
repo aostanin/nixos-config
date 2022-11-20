@@ -29,6 +29,7 @@ in
     tmpOnTmpfs = true;
     kernelParams = [
       "intel_pstate=active"
+      "i915.enable_fbc=1"
       "zfs.zfs_arc_max=2147483648"
       "acpi_osi=\"!Windows 2013\"" # Needed to disable NVIDIA card
       "acpi_osi=Linux"
@@ -157,6 +158,7 @@ in
     docker = {
       enable = true;
       storageDriver = "zfs";
+      liveRestore = false;
       autoPrune = {
         enable = true;
         flags = [

@@ -200,6 +200,7 @@ in
     enable = true;
     enableNvidia = true;
     storageDriver = "zfs";
+    liveRestore = false;
     autoPrune = {
       enable = true;
       flags = [
