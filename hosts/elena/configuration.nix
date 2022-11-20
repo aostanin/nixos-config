@@ -79,6 +79,20 @@ in
 
     defaultGateway = secrets.network.home.defaultGateway;
     nameservers = [ secrets.network.home.nameserver ];
+
+    firewall = {
+      enable = true;
+      trustedInterfaces = [
+        "br0"
+        ifaceStorage
+        secrets.zerotier.interface
+      ];
+      interfaces.vlan40 = {
+        allowedTCPPorts = [
+          1883 # MQTT
+        ];
+      };
+    };
   };
 
   hardware = {

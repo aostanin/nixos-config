@@ -54,10 +54,10 @@ with lib;
       gitui
       gpsbabel
       httm
-      ipmitool
       lazygit
       lftp
       miniserve
+      mqttui
       nsz
       (p7zip.override { enableUnfree = true; })
       personal-scripts

@@ -96,6 +96,15 @@ in
 
     defaultGateway = secrets.network.home.defaultGateway;
     nameservers = [ secrets.network.home.nameserverPihole ];
+
+    firewall = {
+      enable = true;
+      trustedInterfaces = [
+        "br0"
+        ifaceStorage
+        secrets.zerotier.interface
+      ];
+    };
   };
 
   services = {
