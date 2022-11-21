@@ -17,6 +17,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix/nixpkgs-stable";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -28,6 +35,7 @@
     nixos-hardware,
     nur,
     deploy-rs,
+    pre-commit-hooks,
     flake-utils,
   }: let
     secrets = import ./secrets;
@@ -115,30 +123,29 @@
       valmar = mkNode {hostname = "valmar";};
     };
 
-    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+    checks =
+      builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib
+      // nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (
+        system: {
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              alejandra.enable = true;
+            };
+          };
+        }
+      );
 
     devShell = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (system:
       with nixpkgs.legacyPackages.${system};
         mkShell {
-          buildInputs =
-            [
-              cargo # For nixpkgs-fmt
-              deploy-rs.defaultPackage.${system}
-              git-crypt
-              nixos-generators
-            ]
-            ++ lib.optionals
-            (system
-              != "i686-linux"
-              && !(lib.strings.hasSuffix "-darwin" system)) [
-              # pre-commit is missing i686-linux https://github.com/NixOS/nixpkgs/issues/174847
-              # dotnet is marked broken on darwin on nixos-22.05 https://github.com/NixOS/nixpkgs/pull/176000
-              pre-commit
-            ];
+          inherit (self.checks.${system}.pre-commit-check) shellHook;
 
-          shellHook = ''
-            pre-commit install -f --hook-type pre-commit
-          '';
+          buildInputs = [
+            deploy-rs.defaultPackage.${system}
+            git-crypt
+            nixos-generators
+          ];
         });
 
     formatter = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (
