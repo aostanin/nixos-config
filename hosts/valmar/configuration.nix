@@ -139,7 +139,6 @@ in {
       deviceSection = ''
         Option "TearFree" "true"
       '';
-      xkbOptions = "ctrl:nocaps, shift:both_capslock";
       xrandrHeads = [
         {
           output = "HDMI-A-0";

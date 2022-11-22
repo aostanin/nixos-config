@@ -72,6 +72,7 @@
     xserver = {
       enable = true;
       layout = "jp";
+      xkbOptions = "ctrl:nocaps, shift:both_capslock";
       displayManager.lightdm.enable = true;
       windowManager.i3.enable = true;
 
