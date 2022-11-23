@@ -6,6 +6,10 @@
 }: let
   secrets = import ../../../secrets;
 in {
+  home.packages = with pkgs; [
+    git-crypt
+  ];
+
   programs.git = {
     enable = true;
     userName = secrets.user.fullName;
