@@ -11,12 +11,9 @@
     "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG2TTLA"
     "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG2TV0A"
   ];
-in {
-  boot.kernelParams = [
-    "amdgpu.ppfeaturemask=0xfff7ffff"
-  ];
+  gpuPowerManagementScript = pkgs.writeScriptBin "gpu-power-management" ''
+    #!${pkgs.stdenv.shell}
 
-  powerManagement.powerUpCommands = ''
     # Set host GPU to lowest power level
     echo "low" > ${gpuSysfsPath}/power_dpm_force_performance_level
 
@@ -25,10 +22,20 @@ in {
         MclkDependencyTable/1/Mclk=30000 MclkDependencyTable/1/Vddci=800 MclkDependencyTable/1/VddcInd=0 \
         MclkDependencyTable/2/Mclk=30000 MclkDependencyTable/2/Vddci=800 MclkDependencyTable/2/VddcInd=0 \
         --write
+  '';
+in {
+  boot.kernelParams = [
+    "amdgpu.ppfeaturemask=0xfff7ffff"
+  ];
+
+  powerManagement.powerUpCommands = ''
+    ${gpuPowerManagementScript}/bin/gpu-power-management
 
     # Calling hdparm brings the drives out of standby, so disable for now
     #${pkgs.hdparm}/bin/hdparm -B 1 -S 6 -y ${lib.concatStringsSep " " backupDrives}
   '';
+
+  services.xserver.displayManager.setupCommands = "${gpuPowerManagementScript}/bin/gpu-power-management";
 
   systemd.services."hd-idle" = {
     description = "hd-idle - spin down idle hard disks";
