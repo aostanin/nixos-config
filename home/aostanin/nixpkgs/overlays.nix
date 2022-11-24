@@ -12,6 +12,7 @@
       personal-scripts = super.callPackage ../../../packages/personal-scripts {};
       pidcat = super.callPackage ../../../packages/pidcat {};
       splitNSP = super.callPackage ../../../packages/splitNSP {};
+      upp = super.python3Packages.callPackage ../../../packages/upp {};
       vfio-isolate = super.python3Packages.callPackage ../../../packages/vfio-isolate {};
       virtwold = super.callPackage ../../../packages/virtwold {};
 

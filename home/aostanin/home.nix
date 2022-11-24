@@ -125,6 +125,7 @@ with lib; {
       ]
       ++ optionals (elem "amdgpu" nixosConfig.services.xserver.videoDrivers) [
         radeontop
+        nvtop
       ]
       ++ optionals (elem "intel" nixosConfig.services.xserver.videoDrivers) [
         intel-gpu-tools
