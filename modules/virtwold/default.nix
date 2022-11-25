@@ -26,6 +26,7 @@ in {
           after = ["network.target"];
           wants = ["libvirtd.service"];
           serviceConfig = {
+            Restart = "on-failure";
             Type = "simple";
             ExecStart = "${pkgs.virtwold}/bin/virtwold -interface ${interface}";
           };

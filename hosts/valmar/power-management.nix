@@ -41,6 +41,7 @@ in {
     description = "hd-idle - spin down idle hard disks";
     after = ["suspend.target" "hibernate.target" "hybrid-sleep.target" "suspend-then-hibernate.target"];
     serviceConfig = {
+      Restart = "on-failure";
       Type = "simple";
       ExecStart = "${pkgs.hd-idle}/bin/hd-idle -i 0 ${lib.concatStringsSep " " (map (drive: "-a ${drive} -i 30") backupDrives)}";
     };
