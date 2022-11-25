@@ -1,5 +1,6 @@
 {
   imports = [
+    ./virtwold
     ./vfio
   ];
 }

@@ -128,6 +128,11 @@ in {
   };
 
   services = {
+    virtwold = {
+      enable = true;
+      interfaces = ["br0"];
+    };
+
     udev = {
       extraRules = ''
         # Disable Bluetooth dongle passed to Windows VM
@@ -252,17 +257,6 @@ in {
         "--filter \"until=168h\""
       ];
     };
-  };
-
-  systemd.services."virtwold-br0" = {
-    description = "libvirt wake on lan daemon";
-    after = ["network.target"];
-    wants = ["libvirtd.service"];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.virtwold}/bin/virtwold -interface br0";
-    };
-    wantedBy = ["multi-user.target"];
   };
 
   # TODO: For temporary development, remove later

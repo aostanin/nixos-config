@@ -132,6 +132,11 @@ in {
       };
     };
 
+    virtwold = {
+      enable = true;
+      interfaces = ["br0"];
+    };
+
     xserver.videoDrivers = ["intel" "nvidia"];
 
     zfs = {
