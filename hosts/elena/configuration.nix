@@ -283,6 +283,7 @@ in {
 
   services.nfs.server = {
     enable = true;
+    hostName = secrets.network.storage.hosts.elena.address;
     exports = ''
       /srv/nfs             ${secrets.network.storage.hosts.elena.address}/24(insecure,rw,fsid=0)
       /srv/nfs/images      ${secrets.network.storage.hosts.elena.address}/24(insecure,no_root_squash,rw,crossmnt)
