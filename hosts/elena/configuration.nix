@@ -295,15 +295,6 @@ in {
 
   systemd = {
     timers = {
-      cleanup-recorded-videos = {
-        wantedBy = ["timers.target"];
-        partOf = ["cleanup-recorded-videos.service"];
-        timerConfig = {
-          OnCalendar = "daily";
-          RandomizedDelaySec = "5h";
-        };
-      };
-
       update-mam = {
         wantedBy = ["timers.target"];
         partOf = ["update-mam.service"];
@@ -315,34 +306,6 @@ in {
     };
 
     services = {
-      cleanup-recorded-videos = {
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart = pkgs.writers.writePython3 "cleanup-recorded-videos" {} ''
-            import glob
-            import os
-
-            DIR = '/storage/media/recorded'
-            MAX_USED_SPACE = 1 * 1024 * 1024 * 1024 * 1024  # 1 TB
-
-
-            def used_space():
-                files = glob.glob(f'{DIR}/**/*', recursive=True)
-                return sum([os.stat(file).st_size for file in files])
-
-
-            def oldest_file():
-                files = glob.glob(f'{DIR}/**/*', recursive=True)
-                return sorted(files, key=os.path.getctime)[0]
-
-
-            while used_space() > MAX_USED_SPACE:
-                file = oldest_file()
-                os.remove(file)
-          '';
-        };
-      };
-
       update-mam = {
         serviceConfig = {
           Type = "oneshot";
