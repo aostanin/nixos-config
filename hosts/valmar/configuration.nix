@@ -51,6 +51,9 @@ in {
       "k10temp" # Use zenpower
       "nouveau"
     ];
+    kernelParams = [
+      "pcie_aspm.policy=powersave"
+    ];
     binfmt.emulatedSystems = ["aarch64-linux"];
     zfs.extraPools = ["tank"];
   };
