@@ -82,15 +82,20 @@ in {
     nameservers = [secrets.network.home.nameserver];
 
     firewall = {
-      enable = true;
+      # TODO: Breaks some Docker containers
+      enable = false;
       trustedInterfaces = [
         "br0"
+        "docker0"
         ifaceStorage
         secrets.zerotier.interface
       ];
       interfaces.vlan40 = {
         allowedTCPPorts = [
           1883 # MQTT
+        ];
+        allowedUDPPorts = [
+          123 # NTP
         ];
       };
     };
