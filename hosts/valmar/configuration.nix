@@ -20,6 +20,7 @@ in {
     ../../modules/msmtp
     ../../modules/scrutiny
     ../../modules/zerotier
+    ../../modules
     ./telegraf.nix
     ./vfio.nix
     ./tdarr.nix
@@ -54,10 +55,16 @@ in {
     zfs.extraPools = ["tank"];
   };
 
-  hardware.opengl.extraPackages = with pkgs; [
-    amdvlk
-    rocm-opencl-icd
-  ];
+  hardware = {
+    nvidia.package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
+      nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
+
+    opengl.extraPackages = with pkgs; [
+      amdvlk
+      rocm-opencl-icd
+    ];
+  };
 
   networking = {
     hostName = "valmar";

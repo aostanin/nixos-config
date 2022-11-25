@@ -12,6 +12,7 @@ in {
     "${hardwareModulesPath}/common/cpu/intel"
     "${hardwareModulesPath}/common/pc/ssd"
     ./hardware-configuration.nix
+    ../../modules
     ../../modules/variables
     ../../modules/common
     ../../modules/msmtp
@@ -27,24 +28,12 @@ in {
     };
     supportedFilesystems = ["zfs"];
     tmpOnTmpfs = true;
-    initrd.kernelModules = [
-      "vfio_pci"
-    ];
-    kernelModules = [
-      "nct6775" # For lm-sensors
-      "vfio_pci"
-    ];
     kernelParams = [
-      "intel_iommu=on"
-      "iommu=pt"
       "i915.force_probe=4690" # TODO: Remove after upgrading to 5.16+ kernel
       "i915.enable_fbc=1"
       "i915.enable_guc=3"
       #"vfio-pci.ids=1912:0014" # USB
     ];
-    extraModprobeConfig = ''
-      options kvm-intel nested=1
-    '';
   };
 
   networking = {
@@ -122,6 +111,27 @@ in {
   };
 
   services = {
+    vfio = {
+      enable = true;
+      cpuType = "intel";
+      gpu = {
+        # Quadro P400
+        driver = "nvidia";
+        pciIds = ["10de:1cb3" "10de:0fb9"];
+        busId = "01:00.0";
+      };
+      vms = {
+        win10-work = {
+          useGpu = false;
+          enableHibernation = true;
+        };
+        win10-work-gpu = {
+          useGpu = true;
+          enableHibernation = true;
+        };
+      };
+    };
+
     xserver.videoDrivers = ["intel" "nvidia"];
 
     zfs = {
@@ -328,42 +338,6 @@ in {
           WorkingDirectory = "/storage/appdata/scripts/mam";
           ExecStart = "/storage/appdata/scripts/mam/update_mam.sh";
         };
-      };
-
-      hibernate-vm-shutdown-win10-work = let
-        vmName = "win10-work";
-        # TODO: Move to module, shared with VFIO
-        hibernateScript = pkgs.writeScriptBin "hibernate-vm" ''
-          #!${pkgs.stdenv.shell}
-
-          #
-          # Usage: hibernate-vm NAME
-          #
-          # Hibernates the VM specified in NAME and waits for it to finish shutting down
-          #
-
-          if ${pkgs.libvirt}/bin/virsh dompmsuspend "$1" disk; then
-            echo "Waiting for domain to finish shutting down.." >&2
-            while ! [ "$(${pkgs.libvirt}/bin/virsh domstate "$1")" == 'shut off' ]; do
-              sleep 1
-            done
-            echo "Domain finished shutting down" >&2
-          fi
-        '';
-      in {
-        description = "Hibernate VM ${vmName} when host shuts down";
-        requires = ["virt-guest-shutdown.target"];
-        after = [
-          "libvirt-guests.service"
-          "libvirtd.service"
-          "virt-guest-shutdown.target"
-        ];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          ExecStop = "${hibernateScript}/bin/hibernate-vm ${vmName}";
-        };
-        wantedBy = ["multi-user.target"];
       };
     };
   };
