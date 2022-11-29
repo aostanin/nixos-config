@@ -23,7 +23,6 @@ in {
     ../../modules
     ./telegraf.nix
     ./vfio.nix
-    ./tdarr.nix
     ./power-management.nix
   ];
 
@@ -35,7 +34,7 @@ in {
 
   boot = {
     loader = {
-      systemd-boot.enable = true; # TODO: Switch back to systemd-boot when ipxe can be added
+      systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = ["zfs"];
@@ -240,8 +239,6 @@ in {
     "/var/lib/libvirt/images/remote" = nfsFilesystem "/images";
     "/mnt/media" = nfsFilesystem "/media";
     "/mnt/personal" = nfsFilesystem "/personal";
-    "/mnt/appdata" = nfsFilesystem "/appdata";
-    "/mnt/appdata/temp" = nfsFilesystem "/appdata/temp";
   };
 
   programs.adb.enable = true;
