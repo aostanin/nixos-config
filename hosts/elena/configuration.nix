@@ -277,11 +277,6 @@ in {
     options = ["bind"];
   };
 
-  fileSystems."/srv/nfs/appdata" = {
-    device = "/storage/appdata";
-    options = ["rbind"];
-  };
-
   services.nfs.server = {
     enable = true;
     hostName = secrets.network.storage.hosts.elena.address;
@@ -290,7 +285,6 @@ in {
       /srv/nfs/images      ${secrets.network.storage.hosts.elena.address}/24(insecure,no_root_squash,rw,crossmnt)
       /srv/nfs/media       ${secrets.network.storage.hosts.elena.address}/24(insecure,rw,crossmnt)
       /srv/nfs/personal    ${secrets.network.storage.hosts.elena.address}/24(insecure,rw)
-      /srv/nfs/appdata     ${secrets.network.storage.hosts.elena.address}/24(insecure,rw,crossmnt)
     '';
   };
 
