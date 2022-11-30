@@ -52,7 +52,6 @@ with lib; {
         btop
         catt
         cksfv
-        nur.repos.xe.comma
         ctop
         dhex
         exa
@@ -78,7 +77,6 @@ with lib; {
         tig
         tmuxp
         tokei
-        translate-shell
         tuir
         wol
         yt-dlp
@@ -93,7 +91,6 @@ with lib; {
         gparted
         gtkpod
         jellyfin-media-player
-        keepassxc
         krita
         libreoffice
         moonlight-qt
@@ -102,10 +99,8 @@ with lib; {
         qdirstat
         sonixd
         steam
-        (sublime-music.override {chromecastSupport = true;})
         thunderbird
         virtmanager
-        virtscreen
         wineWowPackages.stable
         xclip
 
