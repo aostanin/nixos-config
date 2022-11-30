@@ -100,6 +100,7 @@ with lib; {
         mullvad-vpn
         peek
         qdirstat
+        sonixd
         steam
         (sublime-music.override {chromecastSupport = true;})
         thunderbird
