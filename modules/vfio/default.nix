@@ -326,6 +326,7 @@ in {
 
       virtualisation.libvirtd = {
         enable = true;
+        qemu.swtpm.enable = true;
         qemu.verbatimConfig = let
           allDevices =
             [
