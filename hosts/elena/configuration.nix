@@ -178,16 +178,16 @@ in {
         "tank/home" = {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
-            host = "valmar";
+            host = secrets.network.storage.hosts.valmar.address;
             dataset = "tank/backup/hosts/${config.networking.hostName}/home";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
-        "tank/nixos" = {
+        "tank/root/nixos" = {
           recursive = true;
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
-            host = "valmar";
+            host = secrets.network.storage.hosts.valmar.address;
             dataset = "tank/backup/hosts/${config.networking.hostName}/root/nixos";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
@@ -196,7 +196,7 @@ in {
           recursive = true;
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
-            host = "valmar";
+            host = secrets.network.storage.hosts.valmar.address;
             dataset = "tank/backup/hosts/${config.networking.hostName}/appdata/docker";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
@@ -205,7 +205,7 @@ in {
           recursive = true;
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
-            host = "valmar";
+            host = secrets.network.storage.hosts.valmar.address;
             dataset = "tank/backup/hosts/${config.networking.hostName}/personal";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
@@ -214,7 +214,7 @@ in {
           recursive = true;
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
-            host = "valmar";
+            host = secrets.network.storage.hosts.valmar.address;
             dataset = "tank/backup/hosts/${config.networking.hostName}/media/music";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
@@ -223,7 +223,7 @@ in {
           recursive = true;
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
-            host = "valmar";
+            host = secrets.network.storage.hosts.valmar.address;
             dataset = "tank/backup/hosts/${config.networking.hostName}/media/audiobooks";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
@@ -232,7 +232,7 @@ in {
           recursive = true;
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
-            host = "valmar";
+            host = secrets.network.storage.hosts.valmar.address;
             dataset = "tank/backup/hosts/${config.networking.hostName}/media/books";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
