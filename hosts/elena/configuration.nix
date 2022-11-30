@@ -5,8 +5,8 @@
   ...
 }: let
   secrets = import ../../secrets;
-  iface = "enp5s0f0";
-  ifaceStorage = "enp5s0f1";
+  iface = "enp4s0f0";
+  ifaceStorage = "enp4s0f1";
 in {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel"
