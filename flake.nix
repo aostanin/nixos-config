@@ -38,13 +38,23 @@
     pre-commit-hooks,
     flake-utils,
   }: let
+    lib = nixpkgs.lib;
     secrets = import ./secrets;
+    hosts = [
+      "elena"
+      "mareg"
+      "roan"
+      "router"
+      "valmar"
+      "vps-gce1"
+      "vps-oci1"
+    ];
     mkNixosSystem = {
       hostname,
       system ? "x86_64-linux",
       extraModules ? [],
     }:
-      nixpkgs.lib.nixosSystem {
+      lib.nixosSystem {
         inherit system;
         specialArgs = {
           hardwareModulesPath = nixos-hardware;
@@ -107,25 +117,21 @@
       };
     };
   in {
-    nixosConfigurations = {
-      elena = mkNixosSystem {hostname = "elena";};
-      mareg = mkNixosSystem {hostname = "mareg";};
-      roan = mkNixosSystem {hostname = "roan";};
-      router = mkNixosSystem {hostname = "router";};
-      valmar = mkNixosSystem {hostname = "valmar";};
-    };
+    nixosConfigurations = builtins.listToAttrs (map (
+        host:
+          lib.nameValuePair host (mkNixosSystem {hostname = host;})
+      )
+      hosts);
 
-    deploy.nodes = {
-      elena = mkNode {hostname = "elena";};
-      mareg = mkNode {hostname = "mareg";};
-      roan = mkNode {hostname = "roan";};
-      router = mkNode {hostname = "router";};
-      valmar = mkNode {hostname = "valmar";};
-    };
+    deploy.nodes = builtins.listToAttrs (map (
+        host:
+          lib.nameValuePair host (mkNode {hostname = host;})
+      )
+      hosts);
 
     checks =
       builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib
-      // nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (
+      // lib.genAttrs flake-utils.lib.defaultSystems (
         system: {
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
             src = ./.;
@@ -136,7 +142,7 @@
         }
       );
 
-    devShell = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (system:
+    devShell = lib.genAttrs flake-utils.lib.defaultSystems (system:
       with nixpkgs.legacyPackages.${system};
         mkShell {
           inherit (self.checks.${system}.pre-commit-check) shellHook;
@@ -148,7 +154,7 @@
           ];
         });
 
-    formatter = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (
+    formatter = lib.genAttrs flake-utils.lib.defaultSystems (
       system:
         nixpkgs.legacyPackages.${system}.alejandra
     );
