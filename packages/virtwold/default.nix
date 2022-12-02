@@ -1,12 +1,14 @@
 {
   pkgs,
-  buildGoModule,
+  buildGoPackage,
   fetchFromGitHub,
   libpcap,
 }:
-buildGoModule rec {
+buildGoPackage rec {
   pname = "virtwold";
   version = "21.12.0";
+
+  goPackagePath = "github.com/ScottESanDiego/virtwold";
 
   src = fetchFromGitHub {
     owner = "ScottESanDiego";
@@ -15,7 +17,7 @@ buildGoModule rec {
     sha256 = "sha256-2WGnDcsGvVq8obdUZ+JykSPmcvtPDjoE08Fals2Ee8k=";
   };
 
-  vendorSha256 = "sha256-0+Rc7QXzmh2f5Y4ULTcOB3N4yw/WB6fVsqu3K2Hnyv0=";
+  goDeps = ./deps.nix;
 
   buildInputs = [
     libpcap
