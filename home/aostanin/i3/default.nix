@@ -276,8 +276,15 @@ in {
 
     picom = {
       enable = true;
-      blur = true;
       shadow = true;
+      settings = {
+        backend = "glx";
+        blur-background = true;
+        blur = {
+          method = "dual_kawase";
+          strength = 2;
+        };
+      };
     };
 
     udiskie = {

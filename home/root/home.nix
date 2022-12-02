@@ -2,7 +2,12 @@
   pkgs,
   config,
   lib,
+  nixosConfig,
   ...
 }: {
-  home.file.".ssh/config".source = ../../secrets/ssh/ssh_config_root;
+  home = {
+    stateVersion = nixosConfig.system.stateVersion;
+
+    file.".ssh/config".source = ../../secrets/ssh/ssh_config_root;
+  };
 }

@@ -75,16 +75,6 @@
       xkbOptions = "ctrl:nocaps, shift:both_capslock";
       displayManager.lightdm.enable = true;
       windowManager.i3.enable = true;
-
-      desktopManager.xfce = {
-        enable = true;
-        noDesktop = true;
-        thunarPlugins = with pkgs.xfce; [
-          thunar-archive-plugin
-          thunar-volman
-          tumbler
-        ];
-      };
     };
   };
 
@@ -95,6 +85,15 @@
 
   programs = {
     dconf.enable = true;
+
+    thunar = {
+      enable = true;
+      plugins = with pkgs.xfce; [
+        thunar-archive-plugin
+        thunar-volman
+        tumbler
+      ];
+    };
   };
 
   security.pam.services.lightdm.enableGnomeKeyring = true;

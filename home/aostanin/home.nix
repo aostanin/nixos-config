@@ -142,7 +142,7 @@ with lib; {
     {
       broot = {
         enable = true;
-        modal = true;
+        settings.modal = true;
       };
 
       direnv = {

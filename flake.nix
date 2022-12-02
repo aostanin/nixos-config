@@ -9,11 +9,11 @@
         utils.follows = "flake-utils";
       };
     };
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
     home-manager = {
-      url = "github:nix-community/home-manager/release-22.05";
+      url = "github:nix-community/home-manager/release-22.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
@@ -77,7 +77,7 @@
                   ]
                   ++ (import ./home/aostanin/nixpkgs/overlays.nix);
               };
-              system.stateVersion = "22.05";
+              system.stateVersion = "22.11";
 
               # Use same nixpkgs for flakes and system
               # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html

@@ -28,15 +28,14 @@ in {
   };
 
   nix = {
-    autoOptimiseStore = true;
     gc = {
       automatic = true;
       options = "--delete-older-than 30d";
     };
-    package = pkgs.nixFlakes;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = ["nix-command" "flakes"];
+    };
   };
 
   nixpkgs.config = {
@@ -48,6 +47,8 @@ in {
       "electron-14.2.9" # TODO: Needed for something?
     ];
   };
+
+  security.polkit.enable = true;
 
   security.sudo.wheelNeedsPassword = false;
 
