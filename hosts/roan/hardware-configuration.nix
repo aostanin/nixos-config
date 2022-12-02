@@ -18,19 +18,19 @@
   fileSystems."/" = {
     device = "rpool/root/nixos";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
   fileSystems."/nix" = {
     device = "rpool/root/nix";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
   fileSystems."/home" = {
     device = "rpool/home";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
   fileSystems."/boot" = {
@@ -41,7 +41,7 @@
   fileSystems."/var/lib/docker" = {
     device = "rpool/docker";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
   swapDevices = [

@@ -11,7 +11,7 @@
   zfsFilesystem = device: {
     inherit device;
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["noatime"];
   };
 in {
   imports = ["${modulesPath}/installer/scan/not-detected.nix"];

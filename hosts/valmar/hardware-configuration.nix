@@ -18,19 +18,19 @@
   fileSystems."/" = {
     device = "rpool/root/nixos";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["noatime"];
   };
 
   fileSystems."/nix" = {
     device = "rpool/root/nix";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["noatime"];
   };
 
   fileSystems."/home" = {
     device = "rpool/home";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["noatime"];
   };
 
   fileSystems."/boot" = {
@@ -41,19 +41,19 @@
   fileSystems."/var/lib/docker" = {
     device = "rpool/virtualization/docker";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["noatime"];
   };
 
   fileSystems."/var/lib/libvirt" = {
     device = "rpool/virtualization/libvirt";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["noatime"];
   };
 
   fileSystems."/var/lib/libvirt/images" = {
     device = "rpool/virtualization/libvirt/images";
     fsType = "zfs";
-    options = ["noatime" "nodiratime"];
+    options = ["noatime"];
   };
 
   swapDevices = [
