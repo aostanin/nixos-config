@@ -34,7 +34,6 @@ in {
     "/var/lib/libvirt/images/ssd" = zfsFilesystem "tank/virtualization/libvirt/images/ssd";
     "/storage/appdata/docker" = zfsFilesystem "tank/appdata/docker";
     "/storage/appdata/docker/ssd" = zfsFilesystem "tank/appdata/docker/ssd";
-    "/storage/appdata/rclone" = zfsFilesystem "tank/appdata/rclone";
     "/storage/appdata/scripts" = zfsFilesystem "tank/appdata/scripts";
     "/storage/appdata/temp" = zfsFilesystem "tank/appdata/temp";
     "/storage/backup/devices" = zfsFilesystem "tank/backup/devices";
@@ -48,7 +47,6 @@ in {
     "/storage/media/software" = zfsFilesystem "tank/media/software";
     "/storage/media/videos" = zfsFilesystem "tank/media/videos";
     "/storage/personal" = zfsFilesystem "tank/personal";
-    "/var/lib/containers" = zfsFilesystem "tank/virtualization/containers";
     "/var/lib/docker" = zfsFilesystem "tank/virtualization/docker";
   };
 
