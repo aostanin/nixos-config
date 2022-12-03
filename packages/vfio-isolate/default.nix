@@ -21,7 +21,7 @@ buildPythonPackage rec {
     sed -i \
       -e 's/psutil~=5.7.0/psutil~=5.9.0/' \
       -e 's/click~=7.1.2/click~=8.1.0/' \
-      -e 's/parsimonious~=0.8.1/parsimonious~=0.9.0/' \
+      -e 's/parsimonious~=0.8.1/parsimonious~=0.10.0/' \
       setup.py
   '';
 
