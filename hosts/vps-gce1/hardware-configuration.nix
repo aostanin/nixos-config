@@ -15,4 +15,10 @@
     device = "/dev/sda1";
     fsType = "ext4";
   };
+  swapDevices = [
+    {
+      device = "/var/swapfile";
+      size = 2048;
+    }
+  ];
 }

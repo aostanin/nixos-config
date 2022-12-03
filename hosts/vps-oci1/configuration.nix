@@ -21,7 +21,6 @@ in {
   };
 
   boot.cleanTmpDir = true;
-  zramSwap.enable = true;
 
   networking = {
     hostName = "vps-oci1";

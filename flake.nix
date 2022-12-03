@@ -48,6 +48,7 @@
       "valmar"
       "vps-gce1"
       "vps-oci1"
+      "vps-oci2"
     ];
     mkNixosSystem = {
       hostname,

@@ -23,8 +23,8 @@ in {
   boot.cleanTmpDir = true;
 
   networking = {
-    hostName = "vps-gce1";
-    interfaces.enp0s4.useDHCP = true;
+    hostName = "vps-oci2";
+    interfaces.ens3.useDHCP = true;
   };
 
   virtualisation.docker = {
