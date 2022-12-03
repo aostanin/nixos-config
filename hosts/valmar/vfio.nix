@@ -5,6 +5,14 @@
 }: let
   usbPciIds = "1b73:1100";
 in {
+  services.persistent-evdev = {
+    enable = true;
+    devices = {
+      persist-keyboard0 = "usb-04d9_USB_Keyboard-event-kbd";
+      persist-mouse0 = "usb-SINOWEALTH_Wired_Gaming_Mouse-event-mouse";
+    };
+  };
+
   services.vfio = {
     enable = true;
     cpuType = "amd";
@@ -12,8 +20,8 @@ in {
     qemu = {
       user = "aostanin";
       devices = [
-        "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd"
-        "/dev/input/by-id/usb-SINOWEALTH_Wired_Gaming_Mouse-event-mouse"
+        "/dev/input/by-id/uinput-persist-keyboard0"
+        "/dev/input/by-id/uinput-persist-mouse0"
       ];
     };
     # gpu = {
