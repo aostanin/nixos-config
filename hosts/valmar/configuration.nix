@@ -204,7 +204,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.elena.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/home";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/home";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
@@ -213,7 +213,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.elena.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/root/nixos";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/root/nixos";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
@@ -222,7 +222,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.elena.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/virtualization/libvirt";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/virtualization/libvirt";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };

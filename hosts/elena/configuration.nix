@@ -179,7 +179,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/home";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/home";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
@@ -188,7 +188,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/root/nixos";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/root/nixos";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
@@ -197,7 +197,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/appdata/docker";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/appdata/docker";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
@@ -206,7 +206,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/personal";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/personal";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
@@ -215,7 +215,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/media/music";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/media/music";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
@@ -224,7 +224,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/media/audiobooks";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/media/audiobooks";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
@@ -233,7 +233,7 @@ in {
           plan = "1day=>1hour,1week=>1day,1month=>1week";
           destinations.remote = {
             host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/${config.networking.hostName}/media/books";
+            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/media/books";
             plan = "1week=>1day,1month=>1week,3month=>1month";
           };
         };
