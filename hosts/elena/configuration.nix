@@ -1,12 +1,13 @@
 {
   config,
   pkgs,
+  lib,
   hardwareModulesPath,
   ...
 }: let
   secrets = import ../../secrets;
-  iface = "enp4s0f0";
-  ifaceStorage = "enp4s0f1";
+  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
+  ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE1}";
 in {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel"
@@ -35,6 +36,12 @@ in {
       "pcie_aspm.policy=powersave"
       #"vfio-pci.ids=1912:0014" # USB
     ];
+  };
+
+  systemd.network.links."11-default" = {
+    matchConfig.OriginalName = "*";
+    linkConfig.NamePolicy = "mac";
+    linkConfig.MACAddressPolicy = "persistent";
   };
 
   networking = {

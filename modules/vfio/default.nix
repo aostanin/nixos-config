@@ -300,6 +300,7 @@ in {
 
     vms = mkOption {
       type = types.attrsOf vmSubmodule;
+      default = {};
       description = ''
         The virtual machines.
       '';

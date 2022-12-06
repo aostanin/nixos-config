@@ -6,9 +6,9 @@
   ...
 }: let
   secrets = import ../../secrets;
-  iface = "enp4s0f0";
-  ifaceStorage = "enp4s0f1";
-  ifaceWol = "enp5s0";
+  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.expansion10GbE0}";
+  ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.expansion10GbE1}";
+  ifaceWol = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.integrated}";
 in {
   imports = [
     "${hardwareModulesPath}/common/cpu/amd"
@@ -66,6 +66,12 @@ in {
       amdvlk
       rocm-opencl-icd
     ];
+  };
+
+  systemd.network.links."11-default" = {
+    matchConfig.OriginalName = "*";
+    linkConfig.NamePolicy = "mac";
+    linkConfig.MACAddressPolicy = "persistent";
   };
 
   networking = {
