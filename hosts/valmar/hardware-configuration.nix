@@ -15,49 +15,25 @@
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
 
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/D75E-C44C";
+    fsType = "vfat";
+  };
+
   fileSystems."/" = {
     device = "rpool/root/nixos";
     fsType = "zfs";
-    options = ["noatime"];
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
   fileSystems."/nix" = {
     device = "rpool/root/nix";
     fsType = "zfs";
-    options = ["noatime"];
-  };
-
-  fileSystems."/home" = {
-    device = "rpool/home";
-    fsType = "zfs";
-    options = ["noatime"];
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/1FA6-DE5C";
-    fsType = "vfat";
-  };
-
-  fileSystems."/var/lib/docker" = {
-    device = "rpool/virtualization/docker";
-    fsType = "zfs";
-    options = ["noatime"];
-  };
-
-  fileSystems."/var/lib/libvirt" = {
-    device = "rpool/virtualization/libvirt";
-    fsType = "zfs";
-    options = ["noatime"];
-  };
-
-  fileSystems."/var/lib/libvirt/images" = {
-    device = "rpool/virtualization/libvirt/images";
-    fsType = "zfs";
-    options = ["noatime"];
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/46a8575f-76a1-4f99-87fa-8e56aa7dc0c4";}
+    {device = "/dev/disk/by-uuid/d97f5213-56bd-4856-a068-dd39e8ad0e61";}
   ];
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";

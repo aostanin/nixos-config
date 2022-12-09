@@ -9,6 +9,7 @@ in {
     timers.scrutiny-collector = {
       wantedBy = ["timers.target"];
       partOf = ["scrutiny-collector.service"];
+      after = ["network-online.target"];
       timerConfig = {
         OnCalendar = "daily";
         RandomizedDelaySec = "5h";

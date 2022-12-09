@@ -7,13 +7,7 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  zfsFilesystem = device: {
-    inherit device;
-    fsType = "zfs";
-    options = ["noatime"];
-  };
-in {
+}: {
   imports = ["${modulesPath}/installer/scan/not-detected.nix"];
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "mpt3sas" "usbhid" "sd_mod"];
@@ -21,37 +15,31 @@ in {
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  fileSystems = {
-    "/boot" = {
-      device = "/dev/disk/by-uuid/3E1E-2057";
-      fsType = "vfat";
-    };
-    "/" = zfsFilesystem "tank/root/nixos";
-    "/nix" = zfsFilesystem "tank/root/nix";
-    "/home" = zfsFilesystem "tank/home";
-    "/var/lib/libvirt" = zfsFilesystem "tank/virtualization/libvirt";
-    "/var/lib/libvirt/images" = zfsFilesystem "tank/virtualization/libvirt/images";
-    "/var/lib/libvirt/images/ssd" = zfsFilesystem "tank/virtualization/libvirt/images/ssd";
-    "/storage/appdata/docker" = zfsFilesystem "tank/appdata/docker";
-    "/storage/appdata/docker/ssd" = zfsFilesystem "tank/appdata/docker/ssd";
-    "/storage/appdata/scripts" = zfsFilesystem "tank/appdata/scripts";
-    "/storage/appdata/temp" = zfsFilesystem "tank/appdata/temp";
-    "/storage/backup/devices" = zfsFilesystem "tank/backup/devices";
-    "/storage/download" = zfsFilesystem "tank/download";
-    "/storage/media/adult" = zfsFilesystem "tank/media/adult";
-    "/storage/media/audiobooks" = zfsFilesystem "tank/media/audiobooks";
-    "/storage/media/books" = zfsFilesystem "tank/media/books";
-    "/storage/media/magazines" = zfsFilesystem "tank/media/magazines";
-    "/storage/media/manga" = zfsFilesystem "tank/media/manga";
-    "/storage/media/music" = zfsFilesystem "tank/media/music";
-    "/storage/media/software" = zfsFilesystem "tank/media/software";
-    "/storage/media/videos" = zfsFilesystem "tank/media/videos";
-    "/storage/personal" = zfsFilesystem "tank/personal";
-    "/var/lib/docker" = zfsFilesystem "tank/virtualization/docker";
+  fileSystems."/boot1" = {
+    device = "/dev/disk/by-uuid/E069-828B";
+    fsType = "vfat";
+  };
+
+  fileSystems."/boot2" = {
+    device = "/dev/disk/by-uuid/E422-F3E0";
+    fsType = "vfat";
+  };
+
+  fileSystems."/" = {
+    device = "rpool/root/nixos";
+    fsType = "zfs";
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
+  };
+
+  fileSystems."/nix" = {
+    device = "rpool/root/nix";
+    fsType = "zfs";
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/7150d268-bc6c-430c-a8f0-eeacf879b9d9";}
+    {device = "/dev/disk/by-uuid/78497a7d-ba6e-43c2-aaa6-3d27a8dd8f67";}
+    {device = "/dev/disk/by-uuid/64c17284-d9c6-4fd4-8ad0-5759a36bdcda";}
   ];
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";

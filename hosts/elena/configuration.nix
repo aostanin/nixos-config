@@ -19,15 +19,32 @@ in {
     ../../modules/msmtp
     ../../modules/scrutiny
     ../../modules/zerotier
+    ./backup.nix
     ./telegraf.nix
   ];
 
   boot = {
     loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+      grub = {
+        enable = true;
+        configurationLimit = 10;
+        efiSupport = true;
+        efiInstallAsRemovable = true;
+        mirroredBoots = [
+          {
+            devices = ["nodev"];
+            path = "/boot1";
+          }
+          {
+            devices = ["nodev"];
+            path = "/boot2";
+          }
+        ];
+      };
     };
     supportedFilesystems = ["zfs"];
+    zfs.extraPools = ["fastpool" "tank"];
+    zfs.forceImportAll = true;
     tmpOnTmpfs = true;
     kernelParams = [
       "i915.force_probe=4690" # TODO: Remove after upgrading to 5.16+ kernel
@@ -157,92 +174,12 @@ in {
         enable = true;
         interval = "monthly";
       };
-      autoSnapshot = {
-        enable = true;
-        monthly = 0;
-      };
       trim.enable = true;
       zed = {
         enableMail = true;
         settings = {
           ZED_EMAIL_ADDR = secrets.user.emailAddress;
           ZED_NOTIFY_VERBOSE = true;
-        };
-      };
-    };
-
-    znapzend = {
-      enable = true;
-      pure = true;
-      autoCreation = true;
-      features = {
-        compressed = true;
-        recvu = true;
-        skipIntermediates = true;
-        zfsGetType = true;
-      };
-      zetup = {
-        "tank/home" = {
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/home";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
-        };
-        "tank/root/nixos" = {
-          recursive = true;
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/root/nixos";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
-        };
-        "tank/appdata/docker" = {
-          recursive = true;
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/appdata/docker";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
-        };
-        "tank/personal" = {
-          recursive = true;
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/personal";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
-        };
-        "tank/media/music" = {
-          recursive = true;
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/media/music";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
-        };
-        "tank/media/audiobooks" = {
-          recursive = true;
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/media/audiobooks";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
-        };
-        "tank/media/books" = {
-          recursive = true;
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = secrets.network.storage.hosts.valmar.address;
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/media/books";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
         };
       };
     };
@@ -318,6 +255,7 @@ in {
       update-mam = {
         wantedBy = ["timers.target"];
         partOf = ["update-mam.service"];
+        after = ["network-online.target"];
         timerConfig = {
           OnCalendar = "0/2:00";
           RandomizedDelaySec = "30m";

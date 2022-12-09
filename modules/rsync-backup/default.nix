@@ -43,6 +43,7 @@ in {
         "rsync-backup-${name}" = {
           wantedBy = ["timers.target"];
           partOf = ["rsync-backup-${name}.service"];
+          after = ["network-online.target"];
           timerConfig = {
             OnCalendar = "daily";
             RandomizedDelaySec = "60m";
@@ -55,28 +56,22 @@ in {
         "rsync-backup-${name}" = {
           description = "rsync backup for ${name}";
           path = [pkgs.openssh];
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = let
-              script = pkgs.writeScriptBin "rsync-backup-${name}" ''
-                #!${pkgs.stdenv.shell}
-                set -e
-                ${pkgs.rsync}/bin/rsync \
-                  --verbose \
-                  --stats \
-                  --archive \
-                  --delete \
-                  --numeric-ids \
-                  --hard-links \
-                  --acls \
-                  --xattrs \
-                  --relative \
-                  --compress --compress-choice=lz4 \
-                  "${backup.source}" \
-                  "${backup.destination}"
-              '';
-            in "${script}/bin/rsync-backup-${name}";
-          };
+          serviceConfig.Type = "oneshot";
+          script = ''
+            ${pkgs.rsync}/bin/rsync \
+              --verbose \
+              --stats \
+              --archive \
+              --delete \
+              --numeric-ids \
+              --hard-links \
+              --acls \
+              --xattrs \
+              --relative \
+              --compress --compress-choice=lz4 \
+              "${backup.source}" \
+              "${backup.destination}"
+          '';
         };
       })
       cfg.backups);
