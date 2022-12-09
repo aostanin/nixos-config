@@ -54,6 +54,9 @@ in {
     kernelParams = [
       "pcie_aspm.policy=powersave"
     ];
+    kernel.sysctl = {
+      "net.ipv6.conf.${ifaceWol}.accept_ra" = 0;
+    };
     binfmt.emulatedSystems = ["aarch64-linux"];
     zfs.extraPools = ["tank"];
     zfs.forceImportAll = true;
