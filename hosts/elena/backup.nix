@@ -49,7 +49,7 @@ in {
           type = "snap";
           filesystems = {
             "tank/backup<" = true;
-            "tank/backup/hosts<" = false;
+            "tank/backup/hosts/zfs<" = false;
             "tank/download<" = true;
             "tank/media<" = true;
             "tank/personal<" = true;
