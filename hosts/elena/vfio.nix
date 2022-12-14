@@ -51,11 +51,11 @@
         useGpu = false;
         enableHibernation = true;
       };
-      win10-work-gpu-intel = {
+      win10-work-intel = {
         useGpu = false;
         enableHibernation = true;
       };
-      win10-work-gpu-nvidia = {
+      win10-work-nvidia = {
         useGpu = true;
         enableHibernation = true;
       };
