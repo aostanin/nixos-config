@@ -21,6 +21,7 @@ in {
     ../../modules/zerotier
     ./backup.nix
     ./telegraf.nix
+    ./vfio.nix
   ];
 
   boot = {
@@ -47,11 +48,7 @@ in {
     zfs.forceImportAll = true;
     tmpOnTmpfs = true;
     kernelParams = [
-      "i915.force_probe=4690" # TODO: Remove after upgrading to 5.16+ kernel
-      "i915.enable_fbc=1"
-      "i915.enable_guc=3"
       "pcie_aspm.policy=powersave"
-      #"vfio-pci.ids=1912:0014" # USB
     ];
   };
 
@@ -141,27 +138,6 @@ in {
   };
 
   services = {
-    vfio = {
-      enable = true;
-      cpuType = "intel";
-      gpu = {
-        # Quadro P400
-        driver = "nvidia";
-        pciIds = ["10de:1cb3" "10de:0fb9"];
-        busId = "01:00.0";
-      };
-      vms = {
-        win10-work = {
-          useGpu = false;
-          enableHibernation = true;
-        };
-        win10-work-gpu = {
-          useGpu = true;
-          enableHibernation = true;
-        };
-      };
-    };
-
     virtwold = {
       enable = true;
       interfaces = ["br0"];
