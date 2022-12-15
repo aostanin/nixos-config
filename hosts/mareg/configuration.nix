@@ -15,6 +15,7 @@ in {
     ../../modules/desktop
     ../../modules/msmtp
     ../../modules/zerotier
+    ./backup.nix
   ];
 
   variables = {
@@ -108,47 +109,12 @@ in {
         enable = true;
         interval = "monthly";
       };
-      autoSnapshot = {
-        enable = true;
-        monthly = 0;
-      };
       trim.enable = true;
       zed = {
         enableMail = true;
         settings = {
           ZED_EMAIL_ADDR = secrets.user.emailAddress;
           ZED_NOTIFY_VERBOSE = true;
-        };
-      };
-    };
-
-    znapzend = {
-      enable = true;
-      pure = true;
-      autoCreation = true;
-      features = {
-        compressed = true;
-        recvu = true;
-        skipIntermediates = true;
-        zfsGetType = true;
-      };
-      zetup = {
-        "rpool/home" = {
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = "elena";
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/home";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
-        };
-        "rpool/root/nixos" = {
-          recursive = true;
-          plan = "1day=>1hour,1week=>1day,1month=>1week";
-          destinations.remote = {
-            host = "elena";
-            dataset = "tank/backup/hosts/zfs/${config.networking.hostName}/root/nixos";
-            plan = "1week=>1day,1month=>1week,3month=>1month";
-          };
         };
       };
     };
