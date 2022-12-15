@@ -280,6 +280,9 @@ in {
       settings = {
         backend = "glx";
         blur-background = true;
+        blur-background-exclude = [
+          "class_g ?= 'Peek'"
+        ];
         blur = {
           method = "dual_kawase";
           strength = 2;
