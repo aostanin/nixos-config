@@ -65,6 +65,8 @@
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="users", MODE="0660"
     '';
 
+    udisks2.enable = true;
+
     upower.enable = true;
 
     xbanish.enable = true;
