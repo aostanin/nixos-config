@@ -28,13 +28,13 @@
           # Overwrite the kernel's i915 module with i915-sriov. There has to be a better way to do this, but
           # I couldn't figure out how to overwrite a single module without rebuilding the kernel.
           + ''
-            cp ${i915-sriov}/lib/modules/${configuredKernel.modDirVersion}/kernel/drivers/gpu/drm/i915/i915.ko.xz $out/lib/modules/${configuredKernel.modDirVersion}/kernel/drivers/gpu/drm/i915/i915.ko.xz
+            cp ${i915-sriov}/lib/modules/${configuredKernel.modDirVersion}/kernel/drivers/gpu/drm/i915/i915-sriov.ko.xz $out/lib/modules/${configuredKernel.modDirVersion}/kernel/drivers/gpu/drm/i915/i915.ko.xz
           '';
       }));
   };
 
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="drm", KERNELS=="0000:00:02.0", ATTR{device/sriov_numvfs}="2"
+    ACTION=="add", SUBSYSTEM=="drm", KERNELS=="0000:00:02.0", ATTR{device/sriov_numvfs}="4"
   '';
 
   services.vfio = {
@@ -47,6 +47,10 @@
       busId = "01:00.0";
     };
     vms = {
+      macOS-nvidia = {
+        useGpu = true;
+        enableHibernation = true;
+      };
       win10-work = {
         useGpu = false;
         enableHibernation = true;

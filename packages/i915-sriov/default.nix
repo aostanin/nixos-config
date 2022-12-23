@@ -35,7 +35,7 @@ stdenv.mkDerivation {
   buildFlags = [];
 
   installPhase = ''
-    install -v -D -m 644 i915.ko "$out/lib/modules/${kernel.modDirVersion}/kernel/drivers/gpu/drm/i915/i915.ko"
-    xz "$out/lib/modules/${kernel.modDirVersion}/kernel/drivers/gpu/drm/i915/i915.ko"
+    install -v -D -m 644 i915.ko "$out/lib/modules/${kernel.modDirVersion}/kernel/drivers/gpu/drm/i915/i915-sriov.ko"
+    xz "$out/lib/modules/${kernel.modDirVersion}/kernel/drivers/gpu/drm/i915/i915-sriov.ko"
   '';
 }
