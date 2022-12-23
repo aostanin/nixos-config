@@ -45,8 +45,11 @@ in {
       };
     };
     supportedFilesystems = ["zfs"];
-    zfs.extraPools = ["fastpool" "tank"];
-    zfs.forceImportAll = true;
+    zfs = {
+      extraPools = ["fastpool" "tank"];
+      forceImportAll = true;
+      requestEncryptionCredentials = false;
+    };
     tmpOnTmpfs = true;
     kernelParams = [
       "pcie_aspm.policy=powersave"
