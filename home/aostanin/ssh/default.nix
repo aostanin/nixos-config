@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  ssh_config = import ../../../secrets/ssh;
+  ssh_config = import ../../../secrets/ssh {pkgs = pkgs;};
 in {
   programs.ssh = {
     enable = true;
