@@ -8,7 +8,7 @@
     kernelParams = [
       "i915.enable_fbc=1"
       "i915.enable_guc=7"
-      #"vfio-pci.ids=1912:0014" # USB
+      "vfio-pci.ids=1912:0014" # USB
     ];
     kernelPackages = let
       configuredKernel = config.boot.zfs.package.latestCompatibleLinuxPackages.kernel.override {
