@@ -5,6 +5,9 @@
 " General options
 set nocompatible
 
+" Disable mouse
+set mouse=
+
 " Tab key is 4 spaces
 set tabstop=4
 set softtabstop=4
