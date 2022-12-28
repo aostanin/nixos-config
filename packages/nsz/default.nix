@@ -54,7 +54,7 @@
 in
   buildPythonPackage rec {
     pname = "nsz";
-    version = "4.1.0";
+    version = "4.2.1";
 
     doCheck = false;
 
@@ -68,6 +68,6 @@ in
       owner = "nicoboss";
       repo = "nsz";
       rev = version;
-      hash = "sha256-tdngXV+VUOAkg3lF2NOmw0mBeSEE+YpUfuKukTKcPnM=";
+      hash = "sha256-It815Uxxs4T9BM9EypAfPuq4Oy8rgGLpKA79m2xM8N4=";
     };
   }
