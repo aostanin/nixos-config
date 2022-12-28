@@ -6,6 +6,24 @@
 }: let
   secrets = import ../../secrets;
 in {
+  services.rsync-backup = {
+    enable = true;
+    backups = {
+      vps-gce1 = {
+        source = "root@${secrets.network.zerotier.hosts.vps-gce1.address}:/storage/appdata";
+        destination = "/storage/backup/hosts/dir/vps-gce1";
+      };
+      vps-oci1 = {
+        source = "root@${secrets.network.zerotier.hosts.vps-oci1.address}:/storage/appdata";
+        destination = "/storage/backup/hosts/dir/vps-oci1";
+      };
+      vps-oci2 = {
+        source = "root@${secrets.network.zerotier.hosts.vps-oci2.address}:/storage/appdata";
+        destination = "/storage/backup/hosts/dir/vps-oci2";
+      };
+    };
+  };
+
   services.zrepl = {
     enable = true;
     settings = {
