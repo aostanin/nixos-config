@@ -72,6 +72,10 @@ in {
   services.openssh = {
     enable = true;
     forwardX11 = true;
+    extraConfig = ''
+      HostKeyAlgorithms +ssh-rsa
+      PubkeyAcceptedAlgorithms +ssh-rsa
+    '';
   };
 
   programs = {
