@@ -31,7 +31,8 @@ in {
     enable = true;
     liveRestore = false;
     autoPrune = {
-      enable = true;
+      # Don't autoprune on servers
+      enable = false;
       flags = [
         "--all"
         "--filter \"until=168h\""
