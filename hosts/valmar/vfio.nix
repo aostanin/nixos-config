@@ -52,6 +52,11 @@ in {
         enableHibernation = true;
         isolate = isolate;
       };
+      win10-play-rescue = {
+        useGpu = true;
+        enableHibernation = true;
+        isolate = isolate;
+      };
       win10-zwift = {
         useGpu = true;
         enableHibernation = true;
