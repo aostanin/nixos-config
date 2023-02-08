@@ -63,6 +63,9 @@
 
       # Saleae Logic
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="users", MODE="0660"
+
+      # LEOMO TYPE-S
+      ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", GROUP="adbusers", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
     '';
 
     udisks2.enable = true;
@@ -86,6 +89,8 @@
   };
 
   programs = {
+    adb.enable = true;
+
     dconf.enable = true;
 
     thunar = {

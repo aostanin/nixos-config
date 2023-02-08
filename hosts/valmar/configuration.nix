@@ -208,8 +208,6 @@ in {
     "/mnt/personal" = nfsFilesystem "/personal";
   };
 
-  programs.adb.enable = true;
-
   virtualisation.libvirtd.enable = true;
 
   virtualisation.docker = {

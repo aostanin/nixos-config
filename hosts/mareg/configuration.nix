@@ -124,8 +124,6 @@ in {
     nvidiaOptimus.disable = true;
   };
 
-  programs.adb.enable = true;
-
   virtualisation = {
     libvirtd.enable = true;
 
