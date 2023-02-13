@@ -46,7 +46,22 @@
       pciIds = ["10de:1cb3" "10de:0fb9"];
       busId = "01:00.0";
     };
-    vms = {
+    vms = let
+      isolate8Core = {
+        enable = true;
+        dropCaches = false;
+        compactMemory = false;
+        isolateCpus = true;
+        allCpus = ["0-11"];
+        hostCpus = ["0-3"];
+        guestCpus = ["0-1" "4-11"];
+      };
+    in {
+      desktop = {
+        useGpu = true;
+        enableHibernation = true;
+        isolate = isolate8Core;
+      };
       macOS-nvidia = {
         useGpu = true;
         enableHibernation = true;
