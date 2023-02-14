@@ -34,12 +34,10 @@ in {
           filesystems = {
             "rpool/appdata<" = true;
             "rpool/appdata/temp<" = false;
+            "rpool/home<" = true;
             "rpool/root<" = true;
             "rpool/virtualization<" = true;
             "rpool/virtualization/docker<" = false;
-            "fastpool/appdata<" = true;
-            "fastpool/home<" = true;
-            "fastpool/virtualization<" = true;
           };
           snapshotting = {
             type = "periodic";
@@ -130,9 +128,6 @@ in {
             "rpool/home<" = true;
             "rpool/root<" = true;
             "rpool/root/nix<" = false;
-            "fastpool/appdata<" = true;
-            "fastpool/appdata/temp<" = false;
-            "fastpool/home<" = true;
             "tank/media/audiobooks<" = true;
             "tank/media/books<" = true;
             "tank/media/music<" = true;
