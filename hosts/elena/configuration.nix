@@ -23,6 +23,7 @@ in {
     ./nfs.nix
     ./telegraf.nix
     ./vfio.nix
+    ./power-management.nix
   ];
 
   boot = {
