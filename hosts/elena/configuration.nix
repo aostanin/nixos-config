@@ -202,6 +202,16 @@ in {
     };
 
     services = {
+      # For PiKVM console
+      "serial-getty@ttyACM0" = {
+        enable = true;
+        wantedBy = ["getty.target"];
+        serviceConfig = {
+          Environment = "TERM=xterm-256color";
+          Restart = "always";
+        };
+      };
+
       update-mam = {
         serviceConfig = {
           Type = "oneshot";
