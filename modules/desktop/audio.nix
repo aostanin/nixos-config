@@ -5,7 +5,7 @@
 }: {
   hardware.bluetooth = {
     enable = true;
-    hsphfpd.enable = true;
+    settings.General.Experimental = true;
   };
 
   security.rtkit.enable = true;
