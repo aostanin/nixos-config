@@ -37,15 +37,30 @@
     ACTION=="add", SUBSYSTEM=="drm", KERNELS=="0000:00:02.0", ATTR{device/sriov_numvfs}="4"
   '';
 
-  services.vfio = {
-    enable = true;
-    cpuType = "intel";
-    gpu = {
+  services.vfio = let
+    amdRX570 = {
+      # RX 570
+      driver = "amdgpu";
+      pciIds = ["1458:22f7" "1458:aaf0"];
+      busId = "07:00.0";
+    };
+    nvidiaQuadroP400 = {
       # Quadro P400
       driver = "nvidia";
       pciIds = ["10de:1cb3" "10de:0fb9"];
       busId = "01:00.0";
     };
+    nvidiaRTX2070Super = {
+      # RTX 2070 Super
+      driver = "nvidia";
+      pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
+      busId = "01:00.0";
+    };
+  in {
+    enable = true;
+    cpuType = "intel";
+    enableLookingGlass = true;
+    gpu = nvidiaRTX2070Super;
     vms = let
       isolate8Core = {
         enable = true;
@@ -57,14 +72,14 @@
         guestCpus = ["0-1" "4-11"];
       };
     in {
-      desktop = {
+      valmar = {
+        useGpu = false;
+        enableHibernation = true;
+      };
+      win10-play = {
         useGpu = true;
         enableHibernation = true;
         isolate = isolate8Core;
-      };
-      macOS-nvidia = {
-        useGpu = true;
-        enableHibernation = true;
       };
       win10-work = {
         useGpu = false;
@@ -72,10 +87,6 @@
       };
       win10-work-intel = {
         useGpu = false;
-        enableHibernation = true;
-      };
-      win10-work-nvidia = {
-        useGpu = true;
         enableHibernation = true;
       };
     };

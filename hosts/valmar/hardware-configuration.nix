@@ -8,33 +8,48 @@
   modulesPath,
   ...
 }: {
-  imports = ["${modulesPath}/installer/scan/not-detected.nix"];
+  imports = [
+    (modulesPath + "/profiles/qemu-guest.nix")
+  ];
 
-  boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "sd_mod"];
+  boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk"];
   boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-amd"];
+  boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/D75E-C44C";
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/eedb1b30-6eda-43e5-b8a4-2933749452e1";
+    fsType = "ext4";
+  };
+
+  fileSystems."/boot/efi" = {
+    device = "/dev/disk/by-uuid/EF31-6C12";
     fsType = "vfat";
   };
 
-  fileSystems."/" = {
-    device = "rpool/root/nixos";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
+  # TODO: virtiofs doesn't support suspend/resume
+  boot.blacklistedKernelModules = ["virtiofs"];
 
-  fileSystems."/nix" = {
-    device = "rpool/root/nix";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
+  # boot.initrd.availableKernelModules = ["virtiofs"];
+
+  # fileSystems."/mnt/home" = {
+  #   device = "home";
+  #   fsType = "virtiofs";
+  # };
+
+  # fileSystems."/mnt/media" = {
+  #   device = "media";
+  #   fsType = "virtiofs";
+  # };
+
+  # fileSystems."/mnt/personal" = {
+  #   device = "personal";
+  #   fsType = "virtiofs";
+  # };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/d97f5213-56bd-4856-a068-dd39e8ad0e61";}
+    {device = "/dev/disk/by-uuid/afa2e1cd-8884-4a49-9679-d64a02e98874";}
   ];
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
+  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }

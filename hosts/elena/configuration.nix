@@ -6,8 +6,7 @@
   ...
 }: let
   secrets = import ../../secrets;
-  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
-  ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE1}";
+  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.integrated}";
 in {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel"
@@ -95,16 +94,6 @@ in {
       ];
     };
 
-    interfaces."${ifaceStorage}" = {
-      mtu = 9000;
-      ipv4.addresses = [
-        {
-          address = secrets.network.storage.hosts.elena.address;
-          prefixLength = 24;
-        }
-      ];
-    };
-
     defaultGateway = secrets.network.home.defaultGateway;
     nameservers = [secrets.network.home.nameserver];
 
@@ -114,7 +103,6 @@ in {
       trustedInterfaces = [
         "br0"
         "docker0"
-        ifaceStorage
         secrets.zerotier.interface
       ];
       interfaces.vlan40 = {
@@ -148,7 +136,7 @@ in {
       interfaces = ["br0"];
     };
 
-    xserver.videoDrivers = ["intel" "nvidia"];
+    xserver.videoDrivers = ["amdgpu" "intel" "nvidia"];
 
     zfs = {
       autoScrub = {
