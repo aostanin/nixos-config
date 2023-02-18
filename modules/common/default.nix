@@ -30,6 +30,7 @@ in {
   nix = {
     gc = {
       automatic = true;
+      dates = "weekly";
       options = "--delete-older-than 30d";
     };
     settings = {
@@ -62,6 +63,8 @@ in {
     # Load module needed to set above sysctl
     kernelModules = ["br_netfilter"];
   };
+
+  hardware.enableRedistributableFirmware = true;
 
   networking = {
     useDHCP = false;
