@@ -33,6 +33,7 @@ in {
       # TODO: Move
       efi.efiSysMountPoint = "/boot/efi";
     };
+    supportedFilesystems = ["zfs"];
     tmpOnTmpfs = true;
     #extraModulePackages = with config.boot.kernelPackages; [
     #  kvmfr
