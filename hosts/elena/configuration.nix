@@ -46,7 +46,7 @@ in {
     };
     supportedFilesystems = ["zfs"];
     zfs = {
-      extraPools = ["tank"];
+      extraPools = ["tank" "vmpool"];
       forceImportAll = true;
       requestEncryptionCredentials = false;
     };
