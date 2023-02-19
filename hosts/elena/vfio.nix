@@ -8,7 +8,7 @@
     kernelParams = [
       "i915.enable_fbc=1"
       "i915.enable_guc=7"
-      "vfio-pci.ids=1912:0014" # USB
+      "vfio-pci.ids=1912:0014,1b73:1100" # USB
     ];
     kernelPackages = let
       configuredKernel = config.boot.zfs.package.latestCompatibleLinuxPackages.kernel.override {
@@ -42,14 +42,14 @@
       # RX 570
       driver = "amdgpu";
       pciIds = ["1458:22f7" "1458:aaf0"];
-      busId = "07:00.0";
+      busId = "09:00.0";
     };
-    nvidiaQuadroP400 = {
-      # Quadro P400
-      driver = "nvidia";
-      pciIds = ["10de:1cb3" "10de:0fb9"];
-      busId = "01:00.0";
-    };
+    #nvidiaQuadroP400 = {
+    #  # Quadro P400
+    #  driver = "nvidia";
+    #  pciIds = ["10de:1cb3" "10de:0fb9"];
+    #  busId = "01:00.0";
+    #};
     nvidiaRTX2070Super = {
       # RTX 2070 Super
       driver = "nvidia";

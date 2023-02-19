@@ -1,11 +1,12 @@
 {
   config,
   pkgs,
+  lib,
   hardwareModulesPath,
   ...
 }: let
   secrets = import ../../secrets;
-  iface = "enp1s0";
+  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.integrated}";
 in {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel/cpu-only.nix"
@@ -30,14 +31,13 @@ in {
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
-      # TODO: Move
-      efi.efiSysMountPoint = "/boot/efi";
     };
     supportedFilesystems = ["zfs"];
+    zfs.allowHibernation = true;
     tmpOnTmpfs = true;
-    #extraModulePackages = with config.boot.kernelPackages; [
-    #  kvmfr
-    #];
+    extraModulePackages = with config.boot.kernelPackages; [
+      kvmfr
+    ];
     kernelModules = [
       "amdgpu"
     ];
@@ -51,10 +51,16 @@ in {
     ];
   };
 
-  hardware .opengl.extraPackages = with pkgs; [
+  hardware.opengl.extraPackages = with pkgs; [
     amdvlk
     rocm-opencl-icd
   ];
+
+  systemd.network.links."11-default" = {
+    matchConfig.OriginalName = "*";
+    linkConfig.NamePolicy = "mac";
+    linkConfig.MACAddressPolicy = "persistent";
+  };
 
   networking = {
     hostName = "valmar";
@@ -123,8 +129,7 @@ in {
           '';
         }
         {
-          #output = "DVI-D-0";
-          output = "DisplayPort-2";
+          output = "DVI-D-0";
           monitorConfig = ''
             Option "Position" "440 0"
           '';

@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  gpuSysfsPath = "/sys/devices/pci0000:00/0000:00:02.6/0000:07:00.0";
+  gpuSysfsPath = "/sys/devices/pci0000:00/0000:00:02.6/0000:09:00.0";
   gpuPowerManagementScript = pkgs.writeScriptBin "gpu-power-management" ''
     #!${pkgs.stdenv.shell}
 

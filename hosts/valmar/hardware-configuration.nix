@@ -22,30 +22,10 @@
     fsType = "ext4";
   };
 
-  fileSystems."/boot/efi" = {
+  fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/EF31-6C12";
     fsType = "vfat";
   };
-
-  # TODO: virtiofs doesn't support suspend/resume
-  boot.blacklistedKernelModules = ["virtiofs"];
-
-  # boot.initrd.availableKernelModules = ["virtiofs"];
-
-  # fileSystems."/mnt/home" = {
-  #   device = "home";
-  #   fsType = "virtiofs";
-  # };
-
-  # fileSystems."/mnt/media" = {
-  #   device = "media";
-  #   fsType = "virtiofs";
-  # };
-
-  # fileSystems."/mnt/personal" = {
-  #   device = "personal";
-  #   fsType = "virtiofs";
-  # };
 
   swapDevices = [
     {device = "/dev/disk/by-uuid/afa2e1cd-8884-4a49-9679-d64a02e98874";}
