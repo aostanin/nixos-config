@@ -128,6 +128,11 @@ in {
       enable = true;
       driSupport32Bit = true;
     };
+
+    pulseaudio = {
+      enable = true;
+      systemWide = true;
+    };
   };
 
   services = {

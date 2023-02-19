@@ -99,6 +99,7 @@ in {
       "libvirtd"
       "networkmanager"
       "plugdev"
+      "pulse-access"
       "wheel"
     ];
     shell = pkgs.zsh;
