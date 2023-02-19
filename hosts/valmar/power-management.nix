@@ -4,13 +4,7 @@
   pkgs,
   ...
 }: let
-  gpuSysfsPath = "/sys/devices/pci0000:00/0000:00:03.1/0000:0a:00.0";
-  backupDrives = [
-    "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG052SA"
-    "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG2TT6A"
-    "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG2TTLA"
-    "/dev/disk/by-id/ata-Hitachi_HDS5C3030ALA630_MJ1311YNG2TV0A"
-  ];
+  gpuSysfsPath = "/sys/devices/pci0000:00/0000:00:02.6/0000:09:00.0";
   gpuPowerManagementScript = pkgs.writeScriptBin "gpu-power-management" ''
     #!${pkgs.stdenv.shell}
 
@@ -26,25 +20,17 @@
 in {
   boot.kernelParams = [
     "amdgpu.ppfeaturemask=0xfff7ffff"
+    "pcie_aspm.policy=powersave"
   ];
 
   powerManagement.powerUpCommands = ''
     ${gpuPowerManagementScript}/bin/gpu-power-management
-
-    # Calling hdparm brings the drives out of standby, so disable for now
-    #${pkgs.hdparm}/bin/hdparm -B 1 -S 6 -y ${lib.concatStringsSep " " backupDrives}
   '';
 
   services.xserver.displayManager.setupCommands = "${gpuPowerManagementScript}/bin/gpu-power-management";
 
-  systemd.services."hd-idle" = {
-    description = "hd-idle - spin down idle hard disks";
-    after = ["suspend.target" "hibernate.target" "hybrid-sleep.target" "suspend-then-hibernate.target"];
-    serviceConfig = {
-      Restart = "on-failure";
-      Type = "simple";
-      ExecStart = "${pkgs.hd-idle}/bin/hd-idle -i 0 ${lib.concatStringsSep " " (map (drive: "-a ${drive} -i 300") backupDrives)}";
-    };
-    wantedBy = ["multi-user.target"];
-  };
+  services.udev.extraRules = ''
+    # GPU lower power mode
+    KERNEL=="card0", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="low"
+  '';
 }

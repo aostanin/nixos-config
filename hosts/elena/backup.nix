@@ -38,6 +38,7 @@ in {
             "rpool/root<" = true;
             "rpool/virtualization<" = true;
             "rpool/virtualization/docker<" = false;
+            "vmpool/virtualization<" = true;
           };
           snapshotting = {
             type = "periodic";

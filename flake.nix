@@ -41,7 +41,6 @@
     lib = nixpkgs.lib;
     secrets = import ./secrets;
     hosts = [
-      "desktop"
       "elena"
       "mareg"
       "roan"

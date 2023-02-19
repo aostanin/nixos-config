@@ -32,6 +32,8 @@ in {
     supportedFilesystems = ["zfs"];
     tmpOnTmpfs = true;
     kernelParams = [
+      "intel_iommu=on"
+      "iommu=pt"
       "intel_pstate=active"
       "i915.enable_fbc=1"
       "zfs.zfs_arc_max=2147483648"
