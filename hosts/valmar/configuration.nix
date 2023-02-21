@@ -42,9 +42,6 @@ in {
       "amdgpu"
     ];
     kernelParams = [
-      "intel_iommu=on"
-      "iommu=pt"
-      "intel_pstate=active"
       # For virsh console
       "console=ttyS0,115200"
       "console=tty1"

@@ -20,7 +20,6 @@
 in {
   boot.kernelParams = [
     "amdgpu.ppfeaturemask=0xfff7ffff"
-    "pcie_aspm.policy=powersave"
   ];
 
   powerManagement.powerUpCommands = ''
