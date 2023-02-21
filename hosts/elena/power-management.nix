@@ -13,6 +13,10 @@
     "/dev/disk/by-id/ata-WDC_WD120EMFZ-11A6JA0_9RG1G3RC"
   ];
 in {
+  boot.kernelParams = [
+    "pcie_aspm.policy=powersave"
+  ];
+
   powerManagement.powerUpCommands = ''
     ${pkgs.hdparm}/bin/hdparm -B 1 -S 120 ${lib.concatStringsSep " " drives}
   '';

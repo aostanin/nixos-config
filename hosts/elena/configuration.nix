@@ -21,6 +21,7 @@ in {
     ./backup.nix
     ./nfs.nix
     ./telegraf.nix
+    ./i915-sriov.nix
     ./vfio.nix
     ./power-management.nix
   ];
@@ -51,9 +52,6 @@ in {
       requestEncryptionCredentials = false;
     };
     tmpOnTmpfs = true;
-    kernelParams = [
-      "pcie_aspm.policy=powersave"
-    ];
   };
 
   systemd.network.links."11-default" = {
