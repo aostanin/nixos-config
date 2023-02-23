@@ -27,15 +27,6 @@
   vfioPciIds = usbControllerIds;
 in {
   boot = {
-    extraModulePackages = with config.boot.kernelPackages; [
-      vendor-reset
-    ];
-    initrd.kernelModules = [
-      "vendor-reset"
-    ];
-    initrd.postDeviceCommands = ''
-      echo device_specific > /sys/bus/pci/devices/0000:${gpus.amdRX570.busId}/reset_method
-    '';
     kernelParams = [
       "vfio-pci.ids=${lib.concatStringsSep "," vfioPciIds}"
     ];
