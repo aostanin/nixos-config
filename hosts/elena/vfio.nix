@@ -3,38 +3,77 @@
   lib,
   pkgs,
   ...
-}: {
-  boot = {
-    kernelParams = [
-      "i915.enable_fbc=1"
-      "vfio-pci.ids=1912:0014,1b73:1100" # USB
-    ];
-  };
-
-  services.vfio = let
+}: let
+  gpus = {
     amdRX570 = {
       # RX 570
       driver = "amdgpu";
-      pciIds = ["1458:22f7" "1458:aaf0"];
+      pciIds = ["1002:67df" "1002:aaf0"];
       busId = "09:00.0";
     };
-    #nvidiaQuadroP400 = {
-    #  # Quadro P400
-    #  driver = "nvidia";
-    #  pciIds = ["10de:1cb3" "10de:0fb9"];
-    #  busId = "01:00.0";
-    #};
     nvidiaRTX2070Super = {
       # RTX 2070 Super
       driver = "nvidia";
       pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
       busId = "01:00.0";
     };
-  in {
+  };
+  usbControllerIds = [
+    "1912:0014" # Renesas Technology Corp. uPD720201
+    "1b73:1100" # Fresco Logic FL1100
+  ];
+  peripherals = {
+    mouse = "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd";
+    keyboard = "/dev/input/by-id/usb-SINOWEALTH_Wired_Gaming_Mouse-event-mouse";
+  };
+  vfioPciIds = usbControllerIds ++ gpus.amdRX570.pciIds;
+in {
+  boot = {
+    extraModulePackages = with config.boot.kernelPackages; [
+      vendor-reset
+    ];
+    initrd.kernelModules = [
+      "vendor-reset"
+    ];
+    initrd.postDeviceCommands = ''
+      echo device_specific > /sys/bus/pci/devices/0000:${gpus.amdRX570.busId}/reset_method
+    '';
+    kernelParams = [
+      "vfio-pci.ids=${lib.concatStringsSep "," vfioPciIds}"
+    ];
+  };
+
+  systemd.services."evsieve" = {
+    serviceConfig = {
+      Restart = "on-failure";
+      Type = "notify";
+      ExecStart = ''
+        ${pkgs.evsieve}/bin/evsieve \
+          --input ${peripherals.keyboard} domain=kb grab=auto persist=reopen \
+          --input ${peripherals.mouse} domain=ms grab=auto persist=reopen \
+          --hook   key:scrolllock toggle   \
+          --toggle @kb @vkb2 @vkb1  \
+          --toggle @ms @vms2 @vms1  \
+          --output @vkb1 create-link=/dev/input/by-id/virtual-keyboard-1   \
+          --output @vms1 create-link=/dev/input/by-id/virtual-mouse-1 \
+          --output @vkb2 create-link=/dev/input/by-id/virtual-keyboard-2 \
+          --output @vms2 create-link=/dev/input/by-id/virtual-mouse-2
+      '';
+    };
+    wantedBy = ["multi-user.target"];
+  };
+
+  services.vfio = {
     enable = true;
     cpuType = "intel";
     enableLookingGlass = true;
-    gpu = nvidiaRTX2070Super;
+    gpu = gpus.nvidiaRTX2070Super;
+    qemu.devices = [
+      "/dev/input/by-id/virtual-keyboard-1"
+      "/dev/input/by-id/virtual-mouse-1"
+      "/dev/input/by-id/virtual-keyboard-2"
+      "/dev/input/by-id/virtual-mouse-2"
+    ];
     vms = let
       isolate8Core = {
         enable = true;
