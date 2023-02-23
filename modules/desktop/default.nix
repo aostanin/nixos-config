@@ -7,18 +7,6 @@
     ./audio.nix
   ];
 
-  boot = {
-    extraModulePackages = with config.boot.kernelPackages; [
-      v4l2loopback
-    ];
-    kernelModules = [
-      "v4l2loopback"
-    ];
-    extraModprobeConfig = ''
-      options v4l2loopback video_nr=10 card_label="OBS Studio" exclusive_caps=1
-    '';
-  };
-
   i18n.inputMethod = {
     enabled = "fcitx";
     fcitx.engines = with pkgs.fcitx-engines; [mozc];
