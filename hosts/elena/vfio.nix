@@ -6,13 +6,11 @@
 }: let
   gpus = {
     amdRX570 = {
-      # RX 570
       driver = "amdgpu";
       pciIds = ["1002:67df" "1002:aaf0"];
       busId = "09:00.0";
     };
     nvidiaRTX2070Super = {
-      # RTX 2070 Super
       driver = "nvidia";
       pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
       busId = "01:00.0";
@@ -26,7 +24,7 @@
     mouse = "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd";
     keyboard = "/dev/input/by-id/usb-SINOWEALTH_Wired_Gaming_Mouse-event-mouse";
   };
-  vfioPciIds = usbControllerIds ++ gpus.amdRX570.pciIds;
+  vfioPciIds = usbControllerIds;
 in {
   boot = {
     extraModulePackages = with config.boot.kernelPackages; [
@@ -52,8 +50,8 @@ in {
           --input ${peripherals.keyboard} domain=kb grab=auto persist=reopen \
           --input ${peripherals.mouse} domain=ms grab=auto persist=reopen \
           --hook   key:scrolllock toggle   \
-          --toggle @kb @vkb2 @vkb1  \
-          --toggle @ms @vms2 @vms1  \
+          --toggle @kb @vkb1 @vkb2  \
+          --toggle @ms @vms1 @vms2  \
           --output @vkb1 create-link=/dev/input/by-id/virtual-keyboard-1   \
           --output @vms1 create-link=/dev/input/by-id/virtual-mouse-1 \
           --output @vkb2 create-link=/dev/input/by-id/virtual-keyboard-2 \
@@ -67,7 +65,7 @@ in {
     enable = true;
     cpuType = "intel";
     enableLookingGlass = true;
-    gpu = gpus.nvidiaRTX2070Super;
+    gpus = gpus;
     qemu.devices = [
       "/dev/input/by-id/virtual-keyboard-1"
       "/dev/input/by-id/virtual-mouse-1"
@@ -85,21 +83,31 @@ in {
         guestCpus = ["0-1" "4-11"];
       };
     in {
+      macOS = {
+        gpu = "amdRX570";
+        enableHibernation = true;
+      };
+      ubuntu = {
+        gpu = "amdRX570";
+        enableHibernation = true;
+      };
       valmar = {
-        useGpu = false;
+        gpu = "amdRX570";
         enableHibernation = true;
       };
       win10-play = {
-        useGpu = true;
+        gpu = "nvidiaRTX2070Super";
         enableHibernation = true;
         isolate = isolate8Core;
       };
+      win10-play-amd = {
+        gpu = "amdRX570";
+        enableHibernation = true;
+      };
       win10-work = {
-        useGpu = false;
         enableHibernation = true;
       };
       win10-work-intel = {
-        useGpu = false;
         enableHibernation = true;
       };
     };

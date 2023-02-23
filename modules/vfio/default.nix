@@ -132,12 +132,12 @@ with lib; let
 
   vmSubmodule = types.submodule {
     options = {
-      useGpu = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
+      gpu = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "amdRX570";
         description = ''
-          Use GPU passthrough.
+          Which GPU to use for this VM.
         '';
       };
 
@@ -234,33 +234,72 @@ with lib; let
     fi
   '';
 
-  gpuDetachScript = pkgs.writeScriptBin "vfio-gpu-detach" ''
-    #!${pkgs.stdenv.shell}
-    set -e
+  gpuDetachScript = gpu:
+    pkgs.writeScriptBin "vfio-gpu-detach"
+    (
+      if (gpu.driver == "amdgpu")
+      then ''
+        #!${pkgs.stdenv.shell}
+        set -e
 
-    systemctl stop nvidia-persistenced.service
+        if [ -d /sys/bus/pci/drivers/amdgpu/0000:${gpu.busId} ]; then
+          echo 0000:${gpu.busId} > /sys/bus/pci/drivers/amdgpu/unbind
+        fi
 
-    # Avoid detaching the GPU if it's in use
-    fuser /dev/nvidia0 && exit 1
+        # Binding to amdgpu resizes the BAR from 256MB to 4GB (on RX 570). This causes Windows
+        # guests to fail initializing DirectX and macOS guests to hang during boot.
+        # Setting the BAR size back to 256MB before starting the VM fixes these issues.
+        echo 8 > /sys/bus/pci/devices/0000:${gpu.busId}/resource0_resize
 
-    if [ $(basename $(readlink /sys/bus/pci/devices/0000:${cfg.gpu.busId}/driver)) != "vfio-pci" ]; then
-      ${libvirt}/bin/virsh nodedev-detach pci_0000_${(replaceStrings [":" "."] ["_" "_"] cfg.gpu.busId)}
-    fi
-  '';
+        if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
+          ${libvirt}/bin/virsh nodedev-detach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+        fi
+      ''
+      else if (gpu.driver == "nvidia")
+      then ''
+        #!${pkgs.stdenv.shell}
+        set -e
 
-  gpuAttachScript = pkgs.writeScriptBin "vfio-gpu-attach" ''
-    #!${pkgs.stdenv.shell}
-    set -e
+        systemctl stop nvidia-persistenced.service
 
-    if [ $(basename $(readlink /sys/bus/pci/devices/0000:${cfg.gpu.busId}/driver)) == "vfio-pci" ]; then
-      ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(replaceStrings [":" "."] ["_" "_"] cfg.gpu.busId)}
-    fi
+        # Avoid detaching the GPU if it's in use
+        fuser /dev/nvidia0 && exit 1
 
-    systemctl start nvidia-persistenced.service
+        if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
+          ${libvirt}/bin/virsh nodedev-detach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+        fi
+      ''
+      else throw "Unsupported gpu driver ${gpu.driver}"
+    );
 
-    # Resetting the GPU slightly lowers the power consumption
-    ${nvidiaBin}/bin/nvidia-smi --gpu-reset
-  '';
+  gpuAttachScript = gpu:
+    pkgs.writeScriptBin "vfio-gpu-attach"
+    (
+      if (gpu.driver == "amdgpu")
+      then ''
+        #!${pkgs.stdenv.shell}
+        set -e
+
+        if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) == "vfio-pci" ]; then
+          ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+        fi
+      ''
+      else if (gpu.driver == "nvidia")
+      then ''
+        #!${pkgs.stdenv.shell}
+        set -e
+
+        if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) == "vfio-pci" ]; then
+          ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+        fi
+
+        systemctl start nvidia-persistenced.service
+
+        # Resetting the GPU slightly lowers the power consumption
+        ${nvidiaBin}/bin/nvidia-smi --gpu-reset
+      ''
+      else throw "Unsupported gpu driver ${gpu.driver}"
+    );
 in {
   options.services.vfio = {
     enable = mkEnableOption "vfio";
@@ -290,10 +329,10 @@ in {
       '';
     };
 
-    gpu = mkOption {
-      type = gpuSubmodule;
+    gpus = mkOption {
+      type = types.attrsOf gpuSubmodule;
       description = ''
-        The GPU to pass through to the guest.
+        The GPUs used for passthrough.
       '';
     };
 
@@ -322,8 +361,6 @@ in {
           options kvm ignore_msrs=1 report_ignored_msrs=0
         '';
       };
-
-      environment.systemPackages = [gpuAttachScript gpuDetachScript];
 
       virtualisation.libvirtd = {
         enable = true;
@@ -367,8 +404,12 @@ in {
 
       # Prevent Xorg from opening /dev/nvidia0
       services.xserver.displayManager = {
-        setupCommands = "${gpuAttachScript}/bin/vfio-gpu-attach";
-        job.preStart = "${gpuDetachScript}/bin/vfio-gpu-detach";
+        setupCommands =
+          concatStringsSep "\n"
+          (mapAttrsToList (gpuName: gpu: "${gpuAttachScript gpu}/bin/vfio-gpu-attach") cfg.gpus);
+        job.preStart =
+          concatStringsSep "\n"
+          (mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus);
       };
     })
 
@@ -415,24 +456,12 @@ in {
       environment.etc = mkMerge (mapAttrsToList (vmName: vm: let
           hookPath = "libvirt/hooks/qemu.d/${vmName}";
         in {
-          "${hookPath}/prepare/begin/01-detach.sh" = mkIf vm.useGpu {
-            source = let
-              script = pkgs.writeScriptBin "detach" ''
-                #!${pkgs.stdenv.shell}
-                set -e
-                ${gpuDetachScript}/bin/vfio-gpu-detach
-              '';
-            in "${script}/bin/detach";
+          "${hookPath}/prepare/begin/01-detach.sh" = mkIf (vm.gpu != null) {
+            source = "${gpuDetachScript cfg.gpus.${vm.gpu}}/bin/vfio-gpu-detach";
           };
 
-          "${hookPath}/release/end/01-attach.sh" = mkIf vm.useGpu {
-            source = let
-              script = pkgs.writeScriptBin "attach" ''
-                #!${pkgs.stdenv.shell}
-                set -e
-                ${gpuAttachScript}/bin/vfio-gpu-attach
-              '';
-            in "${script}/bin/attach";
+          "${hookPath}/release/end/01-attach.sh" = mkIf (vm.gpu != null) {
+            source = "${gpuAttachScript cfg.gpus.${vm.gpu}}/bin/vfio-gpu-attach";
           };
 
           "${hookPath}/prepare/begin/02-isolate.sh" = mkIf vm.isolate.enable {
