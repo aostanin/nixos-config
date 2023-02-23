@@ -18,7 +18,6 @@ in {
     ../../modules/msmtp
     ../../modules/zerotier
     ../../modules
-    ./power-management.nix
   ];
 
   variables = {
