@@ -5,15 +5,31 @@
   ...
 }: let
   gpus = {
-    amdRX570 = {
+    amdRX570 = rec {
       driver = "amdgpu";
       pciIds = ["1002:67df" "1002:aaf0"];
       busId = "09:00.0";
+      powerManagementCommands = ''
+        # Set host GPU to lowest power level
+        echo "low" > /sys/bus/pci/devices/0000:${busId}/power_dpm_force_performance_level
+
+        # The memory clock is locked to the highest power level when multiple monitors are connected.
+        # Force overwrite all power levels to match the lowest.
+        # Lowers idle from ~22 W to ~6 W
+        ${pkgs.upp}/bin/upp -p /sys/bus/pci/devices/0000:${busId}/pp_table set \
+            MclkDependencyTable/1/Mclk=30000 MclkDependencyTable/1/Vddci=800 MclkDependencyTable/1/VddcInd=0 \
+            MclkDependencyTable/2/Mclk=30000 MclkDependencyTable/2/Vddci=800 MclkDependencyTable/2/VddcInd=0 \
+            --write
+      '';
     };
     nvidiaRTX2070Super = {
       driver = "nvidia";
       pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
       busId = "01:00.0";
+      powerManagementCommands = ''
+        # Lowers idle from ~13 W to ~6 W
+        ${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi --gpu-reset
+      '';
     };
   };
   usbControllerIds = [
@@ -27,7 +43,12 @@
   vfioPciIds = usbControllerIds;
 in {
   boot = {
+    initrd.kernelModules = [
+      # Load amdgpu for power management commands to work
+      "amdgpu"
+    ];
     kernelParams = [
+      "amdgpu.ppfeaturemask=0xfff7ffff"
       "vfio-pci.ids=${lib.concatStringsSep "," vfioPciIds}"
     ];
   };

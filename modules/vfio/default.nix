@@ -60,6 +60,13 @@ with lib; let
           The bus id in the same format as lspci.
         '';
       };
+
+      powerManagementCommands = mkOption {
+        type = types.str;
+        description = ''
+          Commands to run when the card is detached to put it in a low power state.
+        '';
+      };
     };
   };
 
@@ -283,6 +290,8 @@ with lib; let
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) == "vfio-pci" ]; then
           ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
+
+        ${gpu.powerManagementCommands}
       ''
       else if (gpu.driver == "nvidia")
       then ''
@@ -295,8 +304,7 @@ with lib; let
 
         systemctl start nvidia-persistenced.service
 
-        # Resetting the GPU slightly lowers the power consumption
-        ${nvidiaBin}/bin/nvidia-smi --gpu-reset
+        ${gpu.powerManagementCommands}
       ''
       else throw "Unsupported gpu driver ${gpu.driver}"
     );
@@ -411,6 +419,10 @@ in {
           concatStringsSep "\n"
           (mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus);
       };
+
+      powerManagement.powerUpCommands =
+        concatStringsSep "\n"
+        (mapAttrsToList (gpuName: gpu: gpu.powerManagementCommands) cfg.gpus);
     })
 
     (mkIf (cfg.enable && cfg.enableLookingGlass) {
