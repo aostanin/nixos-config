@@ -31,15 +31,7 @@ in {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    supportedFilesystems = ["zfs"];
-    zfs.allowHibernation = true;
     tmpOnTmpfs = true;
-    extraModulePackages = with config.boot.kernelPackages; [
-      kvmfr
-    ];
-    kernelModules = [
-      "amdgpu"
-    ];
     kernelParams = [
       # For virsh console
       "console=ttyS0,115200"
