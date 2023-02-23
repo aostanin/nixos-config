@@ -32,6 +32,6 @@
   };
 
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="drm", KERNELS=="0000:00:02.0", ATTR{device/sriov_numvfs}="4"
+    ACTION=="add", SUBSYSTEM=="drm", KERNELS=="0000:00:02.0", ATTR{device/sriov_numvfs}="2"
   '';
 }
