@@ -38,6 +38,7 @@ in {
             "rpool/root<" = true;
             "rpool/virtualization<" = true;
             "rpool/virtualization/docker<" = false;
+            "vmpool/appdata<" = true;
             "vmpool/virtualization<" = true;
           };
           snapshotting = {
@@ -65,6 +66,7 @@ in {
           name = "snap-infrequent";
           type = "snap";
           filesystems = {
+            "tank/appdata<" = true;
             "tank/backup<" = true;
             "tank/backup/hosts/zfs<" = false;
             "tank/download<" = true;
@@ -94,6 +96,45 @@ in {
           };
         }
         {
+          type = "push";
+          name = "local-push";
+          connect = {
+            type = "tcp";
+            address = "127.0.0.1:8888";
+          };
+          filesystems = {
+            "rpool/appdata<" = true;
+            "rpool/appdata/temp<" = false;
+            "rpool/home<" = true;
+            "rpool/root<" = true;
+            "rpool/virtualization<" = true;
+            "rpool/virtualization/docker<" = false;
+            "vmpool/appdata<" = true;
+            "vmpool/virtualization<" = true;
+          };
+          snapshotting.type = "manual";
+          pruning = {
+            keep_sender = [
+              {
+                type = "regex";
+                regex = ".*";
+              }
+            ];
+            keep_receiver = [
+              {
+                type = "grid";
+                grid = "1x1h(keep=all) | 24x1h | 90x1d";
+                regex = "^zrepl_.*";
+              }
+              {
+                type = "regex";
+                negate = true;
+                regex = "^zrepl_.*";
+              }
+            ];
+          };
+        }
+        {
           type = "sink";
           name = "sink";
           serve = {
@@ -101,10 +142,9 @@ in {
             listen = ":8888";
             listen_freebind = true;
             clients = {
+              "127.0.0.1" = "elena";
               "${secrets.network.zerotier.hosts.roan.address}" = "roan";
               "${secrets.network.zerotier.hosts.mareg.address}" = "mareg";
-              "${secrets.network.zerotier.hosts.valmar.address}" = "valmar";
-              "${secrets.network.storage.hosts.valmar.address}" = "valmar";
             };
           };
           recv = {
@@ -112,31 +152,22 @@ in {
           };
           root_fs = "tank/backup/hosts/zfs";
         }
-        {
-          type = "source";
-          name = "source";
-          serve = {
-            type = "tcp";
-            listen = "${secrets.network.storage.hosts.elena.address}:8889";
-            clients = {
-              "${secrets.network.storage.hosts.valmar.address}" = "valmar";
-            };
-          };
-          send.encrypted = false;
-          filesystems = {
-            "rpool/appdata<" = true;
-            "rpool/appdata/temp<" = false;
-            "rpool/home<" = true;
-            "rpool/root<" = true;
-            "rpool/root/nix<" = false;
-            "tank/media/audiobooks<" = true;
-            "tank/media/books<" = true;
-            "tank/media/music<" = true;
-            "tank/personal<" = true;
-          };
-          snapshotting.type = "manual";
-        }
       ];
+    };
+  };
+
+  systemd = {
+    timers.zrepl-local-push = {
+      wantedBy = ["timers.target"];
+      partOf = ["zrepl-local-push.service"];
+      timerConfig = {
+        OnCalendar = "daily";
+        RandomizedDelaySec = "5h";
+      };
+    };
+    services.zrepl-local-push = {
+      serviceConfig.Type = "oneshot";
+      script = "${pkgs.zrepl}/bin/zrepl signal wakeup local-push";
     };
   };
 }
