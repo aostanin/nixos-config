@@ -17,9 +17,12 @@ in {
     "pcie_aspm.policy=powersave"
   ];
 
-  powerManagement.powerUpCommands = ''
-    ${pkgs.hdparm}/bin/hdparm -B 1 -S 120 ${lib.concatStringsSep " " drives}
-  '';
+  powerManagement = {
+    scsiLinkPolicy = "med_power_with_dipm";
+    powerUpCommands = ''
+      ${pkgs.hdparm}/bin/hdparm -B 1 -S 120 ${lib.concatStringsSep " " drives}
+    '';
+  };
 
   systemd.services."hd-idle" = {
     description = "hd-idle - spin down idle hard disks";
