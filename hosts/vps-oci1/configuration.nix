@@ -39,4 +39,24 @@ in {
       ];
     };
   };
+
+  systemd = {
+    # Matrix LINE bridge can be a bit unstable, so restart it daily
+    timers.restart-line-bridge = {
+      wantedBy = ["timers.target"];
+      partOf = ["restart-line-bridge.service"];
+      timerConfig = {
+        OnCalendar = "*-*-* 02:00:00";
+        RandomizedDelaySec = "60m";
+      };
+    };
+    services.restart-line-bridge = {
+      serviceConfig.Type = "oneshot";
+      script = ''
+        ${pkgs.docker}/bin/docker stop matrix-puppeteer-line matrix-puppeteer-line-chrome
+        sleep 10
+        ${pkgs.docker}/bin/docker start matrix-puppeteer-line matrix-puppeteer-line-chrome
+      '';
+    };
+  };
 }
