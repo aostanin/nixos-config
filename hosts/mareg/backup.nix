@@ -18,7 +18,7 @@ in {
           };
           snapshotting = {
             type = "periodic";
-            interval = "15m";
+            interval = "1h";
             prefix = "zrepl_";
             timestamp_format = "iso-8601";
           };

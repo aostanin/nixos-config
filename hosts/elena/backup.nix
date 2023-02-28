@@ -42,8 +42,8 @@ in {
             "vmpool/virtualization<" = true;
           };
           snapshotting = {
-            type = "periodic";
-            interval = "15m";
+            type = "cron";
+            cron = "0 * * * *";
             prefix = "zrepl_";
             timestamp_format = "iso-8601";
           };
