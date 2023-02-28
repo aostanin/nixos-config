@@ -37,6 +37,19 @@
     options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
+  fileSystems."/storage/appdata/games/merged" = {
+    device = "overlay";
+    fsType = "overlay";
+    options = [
+      (lib.concatStringsSep "," [
+        "lowerdir=/storage/appdata/games/tank/data"
+        "upperdir=/storage/appdata/games/vmpool/data"
+        "workdir=/storage/appdata/games/vmpool/work"
+      ])
+      "x-systemd.requires=zfs-mount.service"
+    ];
+  };
+
   swapDevices = [
     {device = "/dev/disk/by-uuid/e017aee1-551b-4ced-b51d-1ff8c828bf3b";}
     {device = "/dev/disk/by-uuid/ecced8b5-e088-49d9-beeb-6c8f60806de1";}
