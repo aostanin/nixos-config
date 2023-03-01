@@ -84,7 +84,7 @@ in {
             keep = [
               {
                 type = "grid";
-                grid = "1x1h(keep=all) | 24x1h | 14x1d";
+                grid = "1x1h(keep=all) | 24x1h | 90x1d";
                 regex = "^zrepl_.*";
               }
               {
