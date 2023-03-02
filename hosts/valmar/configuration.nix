@@ -18,6 +18,7 @@ in {
     ../../modules/msmtp
     ../../modules/zerotier
     ../../modules
+    ./nvidia.nix
   ];
 
   variables = {
@@ -38,11 +39,6 @@ in {
       "console=tty1"
     ];
   };
-
-  hardware.opengl.extraPackages = with pkgs; [
-    amdvlk
-    rocm-opencl-icd
-  ];
 
   systemd.network.links."11-default" = {
     matchConfig.OriginalName = "*";
@@ -102,28 +98,6 @@ in {
     udev.packages = with pkgs; [
       stlink
     ];
-
-    xserver = {
-      videoDrivers = ["amdgpu"];
-      deviceSection = ''
-        Option "TearFree" "true"
-      '';
-      xrandrHeads = [
-        {
-          output = "HDMI-A-0";
-          primary = true;
-          monitorConfig = ''
-            Option "Position" "0 1440"
-          '';
-        }
-        {
-          output = "DVI-D-0";
-          monitorConfig = ''
-            Option "Position" "440 0"
-          '';
-        }
-      ];
-    };
   };
 
   virtualisation = {
