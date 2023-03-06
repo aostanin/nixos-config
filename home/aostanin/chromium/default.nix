@@ -6,7 +6,7 @@
 }: {
   programs.chromium = {
     enable = true;
-    package = pkgs.brave;
+    package = pkgs.chromium;
     extensions = [
       {id = "nngceckbapebfimnlniiiahkandclblb";} # Bitwarden
       {id = "dbepggeogbaibhgnhhndojpepiihcmeb";} # Vimium
