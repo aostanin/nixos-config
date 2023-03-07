@@ -95,19 +95,22 @@ in {
         guestCpus = ["0-1" "4-11"];
       };
     in {
-      macOS = {
+      macOS-amd = {
         gpu = "amdRX570";
         enableHibernation = true;
+        isolate = isolate8Core;
       };
-      ubuntu = {
+      ubuntu-amd = {
         gpu = "amdRX570";
         enableHibernation = true;
+        isolate = isolate8Core;
       };
-      valmar = {
+      valmar-amd = {
         gpu = "amdRX570";
         enableHibernation = true;
+        isolate = isolate8Core;
       };
-      win10-play = {
+      valmar-nvidia = {
         gpu = "nvidiaRTX2070Super";
         enableHibernation = true;
         isolate = isolate8Core;
@@ -115,6 +118,12 @@ in {
       win10-play-amd = {
         gpu = "amdRX570";
         enableHibernation = true;
+        isolate = isolate8Core;
+      };
+      win10-play-nvidia = {
+        gpu = "nvidiaRTX2070Super";
+        enableHibernation = true;
+        isolate = isolate8Core;
       };
       win10-work = {
         enableHibernation = true;
