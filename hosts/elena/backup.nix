@@ -9,10 +9,6 @@ in {
   services.rsync-backup = {
     enable = true;
     backups = {
-      vps-gce1 = {
-        source = "root@${secrets.network.zerotier.hosts.vps-gce1.address}:/storage/appdata";
-        destination = "/storage/backup/hosts/dir/vps-gce1";
-      };
       vps-oci1 = {
         source = "root@${secrets.network.zerotier.hosts.vps-oci1.address}:/storage/appdata";
         destination = "/storage/backup/hosts/dir/vps-oci1";
@@ -151,6 +147,30 @@ in {
             placeholder.encryption = "inherit";
           };
           root_fs = "tank/backup/hosts/zfs";
+        }
+        {
+          type = "source";
+          name = "source";
+          serve = {
+            type = "tcp";
+            listen = "${secrets.network.zerotier.hosts.elena.address}:8889";
+            clients = {
+              "${secrets.network.zerotier.hosts.rpi-backup.address}" = "rpi-backup";
+            };
+          };
+          send.encrypted = false;
+          filesystems = {
+            "rpool/appdata<" = true;
+            "rpool/appdata/temp<" = false;
+            "rpool/home<" = true;
+            "rpool/root<" = true;
+            "rpool/root/nix<" = false;
+            "tank/media/audiobooks<" = true;
+            "tank/media/books<" = true;
+            "tank/media/music<" = true;
+            "tank/personal<" = true;
+          };
+          snapshotting.type = "manual";
         }
       ];
     };

@@ -117,17 +117,41 @@
       };
     };
   in {
-    nixosConfigurations = builtins.listToAttrs (map (
-        host:
-          lib.nameValuePair host (mkNixosSystem {hostname = host;})
-      )
-      hosts);
+    nixosConfigurations =
+      builtins.listToAttrs (map (
+          host:
+            lib.nameValuePair host (mkNixosSystem {hostname = host;})
+        )
+        hosts)
+      // {
+        rpi-backup = mkNixosSystem {
+          hostname = "rpi-backup";
+          system = "aarch64-linux";
+        };
+      };
 
-    deploy.nodes = builtins.listToAttrs (map (
-        host:
-          lib.nameValuePair host (mkNode {hostname = host;})
-      )
-      hosts);
+    deploy.nodes =
+      builtins.listToAttrs (map (
+          host:
+            lib.nameValuePair host (mkNode {hostname = host;})
+        )
+        hosts)
+      // {
+        rpi-backup = {
+          hostname = secrets.network.zerotier.hosts.rpi-backup.address;
+          sshUser = "root";
+          fastConnection = true;
+          autoRollback = false;
+          magicRollback = false;
+
+          profiles = {
+            system = {
+              user = "root";
+              path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.rpi-backup;
+            };
+          };
+        };
+      };
 
     checks =
       builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib
