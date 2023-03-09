@@ -153,7 +153,7 @@ in {
           name = "source";
           serve = {
             type = "tcp";
-            listen = "${secrets.network.zerotier.hosts.elena.address}:8889";
+            listen = ":8889";
             clients = {
               "${secrets.network.zerotier.hosts.rpi-backup.address}" = "rpi-backup";
             };
