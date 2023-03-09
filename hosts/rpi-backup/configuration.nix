@@ -29,6 +29,8 @@ in {
     interfaces.eth0.useDHCP = true;
   };
 
+  services.xserver.videoDrivers = [];
+
   services.zrepl = {
     enable = true;
     settings = {
