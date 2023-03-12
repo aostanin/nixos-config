@@ -1,8 +1,0 @@
-#!/bin/sh
-
-set -e
-
-FILE="/tmp/scan-$(date '+%Y%m%d-%H%M%S').png"
-hp-scan --mode=color --resolution=300 --device="hpaio:/net/Envy_100_D410_series?ip=192.168.1.117" --file="$FILE"
-rclone copy "$FILE" gdrive:Documents/Incoming
-rm "$FILE"
