@@ -40,6 +40,7 @@ in {
       "acpi_osi=\"!Windows 2013\"" # Needed to disable NVIDIA card
       "acpi_osi=Linux"
     ];
+    binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
   networking = {

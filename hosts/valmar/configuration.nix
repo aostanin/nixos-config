@@ -38,6 +38,7 @@ in {
       "console=ttyS0,115200"
       "console=tty1"
     ];
+    binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
   systemd.network.links."11-default" = {
