@@ -44,7 +44,6 @@
       "elena"
       "mareg"
       "roan"
-      "router"
       "valmar"
       "vps-oci1"
       "vps-oci2"
