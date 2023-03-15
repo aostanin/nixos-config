@@ -44,6 +44,7 @@
       "elena"
       "mareg"
       "roan"
+      "tio"
       "valmar"
       "vps-oci1"
       "vps-oci2"
@@ -102,7 +103,7 @@
           ++ extraModules;
       };
     mkNode = {hostname}: {
-      hostname = secrets.network.zerotier.hosts."${hostname}".address;
+      hostname = secrets.network.zerotier.hosts."${hostname}".address6;
       sshUser = "root";
       fastConnection = true;
       autoRollback = false;
@@ -137,7 +138,7 @@
         hosts)
       // {
         rpi-backup = {
-          hostname = secrets.network.zerotier.hosts.rpi-backup.address;
+          hostname = secrets.network.zerotier.hosts.rpi-backup.address6;
           sshUser = "root";
           fastConnection = true;
           autoRollback = false;
