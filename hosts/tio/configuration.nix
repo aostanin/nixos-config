@@ -18,6 +18,8 @@ in {
     ../../modules/msmtp
     ../../modules/scrutiny
     ../../modules/zerotier
+    ./backup.nix
+    ./power-management.nix
   ];
 
   boot = {
