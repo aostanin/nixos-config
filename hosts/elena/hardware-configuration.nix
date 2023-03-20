@@ -10,7 +10,7 @@
 }: {
   imports = ["${modulesPath}/installer/scan/not-detected.nix"];
 
-  boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "mpt3sas" "usbhid" "sd_mod"];
+  boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "sd_mod"];
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
@@ -18,11 +18,13 @@
   fileSystems."/boot1" = {
     device = "/dev/disk/by-uuid/3A2B-B155";
     fsType = "vfat";
+    options = ["nofail"];
   };
 
   fileSystems."/boot2" = {
     device = "/dev/disk/by-uuid/3B7B-1CCB";
     fsType = "vfat";
+    options = ["nofail"];
   };
 
   fileSystems."/" = {
@@ -51,8 +53,14 @@
   };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/e017aee1-551b-4ced-b51d-1ff8c828bf3b";}
-    {device = "/dev/disk/by-uuid/ecced8b5-e088-49d9-beeb-6c8f60806de1";}
+    {
+      device = "/dev/disk/by-uuid/e017aee1-551b-4ced-b51d-1ff8c828bf3b";
+      options = ["nofail"];
+    }
+    {
+      device = "/dev/disk/by-uuid/ecced8b5-e088-49d9-beeb-6c8f60806de1";
+      options = ["nofail"];
+    }
   ];
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";

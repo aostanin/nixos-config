@@ -18,11 +18,13 @@
   fileSystems."/boot1" = {
     device = "/dev/disk/by-uuid/5569-52EB";
     fsType = "vfat";
+    options = ["nofail"];
   };
 
   fileSystems."/boot2" = {
     device = "/dev/disk/by-uuid/58BC-D2A3";
     fsType = "vfat";
+    options = ["nofail"];
   };
 
   fileSystems."/" = {
@@ -38,8 +40,14 @@
   };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/2f2a1fee-86c3-49be-8027-1e3cab28af02";}
-    {device = "/dev/disk/by-uuid/39433c7f-93bf-4a57-9dac-82b6d9acf093";}
+    {
+      device = "/dev/disk/by-uuid/2f2a1fee-86c3-49be-8027-1e3cab28af02";
+      options = ["nofail"];
+    }
+    {
+      device = "/dev/disk/by-uuid/39433c7f-93bf-4a57-9dac-82b6d9acf093";
+      options = ["nofail"];
+    }
   ];
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
