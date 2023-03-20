@@ -11,8 +11,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "strongtz";
     repo = "i915-sriov-dkms";
-    rev = "9996e5c11aad87acaea9060a539084f9a5e90952";
-    sha256 = "sha256-TlpaULil4jPX2KPDfw17OUc6mXU+LMVzoO3sj+AjZls=";
+    rev = "f3442a6f9c5e1b022e9d1f578b61ad371b12bd24";
+    sha256 = "sha256-cctTOMZFU88MMeUe1CwhdNChcU430Nm9G2v+LQhnQkI=";
   };
 
   setSourceRoot = ''
