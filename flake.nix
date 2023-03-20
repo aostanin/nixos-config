@@ -43,6 +43,7 @@
     hosts = [
       "elena"
       "mareg"
+      "nas"
       "roan"
       "tio"
       "valmar"
