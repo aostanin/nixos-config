@@ -7,24 +7,16 @@
   programs.vscode = {
     enable = true;
     package = pkgs.vscodium;
-    extensions = with pkgs.vscode-extensions;
-      [
-        antyos.openscad
-        bbenoist.nix
-        editorconfig.editorconfig
-        jdinhlife.gruvbox
-        ms-azuretools.vscode-docker
-        ms-python.python
-        vscodevim.vim
-      ]
-      ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-        {
-          name = "vscode-direnv";
-          publisher = "Rubymaniac";
-          version = "0.0.2";
-          sha256 = "1gml41bc77qlydnvk1rkaiv95rwprzqgj895kxllqy4ps8ly6nsd";
-        }
-      ];
+    extensions = with pkgs.vscode-extensions; [
+      antyos.openscad
+      bbenoist.nix
+      editorconfig.editorconfig
+      jdinhlife.gruvbox
+      mkhl.direnv
+      ms-azuretools.vscode-docker
+      ms-python.python
+      vscodevim.vim
+    ];
     userSettings = {
       "editor.fontFamily" = "'Hack Nerd Font', 'monospace', monospace, 'Droid Sans Fallback'";
       "editor.minimap.enabled" = false;
@@ -34,6 +26,7 @@
       "files.insertFinalNewline" = true;
       "telemetry.enableTelemetry" = false;
       "telemetry.enableCrashReporter" = false;
+      "telemetry.telemetryLevel" = "off";
       "update.mode" = "none";
       "vim.useCtrlKeys" = false;
       "workbench.colorTheme" = "Gruvbox Dark Medium";
