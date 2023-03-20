@@ -19,6 +19,7 @@ in {
     ../../modules/scrutiny
     ../../modules/zerotier
     ./backup.nix
+    ./i915-sriov.nix
     ./power-management.nix
   ];
 
@@ -42,7 +43,6 @@ in {
       };
     };
     tmpOnTmpfs = true;
-    kernelPackages = pkgs.linuxPackages_6_1;
   };
 
   systemd.network.links."11-default" = {
