@@ -35,6 +35,7 @@ in {
       # For virsh console
       "console=ttyS0,115200"
       "console=tty1"
+      "i915.enable_guc=3"
     ];
     kernelPackages = let
       configuredKernel = pkgs.linuxPackages_6_1.kernel.override {
