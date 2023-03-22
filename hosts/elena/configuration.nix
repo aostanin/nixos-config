@@ -171,37 +171,13 @@ in {
     '';
   };
 
-  systemd = {
-    timers = {
-      update-mam = {
-        wantedBy = ["timers.target"];
-        partOf = ["update-mam.service"];
-        after = ["network-online.target"];
-        timerConfig = {
-          OnCalendar = "0/2:00";
-          RandomizedDelaySec = "30m";
-        };
-      };
-    };
-
-    services = {
-      # For PiKVM console
-      "serial-getty@ttyACM0" = {
-        enable = true;
-        wantedBy = ["getty.target"];
-        serviceConfig = {
-          Environment = "TERM=xterm-256color";
-          Restart = "always";
-        };
-      };
-
-      update-mam = {
-        serviceConfig = {
-          Type = "oneshot";
-          WorkingDirectory = "/storage/appdata/scripts/mam";
-          ExecStart = "/storage/appdata/scripts/mam/update_mam.sh";
-        };
-      };
+  # For PiKVM console
+  systemd.services."serial-getty@ttyACM0" = {
+    enable = true;
+    wantedBy = ["getty.target"];
+    serviceConfig = {
+      Environment = "TERM=xterm-256color";
+      Restart = "always";
     };
   };
 }

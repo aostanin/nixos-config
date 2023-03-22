@@ -124,4 +124,14 @@ in {
       --dns-search lan
     '';
   };
+
+  # For PiKVM console
+  systemd.services."serial-getty@ttyACM0" = {
+    enable = true;
+    wantedBy = ["getty.target"];
+    serviceConfig = {
+      Environment = "TERM=xterm-256color";
+      Restart = "always";
+    };
+  };
 }
