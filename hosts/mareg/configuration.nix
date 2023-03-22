@@ -83,6 +83,8 @@ in {
   powerManagement.powertop.enable = true;
 
   services = {
+    logind.lidSwitchDocked = "suspend";
+
     tlp = {
       enable = true;
       settings = {
