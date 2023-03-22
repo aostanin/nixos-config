@@ -73,6 +73,7 @@ with lib; {
         ranger
         rclone
         ripgrep
+        sshfs
         tealdeer
         tig
         tmuxp
