@@ -8,7 +8,7 @@
     amdRX570 = rec {
       driver = "amdgpu";
       pciIds = ["1002:67df" "1002:aaf0"];
-      busId = "09:00.0";
+      busId = "06:00.0";
       powerManagementCommands = ''
         # Set host GPU to lowest power level
         echo "low" > /sys/bus/pci/devices/0000:${busId}/power_dpm_force_performance_level
@@ -85,45 +85,71 @@ in {
       "/dev/input/by-id/virtual-mouse-2"
     ];
     vms = let
-      isolate8Core = {
+      isolate8ThreadFirst = {
         enable = true;
         dropCaches = false;
         compactMemory = false;
         isolateCpus = true;
-        allCpus = ["0-11"];
-        hostCpus = ["0-3"];
-        guestCpus = ["0-1" "4-11"];
+        allCpus = ["0-23"];
+        hostCpus = ["8-15" "16-23"];
+        guestCpus = ["16-17" "0-7"];
+      };
+      isolate8ThreadSecond = {
+        enable = true;
+        dropCaches = false;
+        compactMemory = false;
+        isolateCpus = true;
+        allCpus = ["0-23"];
+        hostCpus = ["0-7" "16-23"];
+        guestCpus = ["16-17" "8-15"];
+      };
+      isolate16Thread = {
+        enable = true;
+        dropCaches = false;
+        compactMemory = false;
+        isolateCpus = true;
+        allCpus = ["0-23"];
+        hostCpus = ["16-23"];
+        guestCpus = ["16-17" "0-15"];
       };
     in {
       macOS-amd = {
         gpu = "amdRX570";
         enableHibernation = true;
-        isolate = isolate8Core;
+        isolate = isolate8ThreadFirst;
       };
       ubuntu-amd = {
         gpu = "amdRX570";
         enableHibernation = true;
-        isolate = isolate8Core;
+        isolate = isolate8ThreadFirst;
       };
       valmar-amd = {
         gpu = "amdRX570";
         enableHibernation = true;
-        isolate = isolate8Core;
+        isolate = isolate8ThreadFirst;
       };
       valmar-nvidia = {
         gpu = "nvidiaRTX2070Super";
         enableHibernation = true;
-        isolate = isolate8Core;
+        isolate = isolate8ThreadSecond;
       };
       win10-play-amd = {
         gpu = "amdRX570";
         enableHibernation = true;
-        isolate = isolate8Core;
+        isolate =
+          isolate8ThreadFirst
+          // {
+            setPerformanceGovernor = true;
+          };
       };
       win10-play-nvidia = {
         gpu = "nvidiaRTX2070Super";
         enableHibernation = true;
-        isolate = isolate8Core;
+        isolate =
+          isolate8ThreadSecond
+          // {
+            setPerformanceGovernor = true;
+          };
       };
       win10-work = {
         enableHibernation = true;
