@@ -15,16 +15,9 @@
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  fileSystems."/boot1" = {
-    device = "/dev/disk/by-uuid/3A2B-B155";
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/9150-8B94";
     fsType = "vfat";
-    options = ["nofail"];
-  };
-
-  fileSystems."/boot2" = {
-    device = "/dev/disk/by-uuid/3B7B-1CCB";
-    fsType = "vfat";
-    options = ["nofail"];
   };
 
   fileSystems."/" = {
@@ -39,27 +32,9 @@
     options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
-  fileSystems."/storage/appdata/games/merged" = {
-    device = "overlay";
-    fsType = "overlay";
-    options = [
-      (lib.concatStringsSep "," [
-        "lowerdir=/storage/appdata/games/tank/data"
-        "upperdir=/storage/appdata/games/vmpool/data"
-        "workdir=/storage/appdata/games/vmpool/work"
-      ])
-      "x-systemd.requires=zfs-mount.service"
-    ];
-  };
-
   swapDevices = [
     {
-      device = "/dev/disk/by-uuid/e017aee1-551b-4ced-b51d-1ff8c828bf3b";
-      options = ["nofail"];
-    }
-    {
-      device = "/dev/disk/by-uuid/ecced8b5-e088-49d9-beeb-6c8f60806de1";
-      options = ["nofail"];
+      device = "/dev/disk/by-uuid/661153da-8027-413b-90f7-40ec60411e9c";
     }
   ];
 

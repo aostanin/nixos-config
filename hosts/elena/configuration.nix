@@ -28,26 +28,14 @@ in {
 
   boot = {
     loader = {
-      grub = {
+      systemd-boot = {
         enable = true;
         configurationLimit = 10;
-        efiSupport = true;
-        efiInstallAsRemovable = true;
-        mirroredBoots = [
-          {
-            devices = ["nodev"];
-            path = "/boot1";
-          }
-          {
-            devices = ["nodev"];
-            path = "/boot2";
-          }
-        ];
       };
+      efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = ["zfs"];
     zfs = {
-      extraPools = ["tank" "vmpool"];
       forceImportAll = true;
       requestEncryptionCredentials = false;
     };
