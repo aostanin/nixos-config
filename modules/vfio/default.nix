@@ -134,6 +134,15 @@ with lib; let
           List of ranges for the guest CPUs.
         '';
       };
+
+      setPerformanceGovernor = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Change the guest CPU governor to performance.
+        '';
+      };
     };
   };
 
@@ -162,6 +171,22 @@ with lib; let
         default = {};
         description = ''
           Settings for vfio-isolate.
+        '';
+      };
+
+      startCommands = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Commands to run before the VM starts.
+        '';
+      };
+
+      endCommands = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Commands to run after the VM ends.
         '';
       };
     };
@@ -339,6 +364,7 @@ in {
 
     gpus = mkOption {
       type = types.attrsOf gpuSubmodule;
+      default = {};
       description = ''
         The GPUs used for passthrough.
       '';
@@ -491,8 +517,8 @@ in {
                   ${optionalString vm.isolate.isolateCpus "cpuset-modify --cpus C$HCPUS /user.slice"} \
                   ${optionalString vm.isolate.compactMemory "compact-memory"} \
                   ${optionalString vm.isolate.isolateCpus ''
-                  irq-affinity mask C$MCPUS \
-                  cpu-governor performance C$MCPUS
+                  ${optionalString vm.isolate.setPerformanceGovernor "cpu-governor performance C$MCPUS"} \
+                  irq-affinity mask C$MCPUS
                 ''}
 
                 ${optionalString vm.isolate.isolateCpus ''
@@ -515,6 +541,26 @@ in {
                 ''}
               '';
             in "${script}/bin/unisolate";
+          };
+
+          "${hookPath}/prepare/begin/03-start.sh" = mkIf (vm.startCommands != null) {
+            source = let
+              script = pkgs.writeScriptBin "start" ''
+                #!${pkgs.stdenv.shell}
+                set -e
+                ${vm.startCommands}
+              '';
+            in "${script}/bin/start";
+          };
+
+          "${hookPath}/release/end/03-end.sh" = mkIf (vm.endCommands != null) {
+            source = let
+              script = pkgs.writeScriptBin "end" ''
+                #!${pkgs.stdenv.shell}
+                set -e
+                ${vm.endCommands}
+              '';
+            in "${script}/bin/end";
           };
         })
         cfg.vms);

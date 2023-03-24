@@ -21,19 +21,16 @@ in {
     powertop.enable = true;
 
     scsiLinkPolicy = "med_power_with_dipm";
-
-    powerUpCommands = ''
-      ${pkgs.hdparm}/bin/hdparm -B 1 -S 60 -y ${lib.concatStringsSep " " drives}
-    '';
   };
 
+  # WD drives aren't going to sleep with just the standby timeout set
   systemd.services."hd-idle" = {
     description = "hd-idle - spin down idle hard disks";
     after = ["suspend.target" "hibernate.target" "hybrid-sleep.target" "suspend-then-hibernate.target"];
     serviceConfig = {
       Restart = "on-failure";
       Type = "simple";
-      ExecStart = "${pkgs.hd-idle}/bin/hd-idle -i 0 ${lib.concatStringsSep " " (map (drive: "-a ${drive} -i 300") drives)}";
+      ExecStart = "${pkgs.hd-idle}/bin/hd-idle -i 0 ${lib.concatStringsSep " " (map (drive: "-a ${drive} -i 60") drives)}";
     };
     wantedBy = ["multi-user.target"];
   };

@@ -88,6 +88,23 @@ in {
   };
 
   services = {
+    vfio = {
+      enable = true;
+      cpuType = "intel";
+      vms = {
+        nas = {
+          startCommands = ''
+            systemctl stop hd-idle
+          '';
+          endCommands = ''
+            # Wait for drive discovery
+            sleep 5
+            systemctl start hd-idle
+          '';
+        };
+      };
+    };
+
     zfs = {
       autoScrub = {
         enable = true;
