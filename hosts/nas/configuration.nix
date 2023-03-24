@@ -15,6 +15,7 @@ in {
     ../../modules/variables
     ../../modules/common
     ../../modules/msmtp
+    ../../modules/scrutiny
     ../../modules/zerotier
     ../../modules
   ];
