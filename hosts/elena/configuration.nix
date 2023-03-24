@@ -20,7 +20,6 @@ in {
     ../../modules/zerotier
     ./backup.nix
     ./nfs.nix
-    ./telegraf.nix
     ./i915-sriov.nix
     ./vfio.nix
     ./power-management.nix
