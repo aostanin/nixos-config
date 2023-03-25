@@ -43,6 +43,9 @@ in {
       };
     };
     tmpOnTmpfs = true;
+    kernelParams = [
+      "i915.enable_fbc=1"
+    ];
   };
 
   systemd.network.links."11-default" = {
