@@ -83,7 +83,8 @@ in {
       after = ["network-online.target"];
       timerConfig = {
         OnCalendar = "daily";
-        RandomizedDelaySec = "5h";
+        Persistent = true;
+        RandomizedDelaySec = "15m";
       };
     };
     services.zrepl-push = {

@@ -87,6 +87,8 @@ in {
 
   services = {
     qemuGuest.enable = true;
+
+    xserver.videoDrivers = ["intel"];
   };
 
   virtualisation = {
@@ -103,7 +105,8 @@ in {
       after = ["network-online.target"];
       timerConfig = {
         OnCalendar = "0/2:00";
-        RandomizedDelaySec = "30m";
+        Persistent = true;
+        RandomizedDelaySec = "15m";
       };
     };
 

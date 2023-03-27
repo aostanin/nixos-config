@@ -176,13 +176,15 @@ in {
     };
   };
 
+  /*
   systemd = {
     timers.zrepl-local-push = {
       wantedBy = ["timers.target"];
       partOf = ["zrepl-local-push.service"];
       timerConfig = {
         OnCalendar = "daily";
-        RandomizedDelaySec = "5h";
+        Persistent = true;
+        RandomizedDelaySec = "15m";
       };
     };
     services.zrepl-local-push = {

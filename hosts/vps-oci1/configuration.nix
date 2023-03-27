@@ -47,7 +47,8 @@ in {
       partOf = ["restart-line-bridge.service"];
       timerConfig = {
         OnCalendar = "*-*-* 02:00:00";
-        RandomizedDelaySec = "60m";
+        Persistent = true;
+        RandomizedDelaySec = "15m";
       };
     };
     services.restart-line-bridge = {

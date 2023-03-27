@@ -46,7 +46,8 @@ in {
           after = ["network-online.target"];
           timerConfig = {
             OnCalendar = "daily";
-            RandomizedDelaySec = "60m";
+            Persistent = true;
+            RandomizedDelaySec = "15m";
           };
         };
       })

@@ -108,6 +108,8 @@ in {
       };
     };
 
+    xserver.videoDrivers = ["intel"];
+
     zfs = {
       autoScrub = {
         enable = true;
