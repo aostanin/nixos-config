@@ -16,7 +16,6 @@ in {
     ../../modules/variables
     ../../modules/common
     ../../modules/msmtp
-    ../../modules/scrutiny
     ../../modules/zerotier
     ./backup.nix
     ./nfs.nix
@@ -125,6 +124,8 @@ in {
   };
 
   services = {
+    scrutiny.enable = true;
+
     virtwold = {
       enable = true;
       interfaces = ["br0"];

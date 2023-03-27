@@ -15,7 +15,6 @@ in {
     ../../modules/variables
     ../../modules/common
     ../../modules/msmtp
-    ../../modules/scrutiny
     ../../modules/zerotier
     ../../modules
   ];
@@ -87,6 +86,8 @@ in {
 
   services = {
     qemuGuest.enable = true;
+
+    scrutiny.enable = true;
 
     xserver.videoDrivers = ["intel"];
   };

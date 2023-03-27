@@ -16,7 +16,6 @@ in {
     ../../modules/variables
     ../../modules/common
     ../../modules/msmtp
-    ../../modules/scrutiny
     ../../modules/zerotier
     ./backup.nix
     ./i915-sriov.nix
@@ -91,6 +90,12 @@ in {
   };
 
   services = {
+    scrutiny = {
+      enable = true;
+      # Don't scan spun down drives used by NAS
+      disks = ["/dev/nvme[0-9]"];
+    };
+
     vfio = {
       enable = true;
       cpuType = "intel";
