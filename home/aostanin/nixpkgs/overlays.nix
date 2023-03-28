@@ -11,6 +11,7 @@
       nsz = super.python3Packages.callPackage ../../../packages/nsz {};
       personal-scripts = super.callPackage ../../../packages/personal-scripts {};
       pidcat = super.callPackage ../../../packages/pidcat {};
+      scrutiny = super.callPackage ../../../packages/scrutiny {};
       splitNSP = super.callPackage ../../../packages/splitNSP {};
       upp = super.python3Packages.callPackage ../../../packages/upp {};
       vfio-isolate = super.python3Packages.callPackage ../../../packages/vfio-isolate {};

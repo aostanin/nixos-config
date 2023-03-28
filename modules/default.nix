@@ -1,7 +1,7 @@
 {
   imports = [
     ./rsync-backup
-    ./scrutiny
+    ./scrutiny-collector
     ./virtwold
     ./vfio
   ];

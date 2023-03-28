@@ -124,7 +124,7 @@ in {
   };
 
   services = {
-    scrutiny.enable = true;
+    scrutiny-collector.enable = true;
 
     virtwold = {
       enable = true;

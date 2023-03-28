@@ -90,10 +90,13 @@ in {
   };
 
   services = {
-    scrutiny = {
+    scrutiny-collector = {
       enable = true;
-      # Don't scan spun down drives used by NAS
-      disks = ["/dev/nvme[0-9]"];
+      config.commands = {
+        # Don't scan spun down drives
+        metrics_info_args = "--info --json --nocheck=standby";
+        metrics_smart_args = "--xall --json --nocheck=standby";
+      };
     };
 
     vfio = {

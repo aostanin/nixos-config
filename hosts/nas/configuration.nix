@@ -87,7 +87,7 @@ in {
   services = {
     qemuGuest.enable = true;
 
-    scrutiny.enable = true;
+    scrutiny-collector.enable = true;
 
     xserver.videoDrivers = ["intel"];
   };
