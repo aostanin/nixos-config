@@ -7,6 +7,7 @@
 }: let
   secrets = import ../../secrets;
   iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.integrated}";
+  ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE1}";
 in {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel"
@@ -18,30 +19,33 @@ in {
     ../../modules/msmtp
     ../../modules/zerotier
     ./backup.nix
-    ./nfs.nix
     ./i915-sriov.nix
-    ./vfio.nix
     ./power-management.nix
   ];
 
   boot = {
     loader = {
-      systemd-boot = {
+      grub = {
         enable = true;
         configurationLimit = 10;
+        efiSupport = true;
+        efiInstallAsRemovable = true;
+        mirroredBoots = [
+          {
+            devices = ["nodev"];
+            path = "/boot1";
+          }
+          {
+            devices = ["nodev"];
+            path = "/boot2";
+          }
+        ];
       };
-      efi.canTouchEfiVariables = true;
-    };
-    supportedFilesystems = ["zfs"];
-    zfs = {
-      forceImportAll = true;
-      requestEncryptionCredentials = false;
     };
     tmpOnTmpfs = true;
     kernelParams = [
       "i915.enable_fbc=1"
     ];
-    binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
   systemd.network.links."11-default" = {
@@ -52,7 +56,7 @@ in {
 
   networking = {
     hostName = "elena";
-    hostId = "4446d154";
+    hostId = "fc172604";
 
     vlans = {
       vlan40 = {
@@ -82,56 +86,52 @@ in {
       ];
     };
 
+    interfaces."${ifaceStorage}" = {
+      mtu = 9000;
+      ipv4.addresses = [
+        {
+          address = secrets.network.storage.hosts.elena.address;
+          prefixLength = 24;
+        }
+      ];
+    };
+
     defaultGateway = secrets.network.home.defaultGateway;
     nameservers = [secrets.network.home.nameserver];
-
-    firewall = {
-      # TODO: Breaks some Docker containers
-      enable = false;
-      trustedInterfaces = [
-        "br0"
-        "docker0"
-        secrets.zerotier.interface
-      ];
-      interfaces.vlan40 = {
-        allowedTCPPorts = [
-          1883 # MQTT
-        ];
-        allowedUDPPorts = [
-          123 # NTP
-        ];
-      };
-    };
   };
 
-  hardware = {
-    nvidia = {
-      nvidiaSettings = false;
-      package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
-        nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
-      };
-    };
-
-    opengl = {
-      enable = true;
-      driSupport32Bit = true;
-    };
-
-    pulseaudio = {
-      enable = true;
-      systemWide = true;
-    };
-  };
+  environment.systemPackages = with pkgs; [
+    mstflint
+  ];
 
   services = {
-    scrutiny-collector.enable = true;
-
-    virtwold = {
+    scrutiny-collector = {
       enable = true;
-      interfaces = ["br0"];
+      config.commands = {
+        # Don't scan spun down drives
+        metrics_info_args = "--info --json --nocheck=standby";
+        metrics_smart_args = "--xall --json --nocheck=standby";
+      };
     };
 
-    xserver.videoDrivers = ["amdgpu" "intel" "nvidia"];
+    vfio = {
+      enable = true;
+      cpuType = "intel";
+      vms = {
+        nas = {
+          startCommands = ''
+            systemctl stop hd-idle
+          '';
+          endCommands = ''
+            # Wait for drive discovery
+            sleep 5
+            systemctl start hd-idle
+          '';
+        };
+      };
+    };
+
+    xserver.videoDrivers = ["intel"];
 
     zfs = {
       autoScrub = {
@@ -153,7 +153,6 @@ in {
 
   virtualisation.docker = {
     enable = true;
-    enableNvidia = true;
     storageDriver = "zfs";
     liveRestore = false;
     autoPrune = {

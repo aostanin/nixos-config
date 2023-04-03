@@ -45,7 +45,6 @@
       "mareg"
       "nas"
       "roan"
-      "tio"
       "valmar"
       "vps-oci1"
       "vps-oci2"

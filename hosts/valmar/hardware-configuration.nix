@@ -8,27 +8,34 @@
   modulesPath,
   ...
 }: {
-  imports = [
-    (modulesPath + "/profiles/qemu-guest.nix")
-  ];
+  imports = ["${modulesPath}/installer/scan/not-detected.nix"];
 
-  boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk"];
+  boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "sd_mod"];
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/eedb1b30-6eda-43e5-b8a4-2933749452e1";
-    fsType = "ext4";
-  };
-
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/EF31-6C12";
+    device = "/dev/disk/by-uuid/9150-8B94";
     fsType = "vfat";
   };
 
+  fileSystems."/" = {
+    device = "rpool/root/nixos";
+    fsType = "zfs";
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
+  };
+
+  fileSystems."/nix" = {
+    device = "rpool/root/nix";
+    fsType = "zfs";
+    options = ["zfsutil" "noatime" "X-mount.mkdir"];
+  };
+
   swapDevices = [
-    {device = "/dev/disk/by-uuid/afa2e1cd-8884-4a49-9679-d64a02e98874";}
+    {
+      device = "/dev/disk/by-uuid/661153da-8027-413b-90f7-40ec60411e9c";
+    }
   ];
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";

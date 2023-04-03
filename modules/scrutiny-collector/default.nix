@@ -43,7 +43,7 @@ in {
           script = ''
             ${pkgs.scrutiny}/bin/collector-metrics run \
               --config ${configFile} \
-              --api-endpoint http://${secrets.network.zerotier.hosts.tio.address}:8081 \
+              --api-endpoint http://${secrets.network.zerotier.hosts.elena.address}:8081 \
               --host-id ${config.networking.hostName}
           '';
         };

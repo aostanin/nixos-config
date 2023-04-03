@@ -7,18 +7,24 @@
 }: let
   secrets = import ../../secrets;
   iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.integrated}";
+  ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.expansion10GbE1}";
 in {
   imports = [
-    "${hardwareModulesPath}/common/cpu/intel/cpu-only.nix"
+    "${hardwareModulesPath}/common/cpu/intel"
     "${hardwareModulesPath}/common/pc/ssd"
     ./hardware-configuration.nix
+    ../../modules
     ../../modules/variables
     ../../modules/common
     ../../modules/desktop
     ../../modules/msmtp
     ../../modules/zerotier
-    ../../modules
-    ./nvidia.nix
+    ./backup.nix
+    # TODO: Move to NAS container?
+    # ./nfs.nix
+    #./i915-sriov.nix
+    ./vfio.nix
+    ./power-management.nix
   ];
 
   variables = {
@@ -29,14 +35,16 @@ in {
 
   boot = {
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;
+      };
       efi.canTouchEfiVariables = true;
     };
     tmpOnTmpfs = true;
+    kernelPackages = pkgs.linuxPackages_6_1;
     kernelParams = [
-      # For virsh console
-      "console=ttyS0,115200"
-      "console=tty1"
+      "i915.enable_fbc=1"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
@@ -49,9 +57,7 @@ in {
 
   networking = {
     hostName = "valmar";
-    hostId = "203d588e";
-
-    bridges.br0.interfaces = [iface];
+    hostId = "4446d154";
 
     vlans = {
       vlan40 = {
@@ -60,60 +66,134 @@ in {
       };
     };
 
-    interfaces = {
-      br0 = {
-        macAddress = secrets.network.home.hosts.valmar.macAddress;
-        ipv4.addresses = [
-          {
-            address = secrets.network.home.hosts.valmar.address;
-            prefixLength = 24;
-          }
-        ];
-      };
+    # Home LAN, IPoE uplink
+    bridges.br0.interfaces = [iface];
+    interfaces.br0 = {
+      macAddress = secrets.network.home.hosts.valmar.macAddress;
+      ipv4.addresses = [
+        {
+          address = secrets.network.home.hosts.valmar.address;
+          prefixLength = 24;
+        }
+      ];
+    };
 
-      vlan40 = {
-        ipv4.addresses = [
-          {
-            address = secrets.network.iot.hosts.valmar.address;
-            prefixLength = 24;
-          }
-        ];
-      };
+    interfaces.vlan40 = {
+      ipv4.addresses = [
+        {
+          address = secrets.network.iot.hosts.valmar.address;
+          prefixLength = 24;
+        }
+      ];
+    };
+
+    interfaces."${ifaceStorage}" = {
+      mtu = 9000;
+      ipv4.addresses = [
+        {
+          address = secrets.network.storage.hosts.valmar.address;
+          prefixLength = 24;
+        }
+      ];
     };
 
     defaultGateway = secrets.network.home.defaultGateway;
     nameservers = [secrets.network.home.nameserverPihole];
-
-    firewall = {
-      enable = true;
-      trustedInterfaces = [
-        "br0"
-        secrets.zerotier.interface
-      ];
-    };
   };
 
+  hardware = {
+    #nvidia = {
+    #  package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
+    #    nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
+    #  };
+    #};
+
+    #opengl = {
+    #  enable = true;
+    #  driSupport32Bit = true;
+    #};
+  };
+
+  environment.systemPackages = with pkgs; [
+    mstflint
+  ];
+
   services = {
-    qemuGuest.enable = true;
+    scrutiny-collector.enable = true;
 
     udev.packages = with pkgs; [
       stlink
     ];
+
+    virtwold = {
+      enable = true;
+      interfaces = ["br0"];
+    };
+
+    xserver = {
+      #videoDrivers = ["intel" "nvidia"];
+      xrandrHeads = [
+        {
+          output = "HDMI-1";
+          primary = true;
+          monitorConfig = ''
+            Option "Position" "0 1440"
+          '';
+        }
+        {
+          output = "DP-1";
+          monitorConfig = ''
+            Option "Position" "440 0"
+          '';
+        }
+      ];
+    };
+
+    zfs = {
+      autoScrub = {
+        enable = true;
+        interval = "monthly";
+      };
+      trim.enable = true;
+      zed = {
+        enableMail = true;
+        settings = {
+          ZED_EMAIL_ADDR = secrets.user.emailAddress;
+          ZED_NOTIFY_VERBOSE = true;
+        };
+      };
+    };
   };
 
-  virtualisation = {
-    libvirtd.enable = true;
+  virtualisation.libvirtd.enable = true;
 
-    docker = {
-      enable = true;
-      liveRestore = false;
-      autoPrune = {
-        enable = true;
-        flags = [
-          "--all"
-          "--filter \"until=168h\""
-        ];
-      };
+  virtualisation.docker = {
+    enable = true;
+    #enableNvidia = true;
+    storageDriver = "zfs";
+    liveRestore = false;
+    autoPrune = {
+      # Don't autoprune on servers
+      enable = false;
+      flags = [
+        "--all"
+        "--filter \"until=168h\""
+      ];
+    };
+    # Docker defaults to Google's DNS
+    extraOptions = ''
+      --dns ${secrets.network.home.nameserver} \
+      --dns-search lan
+    '';
+  };
+
+  # For PiKVM console
+  systemd.services."serial-getty@ttyACM0" = {
+    enable = true;
+    wantedBy = ["getty.target"];
+    serviceConfig = {
+      Environment = "TERM=xterm-256color";
+      Restart = "always";
     };
   };
 }
