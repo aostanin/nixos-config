@@ -110,10 +110,9 @@ in {
     mstflint
   ];
 
-  hardware.pikvm.enable = true;
+  localModules.pikvm.enable = true;
 
   services = {
-    # TODO: Schedule to run at 1 am
     scrutiny-collector = {
       enable = true;
       config.commands = {

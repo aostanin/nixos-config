@@ -102,14 +102,12 @@ in {
     nameservers = [secrets.network.home.nameserverPihole];
   };
 
-  hardware = {
-    nvidia = {
-      package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
-        nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
-      };
-    };
+  localModules.pikvm.enable = true;
 
-    pikvm.enable = true;
+  hardware.nvidia = {
+    package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
+      nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
   };
 
   environment.systemPackages = with pkgs; [

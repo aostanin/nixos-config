@@ -5,14 +5,18 @@
   ...
 }:
 with lib; let
-  cfg = config.hardware.pikvm;
+  cfg = config.localModules.pikvm;
   secrets = import ../../secrets;
 in {
-  options.hardware.pikvm = {
+  options.localModules.pikvm = {
     enable = mkEnableOption "pikvm";
   };
 
   config = mkIf cfg.enable {
+    boot.kernelParams = [
+      "video=HDMI-A-1:1280x1024@60e"
+    ];
+
     # For PiKVM console
     systemd.services."serial-getty@ttyACM0" = {
       enable = true;
