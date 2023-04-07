@@ -108,6 +108,8 @@ in {
         nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
       };
     };
+
+    pikvm.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
@@ -184,17 +186,6 @@ in {
       --dns ${secrets.network.home.nameserver} \
       --dns-search lan
     '';
-  };
-
-  # For PiKVM console
-  # TODO: Start when plugged?
-  systemd.services."serial-getty@ttyACM0" = {
-    enable = true;
-    wantedBy = ["getty.target"];
-    serviceConfig = {
-      Environment = "TERM=xterm-256color";
-      Restart = "always";
-    };
   };
 
   fileSystems."/mnt/elena" = {

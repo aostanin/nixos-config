@@ -110,6 +110,8 @@ in {
     mstflint
   ];
 
+  hardware.pikvm.enable = true;
+
   services = {
     # TODO: Schedule to run at 1 am
     scrutiny-collector = {
@@ -179,17 +181,6 @@ in {
       --dns ${secrets.network.home.nameserver} \
       --dns-search lan
     '';
-  };
-
-  # For PiKVM console
-  # TODO: Start when plugged?
-  systemd.services."serial-getty@ttyACM0" = {
-    enable = true;
-    wantedBy = ["getty.target"];
-    serviceConfig = {
-      Environment = "TERM=xterm-256color";
-      Restart = "always";
-    };
   };
 
   systemd.timers.update-mam = {
