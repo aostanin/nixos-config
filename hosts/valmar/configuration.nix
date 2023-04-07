@@ -6,7 +6,7 @@
   ...
 }: let
   secrets = import ../../secrets;
-  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.integrated}";
+  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.expansion10GbE0}";
   ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.expansion10GbE1}";
 in {
   imports = [
@@ -56,6 +56,9 @@ in {
   networking = {
     hostName = "valmar";
     hostId = "4446d154";
+
+    # TODO: Workaround for network down after resuming from sleep.
+    useNetworkd = true;
 
     vlans = {
       vlan40 = {
