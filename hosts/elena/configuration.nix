@@ -19,7 +19,8 @@ in {
     ../../modules/msmtp
     ../../modules/zerotier
     ./backup.nix
-    ./i915-sriov.nix
+    #./i915-sriov.nix
+    ./nfs.nix
     ./power-management.nix
   ];
 
@@ -42,7 +43,12 @@ in {
         ];
       };
     };
+    zfs = {
+      extraPools = ["tank"];
+      requestEncryptionCredentials = false;
+    };
     tmpOnTmpfs = true;
+    kernelPackages = pkgs.linuxPackages_6_1;
     kernelParams = [
       "i915.enable_fbc=1"
     ];
@@ -105,6 +111,7 @@ in {
   ];
 
   services = {
+    # TODO: Schedule to run at 1 am
     scrutiny-collector = {
       enable = true;
       config.commands = {
@@ -171,12 +178,32 @@ in {
   };
 
   # For PiKVM console
+  # TODO: Start when plugged?
   systemd.services."serial-getty@ttyACM0" = {
     enable = true;
     wantedBy = ["getty.target"];
     serviceConfig = {
       Environment = "TERM=xterm-256color";
       Restart = "always";
+    };
+  };
+
+  systemd.timers.update-mam = {
+    wantedBy = ["timers.target"];
+    partOf = ["update-mam.service"];
+    after = ["network-online.target"];
+    timerConfig = {
+      OnCalendar = "0/2:00";
+      Persistent = true;
+      RandomizedDelaySec = "15m";
+    };
+  };
+
+  systemd.services.update-mam = {
+    serviceConfig = {
+      Type = "oneshot";
+      WorkingDirectory = "/storage/appdata/scripts/mam";
+      ExecStart = "/storage/appdata/scripts/mam/update_mam.sh";
     };
   };
 }

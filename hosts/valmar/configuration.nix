@@ -20,8 +20,6 @@ in {
     ../../modules/msmtp
     ../../modules/zerotier
     ./backup.nix
-    # TODO: Move to NAS container?
-    # ./nfs.nix
     #./i915-sriov.nix
     ./vfio.nix
     ./power-management.nix
@@ -107,11 +105,6 @@ in {
     #    nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
     #  };
     #};
-
-    #opengl = {
-    #  enable = true;
-    #  driSupport32Bit = true;
-    #};
   };
 
   environment.systemPackages = with pkgs; [
@@ -132,6 +125,7 @@ in {
 
     xserver = {
       #videoDrivers = ["intel" "nvidia"];
+      videoDrivers = ["intel"];
       xrandrHeads = [
         {
           output = "HDMI-1";
@@ -188,6 +182,7 @@ in {
   };
 
   # For PiKVM console
+  # TODO: Start when plugged?
   systemd.services."serial-getty@ttyACM0" = {
     enable = true;
     wantedBy = ["getty.target"];
@@ -195,5 +190,11 @@ in {
       Environment = "TERM=xterm-256color";
       Restart = "always";
     };
+  };
+
+  fileSystems."/mnt/elena" = {
+    device = "${secrets.network.storage.hosts.elena.address}:/";
+    fsType = "nfs";
+    options = ["x-systemd.automount" "x-systemd.idle-timeout=600" "noauto" "noatime"];
   };
 }

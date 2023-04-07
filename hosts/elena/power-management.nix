@@ -30,7 +30,7 @@ in {
     serviceConfig = {
       Restart = "on-failure";
       Type = "simple";
-      ExecStart = "${pkgs.hd-idle}/bin/hd-idle -i 0 ${lib.concatStringsSep " " (map (drive: "-a ${drive} -i 60") drives)}";
+      ExecStart = "${pkgs.hd-idle}/bin/hd-idle -i 0 ${lib.concatStringsSep " " (map (drive: "-a ${drive} -i 900") drives)}";
     };
     wantedBy = ["multi-user.target"];
   };

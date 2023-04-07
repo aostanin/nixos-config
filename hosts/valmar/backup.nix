@@ -6,23 +6,6 @@
 }: let
   secrets = import ../../secrets;
 in {
-  # TODO: Move to NAS
-  /*
-  services.rsync-backup = {
-    enable = true;
-    backups = {
-      vps-oci1 = {
-        source = "root@${secrets.network.zerotier.hosts.vps-oci1.address}:/storage/appdata";
-        destination = "/storage/backup/hosts/dir/vps-oci1";
-      };
-      vps-oci2 = {
-        source = "root@${secrets.network.zerotier.hosts.vps-oci2.address}:/storage/appdata";
-        destination = "/storage/backup/hosts/dir/vps-oci2";
-      };
-    };
-  };
-  */
-
   services.zrepl = {
     enable = true;
     settings = {
@@ -59,56 +42,19 @@ in {
             ];
           };
         }
-        # TODO: Move to NAS
-        /*
-        {
-          name = "snap-infrequent";
-          type = "snap";
-          filesystems = {
-            "tank/appdata<" = true;
-            "tank/backup<" = true;
-            "tank/backup/hosts/zfs<" = false;
-            "tank/download<" = true;
-            "tank/media<" = true;
-            "tank/personal<" = true;
-            "tank/virtualization<" = true;
-          };
-          snapshotting = {
-            type = "periodic";
-            interval = "12h";
-            prefix = "zrepl_";
-            timestamp_format = "iso-8601";
-          };
-          pruning = {
-            keep = [
-              {
-                type = "grid";
-                grid = "1x1h(keep=all) | 24x1h | 90x1d";
-                regex = "^zrepl_.*";
-              }
-              {
-                type = "regex";
-                negate = true;
-                regex = "^zrepl_.*";
-              }
-            ];
-          };
-        }
-        */
-        # TODO: Push to NAS
-        /*
         {
           type = "push";
-          name = "local-push";
+          name = "push";
           connect = {
             type = "tcp";
-            address = "127.0.0.1:8888";
+            address = "${secrets.network.storage.hosts.elena.address}:8888";
           };
           filesystems = {
             "rpool/appdata<" = true;
             "rpool/appdata/temp<" = false;
             "rpool/home<" = true;
             "rpool/root<" = true;
+            "rpool/root/nix<" = false;
             "rpool/virtualization<" = true;
             "rpool/virtualization/docker<" = false;
           };
@@ -134,71 +80,24 @@ in {
             ];
           };
         }
-        */
-        # TODO: Move to NAS
-        /*
-        {
-          type = "sink";
-          name = "sink";
-          serve = {
-            type = "tcp";
-            listen = ":8888";
-            listen_freebind = true;
-            clients = {
-              "127.0.0.1" = "elena";
-              "${secrets.network.zerotier.hosts.roan.address}" = "roan";
-              "${secrets.network.zerotier.hosts.mareg.address}" = "mareg";
-            };
-          };
-          recv = {
-            placeholder.encryption = "inherit";
-          };
-          root_fs = "tank/backup/hosts/zfs";
-        }
-        */
-        {
-          type = "source";
-          name = "source";
-          serve = {
-            type = "tcp";
-            listen = ":8889";
-            clients = {
-              "${secrets.network.zerotier.hosts.rpi-backup.address}" = "rpi-backup";
-            };
-          };
-          send.encrypted = false;
-          filesystems = {
-            "rpool/appdata<" = true;
-            "rpool/appdata/temp<" = false;
-            "rpool/home<" = true;
-            "rpool/root<" = true;
-            "rpool/root/nix<" = false;
-            "tank/media/audiobooks<" = true;
-            "tank/media/books<" = true;
-            "tank/media/music<" = true;
-            "tank/personal<" = true;
-          };
-          snapshotting.type = "manual";
-        }
       ];
     };
   };
 
-  /*
   systemd = {
-    timers.zrepl-local-push = {
+    timers.zrepl-push = {
       wantedBy = ["timers.target"];
-      partOf = ["zrepl-local-push.service"];
+      partOf = ["zrepl-push.service"];
+      after = ["network-online.target"];
       timerConfig = {
-        OnCalendar = "daily";
+        OnCalendar = "*-*-* 01:15:00";
         Persistent = true;
         RandomizedDelaySec = "15m";
       };
     };
-    services.zrepl-local-push = {
+    services.zrepl-push = {
       serviceConfig.Type = "oneshot";
-      script = "${pkgs.zrepl}/bin/zrepl signal wakeup local-push";
+      script = "${pkgs.zrepl}/bin/zrepl signal wakeup push";
     };
   };
-  */
 }

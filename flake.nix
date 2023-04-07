@@ -43,7 +43,6 @@
     hosts = [
       "elena"
       "mareg"
-      "nas"
       "roan"
       "valmar"
       "vps-oci1"
