@@ -119,6 +119,10 @@ in {
         metrics_info_args = "--info --json --nocheck=standby";
         metrics_smart_args = "--xall --json --nocheck=standby";
       };
+      timerConfig = {
+        OnCalendar = "*-*-* 01:10:00";
+        RandomizedDelaySec = 0;
+      };
     };
 
     vfio = {

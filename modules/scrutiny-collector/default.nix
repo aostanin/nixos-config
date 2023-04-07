@@ -18,6 +18,14 @@ in {
         Scrutiny config.
       '';
     };
+
+    timerConfig = mkOption {
+      type = types.attrs;
+      default = {};
+      description = ''
+        Override the systemd timer config.
+      '';
+    };
   };
 
   config = mkIf cfg.enable (
@@ -32,11 +40,13 @@ in {
           wantedBy = ["timers.target"];
           partOf = ["scrutiny-collector.service"];
           after = ["network-online.target"];
-          timerConfig = {
-            OnCalendar = "daily";
-            Persistent = true;
-            RandomizedDelaySec = "15m";
-          };
+          timerConfig =
+            {
+              OnCalendar = "daily";
+              Persistent = true;
+              RandomizedDelaySec = "15m";
+            }
+            // cfg.timerConfig;
         };
         services.scrutiny-collector = {
           serviceConfig.Type = "oneshot";
