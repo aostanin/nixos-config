@@ -14,6 +14,7 @@
   ];
 in {
   boot.kernelParams = [
+    "consoleblank=300"
     "pcie_aspm.policy=powersave"
   ];
 
