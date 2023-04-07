@@ -138,7 +138,7 @@ in {
       };
     };
 
-    xserver.videoDrivers = ["intel"];
+    xserver.videoDrivers = ["modesetting"];
 
     zfs = {
       autoScrub = {

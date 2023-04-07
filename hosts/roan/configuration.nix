@@ -99,7 +99,7 @@ in {
     };
 
     xserver = {
-      videoDrivers = ["intel"];
+      videoDrivers = ["modesetting"];
       deviceSection = ''
         Option "TearFree" "true"
       '';

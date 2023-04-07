@@ -100,11 +100,11 @@ in {
   };
 
   hardware = {
-    #nvidia = {
-    #  package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
-    #    nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
-    #  };
-    #};
+    nvidia = {
+      package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
+        nvidia_x11 = config.boot.kernelPackages.nvidiaPackages.stable;
+      };
+    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -124,8 +124,10 @@ in {
     };
 
     xserver = {
-      #videoDrivers = ["intel" "nvidia"];
-      videoDrivers = ["intel"];
+      videoDrivers = ["modesetting" "nvidia"];
+      deviceSection = ''
+        Option "TearFree" "true"
+      '';
       xrandrHeads = [
         {
           output = "HDMI-1";
@@ -163,7 +165,7 @@ in {
 
   virtualisation.docker = {
     enable = true;
-    #enableNvidia = true;
+    enableNvidia = true;
     storageDriver = "zfs";
     liveRestore = false;
     autoPrune = {

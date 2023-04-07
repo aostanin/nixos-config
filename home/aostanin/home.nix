@@ -125,7 +125,7 @@ with lib; {
         radeontop
         nvtop
       ]
-      ++ optionals (elem "intel" nixosConfig.services.xserver.videoDrivers) [
+      ++ optionals (elem "modesetting" nixosConfig.services.xserver.videoDrivers) [
         intel-gpu-tools
         nvtop
       ]
