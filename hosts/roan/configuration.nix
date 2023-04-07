@@ -50,29 +50,29 @@ in {
       allowedTCPPorts = [
         22 # SSH
       ];
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
       allowedUDPPorts = [
         5353 # Avahi
         9993 # ZeroTier
+      ];
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
       ];
       interfaces."${secrets.zerotier.interface}" = {
         allowedTCPPorts = [
           22000 # Syncthing
         ];
-        allowedTCPPortRanges = [
-          {
-            from = 1714;
-            to = 1764;
-          } # KDE Connect
-        ];
         allowedUDPPorts = [
           22000 # Syncthing
           21027 # Syncthing
-        ];
-        allowedUDPPortRanges = [
-          {
-            from = 1714;
-            to = 1764;
-          } # KDE Connect
         ];
       };
     };
