@@ -16,6 +16,7 @@ with lib; {
       ./tmux
       ./zsh
     ]
+    ++ optional (pathExists (./hosts + "/${nixosConfig.networking.hostName}/home.nix")) (./hosts + "/${nixosConfig.networking.hostName}/home.nix")
     ++ optionals nixosConfig.variables.hasDesktop [
       ./3dprinting
       ./alacritty

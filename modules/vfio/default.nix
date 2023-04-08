@@ -10,6 +10,55 @@ with lib; let
   libvirt = config.virtualisation.libvirtd.package;
   nvidiaBin = pkgs.linuxPackages.nvidia_x11.bin;
 
+  lookingGlassSubmodule = types.submodule {
+    options = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Enable support for looking-glass-client.
+        '';
+      };
+
+      enableShm = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Create the /dev/shm/looking-glass shm file.
+        '';
+      };
+
+      enableKvmfr = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Load the kvmfr kernel module.
+        '';
+      };
+
+      kvmfrSizes = mkOption {
+        type = types.listOf types.int;
+        default = [];
+        example = [64];
+        description = ''
+          List of static kvmfr devices to create in MiB.
+        '';
+      };
+
+      kvmfrUser = mkOption {
+        type = types.str;
+        default = "root";
+        example = "bob";
+        description = ''
+          The user who owns the kvmfr device.
+        '';
+      };
+    };
+  };
+
   qemuSubmodule = types.submodule {
     options = {
       user = mkOption {
@@ -345,12 +394,11 @@ in {
       '';
     };
 
-    enableLookingGlass = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
+    lookingGlass = mkOption {
+      type = lookingGlassSubmodule;
+      default = {};
       description = ''
-        Enable support for looking-glass-client.
+        Options for looking-glass.
       '';
     };
 
@@ -379,8 +427,8 @@ in {
     };
   };
 
-  config = mkMerge [
-    (mkIf cfg.enable {
+  config = mkIf cfg.enable (mkMerge [
+    {
       boot = {
         initrd.kernelModules = ["vfio_pci"];
         kernelModules = ["vfio_pci"];
@@ -414,7 +462,8 @@ in {
               "/dev/hpet"
               "/dev/sev"
             ]
-            ++ cfg.qemu.devices;
+            ++ cfg.qemu.devices
+            ++ optionals (cfg.lookingGlass.enable && cfg.lookingGlass.enableKvmfr) ["/dev/kvmfr0"];
         in ''
           user = "${cfg.qemu.user}"
           cgroup_device_acl = [
@@ -449,14 +498,30 @@ in {
       powerManagement.powerUpCommands =
         concatStringsSep "\n"
         (mapAttrsToList (gpuName: gpu: gpu.powerManagementCommands) cfg.gpus);
+    }
+
+    (mkIf cfg.lookingGlass.enable {
+      environment.systemPackages = [lookingGlassClient];
     })
 
-    (mkIf (cfg.enable && cfg.enableLookingGlass) {
-      environment.systemPackages = [lookingGlassClient];
-
-      systemd.tmpfiles.rules = [
+    (mkIf (cfg.lookingGlass.enable && cfg.lookingGlass.enableShm) {
+      systemd.tmpfiles.rules = mkIf cfg.lookingGlass.enableShm [
         "f /dev/shm/looking-glass 0660 1000 qemu-libvirtd -"
       ];
+    })
+
+    (mkIf (cfg.lookingGlass.enable && cfg.lookingGlass.enableKvmfr) {
+      boot = {
+        kernelModules = ["kvmfr"];
+        extraModulePackages = with config.boot.kernelPackages; [kvmfr];
+        extraModprobeConfig = ''
+          options kvmfr ${optionalString (cfg.lookingGlass.kvmfrSizes != []) "static_size_mb=${concatStringsSep "," (map toString cfg.lookingGlass.kvmfrSizes)}"}
+        '';
+      };
+
+      services.udev.extraRules = ''
+        SUBSYSTEM=="kvmfr", OWNER="${cfg.lookingGlass.kvmfrUser}", GROUP="kvm", MODE="0660"
+      '';
     })
 
     {
@@ -565,5 +630,5 @@ in {
         })
         cfg.vms);
     }
-  ];
+  ]);
 }

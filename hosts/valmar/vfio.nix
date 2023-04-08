@@ -5,15 +5,15 @@
   ...
 }: let
   gpus = {
-    #nvidiaRTX2070Super = {
-    #  driver = "nvidia";
-    #  pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
-    #  busId = "01:00.0";
-    #  powerManagementCommands = ''
-    #    # Lowers idle from ~13 W to ~6 W
-    #    ${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi --gpu-reset
-    #  '';
-    #};
+    nvidiaRTX2070Super = {
+      driver = "nvidia";
+      pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
+      busId = "01:00.0";
+      powerManagementCommands = ''
+        # Lowers idle from ~13 W to ~6 W
+        ${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi --gpu-reset
+      '';
+    };
   };
   usbControllerIds = [
     "1912:0014" # Renesas Technology Corp. uPD720201
@@ -54,7 +54,12 @@ in {
   services.vfio = {
     enable = true;
     cpuType = "intel";
-    enableLookingGlass = true;
+    lookingGlass = {
+      enable = true;
+      enableKvmfr = true;
+      kvmfrSizes = [64];
+      kvmfrUser = "aostanin";
+    };
     gpus = gpus;
     qemu.devices = [
       "/dev/input/by-id/virtual-keyboard-1"
@@ -91,8 +96,8 @@ in {
         guestCpus = ["16-17" "0-15"];
       };
     in {
-      win10-play-nvidia = {
-        #gpu = "nvidiaRTX2070Super";
+      win10-play = {
+        gpu = "nvidiaRTX2070Super";
         enableHibernation = true;
         isolate =
           isolate16Thread
