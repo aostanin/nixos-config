@@ -44,6 +44,7 @@ in {
           wantedBy = ["timers.target"];
           partOf = ["rsync-backup-${name}.service"];
           after = ["network-online.target"];
+          wants = ["network-online.target"];
           timerConfig = {
             OnCalendar = "daily";
             Persistent = true;
@@ -56,6 +57,8 @@ in {
     systemd.services = mkMerge (mapAttrsToList (name: backup: {
         "rsync-backup-${name}" = {
           description = "rsync backup for ${name}";
+          after = ["network-online.target"];
+          wants = ["network-online.target"];
           path = [pkgs.openssh];
           serviceConfig.Type = "oneshot";
           script = ''

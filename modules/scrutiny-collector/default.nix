@@ -40,6 +40,7 @@ in {
           wantedBy = ["timers.target"];
           partOf = ["scrutiny-collector.service"];
           after = ["network-online.target"];
+          wants = ["network-online.target"];
           timerConfig =
             {
               OnCalendar = "daily";
@@ -50,6 +51,8 @@ in {
         };
         services.scrutiny-collector = {
           serviceConfig.Type = "oneshot";
+          after = ["network-online.target"];
+          wants = ["network-online.target"];
           script = ''
             ${pkgs.scrutiny}/bin/collector-metrics run \
               --config ${configFile} \

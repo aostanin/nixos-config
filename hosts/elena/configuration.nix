@@ -186,6 +186,7 @@ in {
     wantedBy = ["timers.target"];
     partOf = ["update-mam.service"];
     after = ["network-online.target"];
+    wants = ["network-online.target"];
     timerConfig = {
       OnCalendar = "0/2:00";
       Persistent = true;

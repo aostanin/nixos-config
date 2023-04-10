@@ -81,6 +81,7 @@ in {
       wantedBy = ["timers.target"];
       partOf = ["zrepl-push.service"];
       after = ["network-online.target"];
+      wants = ["network-online.target"];
       timerConfig = {
         OnCalendar = "daily";
         Persistent = true;
@@ -89,6 +90,8 @@ in {
     };
     services.zrepl-push = {
       serviceConfig.Type = "oneshot";
+      after = ["network-online.target"];
+      wants = ["network-online.target"];
       script = "${pkgs.zrepl}/bin/zrepl signal wakeup push";
     };
   };
