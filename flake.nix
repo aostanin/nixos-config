@@ -40,17 +40,18 @@
   }: let
     lib = nixpkgs.lib;
     secrets = import ./secrets;
-    hosts = [
-      "elena"
-      "mareg"
-      "roan"
-      "valmar"
-      "vps-oci1"
-      "vps-oci2"
-    ];
+    hosts = {
+      elena = {system = "x86_64-linux";};
+      mareg = {system = "x86_64-linux";};
+      roan = {system = "x86_64-linux";};
+      rpi-backup = {system = "aarch64-linux";};
+      valmar = {system = "x86_64-linux";};
+      vps-oci1 = {system = "x86_64-linux";};
+      vps-oci2 = {system = "x86_64-linux";};
+    };
     mkNixosSystem = {
       hostname,
-      system ? "x86_64-linux",
+      system,
       extraModules ? [],
     }:
       lib.nixosSystem {
@@ -101,7 +102,10 @@
           ]
           ++ extraModules;
       };
-    mkNode = {hostname}: {
+    mkNode = {
+      hostname,
+      system,
+    }: {
       hostname = secrets.network.zerotier.hosts."${hostname}".address6;
       sshUser = "root";
       fastConnection = true;
@@ -111,46 +115,24 @@
       profiles = {
         system = {
           user = "root";
-          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."${hostname}";
+          path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
         };
       };
     };
   in {
-    nixosConfigurations =
-      builtins.listToAttrs (map (
-          host:
-            lib.nameValuePair host (mkNixosSystem {hostname = host;})
-        )
-        hosts)
-      // {
-        rpi-backup = mkNixosSystem {
-          hostname = "rpi-backup";
-          system = "aarch64-linux";
-        };
-      };
+    nixosConfigurations = builtins.mapAttrs (hostname: host:
+      mkNixosSystem {
+        inherit hostname;
+        system = host.system;
+      })
+    hosts;
 
-    deploy.nodes =
-      builtins.listToAttrs (map (
-          host:
-            lib.nameValuePair host (mkNode {hostname = host;})
-        )
-        hosts)
-      // {
-        rpi-backup = {
-          hostname = secrets.network.zerotier.hosts.rpi-backup.address6;
-          sshUser = "root";
-          fastConnection = true;
-          autoRollback = false;
-          magicRollback = false;
-
-          profiles = {
-            system = {
-              user = "root";
-              path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.rpi-backup;
-            };
-          };
-        };
-      };
+    deploy.nodes = builtins.mapAttrs (hostname: host:
+      mkNode {
+        inherit hostname;
+        system = host.system;
+      })
+    hosts;
 
     checks =
       builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib
