@@ -42,7 +42,7 @@ in {
           name = "push";
           connect = {
             type = "tcp";
-            address = "${secrets.network.zerotier.hosts.elena.address}:8888";
+            address = "[${secrets.network.zerotier.hosts.elena.address6}]:8888";
           };
           send.encrypted = true;
           filesystems = {

@@ -40,7 +40,7 @@ in {
           name = "pull-elena";
           connect = {
             type = "tcp";
-            address = "${secrets.network.zerotier.hosts.elena.address}:8889";
+            address = "[${secrets.network.zerotier.hosts.elena.address6}]:8889";
           };
           recv = {
             placeholder.encryption = "inherit";

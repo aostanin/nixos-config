@@ -10,11 +10,11 @@ in {
     enable = true;
     backups = {
       vps-oci1 = {
-        source = "root@${secrets.network.zerotier.hosts.vps-oci1.address}:/storage/appdata";
+        source = "root@[${secrets.network.zerotier.hosts.vps-oci1.address6}]:/storage/appdata";
         destination = "/storage/backup/hosts/dir/vps-oci1";
       };
       vps-oci2 = {
-        source = "root@${secrets.network.zerotier.hosts.vps-oci2.address}:/storage/appdata";
+        source = "root@[${secrets.network.zerotier.hosts.vps-oci2.address6}]:/storage/appdata";
         destination = "/storage/backup/hosts/dir/vps-oci2";
       };
     };
@@ -136,8 +136,8 @@ in {
             listen_freebind = true;
             clients = {
               "127.0.0.1" = "elena";
-              "${secrets.network.zerotier.hosts.roan.address}" = "roan";
-              "${secrets.network.zerotier.hosts.mareg.address}" = "mareg";
+              "${secrets.network.zerotier.hosts.roan.address6}" = "roan";
+              "${secrets.network.zerotier.hosts.mareg.address6}" = "mareg";
               "${secrets.network.storage.hosts.valmar.address}" = "valmar";
             };
           };
@@ -153,7 +153,7 @@ in {
             type = "tcp";
             listen = ":8889";
             clients = {
-              "${secrets.network.zerotier.hosts.rpi-backup.address}" = "rpi-backup";
+              "${secrets.network.zerotier.hosts.rpi-backup.address6}" = "rpi-backup";
               "${secrets.network.storage.hosts.valmar.address}" = "valmar";
             };
           };
