@@ -108,9 +108,6 @@ in {
       win10-work = {
         enableHibernation = true;
       };
-      win10-work-intel = {
-        enableHibernation = true;
-      };
     };
   };
 }

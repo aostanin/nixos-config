@@ -12,5 +12,6 @@ with lib; {
       renderer = "opengl";
     };
     input.escapeKey = "KEY_PAUSE";
+    spice.port = 5910;
   };
 }
