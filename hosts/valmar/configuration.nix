@@ -102,7 +102,16 @@ in {
     nameservers = [secrets.network.home.nameserverPihole];
   };
 
-  localModules.pikvm.enable = true;
+  localModules = {
+    pikvm.enable = true;
+
+    scrutinyCollector.enable = true;
+
+    virtwold = {
+      enable = true;
+      interfaces = ["br0"];
+    };
+  };
 
   hardware.nvidia = {
     package = pkgs.nur.repos.arc.packages.nvidia-patch.override {
@@ -120,11 +129,6 @@ in {
     udev.packages = with pkgs; [
       stlink
     ];
-
-    virtwold = {
-      enable = true;
-      interfaces = ["br0"];
-    };
 
     xserver = {
       videoDrivers = ["modesetting" "nvidia"];

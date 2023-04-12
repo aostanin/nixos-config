@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.services.scrutiny-collector;
+  cfg = config.localModules.scrutinyCollector;
   secrets = import ../../secrets;
 in {
-  options.services.scrutiny-collector = {
+  options.localModules.scrutinyCollector = {
     enable = mkEnableOption "scrutiny-collector";
 
     config = mkOption {

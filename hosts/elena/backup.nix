@@ -6,7 +6,7 @@
 }: let
   secrets = import ../../secrets;
 in {
-  services.rsync-backup = {
+  localModules.rsyncBackup = {
     enable = true;
     backups = {
       vps-oci1 = {

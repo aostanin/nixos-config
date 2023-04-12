@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  cfg = config.services.vfio;
+  cfg = config.localModules.vfio;
 
   libvirt = config.virtualisation.libvirtd.package;
   nvidiaBin = pkgs.linuxPackages.nvidia_x11.bin;
@@ -383,7 +383,7 @@ with lib; let
       else throw "Unsupported gpu driver ${gpu.driver}"
     );
 in {
-  options.services.vfio = {
+  options.localModules.vfio = {
     enable = mkEnableOption "vfio";
 
     cpuType = mkOption {

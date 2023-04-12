@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  cfg = config.services.rsync-backup;
+  cfg = config.localModules.rsyncBackup;
 
   backupSubmodule = types.submodule {
     options = {
@@ -27,7 +27,7 @@ with lib; let
     };
   };
 in {
-  options.services.rsync-backup = {
+  options.localModules.rsyncBackup = {
     enable = mkEnableOption "rsync-backup";
 
     backups = mkOption {

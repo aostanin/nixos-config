@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.services.virtwold;
+  cfg = config.localModules.virtwold;
 in {
-  options.services.virtwold = {
+  options.localModules.virtwold = {
     enable = mkEnableOption "virtwold";
 
     interfaces = mkOption {

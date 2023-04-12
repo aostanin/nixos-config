@@ -51,7 +51,7 @@ in {
     wantedBy = ["multi-user.target"];
   };
 
-  services.vfio = {
+  localModules.vfio = {
     enable = true;
     cpuType = "intel";
     lookingGlass = {
