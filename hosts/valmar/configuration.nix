@@ -175,14 +175,6 @@ in {
     enableNvidia = true;
     storageDriver = "zfs";
     liveRestore = false;
-    autoPrune = {
-      # Don't autoprune on servers
-      enable = false;
-      flags = [
-        "--all"
-        "--filter \"until=168h\""
-      ];
-    };
     # Docker defaults to Google's DNS
     extraOptions = ''
       --dns ${secrets.network.home.nameserver} \

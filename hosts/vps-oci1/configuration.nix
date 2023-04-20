@@ -30,14 +30,6 @@ in {
   virtualisation.docker = {
     enable = true;
     liveRestore = false;
-    autoPrune = {
-      # Don't autoprune on servers
-      enable = false;
-      flags = [
-        "--all"
-        "--filter \"until=168h\""
-      ];
-    };
   };
 
   systemd = {
