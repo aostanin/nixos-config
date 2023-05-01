@@ -153,7 +153,7 @@ in {
             type = "tcp";
             listen = ":8889";
             clients = {
-              "${secrets.network.zerotier.hosts.rpi-backup.address6}" = "rpi-backup";
+              "${secrets.network.zerotier.hosts.tio.address6}" = "tio";
               "${secrets.network.storage.hosts.valmar.address}" = "valmar";
             };
           };

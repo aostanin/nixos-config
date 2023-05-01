@@ -122,16 +122,17 @@ with lib; {
         okular
         spectacle
       ]
+      ++ optionals (pkgs.stdenv.hostPlatform.system != "aarch64-linux") [
+        nvtop
+      ]
       ++ optionals (elem "amdgpu" nixosConfig.services.xserver.videoDrivers) [
         radeontop
-        nvtop
       ]
-      ++ optionals (elem "modesetting" nixosConfig.services.xserver.videoDrivers) [
+      ++ optionals (
+        (pkgs.stdenv.hostPlatform.system != "aarch64-linux")
+        && (elem "modesetting" nixosConfig.services.xserver.videoDrivers)
+      ) [
         intel-gpu-tools
-        nvtop
-      ]
-      ++ optionals (elem "nvidia" nixosConfig.services.xserver.videoDrivers) [
-        nvtop
       ];
 
     sessionVariables = {
