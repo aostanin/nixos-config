@@ -124,11 +124,6 @@ in {
   ];
 
   services = {
-    scrutiny-collector.enable = true;
-
-    udev.packages = with pkgs; [
-      stlink
-    ];
 
     xserver = {
       videoDrivers = ["modesetting" "nvidia"];
