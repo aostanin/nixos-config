@@ -96,6 +96,7 @@ with lib; {
         jellyfin-media-player
         krita
         libreoffice
+        logseq
         moonlight-qt
         mullvad-vpn
         peek
