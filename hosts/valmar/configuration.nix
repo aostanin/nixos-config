@@ -124,6 +124,9 @@ in {
   ];
 
   services = {
+    logind.extraConfig = ''
+      HandlePowerKey=suspend
+    '';
 
     xserver = {
       videoDrivers = ["modesetting" "nvidia"];
