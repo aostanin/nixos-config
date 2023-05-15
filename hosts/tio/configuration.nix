@@ -36,6 +36,9 @@ in {
         }
       ];
     };
+
+    defaultGateway = secrets.network.home.defaultGateway;
+    nameservers = secrets.network.home.nameserversAdguard;
   };
 
   # services.zrepl = {

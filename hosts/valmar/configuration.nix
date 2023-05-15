@@ -99,7 +99,7 @@ in {
     };
 
     defaultGateway = secrets.network.home.defaultGateway;
-    nameservers = [secrets.network.home.nameserverPihole];
+    nameservers = secrets.network.home.nameserversAdguard;
   };
 
   localModules = {
