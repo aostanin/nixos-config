@@ -344,7 +344,7 @@ with lib; let
         systemctl stop nvidia-persistenced.service
 
         # Avoid detaching the GPU if it's in use
-        fuser /dev/nvidia0 && exit 1
+        ${pkgs.psmisc}/bin/fuser /dev/nvidia0 && exit 1
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
           ${libvirt}/bin/virsh nodedev-detach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
