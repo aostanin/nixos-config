@@ -128,6 +128,46 @@ in {
           };
         }
         {
+          type = "push";
+          name = "external-push";
+          connect = {
+            type = "tcp";
+            address = "127.0.0.1:8889";
+          };
+          filesystems = {
+            "rpool/appdata<" = true;
+            "rpool/appdata/temp<" = false;
+            "rpool/home<" = true;
+            "rpool/root<" = true;
+            "rpool/root/nix<" = false;
+            "tank/media/audiobooks<" = true;
+            "tank/media/books<" = true;
+            "tank/media/music<" = true;
+            "tank/personal<" = true;
+          };
+          snapshotting.type = "manual";
+          pruning = {
+            keep_sender = [
+              {
+                type = "regex";
+                regex = ".*";
+              }
+            ];
+            keep_receiver = [
+              {
+                type = "grid";
+                grid = "1x1h(keep=all) | 24x1h | 90x1d";
+                regex = "^zrepl_.*";
+              }
+              {
+                type = "regex";
+                negate = true;
+                regex = "^zrepl_.*";
+              }
+            ];
+          };
+        }
+        {
           type = "sink";
           name = "sink";
           serve = {
@@ -147,29 +187,20 @@ in {
           root_fs = "tank/backup/hosts/zfs";
         }
         {
-          type = "source";
-          name = "source";
+          type = "sink";
+          name = "sink-external";
           serve = {
             type = "tcp";
             listen = ":8889";
+            listen_freebind = true;
             clients = {
-              "${secrets.network.zerotier.hosts.tio.address6}" = "tio";
-              "${secrets.network.storage.hosts.valmar.address}" = "valmar";
+              "127.0.0.1" = "elena";
             };
           };
-          send.encrypted = false;
-          filesystems = {
-            "rpool/appdata<" = true;
-            "rpool/appdata/temp<" = false;
-            "rpool/home<" = true;
-            "rpool/root<" = true;
-            "rpool/root/nix<" = false;
-            "tank/media/audiobooks<" = true;
-            "tank/media/books<" = true;
-            "tank/media/music<" = true;
-            "tank/personal<" = true;
+          recv = {
+            placeholder.encryption = "inherit";
           };
-          snapshotting.type = "manual";
+          root_fs = "external/backup/hosts/zfs";
         }
       ];
     };
