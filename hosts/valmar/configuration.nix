@@ -106,6 +106,10 @@ in {
     # Workaround for "static routes are not configured"
     wait-online.anyInterface = true;
   };
+  # TODO: ZeroTier doesn't work on start and resume.
+  powerManagement.powerUpCommands = ''
+    systemctl restart zerotierone.service
+  '';
 
   localModules = {
     pikvm.enable = true;
