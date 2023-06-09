@@ -44,7 +44,7 @@ in {
     joypixels.acceptLicense = true;
     permittedInsecurePackages = [
       "electron-12.2.3"
-      "electron-20.3.11"
+      "python-2.7.18.6"
     ];
   };
 
@@ -75,11 +75,11 @@ in {
 
   services.openssh = {
     enable = true;
-    forwardX11 = true;
-    extraConfig = ''
-      HostKeyAlgorithms +ssh-rsa
-      PubkeyAcceptedAlgorithms +ssh-rsa
-    '';
+    settings = {
+      X11Forwarding = true;
+      HostKeyAlgorithms = "+ssh-rsa";
+      PubkeyAcceptedAlgorithms = "+ssh-rsa";
+    };
   };
 
   programs = {

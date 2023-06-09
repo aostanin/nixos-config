@@ -20,7 +20,7 @@ in {
     ];
   };
 
-  boot.cleanTmpDir = true;
+  boot.tmp.cleanOnBoot = true;
 
   networking = {
     hostName = "vps-oci2";

@@ -30,7 +30,7 @@ in {
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = ["zfs"];
-    tmpOnTmpfs = true;
+    tmp.useTmpfs = true;
     kernelParams = [
       "intel_iommu=on"
       "iommu=pt"

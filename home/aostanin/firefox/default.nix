@@ -30,19 +30,19 @@ in {
           "layers.acceleration.force-enabled" = true;
           "gfx.webrender.all" = true;
         };
+        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          pkgs.nur.repos.rycee.firefox-addons."10ten-ja-reader"
+          bitwarden
+          cookies-txt
+          multi-account-containers
+          simple-tab-groups
+          sponsorblock
+          statshunters
+          temporary-containers
+          ublock-origin
+          vimium
+        ];
       };
     };
-    extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-      pkgs.nur.repos.rycee.firefox-addons."10ten-ja-reader"
-      bitwarden
-      cookies-txt
-      multi-account-containers
-      simple-tab-groups
-      sponsorblock
-      statshunters
-      temporary-containers
-      ublock-origin
-      vimium
-    ];
   };
 }

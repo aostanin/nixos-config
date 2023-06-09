@@ -7,13 +7,9 @@
     ./audio.nix
   ];
 
-  i18n.inputMethod = {
-    enabled = "fcitx";
-    fcitx.engines = with pkgs.fcitx-engines; [mozc];
-  };
-
   fonts.fonts = with pkgs; [
     dejavu_fonts
+    font-awesome
     ipafont
     joypixels
     kochi-substitute

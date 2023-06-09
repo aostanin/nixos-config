@@ -13,6 +13,13 @@ with lib; let
       ];
     };
 in {
+  i18n.inputMethod = {
+    enabled = "fcitx5";
+    fcitx5.addons = with pkgs; [
+      fcitx5-mozc
+    ];
+  };
+
   xsession.windowManager.i3 = {
     enable = true;
     config = {
@@ -57,7 +64,8 @@ in {
         "Return" = "mode default";
       };
       fonts = {
-        names = ["Hack Nerd Font 9"];
+        names = ["Hack Nerd Font"];
+        size = 9.0;
       };
       colors = {
         focused = {
@@ -94,42 +102,31 @@ in {
           trayOutput = "primary";
           statusCommand = let
             config = pkgs.writeText "i3status-rust-config" ''
+              [theme]
               theme = "gruvbox-dark"
-              icons = "awesome"
+
+              [icons]
+              icons = "awesome6"
 
               [[block]]
               block = "disk_space"
-              path = "/"
-              alias = "/"
-              info_type = "available"
-              unit = "GB"
-              interval = 20
-              warning = 20.0
-              alert = 10.0
+              alert_unit = "GB"
 
               [[block]]
               block = "memory"
-              display_type = "memory"
-              format_mem = "{mem_used_percents}"
-              format_swap = "{swap_used_percents}"
+              format = " $icon $mem_total_used_percents.eng(w:2) "
 
               [[block]]
               block = "cpu"
-              format = "{utilization}"
-              interval = 1
 
               [[block]]
               block = "load"
-              interval = 1
-              format = "{1m}"
 
               ${optionalString nixosConfig.variables.hasBattery ''
                 [[block]]
                 block = "battery"
                 driver = "upower"
                 device = "DisplayDevice"
-                interval = 10
-                format = "{percentage}"
               ''}
 
               ${optionalString nixosConfig.variables.hasBacklightControl ''
@@ -142,12 +139,12 @@ in {
 
               [[block]]
               block = "time"
-              interval = 5
-              format = "%a %-m/%-d %-H:%M"
+              format = " $icon $timestamp.datetime(f:'%a %-m/%-d %-H:%M') "
             '';
           in "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
           fonts = {
-            names = ["Hack Nerd Font 10"];
+            names = ["Hack Nerd Font" "Font Awesome 6 Free"];
+            size = 10.0;
           };
           colors = {
             separator = "#928374";

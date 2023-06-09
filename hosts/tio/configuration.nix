@@ -17,7 +17,6 @@ in {
 
   boot = {
     supportedFilesystems = ["zfs"];
-    kernelPackages = pkgs.linuxPackages_6_1;
   };
 
   networking = {

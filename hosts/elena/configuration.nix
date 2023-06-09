@@ -47,8 +47,7 @@ in {
       extraPools = ["tank"];
       requestEncryptionCredentials = false;
     };
-    tmpOnTmpfs = true;
-    kernelPackages = pkgs.linuxPackages_6_1;
+    tmp.useTmpfs = true;
     kernelParams = [
       "i915.enable_fbc=1"
     ];

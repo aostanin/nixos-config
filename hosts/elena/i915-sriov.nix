@@ -9,7 +9,7 @@
       "i915.enable_guc=7"
     ];
     kernelPackages = let
-      configuredKernel = pkgs.linuxPackages_6_1.kernel.override {
+      configuredKernel = pkgs.linuxPackages.kernel.override {
         structuredExtraConfig = with lib.kernel; {
           # Needed to build i915-sriov. Is there a better way to do this?
           DRM_I915_PXP = yes;
