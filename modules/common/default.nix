@@ -10,7 +10,7 @@ in {
     ./packages.nix
   ];
 
-  time.timeZone = "Asia/Tokyo";
+  time.timeZone = lib.mkDefault "Asia/Tokyo";
 
   console = {
     font = "Lat2-Terminus16";

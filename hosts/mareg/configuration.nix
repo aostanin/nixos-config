@@ -24,6 +24,9 @@ in {
     hasDesktop = true;
   };
 
+  # TODO: Temporary for travel.
+  time.timeZone = "America/Los_Angeles";
+
   boot = {
     loader = {
       systemd-boot.enable = true;
