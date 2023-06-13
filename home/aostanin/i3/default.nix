@@ -137,6 +137,14 @@ in {
               [[block]]
               block = "sound"
 
+
+              ${optionalString (nixosConfig.time.timeZone != "Asia/Tokyo") ''
+                [[block]]
+                block = "time"
+                timezone = "Asia/Tokyo"
+                format = " $icon JP $timestamp.datetime(f:'%-H:%M')"
+              ''}
+
               [[block]]
               block = "time"
               format = " $icon $timestamp.datetime(f:'%a %-m/%-d %-H:%M') "
