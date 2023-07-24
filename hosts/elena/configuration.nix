@@ -51,6 +51,7 @@ in {
     kernelParams = [
       "i915.enable_fbc=1"
     ];
+    binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
   systemd.network.links."11-default" = {
