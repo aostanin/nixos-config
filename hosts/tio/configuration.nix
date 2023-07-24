@@ -37,6 +37,8 @@ in {
 
   environment.systemPackages = with pkgs; [
     libraspberrypi
+    ncmpcpp
+    cifs-utils
   ];
 
   virtualisation.libvirtd = {
@@ -53,5 +55,17 @@ in {
       --dns ${secrets.network.home.nameserver} \
       --dns-search lan
     '';
+  };
+
+  services.mpd = {
+    enable = true;
+    network.listenAddress = "any";
+    musicDirectory = "/mnt/music";
+  };
+
+  fileSystems."/mnt/music" = {
+    device = "//${secrets.network.home.hosts.elena.address}/media/music";
+    fsType = "cifs";
+    options = ["ro" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=60" "x-systemd.device-timeout=5s" "x-systemd.mount-timeout=5s"];
   };
 }
