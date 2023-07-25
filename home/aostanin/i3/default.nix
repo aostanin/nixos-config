@@ -192,7 +192,8 @@ in {
             notification = false;
           }
           {
-            command = "${pkgs.barrier}/bin/barrier";
+            # TODO: Move to stable release
+            command = "${pkgs.unstable.input-leap}/bin/input-leap";
             notification = false;
           }
         ]

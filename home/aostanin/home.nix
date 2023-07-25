@@ -87,7 +87,6 @@ with lib; {
       ++ optionals nixosConfig.variables.hasDesktop [
         # GUI
         audacity
-        barrier
         bitwarden
         etcher
         filezilla
