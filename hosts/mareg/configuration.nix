@@ -24,12 +24,12 @@ in {
     hasDesktop = true;
   };
 
-  # TODO: Temporary for travel.
-  time.timeZone = "America/Los_Angeles";
-
   boot = {
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;
+      };
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = ["zfs"];

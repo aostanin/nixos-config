@@ -19,6 +19,7 @@ in {
     ../../modules/msmtp
     ../../modules/zerotier
     ./backup.nix
+    ./backup-external.nix
     #./i915-sriov.nix
     ./nfs.nix
     ./power-management.nix

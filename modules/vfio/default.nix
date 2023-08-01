@@ -243,8 +243,6 @@ with lib; let
 
   # https://github.com/PassthroughPOST/VFIO-Tools/blob/master/libvirt_hooks/qemu
   qemuHook = pkgs.writeShellScript "qemu" ''
-    #!${pkgs.stdenv.shell}
-    #
     # Author: Sebastiaan Meijer (sebastiaan@passthroughpo.st)
     #
     # Copy this file to /etc/libvirt/hooks, make sure it's called "qemu".
