@@ -15,10 +15,6 @@ in {
     ../../modules
   ];
 
-  boot = {
-    supportedFilesystems = ["zfs"];
-  };
-
   networking = {
     hostName = "tio";
     hostId = "9d6a993f";
@@ -41,11 +37,7 @@ in {
     cifs-utils
   ];
 
-  virtualisation.libvirtd = {
-    enable = true;
-    # viriscsitest fails
-    package = pkgs.libvirt.overrideAttrs (old: {doCheck = false;});
-  };
+  virtualisation.libvirtd.enable = true;
 
   virtualisation.docker = {
     enable = true;

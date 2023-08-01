@@ -44,7 +44,10 @@
       elena = {system = "x86_64-linux";};
       mareg = {system = "x86_64-linux";};
       roan = {system = "x86_64-linux";};
-      tio = {system = "aarch64-linux";};
+      tio = {
+        system = "aarch64-linux";
+        options = {remoteBuild = true;};
+      };
       valmar = {system = "x86_64-linux";};
       vps-oci1 = {system = "x86_64-linux";};
       vps-oci2 = {system = "x86_64-linux";};
@@ -105,20 +108,23 @@
     mkNode = {
       hostname,
       system,
-    }: {
-      hostname = secrets.network.zerotier.hosts."${hostname}".address6;
-      sshUser = "root";
-      fastConnection = true;
-      autoRollback = false;
-      magicRollback = false;
+      options,
+    }:
+      {
+        hostname = secrets.network.zerotier.hosts."${hostname}".address6;
+        sshUser = "root";
+        fastConnection = false;
+        autoRollback = false;
+        magicRollback = false;
 
-      profiles = {
-        system = {
-          user = "root";
-          path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
+        profiles = {
+          system = {
+            user = "root";
+            path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
+          };
         };
-      };
-    };
+      }
+      // options;
   in {
     nixosConfigurations = builtins.mapAttrs (hostname: host:
       mkNixosSystem {
@@ -131,6 +137,7 @@
       mkNode {
         inherit hostname;
         system = host.system;
+        options = ({options = {};} // host).options;
       })
     hosts;
 
