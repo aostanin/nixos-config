@@ -131,6 +131,11 @@ in {
       enable = true;
       cpuType = "intel";
     };
+
+    virtwold = {
+      enable = true;
+      interfaces = ["br0"];
+    };
   };
 
   services = {
