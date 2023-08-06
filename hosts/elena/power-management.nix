@@ -19,10 +19,20 @@ in {
   ];
 
   powerManagement = {
-    powertop.enable = true;
-
-    scsiLinkPolicy = "med_power_with_dipm";
+    # One WD drive has read/write errors with anything other than max_performance
+    scsiLinkPolicy = "max_performance";
   };
+
+  boot.kernel.sysctl = {
+    # Match PowerTOP
+    "vm.dirty_writeback_centisecs" = 1500;
+  };
+
+  # Match PowerTOP
+  services.udev.extraRules = ''
+    SUBSYSTEM=="pci", ATTR{power/control}="auto"
+    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="auto"
+  '';
 
   # WD drives aren't going to sleep with just the standby timeout set
   systemd.services."hd-idle" = {
