@@ -17,9 +17,6 @@ in {
           "extensions.pocket.enabled" = false;
           "general.autoScroll" = false;
 
-          # Fixed location ref: https://security.stackexchange.com/a/147176
-          "geo.provider.network.url" = "data:application/json,{\"location\": {\"lat\": ${toString secrets.location.coarse.latitude}, \"lng\": ${toString secrets.location.coarse.longitude}}, \"accuracy\": 27000.0}";
-
           # Needed for dark mode for simple-tab-groups
           "svg.context-properties.content.enabled" = true;
 
