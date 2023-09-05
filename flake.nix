@@ -46,7 +46,7 @@
       roan = {system = "x86_64-linux";};
       tio = {
         system = "aarch64-linux";
-        options = {remoteBuild = true;};
+        options = {remoteBuild = false;};
       };
       valmar = {system = "x86_64-linux";};
       vps-oci1 = {system = "x86_64-linux";};

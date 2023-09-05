@@ -6,4 +6,8 @@
     device = "/dev/disk/by-label/NIXOS_SD";
     fsType = "ext4";
   };
+  fileSystems."/mnt/ssd" = {
+    device = "/dev/disk/by-label/ssd";
+    fsType = "ext4";
+  };
 }

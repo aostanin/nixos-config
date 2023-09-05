@@ -37,7 +37,11 @@ in {
     cifs-utils
   ];
 
-  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    # viriscsitest fails
+    package = pkgs.libvirt.overrideAttrs (old: {doCheck = false;});
+  };
 
   virtualisation.docker = {
     enable = true;

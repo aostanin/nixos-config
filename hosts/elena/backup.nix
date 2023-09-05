@@ -10,8 +10,8 @@ in {
     enable = true;
     backups = {
       tio = {
-        source = "root@[${secrets.network.zerotier.hosts.vps-oci1.address6}]:/storage/appdata";
-        destination = "/storage/backup/hosts/dir/vps-oci1";
+        source = "root@[${secrets.network.zerotier.hosts.tio.address6}]:/storage/appdata";
+        destination = "/storage/backup/hosts/dir/tio";
       };
       vps-oci1 = {
         source = "root@[${secrets.network.zerotier.hosts.vps-oci1.address6}]:/storage/appdata";
