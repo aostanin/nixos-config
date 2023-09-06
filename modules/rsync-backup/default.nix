@@ -63,6 +63,7 @@ in {
           serviceConfig.Type = "oneshot";
           script = ''
             ${pkgs.rsync}/bin/rsync \
+              -e "ssh -o StrictHostKeyChecking=no" \
               --verbose \
               --stats \
               --archive \
