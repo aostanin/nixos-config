@@ -18,6 +18,12 @@ in {
   networking = {
     hostName = "tio";
     hostId = "9d6a993f";
+
+    vlans.vlan10 = {
+      id = 10;
+      interface = "eth0";
+    };
+
     interfaces.eth0 = {
       ipv4.addresses = [
         {
@@ -29,6 +35,16 @@ in {
 
     defaultGateway = secrets.network.home.defaultGateway;
     nameservers = secrets.network.home.nameserversAdguard;
+
+    firewall = {
+      enable = true;
+      trustedInterfaces = [
+        "eth0"
+      ];
+      allowedTCPPorts = [
+        22 # SSH
+      ];
+    };
   };
 
   environment.systemPackages = with pkgs; [

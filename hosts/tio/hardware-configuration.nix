@@ -14,4 +14,8 @@
     device = "/mnt/ssd/appdata/docker";
     options = ["bind"];
   };
+  fileSystems."/var/lib/docker" = {
+    device = "/mnt/ssd/var/lib/docker";
+    options = ["bind"];
+  };
 }
