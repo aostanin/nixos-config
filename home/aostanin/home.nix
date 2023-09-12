@@ -96,7 +96,7 @@ with lib; {
         jellyfin-media-player
         krita
         libreoffice
-        logseq
+        unstable.logseq # TODO: The stable version shows a white screen on valmar
         moonlight-qt
         mullvad-vpn
         peek
