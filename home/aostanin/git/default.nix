@@ -24,6 +24,9 @@ in {
       push = {
         default = "current";
       };
+      url = {
+        "ssh://git@github.com/".insteadOf = "https://github.com/";
+      };
     };
     aliases = {
       a = "add";
