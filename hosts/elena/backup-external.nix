@@ -90,6 +90,11 @@ in {
           ${zfsUser}/bin/zpool scrub -w external
         fi
 
+        ${lib.optionalString config.localModules.scrutinyCollector.enable ''
+          # Collect external drive health stats for scrutiny
+          systemctl start scrutiny-collector.service
+        ''}
+
         ${zfsUser}/bin/zpool status external
         ${zfsUser}/bin/zpool export external
 
