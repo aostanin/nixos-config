@@ -21,7 +21,7 @@
   ];
   peripherals = {
     mouse = "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd";
-    keyboard = "/dev/input/by-id/usb-SINOWEALTH_Wired_Gaming_Mouse-event-mouse";
+    keyboard = "/dev/input/by-id/usb-Kingsis_Corporation_VAXEE_Mouse-event-mouse";
   };
   vfioPciIds = usbControllerIds;
 in {
