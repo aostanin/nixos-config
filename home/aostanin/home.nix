@@ -161,7 +161,10 @@ with lib; {
       zoxide.enable = true;
     }
     // optionalAttrs nixosConfig.variables.hasDesktop {
-      mpv.enable = true;
+      mpv = {
+        enable = true;
+        package = pkgs.mpv-unwrapped.override {ffmpeg_5 = pkgs.ffmpeg_5.override {withV4l2 = true;};};
+      };
     };
 
   services =
