@@ -23,7 +23,7 @@ in {
 
   fileSystems."/srv/nfs/personal" = {
     device = "/storage/personal";
-    options = ["bind" "x-systemd.requires=zfs-mount.service"];
+    options = ["rbind" "x-systemd.requires=zfs-mount.service"];
   };
 
   fileSystems."/srv/nfs/appdata/temp/tdarr" = {
