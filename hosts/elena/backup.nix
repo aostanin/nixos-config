@@ -35,6 +35,7 @@ in {
             "rpool/appdata<" = true;
             "rpool/appdata/temp<" = false;
             "rpool/home<" = true;
+            "rpool/personal<" = true;
             "rpool/root<" = true;
             "rpool/virtualization<" = true;
             "rpool/virtualization/docker<" = false;
@@ -104,6 +105,7 @@ in {
             "rpool/appdata<" = true;
             "rpool/appdata/temp<" = false;
             "rpool/home<" = true;
+            "rpool/personal<" = true;
             "rpool/root<" = true;
             "rpool/root/nix<" = false;
             "rpool/virtualization<" = true;
@@ -142,6 +144,7 @@ in {
             "rpool/appdata<" = true;
             "rpool/appdata/temp<" = false;
             "rpool/home<" = true;
+            "rpool/personal<" = true;
             "rpool/root<" = true;
             "rpool/root/nix<" = false;
             "tank/media/audiobooks<" = true;
