@@ -125,6 +125,7 @@ with lib; {
       ]
       ++ optionals (pkgs.stdenv.hostPlatform.system != "aarch64-linux") [
         nvtop
+        steam-run
       ]
       ++ optionals (elem "amdgpu" nixosConfig.services.xserver.videoDrivers) [
         radeontop
