@@ -105,9 +105,6 @@ in {
             setPerformanceGovernor = true;
           };
       };
-      win10-work = {
-        enableHibernation = true;
-      };
     };
   };
 }
