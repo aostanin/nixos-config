@@ -67,18 +67,18 @@
           [
             {
               nixpkgs = {
-                config = import ./home/aostanin/nixpkgs/config.nix;
+                config = import ./home/${secrets.user.username}/nixpkgs/config.nix;
                 overlays =
                   [
                     nur.overlay
                     (final: prev: {
                       unstable = import nixpkgs-unstable {
                         inherit system;
-                        config = import ./home/aostanin/nixpkgs/config.nix;
+                        config = import ./home/${secrets.user.username}/nixpkgs/config.nix;
                       };
                     })
                   ]
-                  ++ (import ./home/aostanin/nixpkgs/overlays.nix);
+                  ++ (import ./home/${secrets.user.username}/nixpkgs/overlays.nix);
               };
               system.stateVersion = "23.05";
 

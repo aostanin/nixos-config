@@ -4,6 +4,7 @@
   pkgs,
   ...
 }: let
+  secrets = import ../../../secrets;
   gpus = {
     nvidiaRTX2070Super = {
       driver = "nvidia";
@@ -58,7 +59,7 @@ in {
       enable = true;
       enableKvmfr = true;
       kvmfrSizes = [64];
-      kvmfrUser = "aostanin";
+      kvmfrUser = secrets.user.username;
     };
     gpus = gpus;
     qemu.devices = [

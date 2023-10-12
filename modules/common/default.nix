@@ -88,7 +88,7 @@ in {
     zsh.enable = true;
   };
 
-  users.users.aostanin = {
+  users.users."${secrets.user.username}" = {
     isNormalUser = true;
     extraGroups = [
       "adbusers"
