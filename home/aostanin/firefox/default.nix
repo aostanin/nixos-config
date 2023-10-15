@@ -16,6 +16,7 @@ in {
           "browser.tabs.warnOnClose" = false;
           "extensions.pocket.enabled" = false;
           "general.autoScroll" = false;
+          "full-screen-api.ignore-widgets" = true;
 
           # Needed for dark mode for simple-tab-groups
           "svg.context-properties.content.enabled" = true;
