@@ -4,15 +4,7 @@
   lib,
   nixosConfig,
   ...
-}:
-with lib; let
-  rofiWithPlugins = with pkgs;
-    rofi.override {
-      plugins = [
-        rofi-calc
-      ];
-    };
-in {
+}: {
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5.addons = with pkgs; [
@@ -20,17 +12,35 @@ in {
     ];
   };
 
-  xsession.windowManager.i3 = {
+  xsession = {
     enable = true;
+    preferStatusNotifierItems = true;
+  };
+
+  wayland.windowManager.sway = {
+    enable = true;
+    wrapperFeatures = {
+      base = true;
+      gtk = true;
+    };
+    extraSessionCommands = ''
+      # Workaround for https://github.com/nix-community/home-manager/issues/2659
+      . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+    '';
     config = {
       modifier = "Mod4";
       terminal = "alacritty";
       focus.followMouse = false;
       keybindings = let
-        modifier = config.xsession.windowManager.i3.config.modifier;
+        modifier = config.wayland.windowManager.sway.config.modifier;
+        rofiWithPlugins = with pkgs;
+          rofi.override {
+            plugins = [
+              rofi-calc
+            ];
+          };
       in
-        mkOptionDefault {
-          "Print" = "exec ${pkgs.flameshot}/bin/flameshot gui";
+        lib.mkOptionDefault {
           "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
           "${modifier}+c" = "exec ${rofiWithPlugins}/bin/rofi -show calc -modi calc -no-show-match -no-sort";
           "${modifier}+period" = "exec ${pkgs.rofimoji}/bin/rofimoji";
@@ -47,7 +57,16 @@ in {
           "${modifier}+underscore" = "split v";
           "${modifier}+a" = "focus parent";
           "${modifier}+x" = "[urgent=latest] focus";
-          # TODO: Temporary workaround for https://github.com/nix-community/home-manager/issues/695
+          "Print" = "exec ${pkgs.flameshot}/bin/flameshot gui";
+          "Control+Mod1+Prior" = "exec $${pkgs.avizo}/bin/volumectl -u up";
+          "XF86AudioRaiseVolume" = "exec ${pkgs.avizo}/bin/volumectl -u up";
+          "Control+Mod1+Next" = "exec ${pkgs.avizo}/bin/volumectl -u down";
+          "XF86AudioLowerVolume" = "exec ${pkgs.avizo}/bin/volumectl -u down";
+          "XF86AudioMute" = "exec ${pkgs.avizo}/bin/volumectl toggle-mute";
+          "XF86AudioMicMute" = "exec ${pkgs.avizo}/bin/volumectl -m toggle-mute";
+          "XF86MonBrightnessUp" = "exec ${pkgs.avizo}/bin/lightctl up";
+          "XF86MonBrightnessDown" = "exec ${pkgs.avizo}/bin/lightctl down";
+          # Workaround for https://github.com/nix-community/home-manager/issues/695
           "${modifier}+0" = null;
           "${modifier}+Shift+0" = null;
         };
@@ -62,6 +81,20 @@ in {
         "Right" = "resize grow width 10 px or 10 ppt";
         "Escape" = "mode default";
         "Return" = "mode default";
+      };
+      seat."*" = {
+        hide_cursor = "when-typing enable";
+      };
+      input = {
+        "type:keyboard" = {
+          xkb_layout = "jp";
+          xkb_options = "ctrl:nocaps,shift:both_capslock";
+        };
+        "type:touchpad" = {
+          click_method = "clickfinger";
+          natural_scroll = "enabled";
+          tap = "disabled";
+        };
       };
       fonts = {
         names = ["Hack Nerd Font"];
@@ -98,111 +131,12 @@ in {
         };
       };
       bars = [
-        {
-          trayOutput = "primary";
-          statusCommand = let
-            config = pkgs.writeText "i3status-rust-config" ''
-              [theme]
-              theme = "gruvbox-dark"
-
-              [icons]
-              icons = "awesome6"
-
-              [[block]]
-              block = "disk_space"
-              alert_unit = "GB"
-
-              [[block]]
-              block = "memory"
-              format = " $icon $mem_total_used_percents.eng(w:2) "
-
-              [[block]]
-              block = "cpu"
-
-              [[block]]
-              block = "load"
-
-              ${optionalString nixosConfig.variables.hasBattery ''
-                [[block]]
-                block = "battery"
-                driver = "upower"
-                device = "DisplayDevice"
-              ''}
-
-              ${optionalString nixosConfig.variables.hasBacklightControl ''
-                [[block]]
-                block = "backlight"
-              ''}
-
-              [[block]]
-              block = "sound"
-
-
-              ${optionalString (nixosConfig.time.timeZone != "Asia/Tokyo") ''
-                [[block]]
-                block = "time"
-                timezone = "Asia/Tokyo"
-                format = " $icon JP $timestamp.datetime(f:'%-H:%M')"
-              ''}
-
-              [[block]]
-              block = "time"
-              format = " $icon $timestamp.datetime(f:'%a %-m/%-d %-H:%M') "
-            '';
-          in "${pkgs.i3status-rust}/bin/i3status-rs ${config}";
-          fonts = {
-            names = ["Hack Nerd Font" "Font Awesome 6 Free"];
-            size = 10.0;
-          };
-          colors = {
-            separator = "#928374";
-            background = "#282828";
-            statusline = "#ebdbb2";
-            focusedWorkspace = {
-              border = "#689d6a";
-              background = "#689d6a";
-              text = "#282828";
-            };
-            activeWorkspace = {
-              border = "#282828";
-              background = "#282828";
-              text = "#928374";
-            };
-            inactiveWorkspace = {
-              border = "#32302f";
-              background = "#32302f";
-              text = "#928374";
-            };
-            urgentWorkspace = {
-              border = "#cc241d";
-              background = "#cc241d";
-              text = "#ebdbb2";
-            };
-          };
-        }
+        {command = "waybar";}
       ];
-      startup =
-        [
-          {
-            command = "${pkgs.autorandr}/bin/autorandr --change";
-            notification = false;
-          }
-          {
-            command = "${pkgs.pasystray}/bin/pasystray --notify=none";
-            notification = false;
-          }
-          {
-            # TODO: Move to stable release
-            command = "${pkgs.unstable.input-leap}/bin/input-leap";
-            notification = false;
-          }
-        ]
-        ++ optionals nixosConfig.networking.networkmanager.enable [
-          {
-            command = "${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable";
-            notification = false;
-          }
-        ];
+      startup = [
+        # TODO: Switch to kanshi
+        # {command = "${pkgs.autorandr}/bin/autorandr --change";}
+      ];
       assigns = {
         "2" = [
           {class = "^discord$";}
@@ -250,12 +184,14 @@ in {
         ];
       };
     };
+    extraConfig = ''
+      output * bg ${config.home.homeDirectory}/Sync/wallpaper/t440p.png fill
+    '';
   };
 
   home.packages = with pkgs; [
     arandr
     i3-swallow
-    nitrogen
     pavucontrol
   ];
 
@@ -270,9 +206,46 @@ in {
         parse-known-hosts = false;
       };
     };
+
+    waybar = {
+      enable = true;
+      settings = {
+        mainBar = {
+          layer = "top";
+          position = "left";
+          output = [
+            "eDP-1"
+          ];
+          modules-left = ["sway/workspaces" "sway/mode"];
+          modules-center = [];
+          # TODO: disk, memory, cpu, load, battery, backlight, sound, timezones
+          modules-right = ["tray" "clock"];
+          "clock" = {
+            interval = 5;
+            format = "{:%H\n%M}";
+          };
+          "sway/workspaces" = {
+            all-outputs = true;
+          };
+        };
+      };
+    };
   };
 
   services = {
+    avizo = {
+      enable = true;
+      settings.default = {
+        time = 1.0;
+        y-offset = 0.5;
+        fade-in = 0.1;
+        fade-out = 0.2;
+        padding = 10;
+      };
+    };
+
+    clipman.enable = true;
+
     flameshot.enable = true;
 
     kdeconnect = {
@@ -280,38 +253,28 @@ in {
       indicator = true;
     };
 
-    picom = {
+    network-manager-applet.enable = nixosConfig.networking.networkmanager.enable;
+
+    pasystray = {
       enable = true;
-      shadow = true;
-      settings = {
-        backend = "glx";
-        blur-background = true;
-        blur-background-exclude = [
-          "class_g ?= 'Peek'"
-        ];
-        blur = {
-          method = "dual_kawase";
-          strength = 2;
-        };
-      };
+      extraOptions = ["--notify=none"];
+    };
+
+    swayidle = {
+      enable = true;
+      timeouts = [
+        {
+          timeout = 300;
+          command = "${pkgs.sway}/bin/swaymsg 'output * dpms off'";
+          resumeCommand = "${pkgs.sway}/bin/swaymsg 'output * dpms on'";
+        }
+      ];
     };
 
     udiskie = {
       enable = true;
       automount = false;
       tray = "always";
-    };
-
-    xidlehook = {
-      enable = true;
-      not-when-audio = true;
-      timers = [
-        {
-          delay = 300;
-          command = "${pkgs.xorg.xset}/bin/xset dpms force off";
-          canceller = "${pkgs.xorg.xset}/bin/xset dpms force on";
-        }
-      ];
     };
   };
 }

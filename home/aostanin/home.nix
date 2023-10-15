@@ -20,23 +20,20 @@ with lib; {
     ++ optionals nixosConfig.variables.hasDesktop [
       ./3dprinting
       ./alacritty
+      ./android
       ./chromium
       ./electronics
       ./firefox
       ./gnupg
       ./gtk
+      ./kanshi
       ./obs-studio
       ./qt
+      ./sway
       ./syncthing
       ./vscode
-    ]
-    ++ optionals nixosConfig.services.xserver.windowManager.i3.enable [
-      ./autorandr
-      ./dunst
-      ./i3
-    ]
-    ++ optionals nixosConfig.programs.adb.enable [
-      ./android
+
+      #  ./dunst
     ];
 
   xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs/config.nix;
@@ -103,6 +100,7 @@ with lib; {
         qdirstat
         sonixd
         steam
+        thunar
         thunderbird
         virtmanager
         wineWowPackages.stable
@@ -175,17 +173,7 @@ with lib; {
 
       mpris-proxy.enable = true;
 
-      sxhkd = {
-        enable = true;
-        keybindings = with pkgs; {
-          "ctrl + alt + {Prior,Next}" = "${pamixer}/bin/pamixer -{i,d} 5";
-          "{XF86AudioRaiseVolume,XF86AudioLowerVolume}" = "${pamixer}/bin/pamixer -{i,d} 5";
-          "XF86AudioMute" = "${pamixer}/bin/pamixer -t";
-          "{XF86MonBrightnessUp,XF86MonBrightnessDown}" = "${xorg.xbacklight}/bin/xbacklight -{inc,dec} 10";
-        };
-      };
-
-      xcape.enable = true;
+      #xcape.enable = true;
     };
 
   xdg.configFile = {
@@ -202,6 +190,4 @@ with lib; {
       uri_default='qemu:///system'
     '';
   };
-
-  xsession.enable = true;
 }

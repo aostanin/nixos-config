@@ -4,8 +4,9 @@
   lib,
   ...
 }: {
-  programs.autorandr = {
+  services.kanshi = {
     enable = true;
+    /*
     hooks.postswitch = {
       "change-background" = "${pkgs.nitrogen}/bin/nitrogen --restore";
     };
@@ -68,5 +69,6 @@
         };
       };
     };
+    */
   };
 }

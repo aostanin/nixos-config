@@ -63,36 +63,51 @@
     udisks2.enable = true;
 
     upower.enable = true;
+  };
 
-    xbanish.enable = true;
-
-    xserver = {
-      enable = true;
-      layout = "jp";
-      xkbOptions = "ctrl:nocaps, shift:both_capslock";
-      displayManager.lightdm.enable = true;
-      windowManager.i3.enable = true;
+  services.greetd = {
+    enable = true;
+    vt = 7;
+    settings = {
+      default_session = {
+        command = ''
+          ${pkgs.greetd.tuigreet}/bin/tuigreet \
+            --time \
+            --asterisks \
+            --remember \
+            --user-menu \
+            --cmd sway
+        '';
+      };
     };
+  };
+
+  # Fix for tuigreet remember not working: https://github.com/NixOS/nixpkgs/issues/248323
+  systemd.tmpfiles.rules = [
+    "d '/var/cache/tuigreet' - greeter greeter - -"
+  ];
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-kde # Needed for Flameshot
+    ];
   };
 
   hardware = {
     bluetooth.enable = true;
-    opengl.driSupport32Bit = true; # Needed for Steam
+    opengl = {
+      enable = true;
+      driSupport32Bit = true; # Needed for Steam
+    };
   };
 
   programs = {
     adb.enable = true;
 
     dconf.enable = true;
-
-    thunar = {
-      enable = true;
-      plugins = with pkgs.xfce; [
-        thunar-archive-plugin
-        thunar-volman
-        tumbler
-      ];
-    };
   };
 
   security.pam.services.lightdm.enableGnomeKeyring = true;
