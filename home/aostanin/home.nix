@@ -100,7 +100,13 @@ with lib; {
         qdirstat
         sonixd
         steam
-        thunar
+        (xfce.thunar.override {
+          thunarPlugins = with xfce; [
+            thunar-archive-plugin
+            thunar-volman
+            tumbler
+          ];
+        })
         thunderbird
         virtmanager
         wineWowPackages.stable
