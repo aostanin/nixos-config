@@ -69,14 +69,14 @@ in {
       "/dev/input/by-id/virtual-mouse-2"
     ];
     vms = let
-      isolate8ThreadFirst = {
+      isolate6ThreadFirst = {
         enable = true;
         dropCaches = false;
         compactMemory = false;
         isolateCpus = true;
         allCpus = ["0-23"];
-        hostCpus = ["8-15" "16-23"];
-        guestCpus = ["16-17" "0-7"];
+        hostCpus = ["0-1" "8-15" "16-23"];
+        guestCpus = ["0-1" "2-7"];
       };
       isolate8ThreadSecond = {
         enable = true;
@@ -85,23 +85,28 @@ in {
         isolateCpus = true;
         allCpus = ["0-23"];
         hostCpus = ["0-7" "16-23"];
-        guestCpus = ["16-17" "8-15"];
+        guestCpus = ["0-1" "8-15"];
       };
-      isolate16Thread = {
+      isolate14Thread = {
         enable = true;
         dropCaches = false;
         compactMemory = false;
         isolateCpus = true;
         allCpus = ["0-23"];
-        hostCpus = ["16-23"];
-        guestCpus = ["16-17" "0-15"];
+        hostCpus = ["0-1" "16-23"];
+        guestCpus = ["0-1" "2-15"];
       };
     in {
+      playground = {
+        gpu = "nvidiaRTX2070Super";
+        enableHibernation = true;
+        isolate = isolate14Thread;
+      };
       win10-play = {
         gpu = "nvidiaRTX2070Super";
         enableHibernation = true;
         isolate =
-          isolate16Thread
+          isolate14Thread
           // {
             setPerformanceGovernor = true;
           };
