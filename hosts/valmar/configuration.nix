@@ -114,6 +114,14 @@ in {
   localModules = {
     pikvm.enable = true;
 
+    rkvm.server = {
+      enable = true;
+      listen = "${secrets.network.zerotier.hosts.valmar.address}:5258";
+      certificate = secrets.rkvm.certificate;
+      key = secrets.rkvm.key;
+      password = secrets.rkvm.password;
+    };
+
     scrutinyCollector.enable = true;
 
     virtwold = {
