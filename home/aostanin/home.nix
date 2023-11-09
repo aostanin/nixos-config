@@ -178,8 +178,6 @@ with lib; {
       blueman-applet.enable = true;
 
       mpris-proxy.enable = true;
-
-      #xcape.enable = true;
     };
 
   xdg.configFile = {
