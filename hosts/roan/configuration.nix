@@ -10,6 +10,7 @@ in {
     "${hardwareModulesPath}/lenovo/thinkpad/x250"
     "${hardwareModulesPath}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
+    ../../modules
     ../../modules/variables
     ../../modules/common
     ../../modules/desktop
@@ -82,6 +83,13 @@ in {
   };
 
   powerManagement.powertop.enable = true;
+
+  localModules.rkvm.client = {
+    enable = true;
+    server = "${secrets.network.zerotier.hosts.valmar.address}:5258";
+    certificate = secrets.rkvm.certificate;
+    password = secrets.rkvm.password;
+  };
 
   services = {
     tlp = {
