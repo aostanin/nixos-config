@@ -11,19 +11,12 @@ in {
     "${hardwareModulesPath}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
     ../../modules
-    ../../modules/variables
     ../../modules/common
     ../../modules/desktop
     ../../modules/msmtp
     ../../modules/zerotier
     ./backup.nix
   ];
-
-  variables = {
-    hasBattery = true;
-    hasBacklightControl = true;
-    hasDesktop = true;
-  };
 
   boot = {
     loader = {
@@ -84,11 +77,25 @@ in {
 
   powerManagement.powertop.enable = true;
 
-  localModules.rkvm.client = {
-    enable = true;
-    server = "${secrets.network.zerotier.hosts.valmar.address}:5258";
-    certificate = secrets.rkvm.certificate;
-    password = secrets.rkvm.password;
+  localModules = {
+    desktop = {
+      enable = true;
+      hasBattery = true;
+      hasBacklightControl = true;
+      primaryOutput = "eDP-1";
+      output = {
+        "*" = {
+          bg = "~/Sync/wallpaper/x250.png fill";
+        };
+      };
+    };
+
+    rkvm.client = {
+      enable = true;
+      server = "${secrets.network.zerotier.hosts.valmar.address}:5258";
+      certificate = secrets.rkvm.certificate;
+      password = secrets.rkvm.password;
+    };
   };
 
   services = {
@@ -109,20 +116,7 @@ in {
       gpuOffset = -30;
     };
 
-    xserver = {
-      videoDrivers = ["modesetting"];
-      deviceSection = ''
-        Option "TearFree" "true"
-      '';
-      libinput = {
-        enable = true;
-        touchpad = {
-          clickMethod = "clickfinger";
-          naturalScrolling = true;
-          tapping = false;
-        };
-      };
-    };
+    xserver.videoDrivers = ["modesetting"];
 
     zfs = {
       autoScrub = {

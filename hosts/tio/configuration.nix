@@ -9,10 +9,9 @@ in {
   imports = [
     "${hardwareModulesPath}/raspberry-pi/4"
     ./hardware-configuration.nix
-    ../../modules/variables
+    ../../modules
     ../../modules/common
     ../../modules/zerotier
-    ../../modules
   ];
 
   networking = {

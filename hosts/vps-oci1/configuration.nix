@@ -7,7 +7,7 @@
 in {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/variables
+    ../../modules
     ../../modules/common
     ../../modules/msmtp
     ../../modules/zerotier

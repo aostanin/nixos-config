@@ -2,7 +2,7 @@
   pkgs,
   config,
   lib,
-  nixosConfig,
+  osConfig,
   ...
 }: {
   i18n.inputMethod = {
@@ -162,11 +162,11 @@
         hideEdgeBorders = "smart";
         commands = [
           {
-            criteria = {class = "looking-glass-client";};
-            command = "border none, move container to workspace 9, workspace 9, move workspace to output primary, focus, fullscreen enable";
+            criteria = {app_id = "looking-glass-client";};
+            command = "border none, move container to workspace 9, workspace 9, focus, fullscreen enable";
           }
           {
-            criteria = {class = "mpv";};
+            criteria = {app_id = "mpv";};
             command = "border none";
           }
           {
@@ -183,10 +183,9 @@
           }
         ];
       };
+      output = osConfig.localModules.desktop.output;
+      workspaceOutputAssign = osConfig.localModules.desktop.workspaceOutputAssign;
     };
-    extraConfig = ''
-      output * bg ${config.home.homeDirectory}/Sync/wallpaper/t440p.png fill
-    '';
   };
 
   home.packages = with pkgs; [
@@ -213,13 +212,20 @@
         mainBar = {
           layer = "top";
           position = "left";
-          output = [
-            "eDP-1"
-          ];
+          width = 32;
+          output = [osConfig.localModules.desktop.primaryOutput];
           modules-left = ["sway/workspaces" "sway/mode"];
           modules-center = [];
-          # TODO: disk, memory, cpu, load, battery, backlight, sound, timezones
-          modules-right = ["tray" "clock"];
+          modules-right = [
+            "tray"
+            #"disk"
+            #"memory"
+            #"cpu"
+            "backlight"
+            "wireplumber"
+            "battery"
+            "clock"
+          ];
           "clock" = {
             interval = 5;
             format = "{:%H\n%M}";
@@ -253,7 +259,7 @@
       indicator = true;
     };
 
-    network-manager-applet.enable = nixosConfig.networking.networkmanager.enable;
+    network-manager-applet.enable = osConfig.networking.networkmanager.enable;
 
     pasystray = {
       enable = true;

@@ -1,127 +1,224 @@
 {
-  config,
+  lib,
   pkgs,
+  config,
   ...
-}: {
-  imports = [
-    ./audio.nix
-  ];
+}:
+with lib; let
+  cfg = config.localModules.desktop;
+in {
+  options.localModules.desktop = {
+    enable = mkEnableOption "desktop";
 
-  fonts.fonts = with pkgs; [
-    dejavu_fonts
-    font-awesome
-    ipafont
-    joypixels
-    kochi-substitute
-    nerdfonts
-    noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
-  ];
-
-  environment.systemPackages = with pkgs; [
-    kde-gtk-config
-    spice-gtk # Fix for USB redirection in virt-manager
-  ];
-
-  services = {
-    avahi = {
-      enable = true;
-      nssmdns = true;
-    };
-
-    blueman.enable = true;
-
-    gnome.gnome-keyring.enable = true;
-
-    gvfs.enable = true;
-
-    interception-tools = {
-      enable = true;
-      plugins = [pkgs.interception-tools-plugins.caps2esc];
-      udevmonConfig = ''
-        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
-          DEVICE:
-            EVENTS:
-              EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
+    hasBacklightControl = mkOption {
+      default = false;
+      type = types.bool;
+      description = ''
+        Machine has a controllable backlight.
       '';
     };
 
-    mullvad-vpn.enable = true;
-
-    printing = {
-      enable = true;
-      drivers = [pkgs.brlaser];
+    hasBattery = mkOption {
+      default = false;
+      type = types.bool;
+      description = ''
+        Machine has a battery.
+      '';
     };
 
-    udev = {
-      extraRules = ''
-        # MiniPro
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="04d8", ATTRS{idProduct}=="e11c", GROUP="users", MODE="0660"
-
-        # Saleae Logic
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="users", MODE="0660"
-
-        # LEOMO TYPE-S
-        ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", GROUP="adbusers", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
+    primaryOutput = mkOption {
+      type = types.str;
+      example = "eDP-1";
+      description = ''
+        The display output to use as primary.
       '';
-      packages = with pkgs; [
-        stlink
-        teensy-udev-rules
+    };
+
+    output = mkOption {
+      type = types.attrsOf (types.attrsOf types.str);
+      default = {};
+      example = {"HDMI-A-2" = {bg = "~/path/to/background.png fill";};};
+      description = ''
+        An attribute set that defines output modules. See
+        {manpage}`sway-output(5)`
+        for options.
+      '';
+    };
+
+    workspaceOutputAssign = mkOption {
+      type = with types; let
+        workspaceOutputOpts = submodule {
+          options = {
+            workspace = mkOption {
+              type = str;
+              default = "";
+              example = "Web";
+              description = ''
+                Name of the workspace to assign.
+              '';
+            };
+
+            output = mkOption {
+              type = str;
+              default = "";
+              example = "eDP";
+              description = ''
+                Name of the output.
+              '';
+            };
+          };
+        };
+      in
+        listOf workspaceOutputOpts;
+      default = [];
+      description = "Assign workspaces to outputs.";
+    };
+
+    preStartCommands = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Commands to run before starting the desktop.
+      '';
+    };
+  };
+
+  config = mkIf cfg.enable {
+    fonts.fonts = with pkgs; [
+      dejavu_fonts
+      font-awesome
+      ipafont
+      joypixels
+      kochi-substitute
+      nerdfonts
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+    ];
+
+    environment.systemPackages = with pkgs; [
+      kde-gtk-config
+      spice-gtk # Fix for USB redirection in virt-manager
+    ];
+
+    services = {
+      avahi = {
+        enable = true;
+        nssmdns = true;
+      };
+
+      blueman.enable = true;
+
+      gnome.gnome-keyring.enable = true;
+
+      gvfs.enable = true;
+
+      interception-tools = {
+        enable = true;
+        plugins = [pkgs.interception-tools-plugins.caps2esc];
+        udevmonConfig = ''
+          - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc -m 1 | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+            DEVICE:
+              EVENTS:
+                EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
+        '';
+      };
+
+      mullvad-vpn.enable = true;
+
+      printing = {
+        enable = true;
+        drivers = [pkgs.brlaser];
+      };
+
+      udev = {
+        extraRules = ''
+          # MiniPro
+          SUBSYSTEMS=="usb", ATTRS{idVendor}=="04d8", ATTRS{idProduct}=="e11c", GROUP="users", MODE="0660"
+
+          # Saleae Logic
+          SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="users", MODE="0660"
+
+          # LEOMO TYPE-S
+          ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", GROUP="adbusers", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
+        '';
+        packages = with pkgs; [
+          stlink
+          teensy-udev-rules
+        ];
+      };
+
+      udisks2.enable = true;
+
+      upower.enable = true;
+    };
+
+    services.greetd = {
+      enable = true;
+      vt = 7;
+      settings = {
+        default_session = let
+          startSway = pkgs.writeScriptBin "start-sway" ''
+            ${cfg.preStartCommands}
+            sway --unsupported-gpu
+          '';
+        in {
+          command = ''
+            ${pkgs.greetd.tuigreet}/bin/tuigreet \
+              --time \
+              --asterisks \
+              --remember \
+              --user-menu \
+              --cmd ${startSway}/bin/start-sway
+          '';
+        };
+      };
+    };
+
+    security.rtkit.enable = true;
+
+    services.pipewire = {
+      enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      pulse.enable = true;
+    };
+
+    # Fix for tuigreet remember not working: https://github.com/NixOS/nixpkgs/issues/248323
+    systemd.tmpfiles.rules = [
+      "d '/var/cache/tuigreet' - greeter greeter - -"
+    ];
+
+    xdg.portal = {
+      enable = true;
+      wlr.enable = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+        pkgs.xdg-desktop-portal-kde # Needed for Flameshot
       ];
     };
 
-    udisks2.enable = true;
-
-    upower.enable = true;
-  };
-
-  services.greetd = {
-    enable = true;
-    vt = 7;
-    settings = {
-      default_session = {
-        command = ''
-          ${pkgs.greetd.tuigreet}/bin/tuigreet \
-            --time \
-            --asterisks \
-            --remember \
-            --user-menu \
-            --cmd sway
-        '';
+    hardware = {
+      bluetooth = {
+        enable = true;
+        settings.General.Experimental = true;
+      };
+      opengl = {
+        enable = true;
+        driSupport32Bit = true; # Needed for Steam
       };
     };
-  };
 
-  # Fix for tuigreet remember not working: https://github.com/NixOS/nixpkgs/issues/248323
-  systemd.tmpfiles.rules = [
-    "d '/var/cache/tuigreet' - greeter greeter - -"
-  ];
+    programs = {
+      adb.enable = true;
 
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-kde # Needed for Flameshot
-    ];
-  };
-
-  hardware = {
-    bluetooth.enable = true;
-    opengl = {
-      enable = true;
-      driSupport32Bit = true; # Needed for Steam
+      dconf.enable = true;
     };
+
+    security.pam.services.lightdm.enableGnomeKeyring = true;
+
+    virtualisation.spiceUSBRedirection.enable = true;
   };
-
-  programs = {
-    adb.enable = true;
-
-    dconf.enable = true;
-  };
-
-  security.pam.services.lightdm.enableGnomeKeyring = true;
-
-  virtualisation.spiceUSBRedirection.enable = true;
 }

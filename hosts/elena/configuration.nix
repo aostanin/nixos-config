@@ -14,7 +14,6 @@ in {
     "${hardwareModulesPath}/common/pc/ssd"
     ./hardware-configuration.nix
     ../../modules
-    ../../modules/variables
     ../../modules/common
     ../../modules/msmtp
     ../../modules/zerotier

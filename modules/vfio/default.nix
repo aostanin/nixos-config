@@ -380,6 +380,14 @@ with lib; let
       ''
       else throw "Unsupported gpu driver ${gpu.driver}"
     );
+  gpuAttachAllScript =
+    pkgs.writeScriptBin "vfio-gpus-attach"
+    (concatStringsSep "\n"
+      (mapAttrsToList (gpuName: gpu: "${gpuAttachScript gpu}/bin/vfio-gpu-attach") cfg.gpus));
+  gpuDetachAllScript =
+    pkgs.writeScriptBin "vfio-gpus-detach"
+    (concatStringsSep "\n"
+      (mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus));
 in {
   options.localModules.vfio = {
     enable = mkEnableOption "vfio";
@@ -482,6 +490,8 @@ in {
           ln -sf ${qemuHook} /var/lib/libvirt/hooks/qemu
         '';
       };
+
+      environment.systemPackages = [gpuAttachAllScript gpuDetachAllScript];
 
       # Prevent Xorg from opening /dev/nvidia0
       services.xserver.displayManager = {
