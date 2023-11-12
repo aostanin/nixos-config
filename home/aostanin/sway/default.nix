@@ -58,7 +58,7 @@
           "${modifier}+a" = "focus parent";
           "${modifier}+x" = "[urgent=latest] focus";
           "Print" = "exec ${pkgs.flameshot}/bin/flameshot gui";
-          "Control+Mod1+Prior" = "exec $${pkgs.avizo}/bin/volumectl -u up";
+          "Control+Mod1+Prior" = "exec ${pkgs.avizo}/bin/volumectl -u up";
           "XF86AudioRaiseVolume" = "exec ${pkgs.avizo}/bin/volumectl -u up";
           "Control+Mod1+Next" = "exec ${pkgs.avizo}/bin/volumectl -u down";
           "XF86AudioLowerVolume" = "exec ${pkgs.avizo}/bin/volumectl -u down";
