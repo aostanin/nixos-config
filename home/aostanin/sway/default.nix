@@ -150,7 +150,7 @@
         border = 1;
         titlebar = false;
         criteria = [
-          {class = "mpv";}
+          {app_id = "mpv";}
           {class = ".*scrcpy.*";}
           {class = "Android Emulator - .*";}
           {class = "Picture-in-Picture";}
