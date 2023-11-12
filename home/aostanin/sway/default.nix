@@ -181,6 +181,10 @@
             criteria = {class = "Picture-in-Picture";};
             command = "border none";
           }
+          {
+            criteria = {app_id = "flameshot";};
+            command = "fullscreen enable global";
+          }
         ];
       };
       output = osConfig.localModules.desktop.output;
