@@ -176,18 +176,22 @@ in {
     };
   };
 
-  virtualisation.libvirtd.enable = true;
+  virtualisation = {
+    docker = {
+      enable = true;
+      enableNvidia = true;
+      storageDriver = "zfs";
+      liveRestore = false;
+      # Docker defaults to Google's DNS
+      extraOptions = ''
+        --dns ${secrets.network.home.nameserver} \
+        --dns-search lan
+      '';
+    };
 
-  virtualisation.docker = {
-    enable = true;
-    enableNvidia = true;
-    storageDriver = "zfs";
-    liveRestore = false;
-    # Docker defaults to Google's DNS
-    extraOptions = ''
-      --dns ${secrets.network.home.nameserver} \
-      --dns-search lan
-    '';
+    libvirtd.enable = true;
+
+    waydroid.enable = true;
   };
 
   fileSystems."/mnt/elena" = {

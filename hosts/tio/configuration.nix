@@ -52,20 +52,22 @@ in {
     cifs-utils
   ];
 
-  virtualisation.libvirtd = {
-    enable = true;
-    # viriscsitest fails
-    package = pkgs.libvirt.overrideAttrs (old: {doCheck = false;});
-  };
+  virtualisation = {
+    docker = {
+      enable = true;
+      liveRestore = false;
+      # Docker defaults to Google's DNS
+      extraOptions = ''
+        --dns ${secrets.network.home.nameserver} \
+        --dns-search lan
+      '';
+    };
 
-  virtualisation.docker = {
-    enable = true;
-    liveRestore = false;
-    # Docker defaults to Google's DNS
-    extraOptions = ''
-      --dns ${secrets.network.home.nameserver} \
-      --dns-search lan
-    '';
+    libvirtd = {
+      enable = true;
+      # viriscsitest fails
+      package = pkgs.libvirt.overrideAttrs (old: {doCheck = false;});
+    };
   };
 
   services.mpd = {

@@ -135,8 +135,6 @@ in {
   };
 
   virtualisation = {
-    libvirtd.enable = true;
-
     docker = {
       enable = true;
       storageDriver = "zfs";
@@ -149,5 +147,9 @@ in {
         ];
       };
     };
+
+    libvirtd.enable = true;
+
+    waydroid.enable = true;
   };
 }

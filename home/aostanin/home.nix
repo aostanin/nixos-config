@@ -110,7 +110,7 @@ with lib; {
         thunderbird
         virtmanager
         wineWowPackages.stable
-        xclip
+        wl-clipboard
 
         # Chat
         discord
