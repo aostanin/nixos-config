@@ -7,6 +7,11 @@
 }: let
   # TODO: Need unstable for now https://github.com/NixOS/nixpkgs/pull/251800
   swayncPkg = pkgs.unstable.swaynotificationcenter;
+  # TODO: Copy/paste broken on Wayland https://github.com/flameshot-org/flameshot/issues/2848#issuecomment-1199796142
+  flameshotPkg = pkgs.flameshot.overrideAttrs (old: {
+    nativeBuildInputs = old.nativeBuildInputs ++ [pkgs.libsForQt5.kguiaddons];
+    cmakeFlags = ["-DUSE_WAYLAND_CLIPBOARD=true"];
+  });
 in {
   i18n.inputMethod = {
     enabled = "fcitx5";
@@ -61,7 +66,7 @@ in {
           "${modifier}+underscore" = "split v";
           "${modifier}+a" = "focus parent";
           "${modifier}+x" = "[urgent=latest] focus";
-          "Print" = "exec ${pkgs.flameshot}/bin/flameshot gui";
+          "Print" = "exec ${flameshotPkg}/bin/flameshot gui";
           "Control+Mod1+Prior" = "exec ${pkgs.avizo}/bin/volumectl -u up";
           "XF86AudioRaiseVolume" = "exec ${pkgs.avizo}/bin/volumectl -u up";
           "Control+Mod1+Next" = "exec ${pkgs.avizo}/bin/volumectl -u down";
@@ -260,7 +265,10 @@ in {
 
     clipman.enable = true;
 
-    flameshot.enable = true;
+    flameshot = {
+      enable = true;
+      package = flameshotPkg;
+    };
 
     kdeconnect = {
       enable = true;
