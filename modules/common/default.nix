@@ -2,10 +2,9 @@
   config,
   pkgs,
   lib,
+  secrets,
   ...
-}: let
-  secrets = import ../../secrets;
-in {
+}: {
   imports = [
     ./packages.nix
   ];

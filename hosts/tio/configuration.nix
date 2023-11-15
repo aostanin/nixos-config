@@ -2,10 +2,9 @@
   config,
   pkgs,
   hardwareModulesPath,
+  secrets,
   ...
-}: let
-  secrets = import ../../secrets;
-in {
+}: {
   imports = [
     "${hardwareModulesPath}/raspberry-pi/4"
     ./hardware-configuration.nix

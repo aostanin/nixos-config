@@ -2,9 +2,7 @@
   config,
   pkgs,
   ...
-}: let
-  secrets = import ../../secrets;
-in {
+}: {
   imports = [
     ./hardware-configuration.nix
     ../../modules

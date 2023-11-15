@@ -2,10 +2,9 @@
   pkgs,
   config,
   lib,
+  secrets,
   ...
-}: let
-  secrets = import ../../../secrets;
-in {
+}: {
   services.kanshi = {
     enable = true;
     profiles = {

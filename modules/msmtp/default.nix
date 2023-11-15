@@ -1,10 +1,9 @@
 {
   config,
   pkgs,
+  secrets,
   ...
-}: let
-  secrets = import ../../secrets;
-in {
+}: {
   programs.msmtp = {
     enable = true;
     accounts.default = {

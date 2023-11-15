@@ -3,10 +3,7 @@
   config,
   lib,
   ...
-}:
-with lib; let
-  secrets = import ../../../secrets;
-in {
+}: {
   programs.fish = {
     enable = true;
     interactiveShellInit = ''

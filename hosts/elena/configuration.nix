@@ -3,9 +3,9 @@
   pkgs,
   lib,
   hardwareModulesPath,
+  secrets,
   ...
 }: let
-  secrets = import ../../secrets;
   iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
   ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE1}";
 in {

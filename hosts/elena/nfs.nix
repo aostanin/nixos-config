@@ -2,10 +2,9 @@
   config,
   lib,
   pkgs,
+  secrets,
   ...
-}: let
-  secrets = import ../../secrets;
-in {
+}: {
   fileSystems."/srv/nfs/libvirt/images" = {
     device = "/var/lib/libvirt/images/tank";
     options = ["rbind" "x-systemd.requires=zfs-mount.service"];

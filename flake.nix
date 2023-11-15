@@ -62,6 +62,7 @@
         specialArgs = {
           hardwareModulesPath = nixos-hardware;
           homeModulesPath = home-manager.nixosModules;
+          secrets = secrets;
         };
         modules =
           [
@@ -101,6 +102,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users = import ./home;
+              home-manager.extraSpecialArgs.secrets = secrets;
             }
           ]
           ++ extraModules;

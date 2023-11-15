@@ -6,7 +6,6 @@
 }:
 with lib; let
   cfg = config.localModules.pikvm;
-  secrets = import ../../secrets;
 in {
   options.localModules.pikvm = {
     enable = mkEnableOption "pikvm";
