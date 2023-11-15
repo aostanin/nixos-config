@@ -38,7 +38,10 @@ in {
     config = {
       modifier = "Mod4";
       terminal = "alacritty";
-      focus.followMouse = false;
+      focus = {
+        followMouse = false;
+        mouseWarping = false;
+      };
       keybindings = let
         modifier = config.wayland.windowManager.sway.config.modifier;
         rofiWithPlugins = with pkgs;
@@ -66,6 +69,8 @@ in {
           "${modifier}+underscore" = "split v";
           "${modifier}+a" = "focus parent";
           "${modifier}+x" = "[urgent=latest] focus";
+          "--whole-window ${modifier}+button4" = "workspace prev";
+          "--whole-window ${modifier}+button5" = "workspace next";
           "Print" = "exec ${flameshotPkg}/bin/flameshot gui";
           "Control+Mod1+Prior" = "exec ${pkgs.avizo}/bin/volumectl -u up";
           "XF86AudioRaiseVolume" = "exec ${pkgs.avizo}/bin/volumectl -u up";
@@ -139,13 +144,7 @@ in {
           indicator = "#282828";
         };
       };
-      bars = [
-        {command = "waybar";}
-      ];
-      startup = [
-        # TODO: Switch to kanshi
-        # {command = "${pkgs.autorandr}/bin/autorandr --change";}
-      ];
+      bars = [];
       assigns = {
         "2" = [
           {class = "^discord$";}
@@ -202,9 +201,9 @@ in {
   };
 
   home.packages = with pkgs; [
-    arandr
     i3-swallow
     pavucontrol
+    wdisplays
   ];
 
   programs = {
@@ -221,6 +220,7 @@ in {
 
     waybar = {
       enable = true;
+      systemd.enable = true;
       settings = {
         mainBar = {
           layer = "top";
@@ -237,6 +237,7 @@ in {
             #"backlight"
             #"wireplumber"
             "battery"
+            "idle_inhibitor"
             "clock"
           ];
           "clock" = {
@@ -245,6 +246,14 @@ in {
           };
           "sway/workspaces" = {
             all-outputs = true;
+            enable-bar-scroll = true;
+          };
+          "idle_inhibitor" = {
+            format = "{icon}";
+            format-icons = {
+              "activated" = "";
+              "deactivated" = "";
+            };
           };
         };
       };
