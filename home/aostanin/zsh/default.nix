@@ -3,10 +3,7 @@
   config,
   lib,
   ...
-}:
-with lib; let
-  secrets = import ../../../secrets;
-in {
+}: {
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;

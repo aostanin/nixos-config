@@ -2,12 +2,10 @@
   config,
   pkgs,
   ...
-}: let
-  secrets = import ../../secrets;
-in {
+}: {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/variables
+    ../../modules
     ../../modules/common
     ../../modules/msmtp
     ../../modules/zerotier

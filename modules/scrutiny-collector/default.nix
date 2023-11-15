@@ -2,11 +2,11 @@
   lib,
   pkgs,
   config,
+  secrets,
   ...
 }:
 with lib; let
   cfg = config.localModules.scrutinyCollector;
-  secrets = import ../../secrets;
 in {
   options.localModules.scrutinyCollector = {
     enable = mkEnableOption "scrutiny-collector";

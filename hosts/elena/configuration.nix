@@ -3,9 +3,9 @@
   pkgs,
   lib,
   hardwareModulesPath,
+  secrets,
   ...
 }: let
-  secrets = import ../../secrets;
   iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
   ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE1}";
 in {
@@ -14,7 +14,6 @@ in {
     "${hardwareModulesPath}/common/pc/ssd"
     ./hardware-configuration.nix
     ../../modules
-    ../../modules/variables
     ../../modules/common
     ../../modules/msmtp
     ../../modules/zerotier

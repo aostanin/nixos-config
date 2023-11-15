@@ -2,10 +2,9 @@
   pkgs,
   config,
   lib,
+  secrets,
   ...
-}: let
-  secrets = import ../../../secrets;
-in {
+}: {
   home.packages = with pkgs; [
     git-crypt
   ];

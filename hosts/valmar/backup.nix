@@ -2,10 +2,9 @@
   config,
   lib,
   pkgs,
+  secrets,
   ...
-}: let
-  secrets = import ../../secrets;
-in {
+}: {
   services.zrepl = {
     enable = true;
     settings = {

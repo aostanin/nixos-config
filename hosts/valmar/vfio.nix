@@ -2,9 +2,9 @@
   config,
   lib,
   pkgs,
+  secrets,
   ...
 }: let
-  secrets = import ../../secrets;
   gpus = {
     nvidiaRTX2070Super = {
       driver = "nvidia";

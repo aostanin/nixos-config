@@ -2,17 +2,15 @@
   config,
   pkgs,
   hardwareModulesPath,
+  secrets,
   ...
-}: let
-  secrets = import ../../secrets;
-in {
+}: {
   imports = [
     "${hardwareModulesPath}/raspberry-pi/4"
     ./hardware-configuration.nix
-    ../../modules/variables
+    ../../modules
     ../../modules/common
     ../../modules/zerotier
-    ../../modules
   ];
 
   networking = {
@@ -53,20 +51,22 @@ in {
     cifs-utils
   ];
 
-  virtualisation.libvirtd = {
-    enable = true;
-    # viriscsitest fails
-    package = pkgs.libvirt.overrideAttrs (old: {doCheck = false;});
-  };
+  virtualisation = {
+    docker = {
+      enable = true;
+      liveRestore = false;
+      # Docker defaults to Google's DNS
+      extraOptions = ''
+        --dns ${secrets.network.home.nameserver} \
+        --dns-search lan
+      '';
+    };
 
-  virtualisation.docker = {
-    enable = true;
-    liveRestore = false;
-    # Docker defaults to Google's DNS
-    extraOptions = ''
-      --dns ${secrets.network.home.nameserver} \
-      --dns-search lan
-    '';
+    libvirtd = {
+      enable = true;
+      # viriscsitest fails
+      package = pkgs.libvirt.overrideAttrs (old: {doCheck = false;});
+    };
   };
 
   services.mpd = {

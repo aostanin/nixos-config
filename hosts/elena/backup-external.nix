@@ -2,10 +2,9 @@
   config,
   lib,
   pkgs,
+  secrets,
   ...
 }: let
-  secrets = import ../../secrets;
-
   drivePower = let
     baseUrl = secrets.backupExternal.homeAssistant.baseUrl;
     token = secrets.backupExternal.homeAssistant.token;
