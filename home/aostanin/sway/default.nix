@@ -357,7 +357,7 @@ in {
       "keyboard-shortcuts": true,
       "image-visibility": "when-available",
       "transition-time": 200,
-      "hide-on-clear": false,
+      "hide-on-clear": true,
       "hide-on-action": true,
       "script-fail-notify": true,
       "scripts": {
