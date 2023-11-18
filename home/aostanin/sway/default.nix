@@ -247,6 +247,7 @@ in {
           "sway/workspaces" = {
             all-outputs = true;
             enable-bar-scroll = true;
+            disable-scroll-wraparound = true;
           };
           "idle_inhibitor" = {
             format = "{icon}";
