@@ -19,10 +19,12 @@
 
     vlans.vlan10 = {
       id = 10;
-      interface = "eth0";
+      interface = "br0";
     };
 
-    interfaces.eth0 = {
+    bridges.br0.interfaces = ["eth0"];
+    interfaces.br0 = {
+      macAddress = secrets.network.home.hosts.tio.macAddress;
       ipv4.addresses = [
         {
           address = secrets.network.home.hosts.tio.address;
@@ -62,11 +64,7 @@
       '';
     };
 
-    libvirtd = {
-      enable = true;
-      # viriscsitest fails
-      package = pkgs.libvirt.overrideAttrs (old: {doCheck = false;});
-    };
+    libvirtd.enable = true;
   };
 
   services.mpd = {

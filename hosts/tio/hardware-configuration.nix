@@ -18,4 +18,8 @@
     device = "/mnt/ssd/var/lib/docker";
     options = ["bind"];
   };
+  fileSystems."/var/lib/libvirt" = {
+    device = "/mnt/ssd/var/lib/libvirt";
+    options = ["bind"];
+  };
 }

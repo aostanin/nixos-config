@@ -21,6 +21,15 @@
         # Needed for zed to send emails: https://github.com/NixOS/nixpkgs/issues/132464
         enableMail = true;
       };
+
+      libvirt = super.libvirt.overrideAttrs (old: {
+        postPatch =
+          old.postPatch
+          + ''
+            # viriscsitest fails on aarch64
+            sed -i '/viriscsitest/d' tests/meson.build
+          '';
+      });
     }
   )
 ]
