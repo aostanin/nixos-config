@@ -8,15 +8,19 @@
   localModules.rsyncBackup = {
     enable = true;
     backups = {
-      tio = {
+      tio-appdata = {
         source = "root@[${secrets.network.zerotier.hosts.tio.address6}]:/storage/appdata";
         destination = "/storage/backup/hosts/dir/tio";
       };
-      vps-oci1 = {
+      tio-libvirt = {
+        source = "root@[${secrets.network.zerotier.hosts.tio.address6}]:/var/lib/libvirt";
+        destination = "/storage/backup/hosts/dir/tio";
+      };
+      vps-oci1-appdata = {
         source = "root@[${secrets.network.zerotier.hosts.vps-oci1.address6}]:/storage/appdata";
         destination = "/storage/backup/hosts/dir/vps-oci1";
       };
-      vps-oci2 = {
+      vps-oci2-appdata = {
         source = "root@[${secrets.network.zerotier.hosts.vps-oci2.address6}]:/storage/appdata";
         destination = "/storage/backup/hosts/dir/vps-oci2";
       };
