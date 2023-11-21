@@ -10,7 +10,7 @@
     device = "/dev/disk/by-label/ssd";
     fsType = "ext4";
   };
-  fileSystems."/storage/appdata/docker/ssd" = {
+  fileSystems."/storage/appdata/docker" = {
     device = "/mnt/ssd/appdata/docker";
     options = ["bind"];
   };

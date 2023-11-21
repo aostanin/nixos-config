@@ -48,11 +48,9 @@ in {
     hostName = "valmar";
     hostId = "4446d154";
 
-    vlans = {
-      vlan40 = {
-        id = 40;
-        interface = "br0";
-      };
+    vlans.vlan40 = {
+      id = 40;
+      interface = "br0";
     };
 
     # Home LAN, IPoE uplink

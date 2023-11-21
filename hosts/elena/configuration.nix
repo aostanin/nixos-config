@@ -64,11 +64,9 @@ in {
     hostName = "elena";
     hostId = "fc172604";
 
-    vlans = {
-      vlan40 = {
-        id = 40;
-        interface = "br0";
-      };
+    vlans.vlan40 = {
+      id = 40;
+      interface = "br0";
     };
 
     # Home LAN, IPoE uplink

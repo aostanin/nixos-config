@@ -17,8 +17,8 @@
     hostName = "tio";
     hostId = "9d6a993f";
 
-    vlans.vlan10 = {
-      id = 10;
+    vlans.vlan40 = {
+      id = 40;
       interface = "br0";
     };
 
@@ -28,6 +28,15 @@
       ipv4.addresses = [
         {
           address = secrets.network.home.hosts.tio.address;
+          prefixLength = 24;
+        }
+      ];
+    };
+
+    interfaces.vlan40 = {
+      ipv4.addresses = [
+        {
+          address = secrets.network.iot.hosts.tio.address;
           prefixLength = 24;
         }
       ];
