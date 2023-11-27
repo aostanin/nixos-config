@@ -101,7 +101,7 @@ in {
     };
 
     defaultGateway = secrets.network.home.defaultGateway;
-    nameservers = [secrets.network.home.nameserver];
+    nameservers = secrets.network.home.nameserversAdguard;
   };
 
   environment.systemPackages = with pkgs; [
