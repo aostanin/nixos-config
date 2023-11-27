@@ -11,6 +11,7 @@
 
   programs.git = {
     enable = true;
+    lfs.enable = true;
     userName = secrets.user.fullName;
     userEmail = secrets.user.emailAddress;
     extraConfig = {
