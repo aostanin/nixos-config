@@ -6,7 +6,11 @@
   ...
 }: {
   imports = [
-    "${hardwareModulesPath}/lenovo/thinkpad/x250"
+    "${hardwareModulesPath}/common/cpu/amd"
+    "${hardwareModulesPath}/common/cpu/amd/pstate.nix"
+    "${hardwareModulesPath}/common/gpu/amd"
+    "${hardwareModulesPath}/common/pc/laptop"
+    "${hardwareModulesPath}/common/pc/laptop/acpi_call.nix"
     "${hardwareModulesPath}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
     ../../modules
@@ -27,18 +31,16 @@
     supportedFilesystems = ["zfs"];
     tmp.useTmpfs = true;
     kernelParams = [
-      "intel_iommu=on"
+      "amd_iommu=on"
       "iommu=pt"
-      "intel_pstate=active"
-      "i915.enable_fbc=1"
       "zfs.zfs_arc_max=2147483648"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
   networking = {
-    hostName = "roan";
-    hostId = "9bc52069";
+    hostName = "skye";
+    hostId = "e9fbbf71";
     networkmanager.enable = true;
     firewall = {
       enable = true;
@@ -83,7 +85,7 @@
       primaryOutput = "eDP-1";
       output = {
         "*" = {
-          bg = "~/Sync/wallpaper/x250.png fill";
+          bg = "~/Sync/wallpaper/nix-wallpaper-nineish-dark-gray.png fill";
         };
       };
     };
@@ -97,21 +99,14 @@
   };
 
   services = {
+    logind.lidSwitchDocked = "suspend";
+
     tlp = {
       enable = true;
       settings = {
-        USB_AUTOSUSPEND = 0;
-        START_CHARGE_THRESH_BAT0 = 85;
-        STOP_CHARGE_THRESH_BAT0 = 90;
-        START_CHARGE_THRESH_BAT1 = 85;
-        STOP_CHARGE_THRESH_BAT1 = 90;
+        START_CHARGE_THRESH_BAT0 = 75;
+        STOP_CHARGE_THRESH_BAT0 = 80;
       };
-    };
-
-    undervolt = {
-      enable = true;
-      coreOffset = -40;
-      gpuOffset = -30;
     };
 
     xserver.videoDrivers = ["modesetting"];

@@ -188,6 +188,7 @@
               "127.0.0.1" = "elena";
               "${secrets.network.zerotier.hosts.roan.address6}" = "roan";
               "${secrets.network.zerotier.hosts.mareg.address6}" = "mareg";
+              "${secrets.network.zerotier.hosts.skye.address6}" = "skye";
               "${secrets.network.storage.hosts.valmar.address}" = "valmar";
             };
           };

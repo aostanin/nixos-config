@@ -44,6 +44,7 @@
       elena = {system = "x86_64-linux";};
       mareg = {system = "x86_64-linux";};
       roan = {system = "x86_64-linux";};
+      skye = {system = "x86_64-linux";};
       tio = {
         system = "aarch64-linux";
         options = {remoteBuild = false;};

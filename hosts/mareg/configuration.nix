@@ -11,7 +11,6 @@
     ./hardware-configuration.nix
     ../../modules
     ../../modules/common
-    ../../modules/desktop
     ../../modules/msmtp
     ../../modules/zerotier
     ./backup.nix
