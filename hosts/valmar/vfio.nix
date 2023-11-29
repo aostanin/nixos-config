@@ -41,7 +41,7 @@ in {
       Restart = "on-failure";
       Type = "notify";
       ExecStart = ''
-        ${pkgs.unstable.evsieve}/bin/evsieve \
+        ${pkgs.evsieve}/bin/evsieve \
           --input ${peripherals.keyboard} domain=kb grab=auto persist=reopen \
           --input ${peripherals.mouse} domain=ms grab=auto persist=reopen \
           --hook   key:scrolllock toggle   \

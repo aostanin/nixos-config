@@ -6,7 +6,7 @@
 }:
 with lib; let
   cfg = config.localModules.rkvm;
-  pkg = pkgs.unstable.rkvm; # TODO: Use stable once released
+  pkg = pkgs.rkvm;
 in {
   options.localModules.rkvm = {
     enable = mkOption {

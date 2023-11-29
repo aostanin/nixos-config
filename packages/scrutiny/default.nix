@@ -19,7 +19,7 @@ buildGoModule rec {
     sha256 = "sha256-zkw+41UJRXi3eQO4YEMq8iAqhFjTTMyinLGCBN4Oc0Y=";
   };
 
-  vendorSha256 = "sha256-eB2Zmd537psC0QU2SkWlamLC5qw0HwFo4IxWgQXfxmQ=";
+  vendorHash = "sha256-eB2Zmd537psC0QU2SkWlamLC5qw0HwFo4IxWgQXfxmQ=";
 
   nativeBuildInputs = [makeWrapper];
 

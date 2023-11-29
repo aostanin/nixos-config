@@ -52,7 +52,7 @@ with lib; {
         cksfv
         ctop
         dhex
-        exa
+        eza
         fd
         ffmpeg
         github-cli
@@ -93,7 +93,7 @@ with lib; {
         jellyfin-media-player
         krita
         libreoffice
-        unstable.logseq # TODO: The stable version shows a white screen on valmar
+        logseq
         moonlight-qt
         mullvad-vpn
         peek
@@ -108,7 +108,7 @@ with lib; {
           ];
         })
         thunderbird
-        virtmanager
+        virt-manager
         wineWowPackages.stable
         wl-clipboard
 
@@ -168,7 +168,7 @@ with lib; {
     // optionalAttrs osConfig.localModules.desktop.enable {
       mpv = {
         enable = true;
-        package = pkgs.mpv-unwrapped.override {ffmpeg_5 = pkgs.ffmpeg_5.override {withV4l2 = true;};};
+        package = pkgs.mpv-unwrapped.override {ffmpeg = pkgs.ffmpeg.override {withV4l2 = true;};};
       };
     };
 

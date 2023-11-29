@@ -84,7 +84,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    fonts.fonts = with pkgs; [
+    fonts.packages = with pkgs; [
       dejavu_fonts
       font-awesome
       ipafont
@@ -193,6 +193,7 @@ in {
 
     xdg.portal = {
       enable = true;
+      config.common.default = "*";
       wlr.enable = true;
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk

@@ -88,19 +88,6 @@ in {
     nameservers = secrets.network.home.nameserversAdguard;
   };
 
-  # TODO: Workaround for network down after resuming from sleep.
-  networking.useNetworkd = true;
-  #systemd.services.systemd-networkd.environment = {"SYSTEMD_LOG_LEVEL" = "debug";};
-  systemd.network = {
-    wait-online.timeout = 30;
-    # Workaround for "static routes are not configured"
-    wait-online.anyInterface = true;
-  };
-  # TODO: ZeroTier doesn't work on start and resume.
-  powerManagement.powerUpCommands = ''
-    systemctl restart zerotierone.service
-  '';
-
   localModules = {
     desktop = {
       enable = true;

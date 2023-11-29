@@ -24,7 +24,7 @@
       DISABLE_AUTO_UPDATE = "true";
     };
     shellAliases = {
-      ls = "${pkgs.exa}/bin/exa";
+      ls = "${pkgs.eza}/bin/eza";
       ll = "ls -l";
       la = "ls -a";
       lt = "ls --tree";

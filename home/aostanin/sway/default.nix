@@ -5,8 +5,7 @@
   osConfig,
   ...
 }: let
-  # TODO: Need unstable for now https://github.com/NixOS/nixpkgs/pull/251800
-  swayncPkg = pkgs.unstable.swaynotificationcenter;
+  swayncPkg = pkgs.swaynotificationcenter;
   # TODO: Copy/paste broken on Wayland https://github.com/flameshot-org/flameshot/issues/2848#issuecomment-1199796142
   flameshotPkg = pkgs.flameshot.overrideAttrs (old: {
     nativeBuildInputs = old.nativeBuildInputs ++ [pkgs.libsForQt5.kguiaddons];
