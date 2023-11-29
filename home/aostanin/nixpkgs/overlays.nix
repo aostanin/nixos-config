@@ -4,7 +4,6 @@
       # TODO: Make this compatible with host systems
       crazydiskinfo = super.callPackage ../../../packages/crazydiskinfo {};
       dedbae = super.callPackage ../../../packages/dedbae {};
-      evsieve = super.callPackage ../../../packages/evsieve {};
       hactool = super.callPackage ../../../packages/hactool {};
       immersed = super.callPackage ../../../packages/immersed {};
       ninfs = super.python3Packages.callPackage ../../../packages/ninfs {};

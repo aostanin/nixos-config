@@ -33,11 +33,15 @@ in {
   };
 
   systemd.services."evsieve" = {
+    wantedBy = ["multi-user.target"];
+    # If rkvm starts first then evsieve doesn't seem to work.
+    # TODO: Limit rkvm input devices to virtual-*-1: https://github.com/htrefil/rkvm/pull/55
+    before = ["rkvm-server.service"];
     serviceConfig = {
       Restart = "on-failure";
       Type = "notify";
       ExecStart = ''
-        ${pkgs.evsieve}/bin/evsieve \
+        ${pkgs.unstable.evsieve}/bin/evsieve \
           --input ${peripherals.keyboard} domain=kb grab=auto persist=reopen \
           --input ${peripherals.mouse} domain=ms grab=auto persist=reopen \
           --hook   key:scrolllock toggle   \
@@ -49,7 +53,6 @@ in {
           --output @vms2 create-link=/dev/input/by-id/virtual-mouse-2
       '';
     };
-    wantedBy = ["multi-user.target"];
   };
 
   localModules.vfio = {
