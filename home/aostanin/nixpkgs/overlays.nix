@@ -2,13 +2,9 @@
   (
     self: super: {
       # TODO: Make this compatible with host systems
-      dedbae = super.callPackage ../../../packages/dedbae {};
-      ninfs = super.python3Packages.callPackage ../../../packages/ninfs {};
       personal-scripts = super.callPackage ../../../packages/personal-scripts {};
       pidcat = super.callPackage ../../../packages/pidcat {};
       scrutiny = super.callPackage ../../../packages/scrutiny {};
-      splitNSP = super.callPackage ../../../packages/splitNSP {};
-      upp = super.python3Packages.callPackage ../../../packages/upp {};
       vfio-isolate = super.python3Packages.callPackage ../../../packages/vfio-isolate {};
       virtwold = super.callPackage ../../../packages/virtwold {};
 

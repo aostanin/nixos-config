@@ -6,7 +6,8 @@
 }: {
   boot = {
     kernelParams = [
-      "i915.enable_guc=7"
+      "i915.enable_guc=3"
+      "i915.max_vfs=7"
     ];
     kernelPackages = let
       configuredKernel = pkgs.linuxPackages.kernel.override {

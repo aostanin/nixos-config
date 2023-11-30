@@ -6,7 +6,7 @@
 }:
 buildGoPackage rec {
   pname = "virtwold";
-  version = "21.12.0";
+  version = "23.03.0";
 
   goPackagePath = "github.com/ScottESanDiego/virtwold";
 
@@ -14,7 +14,7 @@ buildGoPackage rec {
     owner = "ScottESanDiego";
     repo = "virtwold";
     rev = version;
-    sha256 = "sha256-2WGnDcsGvVq8obdUZ+JykSPmcvtPDjoE08Fals2Ee8k=";
+    sha256 = "sha256-fM51aKkqCt5DnC/IJz3iUPc/Tblx5og8wQanPkbf6PY=";
   };
 
   goDeps = ./deps.nix;

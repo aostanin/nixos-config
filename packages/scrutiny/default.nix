@@ -8,7 +8,7 @@
 }:
 buildGoModule rec {
   pname = "scrutiny";
-  version = "0.6.0";
+  version = "0.7.2";
 
   doCheck = false;
 
@@ -16,10 +16,10 @@ buildGoModule rec {
     owner = "AnalogJ";
     repo = "scrutiny";
     rev = "v${version}";
-    sha256 = "sha256-zkw+41UJRXi3eQO4YEMq8iAqhFjTTMyinLGCBN4Oc0Y=";
+    sha256 = "sha256-UYKi+WTsasUaE6irzMAHr66k7wXyec8FXc8AWjEk0qs=";
   };
 
-  vendorHash = "sha256-eB2Zmd537psC0QU2SkWlamLC5qw0HwFo4IxWgQXfxmQ=";
+  vendorHash = "sha256-SiQw6pq0Fyy8Ia39S/Vgp9Mlfog2drtVn43g+GXiQuI=";
 
   nativeBuildInputs = [makeWrapper];
 

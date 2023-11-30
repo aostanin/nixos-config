@@ -276,23 +276,7 @@ with lib; let
     fi
   '';
 
-  lookingGlassClient = pkgs.looking-glass-client.overrideAttrs (old: rec {
-    version = "B6";
-    src = pkgs.fetchFromGitHub {
-      owner = "gnif";
-      repo = "LookingGlass";
-      rev = version;
-      sha256 = "sha256-6vYbNmNJBCoU23nVculac24tHqH7F4AZVftIjL93WJU=";
-      fetchSubmodules = true;
-    };
-    buildInputs =
-      old.buildInputs
-      ++ (with pkgs; [
-        pipewire
-        libpulseaudio
-        libsamplerate
-      ]);
-  });
+  lookingGlassClient = pkgs.looking-glass-client;
 
   # https://gist.github.com/Roliga/928cd44440f4df74e796e4e1315034bf
   hibernateScript = pkgs.writeScriptBin "hibernate-vm" ''
