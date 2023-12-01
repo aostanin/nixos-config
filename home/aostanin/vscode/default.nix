@@ -24,8 +24,6 @@
       "editor.renderWhitespace" = "boundary";
       "editor.wordWrap" = "on";
       "files.insertFinalNewline" = true;
-      "telemetry.enableTelemetry" = false;
-      "telemetry.enableCrashReporter" = false;
       "telemetry.telemetryLevel" = "off";
       "update.mode" = "none";
       "vim.useCtrlKeys" = false;
