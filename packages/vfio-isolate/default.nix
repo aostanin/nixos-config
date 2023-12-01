@@ -12,8 +12,8 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "spheenik";
     repo = pname;
-    rev = "20cc2e4a6dd863f563c07b9cda1617dbe729fbf8";
-    sha256 = "sha256-K8DDzMQ18U+jiSsA/UltT81C6pnBrc4MZ+mGJNEdj9o=";
+    rev = "c6eb01cab509dfa6a220dc17f44233fa4e93493c";
+    sha256 = "sha256-NtvFi57A17Bv1kxhKuSbCPBlZlnW8ykg3+aQHeEZNp8=";
   };
 
   preConfigure = ''
