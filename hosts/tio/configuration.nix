@@ -13,6 +13,12 @@
     ../../modules/zerotier
   ];
 
+  boot.kernelParams = [
+    "cgroup_enable=cpuset"
+    "cgroup_memory=1"
+    "cgroup_enable=memory"
+  ];
+
   networking = {
     hostName = "tio";
     hostId = "9d6a993f";
