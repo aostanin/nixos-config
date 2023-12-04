@@ -30,6 +30,11 @@
           # Performance
           "layers.acceleration.force-enabled" = true;
           "gfx.webrender.all" = true;
+
+          # Remove Ads
+          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+          "browser.vpn_promo.enabled" = false;
         };
         extensions = with pkgs.nur.repos.rycee.firefox-addons; [
           pkgs.nur.repos.rycee.firefox-addons."10ten-ja-reader"
@@ -40,6 +45,7 @@
           sponsorblock
           statshunters
           temporary-containers
+          tree-style-tab
           ublock-origin
           vimium
         ];
