@@ -21,8 +21,8 @@
     "1b73:1100" # Fresco Logic FL1100
   ];
   peripherals = {
-    mouse = "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd";
-    keyboard = "/dev/input/by-id/usb-Kingsis_Corporation_VAXEE_Mouse-event-mouse";
+    keyboard = "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd";
+    mouse = "/dev/input/by-id/usb-Kingsis_Corporation_VAXEE_Mouse-event-mouse";
   };
   vfioPciIds = usbControllerIds;
 in {
