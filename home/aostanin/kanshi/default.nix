@@ -5,6 +5,8 @@
   secrets,
   ...
 }: {
+  home.packages = [pkgs.kanshi];
+
   services.kanshi = {
     enable = true;
     profiles = {
@@ -13,6 +15,8 @@
           {
             criteria = "eDP-1";
             status = "enable";
+            mode = "1920x1200";
+            position = "0,0";
           }
         ];
       };
