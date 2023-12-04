@@ -30,10 +30,11 @@
     };
     supportedFilesystems = ["zfs"];
     tmp.useTmpfs = true;
+    kernelPackages = pkgs.linuxPackages_6_6;
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
-      "zfs.zfs_arc_max=2147483648"
+      "pcie_aspm.policy=powersave"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
@@ -99,17 +100,16 @@
   };
 
   services = {
-    logind.lidSwitchDocked = "suspend";
-
     tlp = {
       enable = true;
       settings = {
         START_CHARGE_THRESH_BAT0 = 75;
         STOP_CHARGE_THRESH_BAT0 = 80;
+        CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
       };
     };
 
-    xserver.videoDrivers = ["modesetting"];
+    xserver.videoDrivers = ["amdgpu"];
 
     zfs = {
       autoScrub = {

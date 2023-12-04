@@ -12,8 +12,12 @@
           name = "snap-frequent";
           type = "snap";
           filesystems = {
+            "rpool/appdata<" = true;
+            "rpool/appdata/temp<" = false;
             "rpool/home<" = true;
             "rpool/root<" = true;
+            "rpool/virtualization<" = true;
+            "rpool/virtualization/docker<" = false;
           };
           snapshotting = {
             type = "periodic";
@@ -45,9 +49,13 @@
           };
           send.encrypted = true;
           filesystems = {
+            "rpool/appdata<" = true;
+            "rpool/appdata/temp<" = false;
             "rpool/home<" = true;
             "rpool/root<" = true;
             "rpool/root/nix<" = false;
+            "rpool/virtualization<" = true;
+            "rpool/virtualization/docker<" = false;
           };
           snapshotting.type = "manual";
           pruning = {
