@@ -50,6 +50,9 @@ in {
     tmp.useTmpfs = true;
     kernelParams = [
       "i915.enable_fbc=1"
+      "zfs.l2arc_noprefetch=0"
+      "zfs.l2arc_write_max=536870912"
+      "zfs.l2arc_write_boost=1073741824"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
