@@ -24,7 +24,6 @@
       };
       efi.canTouchEfiVariables = true;
     };
-    supportedFilesystems = ["zfs"];
     tmp.useTmpfs = true;
     kernelParams = [
       "intel_iommu=on"

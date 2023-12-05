@@ -28,7 +28,6 @@
       };
       efi.canTouchEfiVariables = true;
     };
-    supportedFilesystems = ["zfs"];
     tmp.useTmpfs = true;
     kernelPackages = pkgs.linuxPackages_6_6;
     kernelParams = [
