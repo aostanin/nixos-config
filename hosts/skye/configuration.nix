@@ -96,6 +96,8 @@
       certificate = secrets.rkvm.certificate;
       password = secrets.rkvm.password;
     };
+
+    zfs.enable = true;
   };
 
   services = {
@@ -109,27 +111,11 @@
     };
 
     xserver.videoDrivers = ["amdgpu"];
-
-    zfs = {
-      autoScrub = {
-        enable = true;
-        interval = "monthly";
-      };
-      trim.enable = true;
-      zed = {
-        enableMail = true;
-        settings = {
-          ZED_EMAIL_ADDR = secrets.user.emailAddress;
-          ZED_NOTIFY_VERBOSE = true;
-        };
-      };
-    };
   };
 
   virtualisation = {
     docker = {
       enable = true;
-      storageDriver = "zfs";
       liveRestore = false;
       autoPrune = {
         enable = true;

@@ -107,10 +107,6 @@ in {
     nameservers = secrets.network.home.nameserversAdguard;
   };
 
-  environment.systemPackages = with pkgs; [
-    mstflint
-  ];
-
   localModules = {
     pikvm.enable = true;
 
@@ -136,32 +132,16 @@ in {
       enable = true;
       interfaces = ["br0"];
     };
+
+    zfs.enable = true;
   };
 
-  services = {
-    xserver.videoDrivers = ["modesetting"];
-
-    zfs = {
-      autoScrub = {
-        enable = true;
-        interval = "monthly";
-      };
-      trim.enable = true;
-      zed = {
-        enableMail = true;
-        settings = {
-          ZED_EMAIL_ADDR = secrets.user.emailAddress;
-          ZED_NOTIFY_VERBOSE = true;
-        };
-      };
-    };
-  };
+  services.xserver.videoDrivers = ["modesetting"];
 
   virtualisation.libvirtd.enable = true;
 
   virtualisation.docker = {
     enable = true;
-    storageDriver = "zfs";
     liveRestore = false;
     # Docker defaults to Google's DNS
     extraOptions = ''

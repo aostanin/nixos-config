@@ -132,11 +132,9 @@ in {
       enable = true;
       interfaces = ["br0"];
     };
-  };
 
-  environment.systemPackages = with pkgs; [
-    mstflint
-  ];
+    zfs.enable = true;
+  };
 
   services = {
     logind.extraConfig = ''
@@ -144,28 +142,12 @@ in {
     '';
 
     xserver.videoDrivers = ["modesetting" "nvidia"];
-
-    zfs = {
-      autoScrub = {
-        enable = true;
-        interval = "monthly";
-      };
-      trim.enable = true;
-      zed = {
-        enableMail = true;
-        settings = {
-          ZED_EMAIL_ADDR = secrets.user.emailAddress;
-          ZED_NOTIFY_VERBOSE = true;
-        };
-      };
-    };
   };
 
   virtualisation = {
     docker = {
       enable = true;
       enableNvidia = true;
-      storageDriver = "zfs";
       liveRestore = false;
       # Docker defaults to Google's DNS
       extraOptions = ''

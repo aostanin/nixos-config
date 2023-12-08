@@ -7,5 +7,6 @@
     ./scrutiny-collector
     ./virtwold
     ./vfio
+    ./zfs
   ];
 }
