@@ -1,6 +1,7 @@
 {
   imports = [
     ./desktop
+    ./docker
     ./pikvm
     ./rkvm
     ./rsync-backup

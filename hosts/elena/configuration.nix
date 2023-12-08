@@ -108,6 +108,11 @@ in {
   };
 
   localModules = {
+    docker = {
+      enable = true;
+      useLocalDns = true;
+    };
+
     pikvm.enable = true;
 
     scrutinyCollector = {
@@ -139,16 +144,6 @@ in {
   services.xserver.videoDrivers = ["modesetting"];
 
   virtualisation.libvirtd.enable = true;
-
-  virtualisation.docker = {
-    enable = true;
-    liveRestore = false;
-    # Docker defaults to Google's DNS
-    extraOptions = ''
-      --dns ${secrets.network.home.nameserver} \
-      --dns-search lan
-    '';
-  };
 
   systemd.timers.update-mam = {
     wantedBy = ["timers.target"];

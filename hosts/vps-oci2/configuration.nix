@@ -25,8 +25,5 @@
     interfaces.ens3.useDHCP = true;
   };
 
-  virtualisation.docker = {
-    enable = true;
-    liveRestore = false;
-  };
+  localModules.docker.enable = true;
 }

@@ -116,6 +116,11 @@ in {
       }) [1 2 3 4 5 6 7 8 9];
     };
 
+    docker = {
+      enable = true;
+      useLocalDns = true;
+    };
+
     pikvm.enable = true;
 
     rkvm.server = {
@@ -145,17 +150,6 @@ in {
   };
 
   virtualisation = {
-    docker = {
-      enable = true;
-      enableNvidia = true;
-      liveRestore = false;
-      # Docker defaults to Google's DNS
-      extraOptions = ''
-        --dns ${secrets.network.home.nameserver} \
-        --dns-search lan
-      '';
-    };
-
     libvirtd.enable = true;
 
     waydroid.enable = true;

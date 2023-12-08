@@ -25,10 +25,7 @@
     interfaces.ens3.useDHCP = true;
   };
 
-  virtualisation.docker = {
-    enable = true;
-    liveRestore = false;
-  };
+  localModules.docker.enable = true;
 
   systemd = {
     # Matrix LINE bridge can be a bit unstable, so restart it daily

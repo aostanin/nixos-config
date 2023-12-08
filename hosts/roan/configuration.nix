@@ -87,6 +87,11 @@
       };
     };
 
+    docker = {
+      enable = true;
+      enableAutoPrune = true;
+    };
+
     rkvm.client = {
       enable = true;
       server = "${secrets.network.home.hosts.valmar.address}:5258";
@@ -119,18 +124,6 @@
   };
 
   virtualisation = {
-    docker = {
-      enable = true;
-      liveRestore = false;
-      autoPrune = {
-        enable = true;
-        flags = [
-          "--all"
-          "--filter \"until=168h\""
-        ];
-      };
-    };
-
     libvirtd.enable = true;
 
     waydroid.enable = true;
