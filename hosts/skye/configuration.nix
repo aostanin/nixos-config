@@ -18,6 +18,7 @@
     ../../modules/msmtp
     ../../modules/zerotier
     ./backup.nix
+    ./wwan
   ];
 
   boot = {
