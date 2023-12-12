@@ -22,4 +22,11 @@
     device = "/mnt/ssd/var/lib/libvirt";
     options = ["bind"];
   };
+
+  swapDevices = [
+    {
+      device = "/mnt/ssd/swapfile";
+      size = 4096;
+    }
+  ];
 }
