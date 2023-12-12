@@ -50,22 +50,12 @@
 
     defaultGateway = secrets.network.home.defaultGateway;
     nameservers = secrets.network.home.nameserversAdguard;
-
-    firewall = {
-      enable = true;
-      trustedInterfaces = [
-        "eth0"
-      ];
-      allowedTCPPorts = [
-        22 # SSH
-      ];
-    };
   };
+
+  localModules.zfs.enable = true;
 
   environment.systemPackages = with pkgs; [
     libraspberrypi
-    ncmpcpp
-    cifs-utils
   ];
 
   virtualisation = {
@@ -80,17 +70,5 @@
     };
 
     libvirtd.enable = true;
-  };
-
-  services.mpd = {
-    enable = true;
-    network.listenAddress = "any";
-    musicDirectory = "/mnt/music";
-  };
-
-  fileSystems."/mnt/music" = {
-    device = "//${secrets.network.home.hosts.elena.address}/media/music";
-    fsType = "cifs";
-    options = ["ro" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=60" "x-systemd.device-timeout=5s" "x-systemd.mount-timeout=5s"];
   };
 }

@@ -16,6 +16,7 @@ in {
   boot.kernelParams = [
     "consoleblank=300"
     "pcie_aspm.policy=powersave"
+    "snd_hda_intel.power_save=1"
   ];
 
   powerManagement = {

@@ -5,10 +5,7 @@
   hardwareModulesPath,
   secrets,
   ...
-}: let
-  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.expansion10GbE0}";
-  ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.expansion10GbE1}";
-in {
+}: {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel"
     "${hardwareModulesPath}/common/pc/ssd"
@@ -38,54 +35,9 @@ in {
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
-  systemd.network.links."11-default" = {
-    matchConfig.OriginalName = "*";
-    linkConfig.NamePolicy = "mac";
-    linkConfig.MACAddressPolicy = "persistent";
-  };
-
   networking = {
     hostName = "valmar";
     hostId = "4446d154";
-
-    vlans.vlan40 = {
-      id = 40;
-      interface = "br0";
-    };
-
-    # Home LAN, IPoE uplink
-    bridges.br0.interfaces = [iface];
-    interfaces.br0 = {
-      macAddress = secrets.network.home.hosts.valmar.macAddress;
-      ipv4.addresses = [
-        {
-          address = secrets.network.home.hosts.valmar.address;
-          prefixLength = 24;
-        }
-      ];
-    };
-
-    interfaces.vlan40 = {
-      ipv4.addresses = [
-        {
-          address = secrets.network.iot.hosts.valmar.address;
-          prefixLength = 24;
-        }
-      ];
-    };
-
-    interfaces."${ifaceStorage}" = {
-      mtu = 9000;
-      ipv4.addresses = [
-        {
-          address = secrets.network.storage.hosts.valmar.address;
-          prefixLength = 24;
-        }
-      ];
-    };
-
-    defaultGateway = secrets.network.home.defaultGateway;
-    nameservers = secrets.network.home.nameserversAdguard;
   };
 
   localModules = {
@@ -121,15 +73,22 @@ in {
       useLocalDns = true;
     };
 
-    pikvm.enable = true;
-
-    rkvm.server = {
+    home-server = {
       enable = true;
-      listen = "${secrets.network.home.hosts.valmar.address}:5258";
-      certificate = secrets.rkvm.certificate;
-      key = secrets.rkvm.key;
-      password = secrets.rkvm.password;
+      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.valmar.expansion10GbE0}";
+      address = secrets.network.home.hosts.valmar.address;
+      macAddress = secrets.network.home.hosts.valmar.macAddress;
+      iotNetwork = {
+        enable = true;
+        address = secrets.network.iot.hosts.valmar.address;
+      };
+      storageNetwork = {
+        enable = true;
+        address = secrets.network.iot.hosts.valmar.address;
+      };
     };
+
+    pikvm.enable = true;
 
     scrutinyCollector.enable = true;
 

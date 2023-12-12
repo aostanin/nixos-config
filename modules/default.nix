@@ -2,6 +2,7 @@
   imports = [
     ./desktop
     ./docker
+    ./home-server
     ./pikvm
     ./rkvm
     ./rsync-backup

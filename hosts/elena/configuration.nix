@@ -5,10 +5,7 @@
   hardwareModulesPath,
   secrets,
   ...
-}: let
-  iface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
-  ifaceStorage = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE1}";
-in {
+}: {
   imports = [
     "${hardwareModulesPath}/common/cpu/intel"
     "${hardwareModulesPath}/common/pc/ssd"
@@ -66,51 +63,27 @@ in {
   networking = {
     hostName = "elena";
     hostId = "fc172604";
-
-    vlans.vlan40 = {
-      id = 40;
-      interface = "br0";
-    };
-
-    # Home LAN, IPoE uplink
-    bridges.br0.interfaces = [iface];
-    interfaces.br0 = {
-      macAddress = secrets.network.home.hosts.elena.macAddress;
-      ipv4.addresses = [
-        {
-          address = secrets.network.home.hosts.elena.address;
-          prefixLength = 24;
-        }
-      ];
-    };
-
-    interfaces.vlan40 = {
-      ipv4.addresses = [
-        {
-          address = secrets.network.iot.hosts.elena.address;
-          prefixLength = 24;
-        }
-      ];
-    };
-
-    interfaces."${ifaceStorage}" = {
-      mtu = 9000;
-      ipv4.addresses = [
-        {
-          address = secrets.network.storage.hosts.elena.address;
-          prefixLength = 24;
-        }
-      ];
-    };
-
-    defaultGateway = secrets.network.home.defaultGateway;
-    nameservers = secrets.network.home.nameserversAdguard;
   };
 
   localModules = {
     docker = {
       enable = true;
       useLocalDns = true;
+    };
+
+    home-server = {
+      enable = true;
+      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
+      address = secrets.network.home.hosts.elena.address;
+      macAddress = secrets.network.home.hosts.elena.macAddress;
+      iotNetwork = {
+        enable = true;
+        address = secrets.network.iot.hosts.elena.address;
+      };
+      storageNetwork = {
+        enable = true;
+        address = secrets.network.iot.hosts.elena.address;
+      };
     };
 
     pikvm.enable = true;
@@ -141,7 +114,13 @@ in {
     zfs.enable = true;
   };
 
-  services.xserver.videoDrivers = ["modesetting"];
+  services = {
+    logind.extraConfig = ''
+      HandlePowerKey=suspend
+    '';
+
+    xserver.videoDrivers = ["modesetting"];
+  };
 
   virtualisation.libvirtd.enable = true;
 

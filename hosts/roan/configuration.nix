@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   hardwareModulesPath,
   secrets,
   ...
@@ -38,75 +39,38 @@
   networking = {
     hostName = "roan";
     hostId = "9bc52069";
-    networkmanager.enable = true;
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [
-        22 # SSH
-      ];
-      allowedTCPPortRanges = [
-        {
-          from = 1714;
-          to = 1764;
-        } # KDE Connect
-      ];
-      allowedUDPPorts = [
-        5353 # Avahi
-        9993 # ZeroTier
-      ];
-      allowedUDPPortRanges = [
-        {
-          from = 1714;
-          to = 1764;
-        } # KDE Connect
-      ];
-      interfaces."${secrets.zerotier.interface}" = {
-        allowedTCPPorts = [
-          22000 # Syncthing
-        ];
-        allowedUDPPorts = [
-          22000 # Syncthing
-          21027 # Syncthing
-        ];
-      };
-    };
   };
 
   powerManagement.powertop.enable = true;
 
   localModules = {
-    desktop = {
+    docker = {
       enable = true;
-      hasBattery = true;
-      hasBacklightControl = true;
-      primaryOutput = "eDP-1";
-      output = {
-        "*" = {
-          bg = "~/Sync/wallpaper/x250.png fill";
-        };
+      useLocalDns = true;
+    };
+
+    home-server = {
+      enable = true;
+      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.roan.integrated}";
+      address = secrets.network.home.hosts.roan.address;
+      #macAddress = secrets.network.home.hosts.roan.macAddress;
+      iotNetwork = {
+        enable = true;
+        address = secrets.network.iot.hosts.roan.address;
       };
     };
 
-    docker = {
-      enable = true;
-      enableAutoPrune = true;
-    };
-
-    rkvm.client = {
-      enable = true;
-      server = "${secrets.network.home.hosts.valmar.address}:5258";
-      certificate = secrets.rkvm.certificate;
-      password = secrets.rkvm.password;
-    };
+    scrutinyCollector.enable = true;
 
     zfs.enable = true;
   };
 
   services = {
+    logind.lidSwitch = "ignore";
+
     tlp = {
       enable = true;
       settings = {
-        USB_AUTOSUSPEND = 0;
         START_CHARGE_THRESH_BAT0 = 85;
         STOP_CHARGE_THRESH_BAT0 = 90;
         START_CHARGE_THRESH_BAT1 = 85;
@@ -123,9 +87,5 @@
     xserver.videoDrivers = ["modesetting"];
   };
 
-  virtualisation = {
-    libvirtd.enable = true;
-
-    waydroid.enable = true;
-  };
+  virtualisation.libvirtd.enable = true;
 }

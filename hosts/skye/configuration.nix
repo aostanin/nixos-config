@@ -95,13 +95,6 @@
       enableAutoPrune = true;
     };
 
-    rkvm.client = {
-      enable = true;
-      server = "${secrets.network.home.hosts.valmar.address}:5258";
-      certificate = secrets.rkvm.certificate;
-      password = secrets.rkvm.password;
-    };
-
     zfs.enable = true;
   };
 
