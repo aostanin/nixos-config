@@ -101,6 +101,7 @@
       "libvirtd"
       "networkmanager"
       "plugdev"
+      "podman"
       "pulse-access"
       "wheel"
     ];

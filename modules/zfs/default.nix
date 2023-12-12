@@ -35,7 +35,5 @@ in {
         };
       };
     };
-
-    virtualisation.docker.storageDriver = "zfs";
   };
 }

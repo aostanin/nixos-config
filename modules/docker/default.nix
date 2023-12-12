@@ -23,9 +23,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # TODO: Switch to podman
     virtualisation.docker = {
       enable = true;
       enableNvidia = builtins.elem "nvidia" config.services.xserver.videoDrivers;
+      storageDriver = "overlay2";
       liveRestore = false;
       autoPrune = mkIf cfg.enableAutoPrune {
         enable = true;
