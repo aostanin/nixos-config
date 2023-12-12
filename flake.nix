@@ -24,7 +24,11 @@
         flake-utils.follows = "flake-utils";
       };
     };
-    flake-utils.url = "github:numtide/flake-utils";
+    systems.url = "github:nix-systems/default-linux";
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
   };
 
   outputs = {
@@ -37,6 +41,7 @@
     deploy-rs,
     pre-commit-hooks,
     flake-utils,
+    ...
   }: let
     lib = nixpkgs.lib;
     secrets = import ./secrets;
