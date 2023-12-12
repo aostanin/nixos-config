@@ -84,7 +84,7 @@
       };
       storageNetwork = {
         enable = true;
-        address = secrets.network.iot.hosts.valmar.address;
+        address = secrets.network.storage.hosts.valmar.address;
       };
     };
 

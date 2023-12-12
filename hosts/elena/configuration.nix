@@ -82,7 +82,7 @@
       };
       storageNetwork = {
         enable = true;
-        address = secrets.network.iot.hosts.elena.address;
+        address = secrets.network.storage.hosts.elena.address;
       };
     };
 
