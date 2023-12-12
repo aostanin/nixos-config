@@ -46,6 +46,7 @@
       "electron-19.1.9"
       "electron-24.8.6"
       "python-2.7.18.7"
+      "schildichat-web-1.11.30-sc.2"
     ];
   };
 
