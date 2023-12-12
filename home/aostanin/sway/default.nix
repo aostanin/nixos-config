@@ -309,23 +309,21 @@ in {
     };
   };
 
-  systemd.user = {
-    # TODO: Switch to home-manager module https://github.com/nix-community/home-manager/pull/4249
-    services.swaync = {
-      Unit = {
-        Description = "Swaync notification daemon";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
-      };
-
-      Service = {
-        Type = "simple";
-        ExecStart = "${swayncPkg}/bin/swaync";
-        Restart = "always";
-      };
-
-      Install = {WantedBy = ["graphical-session.target"];};
+  # TODO: Switch to home-manager module https://github.com/nix-community/home-manager/pull/4249
+  systemd.user.services.swaync = {
+    Unit = {
+      Description = "Swaync notification daemon";
+      PartOf = ["graphical-session.target"];
+      After = ["graphical-session.target"];
     };
+
+    Service = {
+      Type = "simple";
+      ExecStart = "${swayncPkg}/bin/swaync";
+      Restart = "always";
+    };
+
+    Install = {WantedBy = ["graphical-session.target"];};
   };
 
   xdg.configFile."swaync/config.json".source = pkgs.writeText "swaync/config.json" ''

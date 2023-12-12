@@ -117,6 +117,6 @@
   fileSystems."/mnt/elena" = {
     device = "${secrets.network.storage.hosts.elena.address}:/";
     fsType = "nfs";
-    options = ["x-systemd.automount" "x-systemd.idle-timeout=600" "noauto" "noatime"];
+    options = ["x-systemd.automount" "x-systemd.idle-timeout=600" "noauto" "noatime" "nofail"];
   };
 }

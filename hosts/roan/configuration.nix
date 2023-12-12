@@ -53,7 +53,7 @@
       enable = true;
       interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.roan.integrated}";
       address = secrets.network.home.hosts.roan.address;
-      #macAddress = secrets.network.home.hosts.roan.macAddress;
+      macAddress = secrets.network.home.hosts.roan.macAddress;
       iotNetwork = {
         enable = true;
         address = secrets.network.iot.hosts.roan.address;

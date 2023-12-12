@@ -530,6 +530,7 @@ in {
               Type = "oneshot";
               RemainAfterExit = true;
               ExecStop = "${hibernateScript}/bin/hibernate-vm ${vmName}";
+              TimeoutStopSec = "90s";
             };
             wantedBy = ["multi-user.target"];
           };
@@ -540,6 +541,7 @@ in {
             serviceConfig = {
               Type = "oneshot";
               ExecStart = "${hibernateScript}/bin/hibernate-vm ${vmName}";
+              TimeoutStartSec = "90s";
             };
             wantedBy = ["sleep.target"];
           };
