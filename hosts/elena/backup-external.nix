@@ -61,6 +61,8 @@ in {
     timers.backup-external = {
       wantedBy = ["timers.target"];
       partOf = ["backup-external.service"];
+      after = ["network-online.target"];
+      wants = ["network-online.target"];
       timerConfig = {
         OnCalendar = "*-*-* 02:00:00";
         Persistent = true;
@@ -68,7 +70,10 @@ in {
       };
     };
     services.backup-external = {
-      serviceConfig.Type = "oneshot";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 30"; # Network is offline when resuming from sleep
+      };
       script = let
         drives = secrets.backupExternal.drives;
         zfsUser = config.boot.zfs.package;

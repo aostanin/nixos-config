@@ -140,6 +140,7 @@
     serviceConfig = {
       Type = "oneshot";
       WorkingDirectory = "/storage/appdata/scripts/mam";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 30"; # Network is offline when resuming from sleep
       ExecStart = "/storage/appdata/scripts/mam/update_mam.sh";
     };
   };
