@@ -54,12 +54,6 @@
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
-  systemd.network.links."11-default" = {
-    matchConfig.OriginalName = "*";
-    linkConfig.NamePolicy = "mac";
-    linkConfig.MACAddressPolicy = "persistent";
-  };
-
   networking = {
     hostName = "elena";
     hostId = "fc172604";
