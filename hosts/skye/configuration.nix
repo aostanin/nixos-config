@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   hardwareModulesPath,
   secrets,
   ...
@@ -89,6 +90,15 @@
           bg = "~/Sync/wallpaper/nix-wallpaper-nineish-dark-gray.png fill";
         };
       };
+      workspaceOutputAssign = builtins.map (x: {
+        workspace = builtins.toString x;
+        output =
+          if (lib.mod x 3) == 1
+          then [secrets.monitors.lg.name "eDP-1"]
+          else if (lib.mod x 3) == 2
+          then [secrets.monitors.dell.name "eDP-1"]
+          else "eDP-1";
+      }) [1 2 3 4 5 6 7 8 9];
     };
 
     docker = {
@@ -99,7 +109,20 @@
     zfs.enable = true;
   };
 
+  # Mic LED is always on. Turn it off.
+  systemd.services.disable-mic-led = {
+    wantedBy = ["graphical.target"];
+    partOf = ["graphical.target"];
+    after = ["graphical.target"];
+    serviceConfig.Type = "oneshot";
+    script = "echo 0 > /sys/class/leds/platform::micmute/brightness";
+  };
+
   services = {
+    logind.extraConfig = ''
+      HandlePowerKey=suspend
+    '';
+
     tlp = {
       enable = true;
       settings = {

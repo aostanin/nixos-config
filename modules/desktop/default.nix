@@ -59,7 +59,7 @@ in {
             };
 
             output = mkOption {
-              type = str;
+              type = either str (listOf str);
               default = "";
               example = "eDP";
               description = ''
