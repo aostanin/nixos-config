@@ -5,7 +5,7 @@
   ...
 }: {
   home.packages = with pkgs; [
-    android-studio
+    androidStudioPackages.beta
     pidcat
     scrcpy
   ];
