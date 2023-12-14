@@ -19,11 +19,11 @@ with lib; {
     ++ optional (pathExists (./hosts + "/${osConfig.networking.hostName}/home.nix")) (./hosts + "/${osConfig.networking.hostName}/home.nix")
     ++ optionals osConfig.localModules.desktop.enable [
       ./3dprinting
-      ./alacritty
       ./android
       ./chromium
       ./electronics
       ./firefox
+      ./foot
       ./gnupg
       ./gtk
       ./kanshi

@@ -36,7 +36,7 @@ in {
     '';
     config = {
       modifier = "Mod4";
-      terminal = "alacritty";
+      terminal = "footclient";
       focus = {
         followMouse = false;
         mouseWarping = false;
