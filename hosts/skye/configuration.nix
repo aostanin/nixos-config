@@ -129,6 +129,8 @@
         START_CHARGE_THRESH_BAT0 = 75;
         STOP_CHARGE_THRESH_BAT0 = 80;
         CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+
+        USB_DENYLIST = "04d9:4545"; # Keyboard
       };
     };
 
