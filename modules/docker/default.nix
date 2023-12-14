@@ -22,11 +22,13 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable (let
+    enableNvidia = builtins.elem "nvidia" config.services.xserver.videoDrivers;
+  in {
     # TODO: Switch to podman
     virtualisation.docker = {
       enable = true;
-      enableNvidia = builtins.elem "nvidia" config.services.xserver.videoDrivers;
+      enableNvidia = enableNvidia;
       storageDriver = "overlay2";
       liveRestore = false;
       autoPrune = mkIf cfg.enableAutoPrune {
@@ -42,5 +44,10 @@ in {
         --dns-search lan
       '';
     };
-  };
+
+    hardware.opengl = mkIf enableNvidia {
+      enable = true;
+      driSupport32Bit = true;
+    };
+  });
 }

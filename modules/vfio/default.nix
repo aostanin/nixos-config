@@ -110,10 +110,27 @@ with lib; let
         '';
       };
 
+      preDetachCommands = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          Commands to run before detaching the card.
+        '';
+      };
+
+      postAttachCommands = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          Commands to run after attaching the card.
+        '';
+      };
+
       powerManagementCommands = mkOption {
         type = types.str;
+        default = "";
         description = ''
-          Commands to run when the card is detached to put it in a low power state.
+          Commands to run to put the card in a low power state.
         '';
       };
     };
@@ -305,6 +322,8 @@ with lib; let
         #!${pkgs.stdenv.shell}
         set -e
 
+        ${gpu.preDetachCommands}
+
         if [ -d /sys/bus/pci/drivers/amdgpu/0000:${gpu.busId} ]; then
           echo 0000:${gpu.busId} > /sys/bus/pci/drivers/amdgpu/unbind
         fi
@@ -322,6 +341,8 @@ with lib; let
       then ''
         #!${pkgs.stdenv.shell}
         set -e
+
+        ${gpu.preDetachCommands}
 
         systemctl stop nvidia-persistenced.service
 
@@ -348,6 +369,7 @@ with lib; let
         fi
 
         ${gpu.powerManagementCommands}
+        ${gpu.postAttachCommands}
       ''
       else if (gpu.driver == "nvidia")
       then ''
@@ -361,6 +383,7 @@ with lib; let
         systemctl start nvidia-persistenced.service
 
         ${gpu.powerManagementCommands}
+        ${gpu.postAttachCommands}
       ''
       else throw "Unsupported gpu driver ${gpu.driver}"
     );

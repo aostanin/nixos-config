@@ -18,6 +18,7 @@
     ./backup-external.nix
     #./i915-sriov.nix
     ./nfs.nix
+    ./vfio.nix
     ./power-management.nix
   ];
 
@@ -95,11 +96,6 @@
       };
     };
 
-    vfio = {
-      enable = true;
-      cpuType = "intel";
-    };
-
     virtwold = {
       enable = true;
       interfaces = ["br0"];
@@ -113,7 +109,7 @@
       HandlePowerKey=suspend
     '';
 
-    xserver.videoDrivers = ["modesetting"];
+    xserver.videoDrivers = ["modesetting" "nvidia"];
   };
 
   virtualisation.libvirtd.enable = true;
