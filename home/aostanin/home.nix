@@ -146,6 +146,7 @@ with lib; {
       EDITOR = "vi";
       VISUAL = config.home.sessionVariables.EDITOR;
       MANPAGER = "sh -c 'col -bx | ${pkgs.bat}/bin/bat -l man -p'";
+      MANROFFOPT = "-c";
     };
   };
 
