@@ -42,6 +42,7 @@
             "rpool/root<" = true;
             "rpool/virtualization<" = true;
             "rpool/virtualization/docker<" = false;
+            "vmpool/virtualization<" = true;
           };
           snapshotting = {
             type = "cron";
@@ -113,6 +114,7 @@
             "rpool/root/nix<" = false;
             "rpool/virtualization<" = true;
             "rpool/virtualization/docker<" = false;
+            "vmpool/virtualization<" = true;
           };
           snapshotting.type = "manual";
           pruning = {
