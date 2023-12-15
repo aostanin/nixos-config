@@ -68,7 +68,7 @@
 
     home-server = {
       enable = true;
-      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
+      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.integrated}";
       address = secrets.network.home.hosts.elena.address;
       macAddress = secrets.network.home.hosts.elena.macAddress;
       iotNetwork = {

@@ -70,7 +70,7 @@
   hardware.enableRedistributableFirmware = true;
 
   networking = {
-    useDHCP = false;
+    useDHCP = lib.mkDefault false;
     firewall.enable = lib.mkDefault false;
     resolvconf.dnsExtensionMechanism = false; # Disable edns0
   };

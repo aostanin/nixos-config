@@ -56,8 +56,6 @@ in {
     };
 
     networking = {
-      useNetworkd = true;
-
       vlans.vlan40 = mkIf cfg.iotNetwork.enable {
         id = 40;
         interface = "br0";
