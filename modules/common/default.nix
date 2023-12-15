@@ -45,6 +45,7 @@
       "electron-12.2.3"
       "electron-19.1.9"
       "electron-24.8.6"
+      "electron-25.9.0"
       "python-2.7.18.7"
       "schildichat-web-1.11.30-sc.2"
     ];
