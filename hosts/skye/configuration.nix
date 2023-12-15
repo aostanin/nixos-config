@@ -35,7 +35,6 @@
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
-      "pcie_aspm.policy=powersave"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
@@ -77,8 +76,6 @@
     };
   };
 
-  powerManagement.powertop.enable = true;
-
   localModules = {
     desktop = {
       enable = true;
@@ -118,6 +115,11 @@
     script = "echo 0 > /sys/class/leds/platform::micmute/brightness";
   };
 
+  services.udev.extraRules = ''
+    # Disable wakeup from sleep on touchpad activity
+    KERNEL=="i2c-SYNA88024:00", SUBSYSTEM=="i2c", ATTR{power/wakeup}="disabled"
+  '';
+
   services = {
     fprintd = {
       enable = true;
@@ -134,11 +136,26 @@
     tlp = {
       enable = true;
       settings = {
+        # Battery
         START_CHARGE_THRESH_BAT0 = 75;
         STOP_CHARGE_THRESH_BAT0 = 80;
+
+        # CPU
         CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
 
+        # PCIe
+        RUNTIME_PM_ON_AC = "auto";
+        RUNTIME_PM_ON_BAT = "auto";
+        PCIE_ASPM_ON_AC = "powersave";
+        PCIE_ASPM_ON_BAT = "powersave";
+
+        # USB
+        USB_EXCLUDE_AUDIO = 0;
+        USB_EXCLUDE_PRINTER = 0;
         USB_DENYLIST = "04d9:4545"; # Keyboard
+
+        # Wi-Fi
+        WIFI_PWR_ON_BAT = "off"; # Wi-Fi is unstable in power-saving mode
       };
     };
 
