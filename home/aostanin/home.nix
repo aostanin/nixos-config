@@ -61,6 +61,7 @@ with lib; {
         httm
         lazygit
         lftp
+        lsix
         minicom
         miniserve
         mqttui
