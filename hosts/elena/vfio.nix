@@ -20,13 +20,9 @@
         ${setGpuLedColor "FF5555"}
       '';
       postAttachCommands = ''
-        ${docker} start $(${getNvidiaContainers})
-      '';
-      powerManagementCommands = ''
         # Disable LED
         ${setGpuLedColor "000000"}
-        # Lowers idle from ~13 W to ~6 W
-        ${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi --gpu-reset
+        ${docker} start $(${getNvidiaContainers})
       '';
     };
   };

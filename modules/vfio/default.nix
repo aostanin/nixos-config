@@ -485,7 +485,10 @@ in {
         '';
       };
 
-      hardware.nvidia.nvidiaPersistenced = true;
+      hardware.nvidia = mkIf (lists.any (gpu: gpu.driver == "nvidia") (attrsets.attrValues cfg.gpus)) {
+        nvidiaPersistenced = true;
+        powerManagement.enable = true;
+      };
 
       systemd.services.libvirtd = {
         path = with pkgs; [
