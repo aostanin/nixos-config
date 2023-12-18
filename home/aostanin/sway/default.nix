@@ -11,6 +11,14 @@
     nativeBuildInputs = old.nativeBuildInputs ++ [pkgs.libsForQt5.kguiaddons];
     cmakeFlags = ["-DUSE_WAYLAND_CLIPBOARD=true"];
   });
+  rofiPkg = pkgs.rofi-wayland.override {
+    plugins = [
+      pkgs.rofi-calc
+    ];
+  };
+  rofimojiPkg = pkgs.rofimoji.override {
+    rofi = rofiPkg;
+  };
 in {
   i18n.inputMethod = {
     enabled = "fcitx5";
@@ -43,17 +51,11 @@ in {
       };
       keybindings = let
         modifier = config.wayland.windowManager.sway.config.modifier;
-        rofiWithPlugins = with pkgs;
-          rofi.override {
-            plugins = [
-              rofi-calc
-            ];
-          };
       in
         lib.mkOptionDefault {
-          "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show combi";
-          "${modifier}+c" = "exec ${rofiWithPlugins}/bin/rofi -show calc -modi calc -no-show-match -no-sort";
-          "${modifier}+period" = "exec ${pkgs.rofimoji}/bin/rofimoji";
+          "${modifier}+d" = "exec ${rofiPkg}/bin/rofi -show combi";
+          "${modifier}+c" = "exec ${rofiPkg}/bin/rofi -show calc -modi calc -no-show-match -no-sort";
+          "${modifier}+period" = "exec ${rofimojiPkg}/bin/rofimoji";
           "${modifier}+n" = "exec ${swayncPkg}/bin/swaync-client -t -sw";
           "${modifier}+Shift+s" = "sticky toggle";
           "${modifier}+h" = "focus left";
@@ -208,6 +210,7 @@ in {
   programs = {
     rofi = {
       enable = true;
+      package = rofiPkg;
       theme = "gruvbox-dark";
       extraConfig = {
         modi = "window,drun,run,ssh,combi";
