@@ -6,7 +6,7 @@
 }: {
   home.packages = with pkgs; [
     blender
-    cura
+    (cura.override {plugins = with pkgs.curaPlugins; [octoprint];})
     freecad
     meshlab
     openscad
