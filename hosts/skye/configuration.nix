@@ -103,7 +103,10 @@
       enableAutoPrune = true;
     };
 
-    zfs.enable = true;
+    zfs = {
+      enable = true;
+      allowHibernation = true;
+    };
   };
 
   # Mic LED is always on. Turn it off.

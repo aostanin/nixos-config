@@ -91,6 +91,8 @@
     zsh.enable = true;
   };
 
+  users.mutableUsers = false;
+
   users.users."${secrets.user.username}" = {
     isNormalUser = true;
     extraGroups = [
@@ -112,5 +114,8 @@
     openssh.authorizedKeys.keys = [secrets.user.sshKey];
   };
 
-  users.users.root.openssh.authorizedKeys.keys = [secrets.user.sshKey];
+  users.users.root = {
+    hashedPassword = secrets.user.hashedPassword;
+    openssh.authorizedKeys.keys = [secrets.user.sshKey];
+  };
 }

@@ -10,14 +10,19 @@ with lib; let
 in {
   options.localModules.zfs = {
     enable = mkEnableOption "zfs";
+
+    allowHibernation = mkOption {
+      default = false;
+      type = types.bool;
+    };
   };
 
   config = mkIf cfg.enable {
     boot = {
       supportedFilesystems = ["zfs"];
       zfs = {
-        forceImportRoot = false;
-        allowHibernation = true;
+        forceImportRoot = !cfg.allowHibernation;
+        allowHibernation = cfg.allowHibernation;
       };
     };
 

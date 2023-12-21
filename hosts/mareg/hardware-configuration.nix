@@ -27,25 +27,13 @@
     options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
-  fileSystems."/home" = {
-    device = "rpool/home";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
-
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/77DC-A61A";
+    device = "/dev/disk/by-label/boot";
     fsType = "vfat";
   };
 
-  fileSystems."/var/lib/docker" = {
-    device = "rpool/docker";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
-
   swapDevices = [
-    {device = "/dev/disk/by-uuid/63c1868b-c0cb-4030-bebb-2186c41b2c4a";}
+    {device = "/dev/disk/by-label/swap";}
   ];
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
