@@ -35,6 +35,10 @@
           "browser.newtabpage.activity-stream.showSponsored" = false;
           "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
           "browser.vpn_promo.enabled" = false;
+
+          # Disable two-finger swipe to go forward/back
+          "browser.gesture.swipe.left" = "cmd_scrollLeft";
+          "browser.gesture.swipe.right" = "cmd_scrollRight";
         };
         extensions = with pkgs.nur.repos.rycee.firefox-addons; [
           pkgs.nur.repos.rycee.firefox-addons."10ten-ja-reader"
