@@ -5,7 +5,9 @@
   hardwareModulesPath,
   secrets,
   ...
-}: {
+}: let
+  interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.roan.integrated}";
+in {
   imports = [
     "${hardwareModulesPath}/lenovo/thinkpad/x250"
     "${hardwareModulesPath}/common/pc/laptop/ssd"
@@ -39,6 +41,11 @@
   networking = {
     hostName = "roan";
     hostId = "9bc52069";
+    localCommands = ''
+      # Avoid hang when traffic is high
+      # ref: https://forums.servethehome.com/index.php?threads/fix-intel-i219-v-detected-hardware-unit-hang.36700/#post-339318
+      ${pkgs.ethtool}/bin/ethtool -K ${interface} tso off gso off
+    '';
   };
 
   powerManagement.powertop.enable = true;
@@ -51,7 +58,7 @@
 
     home-server = {
       enable = true;
-      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.roan.integrated}";
+      interface = interface;
       address = secrets.network.home.hosts.roan.address;
       macAddress = secrets.network.home.hosts.roan.macAddress;
       iotNetwork = {
