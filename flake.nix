@@ -52,7 +52,7 @@
       skye = {system = "x86_64-linux";};
       tio = {
         system = "aarch64-linux";
-        options = {remoteBuild = false;};
+        options = {remoteBuild = true;};
       };
       vps-oci1 = {system = "x86_64-linux";};
       vps-oci2 = {system = "x86_64-linux";};
