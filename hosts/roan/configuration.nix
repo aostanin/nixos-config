@@ -68,6 +68,8 @@ in {
       };
     };
 
+    intelAmt.enable = true;
+
     scrutinyCollector.enable = true;
 
     zfs.enable = true;

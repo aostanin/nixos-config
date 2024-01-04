@@ -3,6 +3,7 @@
     ./desktop
     ./docker
     ./home-server
+    ./intel-amt
     ./pikvm
     ./rkvm
     ./rsync-backup
