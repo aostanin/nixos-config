@@ -200,15 +200,6 @@ with lib; let
           List of ranges for the guest CPUs.
         '';
       };
-
-      setPerformanceGovernor = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
-        description = ''
-          Change the guest CPU governor to performance.
-        '';
-      };
     };
   };
 
@@ -578,6 +569,9 @@ in {
     {
       environment.etc = mkMerge (mapAttrsToList (vmName: vm: let
           hookPath = "libvirt/hooks/qemu.d/${vmName}";
+          hostCpus = concatStringsSep "," vm.isolate.hostCpus;
+          guestCpus = concatStringsSep "," vm.isolate.guestCpus;
+          allCpus = concatStringsSep "," vm.isolate.allCpus;
         in {
           "${hookPath}/prepare/begin/01-detach.sh" = mkIf (vm.gpu != null) {
             source = "${gpuDetachScript cfg.gpus.${vm.gpu}}/bin/vfio-gpu-detach";
@@ -592,22 +586,22 @@ in {
               script = pkgs.writeScriptBin "isolate" ''
                 #!${pkgs.stdenv.shell}
                 set -e
-                HCPUS='${concatStringsSep "," vm.isolate.hostCpus}'
-                MCPUS='${concatStringsSep "," vm.isolate.guestCpus}'
+                ${optionalString vm.isolate.isolateCpus ''
+                  systemctl set-property --runtime -- user.slice AllowedCPUs=${hostCpus}
+                  systemctl set-property --runtime -- system.slice AllowedCPUs=${hostCpus}
+                  systemctl set-property --runtime -- init.scope AllowedCPUs=${hostCpus}
+                ''}
 
                 ${pkgs.vfio-isolate}/bin/vfio-isolate \
                   --undo-file /tmp/isolate-undo-${vmName} \
                   ${optionalString vm.isolate.dropCaches "drop-caches"} \
-                  ${optionalString vm.isolate.isolateCpus "cpuset-modify --cpus C$HCPUS /system.slice"} \
-                  ${optionalString vm.isolate.isolateCpus "cpuset-modify --cpus C$HCPUS /user.slice"} \
                   ${optionalString vm.isolate.compactMemory "compact-memory"} \
                   ${optionalString vm.isolate.isolateCpus ''
-                  ${optionalString vm.isolate.setPerformanceGovernor "cpu-governor performance C$MCPUS"} \
-                  irq-affinity mask C$MCPUS
+                  irq-affinity mask C${guestCpus}
                 ''}
 
                 ${optionalString vm.isolate.isolateCpus ''
-                  taskset -pc $HCPUS 2
+                  taskset -pc '${hostCpus}' 2
                 ''}
               '';
             in "${script}/bin/isolate";
@@ -618,11 +612,17 @@ in {
               script = pkgs.writeScriptBin "unisolate" ''
                 #!${pkgs.stdenv.shell}
                 set -e
+                ${optionalString vm.isolate.isolateCpus ''
+                  systemctl set-property --runtime -- user.slice AllowedCPUs=${allCpus}
+                  systemctl set-property --runtime -- system.slice AllowedCPUs=${allCpus}
+                  systemctl set-property --runtime -- init.scope AllowedCPUs=${allCpus}
+                ''}
+
                 ${pkgs.vfio-isolate}/bin/vfio-isolate restore /tmp/isolate-undo-${vmName}
                 rm -f /tmp/isolate-undo-${vmName}
 
                 ${optionalString vm.isolate.isolateCpus ''
-                  taskset -pc '${concatStringsSep "," vm.isolate.allCpus}' 2
+                  taskset -pc '${allCpus}' 2
                 ''}
               '';
             in "${script}/bin/unisolate";
