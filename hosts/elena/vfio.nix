@@ -15,6 +15,10 @@
       driver = "nvidia";
       pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
       busId = "01:00.0";
+      powerManagementCommands = ''
+        # Lowers idle from ~13 W to ~6 W. Otherwise the GPU continues displaying the last image.
+        ${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi --gpu-reset
+      '';
       preDetachCommands = ''
         ${docker} stop $(${getNvidiaContainers})
         ${setGpuLedColor "FF5555"}
@@ -85,11 +89,7 @@ in {
       win10-play = {
         gpu = "nvidiaRTX2070Super";
         enableHibernation = true;
-        isolate =
-          isolate14Thread
-          // {
-            setPerformanceGovernor = true;
-          };
+        isolate = isolate14Thread;
       };
     };
   };
