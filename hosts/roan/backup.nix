@@ -12,8 +12,11 @@
           name = "snap-frequent";
           type = "snap";
           filesystems = {
+            "rpool/appdata<" = true;
             "rpool/home<" = true;
             "rpool/root<" = true;
+            "rpool/virtualization<" = true;
+            "rpool/virtualization/docker<" = false;
           };
           snapshotting = {
             type = "periodic";
@@ -43,11 +46,12 @@
             type = "tcp";
             address = "[${secrets.network.zerotier.hosts.elena.address6}]:8888";
           };
-          send.encrypted = true;
           filesystems = {
+            "rpool/appdata<" = true;
             "rpool/home<" = true;
             "rpool/root<" = true;
-            "rpool/root/nix<" = false;
+            "rpool/virtualization<" = true;
+            "rpool/virtualization/docker<" = false;
           };
           snapshotting.type = "manual";
           pruning = {
