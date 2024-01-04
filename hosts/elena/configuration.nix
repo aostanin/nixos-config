@@ -105,6 +105,99 @@
   };
 
   services = {
+    autosuspend = {
+      enable = true;
+      settings = {
+        interval = 30;
+        idle_time = 1800;
+      };
+      checks = {
+        ActiveConnection.ports = lib.concatStringsSep "," [
+          "22" # ssh
+          "8888" # zrepl
+          "8889" # zrepl
+        ];
+        LogindSessionsIdle = {};
+        Processes.processes = lib.concatStringsSep "," [
+          "rsync"
+          "mosh-server"
+        ];
+        navidrome = {
+          class = "ExternalCommand";
+          command = let
+            baseUrl = secrets.navidrome.baseUrl;
+            username = secrets.navidrome.username;
+            password = secrets.navidrome.password;
+          in
+            toString (pkgs.writeShellScript "check_navidrome_playing" ''
+              response=$(${pkgs.curl}/bin/curl -s "${baseUrl}/rest/getNowPlaying.view?u=${username}&p=${password}&v=1.15.&c=curl")
+              echo $response | ${pkgs.yq}/bin/xq -e '."subsonic-response".nowPlaying != null'
+            '');
+        };
+        jellyfin = {
+          class = "ExternalCommand";
+          command = let
+            baseUrl = secrets.jellyfin.baseUrl;
+            token = secrets.jellyfin.token;
+          in
+            toString (pkgs.writeShellScript "check_jellyfin_sessions" ''
+              sessions=$(${pkgs.curl}/bin/curl -s ${baseUrl}/sessions?api_key=${token})
+              echo $sessions | ${pkgs.jq}/bin/jq -e '. | map(select(.NowPlayingItem != null)) != []'
+            '');
+        };
+        qbittorrent = {
+          class = "ExternalCommand";
+          command = let
+            baseUrl = secrets.qbittorrent.baseUrl;
+            username = secrets.qbittorrent.username;
+            password = secrets.qbittorrent.password;
+          in
+            toString (pkgs.writeShellScript "check_qbittorrent_downloads" ''
+              SID=$(${pkgs.curl}/bin/curl -s -o /dev/null -c - --data "username=${username}&password=${password}" "${baseUrl}/api/v2/auth/login" | ${pkgs.gawk}/bin/awk 'END{print $NF}')
+              torrents=$(${pkgs.curl}/bin/curl -s --cookie "SID=$SID" --data "filter=downloading&sort=dlspeed&reverse=true&limit=1" "${baseUrl}/api/v2/torrents/info")
+              echo $torrents | ${pkgs.jq}/bin/jq -e '.[].dlspeed > 1000'
+            '');
+        };
+        tdarr = {
+          class = "ExternalCommand";
+          command = let
+            baseUrl = secrets.tdarr.baseUrl;
+            username = secrets.tdarr.username;
+            password = secrets.tdarr.password;
+          in
+            toString (pkgs.writeShellScript "check_tdarr" ''
+              nodes=$(${pkgs.curl}/bin/curl -s -u "${username}:${password}" ${baseUrl}/api/v2/get-nodes)
+              echo $nodes | ${pkgs.jq}/bin/jq -e '.[].workers | to_entries | map(select(.value.idle == false)) != []'
+            '');
+        };
+        vms = {
+          class = "ExternalCommand";
+          command = toString (pkgs.writeShellScript "check_running_vms" ''
+            status=$(${pkgs.libvirt}/bin/virsh -q list --state-running | grep "running")
+            if [ -z "$status" ]; then
+              exit 1
+            else
+              exit 0
+            fi
+          '');
+        };
+        zfs = {
+          class = "ExternalCommand";
+          command = let
+            zfsUser = config.boot.zfs.package;
+          in
+            toString (pkgs.writeShellScript "check_zfs" ''
+              status=$(${zfsUser}/bin/zpool status | grep "scrub in progress")
+              if [ -z "$status" ]; then
+                exit 1
+              else
+                exit 0
+              fi
+            '');
+        };
+      };
+    };
+
     logind.extraConfig = ''
       HandlePowerKey=suspend
     '';
