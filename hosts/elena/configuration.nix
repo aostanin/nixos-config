@@ -124,6 +124,14 @@
   services = {
     autosuspend = {
       enable = true;
+      package = pkgs.autosuspend.overrideAttrs (old: {
+        src = pkgs.fetchFromGitHub {
+          owner = "languitar";
+          repo = old.pname;
+          rev = "refs/tags/v${old.version}";
+          hash = "sha256-cF0GEtOTGm4etWM9U4EE0deg9ISckRaxsvgrwKzB3cs=";
+        };
+      });
       settings = {
         interval = 30;
         idle_time = 1800;
