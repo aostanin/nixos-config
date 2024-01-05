@@ -61,6 +61,23 @@
   };
 
   localModules = {
+    desktop = {
+      enable = true;
+      primaryOutput = "HDMI-A-1";
+      output = {
+        "*" = {
+          disable = "";
+        };
+        "HDMI-A-1" = {
+          enable = "";
+        };
+      };
+      preStartCommands = ''
+        export WLR_DRM_DEVICES=$(readlink -f /dev/dri/by-path/pci-0000:00:02.0-card)
+        export __EGL_VENDOR_LIBRARY_FILENAMES=/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json
+      '';
+    };
+
     docker = {
       enable = true;
       useLocalDns = true;
@@ -203,6 +220,19 @@
     '';
 
     xserver.videoDrivers = ["modesetting" "nvidia"];
+  };
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.finegrained = true;
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
   };
 
   virtualisation.libvirtd.enable = true;

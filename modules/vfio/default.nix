@@ -337,7 +337,15 @@ with lib; let
 
         systemctl stop nvidia-persistenced.service
 
+        # Avoid in use error when modeset is enabled
+        modprobe -r nvidia_uvm
+        modprobe -r nvidia_drm
+        modprobe -r nvidia_modeset
+        modprobe -r nvidia
+        modprobe -r i2c_nvidia_gpu
+
         # Avoid detaching the GPU if it's in use
+        # TODO: Kill processes with --kill?
         ${pkgs.psmisc}/bin/fuser /dev/nvidia0 && exit 1
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
@@ -359,7 +367,6 @@ with lib; let
           ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
 
-        ${gpu.powerManagementCommands}
         ${gpu.postAttachCommands}
       ''
       else if (gpu.driver == "nvidia")
@@ -371,9 +378,14 @@ with lib; let
           ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
 
+        modprobe i2c_nvidia_gpu
+        modprobe nvidia
+        modprobe nvidia_modeset
+        modprobe nvidia_drm
+        modprobe nvidia_uvm
+
         systemctl start nvidia-persistenced.service
 
-        ${gpu.powerManagementCommands}
         ${gpu.postAttachCommands}
       ''
       else throw "Unsupported gpu driver ${gpu.driver}"

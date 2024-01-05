@@ -27,7 +27,8 @@ in {
     };
 
     primaryOutput = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
+      default = null;
       example = "eDP-1";
       description = ''
         The display output to use as primary.

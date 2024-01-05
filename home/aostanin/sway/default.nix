@@ -228,7 +228,7 @@ in {
           layer = "top";
           position = "left";
           width = 32;
-          output = [osConfig.localModules.desktop.primaryOutput];
+          output = lib.mkIf (osConfig.localModules.desktop.primaryOutput != null) [osConfig.localModules.desktop.primaryOutput];
           modules-left = ["sway/workspaces" "sway/mode"];
           modules-center = [];
           modules-right = [
