@@ -152,7 +152,10 @@ in {
           {class = "^SchildiChat$";}
           {class = "^Skype$";}
           {class = "^Slack$";}
-          {class = "^thunderbird$";}
+          {app_id = "^thunderbird$";}
+        ];
+        "7" = [
+          {class = "^jetbrains-studio$";}
         ];
       };
       floating = {
