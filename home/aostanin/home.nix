@@ -59,6 +59,7 @@ with lib; {
         gitui
         gpsbabel
         httm
+        jq
         lazygit
         lftp
         lsix
@@ -68,6 +69,7 @@ with lib; {
         nsz
         (p7zip.override {enableUnfree = true;})
         personal-scripts
+        powertop
         pv
         python3
         ranger
