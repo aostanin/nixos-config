@@ -32,8 +32,6 @@ with lib; {
       ./sway
       ./syncthing
       ./vscode
-
-      #  ./dunst
     ];
 
   xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs/config.nix;
