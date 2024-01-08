@@ -125,27 +125,24 @@
     autosuspend = {
       enable = true;
       package = pkgs.autosuspend.overrideAttrs (old: {
-        src = pkgs.fetchFromGitHub {
-          owner = "languitar";
-          repo = old.pname;
-          rev = "refs/tags/v${old.version}";
+        src = old.src.override {
           hash = "sha256-cF0GEtOTGm4etWM9U4EE0deg9ISckRaxsvgrwKzB3cs=";
         };
       });
       settings = {
         interval = 30;
         idle_time = 1800;
+        # The default can't find echo
+        wakeup_cmd = "${pkgs.bash}/bin/sh -c '${pkgs.coreutils}/bin/echo 0 > /sys/class/rtc/rtc0/wakealarm && ${pkgs.coreutils}/bin/echo {timestamp:.0f} > /sys/class/rtc/rtc0/wakealarm'";
       };
       checks = {
         ActiveConnection.ports = lib.concatStringsSep "," [
-          "22" # ssh
           "8888" # zrepl
           "8889" # zrepl
         ];
         LogindSessionsIdle = {};
         Processes.processes = lib.concatStringsSep "," [
           "rsync"
-          "mosh-server"
         ];
         navidrome = {
           class = "ExternalCommand";
@@ -219,6 +216,12 @@
                 exit 0
               fi
             '');
+        };
+      };
+      wakeups = {
+        backup_external = {
+          class = "SystemdTimer";
+          match = "backup-external.timer";
         };
       };
     };
