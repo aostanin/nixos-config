@@ -154,6 +154,9 @@ in {
           {class = "^Slack$";}
           {app_id = "^thunderbird$";}
         ];
+        "3" = [
+          {class = "^Logseq$";}
+        ];
         "7" = [
           {class = "^jetbrains-studio$";}
         ];
