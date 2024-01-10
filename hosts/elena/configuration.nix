@@ -137,7 +137,7 @@
       };
       checks = {
         ActiveConnection.ports = lib.concatStringsSep "," [
-          "22"   # ssh
+          "22" # ssh
           "8888" # zrepl
           "8889" # zrepl
         ];
