@@ -19,5 +19,9 @@ in {
         Environment = "TERM=xterm-256color";
       };
     };
+
+    services.udev.extraRules = ''
+      KERNEL=="ttyS0", TAG+="systemd", ENV{SYSTEMD_WANTS}="serial-getty@%k.service"
+    '';
   };
 }
