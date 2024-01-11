@@ -65,6 +65,7 @@ with lib; {
         miniserve
         mqttui
         nsz
+        ollama
         (p7zip.override {enableUnfree = true;})
         personal-scripts
         powertop
