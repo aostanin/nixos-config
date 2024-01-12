@@ -232,11 +232,11 @@ in {
       settings = {
         mainBar = {
           layer = "top";
-          position = "left";
-          width = 32;
+          position = "top";
+          height = 24;
           output = lib.mkIf (osConfig.localModules.desktop.primaryOutput != null) [osConfig.localModules.desktop.primaryOutput];
           modules-left = ["sway/workspaces" "sway/mode"];
-          modules-center = [];
+          modules-center = ["sway/window"];
           modules-right = [
             "tray"
             #"disk"
@@ -248,16 +248,43 @@ in {
             "idle_inhibitor"
             "clock"
           ];
-          "clock" = {
-            interval = 5;
-            format = "{:%H\n%M}";
+          battery = {
+            format = "{icon} {capacity}%";
+            format-charging = " {capacity}%";
+            format-plugged = " {capacity}%";
+            format-alt = "{icon} {time}";
+            format-icons = ["" "" "" "" ""];
+          };
+          clock = {
+            interval = 1;
+            format = "{:%H:%M}";
+            tooltip-format = "<tt>{calendar}</tt>";
+            format-alt = "{:%Y-%m-%d}";
+            calendar = {
+              mode = "year";
+              mode-mon-col = 3;
+              on-click-right = "mode";
+              format = {
+                months = "<span color='#ffead3'><b>{}</b></span>";
+                days = "<span color='#ecc6d9'><b>{}</b></span>";
+                weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+                today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+              };
+            };
+            actions = {
+              on-click-right = "mode";
+              on-click-forward = "tz_up";
+              on-click-backward = "tz_down";
+              on-scroll-up = "shift_up";
+              on-scroll-down = "shift_down";
+            };
           };
           "sway/workspaces" = {
             all-outputs = true;
             enable-bar-scroll = true;
             disable-scroll-wraparound = true;
           };
-          "idle_inhibitor" = {
+          idle_inhibitor = {
             format = "{icon}";
             format-icons = {
               "activated" = "";
