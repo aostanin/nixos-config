@@ -249,14 +249,15 @@ in {
             "clock"
           ];
           battery = {
-            format = "{icon} {capacity}%";
-            format-charging = " {capacity}%";
-            format-plugged = " {capacity}%";
-            format-alt = "{icon} {time}";
+            interval = 5;
+            format = "{icon}  {capacity}%";
+            format-charging = "  {capacity}%";
+            format-plugged = "  {capacity}%";
+            format-alt = "{icon}  {time}";
             format-icons = ["" "" "" "" ""];
           };
           clock = {
-            interval = 1;
+            interval = 5;
             format = "{:%H:%M}";
             tooltip-format = "<tt>{calendar}</tt>";
             format-alt = "{:%Y-%m-%d}";
@@ -278,6 +279,9 @@ in {
               on-scroll-up = "shift_up";
               on-scroll-down = "shift_down";
             };
+          };
+          "sway/window" = {
+            all-outputs = true;
           };
           "sway/workspaces" = {
             all-outputs = true;
