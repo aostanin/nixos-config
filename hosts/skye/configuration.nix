@@ -90,7 +90,8 @@
       workspaceOutputAssign = builtins.map (x: {
         workspace = builtins.toString x;
         output =
-          if (lib.mod x 3) == 1
+          # 2 workspaces per monitor, except 7-9 on main monitor
+          if (lib.mod x 3) == 1 || x > 6
           then [secrets.monitors.lg.name "eDP-1"]
           else if (lib.mod x 3) == 2
           then [secrets.monitors.dell.name "eDP-1"]
