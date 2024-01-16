@@ -44,9 +44,7 @@ with lib; {
       [
         bat
         beets
-        bottom
         btop
-        catt
         cksfv
         ctop
         dhex
@@ -184,15 +182,6 @@ with lib; {
     };
 
   xdg.configFile = {
-    "catt/catt.cfg".text = ''
-      [options]
-      device = bedroom
-
-      [aliases]
-      kitchen = Kitchen Home Hub Max
-      bedroom = Bedroom TV
-    '';
-
     "libvirt/libvirt.conf".text = ''
       uri_default='qemu:///system'
     '';
