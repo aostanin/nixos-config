@@ -57,6 +57,7 @@ with lib; {
         httm
         jq
         lazygit
+        lf
         lftp
         lsix
         minicom
@@ -69,7 +70,6 @@ with lib; {
         powertop
         pv
         python3
-        ranger
         rclone
         ripgrep
         sshfs
