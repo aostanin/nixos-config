@@ -5,12 +5,11 @@
   ...
 }: {
   home.sessionVariables = {
-    TERMINAL = "footclient";
+    TERMINAL = "foot";
   };
 
   programs.foot = {
     enable = true;
-    server.enable = true;
     settings = {
       main = {
         term = "xterm-256color";

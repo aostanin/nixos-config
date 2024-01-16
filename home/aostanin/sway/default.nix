@@ -44,7 +44,7 @@ in {
     '';
     config = {
       modifier = "Mod4";
-      terminal = "footclient";
+      terminal = "foot";
       focus = {
         followMouse = false;
         mouseWarping = false;
