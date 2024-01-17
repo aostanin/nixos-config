@@ -95,9 +95,6 @@ with lib; {
         logseq
         moonlight-qt
         mullvad-vpn
-        peek
-        qdirstat
-        sonixd
         steam
         (xfce.thunar.override {
           thunarPlugins = with xfce; [
