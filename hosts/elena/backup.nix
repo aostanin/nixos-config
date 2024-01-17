@@ -223,9 +223,8 @@
       wantedBy = ["timers.target"];
       partOf = ["zrepl-local-push.service"];
       timerConfig = {
-        OnCalendar = "*-*-* 01:15:00";
+        OnCalendar = "*-*-* 18:00:00";
         Persistent = true;
-        RandomizedDelaySec = "15m";
       };
     };
     services.zrepl-local-push = {

@@ -108,8 +108,8 @@
         metrics_smart_args = "--xall --json --nocheck=standby";
       };
       timerConfig = {
-        OnCalendar = "*-*-* 01:10:00";
         RandomizedDelaySec = 0;
+        OnCalendar = "*-*-* 18:05:00";
       };
     };
 
@@ -223,7 +223,7 @@
       wakeups = {
         backup_external = {
           class = "SystemdTimer";
-          match = "backup-external.timer";
+          match = "zrepl-local-push.timer";
         };
       };
     };

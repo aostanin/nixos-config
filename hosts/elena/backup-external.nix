@@ -64,9 +64,8 @@ in {
       after = ["network-online.target"];
       wants = ["network-online.target"];
       timerConfig = {
-        OnCalendar = "*-*-* 02:00:00";
+        OnCalendar = "*-*-* 18:15:00";
         Persistent = true;
-        RandomizedDelaySec = "15m";
       };
     };
     services.backup-external = {
