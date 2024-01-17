@@ -43,7 +43,6 @@ with lib; {
     packages = with pkgs;
       [
         bat
-        beets
         btop
         cksfv
         ctop
@@ -128,6 +127,7 @@ with lib; {
         spectacle
       ]
       ++ optionals (pkgs.stdenv.hostPlatform.system != "aarch64-linux") [
+        beets # broken on aarch64
         nvtop
         steam-run
       ]
