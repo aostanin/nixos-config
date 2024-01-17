@@ -4,10 +4,7 @@
   inputs = {
     deploy-rs = {
       url = "github:serokell/deploy-rs";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        utils.follows = "flake-utils";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -19,19 +16,12 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix/nixpkgs-stable";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    systems.url = "github:nix-systems/default-linux";
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
-    };
+    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = {
+  outputs = inputs @ {
     self,
     nixpkgs,
     nixpkgs-unstable,
@@ -40,7 +30,7 @@
     nur,
     deploy-rs,
     pre-commit-hooks,
-    flake-utils,
+    flake-parts,
     ...
   }: let
     lib = nixpkgs.lib;
@@ -88,8 +78,10 @@
               # Use same nixpkgs for flakes and system
               # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
               nix = {
-                registry.nixpkgs.flake = nixpkgs;
-                registry.nixpkgs-unstable.flake = nixpkgs-unstable;
+                registry = {
+                  nixpkgs.flake = nixpkgs;
+                  nixpkgs-unstable.flake = nixpkgs-unstable;
+                };
                 nixPath = [
                   "nixpkgs=/etc/channels/nixpkgs"
                   "nixos-config=/etc/nixos/configuration.nix"
@@ -112,68 +104,71 @@
     mkNode = {
       hostname,
       system,
-      options,
-    }:
-      {
-        hostname = secrets.network.zerotier.hosts."${hostname}".address6;
-        sshUser = "root";
-        fastConnection = false;
-        autoRollback = false;
-        magicRollback = false;
-        remoteBuild = true;
+    }: {
+      hostname = secrets.network.zerotier.hosts."${hostname}".address6;
+      sshUser = "root";
+      fastConnection = false;
+      autoRollback = false;
+      magicRollback = false;
+      remoteBuild = true;
 
-        profiles = {
-          system = {
-            user = "root";
-            path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
-          };
+      profiles = {
+        system = {
+          user = "root";
+          path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
         };
-      }
-      // options;
-  in {
-    nixosConfigurations = builtins.mapAttrs (hostname: host:
-      mkNixosSystem {
-        inherit hostname;
-        system = host.system;
-      })
-    hosts;
-
-    deploy.nodes = builtins.mapAttrs (hostname: host:
-      mkNode {
-        inherit hostname;
-        system = host.system;
-        options = ({options = {};} // host).options;
-      })
-    hosts;
-
-    checks =
-      builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib
-      // lib.genAttrs flake-utils.lib.defaultSystems (
-        system: {
-          pre-commit-check = pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              alejandra.enable = true;
-            };
-          };
-        }
-      );
-
-    devShell = lib.genAttrs flake-utils.lib.defaultSystems (system:
-      with nixpkgs.legacyPackages.${system};
-        mkShell {
-          inherit (self.checks.${system}.pre-commit-check) shellHook;
+      };
+    };
+  in
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux" "aarch64-linux"];
+      perSystem = {
+        config,
+        self',
+        pkgs,
+        system,
+        ...
+      }: {
+        devShells.default = pkgs.mkShell {
+          inherit (self'.checks.pre-commit-check) shellHook;
 
           buildInputs = [
             deploy-rs.defaultPackage.${system}
-            git-crypt
-            nixos-generators
+            pkgs.git-crypt
           ];
-        });
+        };
 
-    formatter = lib.genAttrs flake-utils.lib.defaultSystems (
-      system:
-        nixpkgs.legacyPackages.${system}.alejandra
-    );
-  };
+        checks = pkgs.lib.attrsets.mergeAttrsList [
+          (deploy-rs.lib.${system}.deployChecks {
+            # Only check nodes with the same system
+            nodes = pkgs.lib.attrsets.filterAttrs (name: value: hosts.${name}.system == system) self.deploy.nodes;
+          })
+          {
+            pre-commit-check = pre-commit-hooks.lib.${system}.run {
+              src = ./.;
+              hooks = {
+                alejandra.enable = true;
+              };
+            };
+          }
+        ];
+
+        formatter = pkgs.alejandra;
+      };
+      flake = {
+        nixosConfigurations = builtins.mapAttrs (hostname: host:
+          mkNixosSystem {
+            inherit hostname;
+            system = host.system;
+          })
+        hosts;
+
+        deploy.nodes = builtins.mapAttrs (hostname: host:
+          mkNode {
+            inherit hostname;
+            system = host.system;
+          })
+        hosts;
+      };
+    };
 }
