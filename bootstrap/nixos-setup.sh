@@ -56,7 +56,7 @@ cat << EOF > /mnt/etc/nixos/configuration.nix
   boot.loader.efi.canTouchEfiVariables = true;
   networking.hostId = "$(head -c 8 /etc/machine-id)";
   services.openssh.enable = true;
-  users.users.root.openssh.authorizedKeys.keys = ["ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtPiyHHtDhUJ1jsAP6eUapQrjcyVW6D1EykWDE9e7FDRHg/o63wtpP9WkfvmcGlzHUFPDIyFWwxqKz9O/+M3d/QJ+IPv5Xk33UsHfZNk36BnuDM9G2TmpIKIkKvRG0zhxZOIQnrY3jUl24xdwixeJN2oJj8FAAFbGPSWtyuh8Jnw5tSVo9KPYVfRnwVMMbxVj57OCI3eSsggQoVf1nxiR45EVbKneAUwdVIe0ZrAQVvhVi2iQYDpWWu3J/Yq2tipr91E14HrhrursRCdyisbjy6SeXjz84fIDiMurqs5sQ9qop7RkgWEF8YGmG7De4yqGxxzBv3A2XVvY9aW6lXaKKQ== aostanin@gmail.com"];
+  users.users.root.openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBKi5mFDoyYSeNmjBZk2pU7BAmA3tUyCxV0Ix7/pWzyq aostanin@gmail.com"];
   system.stateVersion = "23.11";
 }
 EOF

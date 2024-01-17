@@ -80,8 +80,6 @@
     enable = true;
     settings = {
       X11Forwarding = true;
-      HostKeyAlgorithms = "+ssh-rsa";
-      PubkeyAcceptedAlgorithms = "+ssh-rsa";
     };
   };
 
