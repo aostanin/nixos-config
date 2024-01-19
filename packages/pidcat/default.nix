@@ -10,12 +10,12 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "JakeWharton";
     repo = "pidcat";
-    rev = version;
-    sha256 = "0jfkyvh39wcyvsa6q21nd5nibrbx7vhf35axlfnr6hd89iv1r997";
+    rev = "61cd1ee1beabfa14eb5fbe21eb90c192d96aebc5";
+    hash = "sha256-exswTRhx89W22tynerd5Bg0Q4BxhV0KC05a+VCEqmL4=";
   };
 
   buildInputs = with pkgs; [
-    python2
+    python3
   ];
 
   installPhase = ''
