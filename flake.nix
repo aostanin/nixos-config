@@ -19,6 +19,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-parts.url = "github:hercules-ci/flake-parts";
+    nvidia-patch.url = "github:arcnmx/nvidia-patch.nix";
   };
 
   outputs = inputs @ {

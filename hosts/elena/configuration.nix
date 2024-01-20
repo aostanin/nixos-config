@@ -20,6 +20,7 @@
     ./nfs.nix
     ./vfio.nix
     ./power-management.nix
+    inputs.nvidia-patch.nixosModules.nvidia-patch
   ];
 
   boot = {
@@ -237,6 +238,7 @@
   };
 
   hardware.nvidia = {
+    patch.enable = true;
     modesetting.enable = true;
     powerManagement.finegrained = true;
     prime = {
