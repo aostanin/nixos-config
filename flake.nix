@@ -26,7 +26,6 @@
     nixpkgs,
     nixpkgs-unstable,
     home-manager,
-    nixos-hardware,
     nur,
     deploy-rs,
     pre-commit-hooks,
@@ -52,8 +51,7 @@
       lib.nixosSystem {
         inherit system;
         specialArgs = {
-          hardwareModulesPath = nixos-hardware;
-          homeModulesPath = home-manager.nixosModules;
+          inherit inputs;
           secrets = secrets;
         };
         modules =

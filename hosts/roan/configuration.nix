@@ -2,15 +2,15 @@
   config,
   pkgs,
   lib,
-  hardwareModulesPath,
+  inputs,
   secrets,
   ...
 }: let
   interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.roan.integrated}";
 in {
   imports = [
-    "${hardwareModulesPath}/lenovo/thinkpad/x250"
-    "${hardwareModulesPath}/common/pc/laptop/ssd"
+    "${inputs.nixos-hardware}/lenovo/thinkpad/x250"
+    "${inputs.nixos-hardware}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
     ../../modules
     ../../modules/common

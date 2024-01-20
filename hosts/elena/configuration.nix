@@ -2,13 +2,13 @@
   config,
   pkgs,
   lib,
-  hardwareModulesPath,
+  inputs,
   secrets,
   ...
 }: {
   imports = [
-    "${hardwareModulesPath}/common/cpu/intel"
-    "${hardwareModulesPath}/common/pc/ssd"
+    "${inputs.nixos-hardware}/common/cpu/intel"
+    "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ../../modules
     ../../modules/common
@@ -70,6 +70,7 @@
         };
         "HDMI-A-1" = {
           enable = "";
+          mode = "1920x1080";
         };
       };
       preStartCommands = ''

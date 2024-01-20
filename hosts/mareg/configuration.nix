@@ -2,13 +2,13 @@
   config,
   pkgs,
   lib,
-  hardwareModulesPath,
+  inputs,
   secrets,
   ...
 }: {
   imports = [
-    "${hardwareModulesPath}/lenovo/thinkpad/t440p"
-    "${hardwareModulesPath}/common/pc/laptop/ssd"
+    "${inputs.nixos-hardware}/lenovo/thinkpad/t440p"
+    "${inputs.nixos-hardware}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
     ../../modules
     ../../modules/common

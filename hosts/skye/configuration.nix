@@ -2,17 +2,17 @@
   config,
   pkgs,
   lib,
-  hardwareModulesPath,
+  inputs,
   secrets,
   ...
 }: {
   imports = [
-    "${hardwareModulesPath}/common/cpu/amd"
-    "${hardwareModulesPath}/common/cpu/amd/pstate.nix"
-    "${hardwareModulesPath}/common/gpu/amd"
-    "${hardwareModulesPath}/common/pc/laptop"
-    "${hardwareModulesPath}/common/pc/laptop/acpi_call.nix"
-    "${hardwareModulesPath}/common/pc/laptop/ssd"
+    "${inputs.nixos-hardware}/common/cpu/amd"
+    "${inputs.nixos-hardware}/common/cpu/amd/pstate.nix"
+    "${inputs.nixos-hardware}/common/gpu/amd"
+    "${inputs.nixos-hardware}/common/pc/laptop"
+    "${inputs.nixos-hardware}/common/pc/laptop/acpi_call.nix"
+    "${inputs.nixos-hardware}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
     ../../modules
     ../../modules/common
