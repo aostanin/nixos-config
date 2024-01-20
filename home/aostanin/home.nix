@@ -35,7 +35,6 @@ with lib; {
     ];
 
   xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs/config.nix;
-  xdg.configFile."nixpkgs/overlays.nix".source = ./nixpkgs/overlays.nix;
 
   home = {
     stateVersion = osConfig.system.stateVersion;

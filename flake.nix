@@ -59,19 +59,18 @@
         modules =
           [
             {
-              nixpkgs = {
+              nixpkgs = rec {
                 config = import ./home/${secrets.user.username}/nixpkgs/config.nix;
-                overlays =
-                  [
-                    nur.overlay
-                    (final: prev: {
-                      unstable = import nixpkgs-unstable {
-                        inherit system;
-                        config = import ./home/${secrets.user.username}/nixpkgs/config.nix;
-                      };
-                    })
-                  ]
-                  ++ (import ./home/${secrets.user.username}/nixpkgs/overlays.nix);
+                overlays = [
+                  nur.overlay
+                  self.overlays.packages
+                  (final: prev: {
+                    unstable = import nixpkgs-unstable {
+                      inherit system;
+                      inherit config;
+                    };
+                  })
+                ];
               };
               system.stateVersion = "23.11";
 
@@ -154,6 +153,8 @@
         ];
 
         formatter = pkgs.alejandra;
+
+        packages = import ./packages {inherit pkgs;};
       };
       flake = {
         nixosConfigurations = builtins.mapAttrs (hostname: host:
@@ -169,6 +170,8 @@
             system = host.system;
           })
         hosts;
+
+        overlays.packages = final: prev: import ./packages {pkgs = prev;};
       };
     };
 }
