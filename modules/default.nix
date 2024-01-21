@@ -2,6 +2,7 @@
   imports = [
     ./desktop
     ./docker
+    ./headless-gaming
     ./home-server
     ./intel-amt
     ./pikvm

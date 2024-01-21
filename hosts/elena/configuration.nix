@@ -85,6 +85,11 @@
       useLocalDns = true;
     };
 
+    headlessGaming = {
+      enable = true;
+      gpuBusId = "PCI:1:0:0";
+    };
+
     home-server = {
       enable = true;
       interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
