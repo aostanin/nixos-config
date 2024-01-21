@@ -39,8 +39,6 @@
   };
 
   nixpkgs.config = {
-    allowUnfree = true;
-    joypixels.acceptLicense = true;
     permittedInsecurePackages = [
       "electron-12.2.3"
       "electron-19.1.9"
