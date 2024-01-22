@@ -109,7 +109,6 @@ with lib; {
         # Chat
         discord
         schildichat-desktop
-        skypeforlinux
         slack
         zoom-us
 
