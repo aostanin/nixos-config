@@ -210,6 +210,7 @@ in {
   home.packages = with pkgs; [
     i3-swallow
     pavucontrol
+    wayvnc
     wdisplays
   ];
 
