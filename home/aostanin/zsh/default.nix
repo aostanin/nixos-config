@@ -24,11 +24,6 @@
       DISABLE_AUTO_UPDATE = "true";
     };
     shellAliases = {
-      ls = "${pkgs.eza}/bin/eza";
-      ll = "ls -l";
-      la = "ls -a";
-      lt = "ls --tree";
-      lla = "ls -la";
       ncdu = "ncdu --color dark";
     };
   };

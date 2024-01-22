@@ -46,7 +46,6 @@ with lib; {
         cksfv
         ctop
         dhex
-        eza
         fd
         ffmpeg
         github-cli
@@ -156,6 +155,11 @@ with lib; {
       direnv = {
         enable = true;
         nix-direnv.enable = true;
+      };
+
+      lsd = {
+        enable = true;
+        enableAliases = true;
       };
 
       starship.enable = true;
