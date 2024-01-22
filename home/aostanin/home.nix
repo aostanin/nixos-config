@@ -122,7 +122,8 @@ with lib; {
       ]
       ++ optionals (pkgs.stdenv.hostPlatform.system != "aarch64-linux") [
         beets # broken on aarch64
-        nvtop
+
+        # TODO: This is huge. Don't build on VPS.
         steam-run
       ]
       ++ optionals (elem "amdgpu" osConfig.services.xserver.videoDrivers) [
@@ -133,7 +134,21 @@ with lib; {
         && (elem "modesetting" osConfig.services.xserver.videoDrivers)
       ) [
         intel-gpu-tools
-      ];
+      ]
+      ++ (let
+        nvtopPkgs = lib.lists.concatMap (driver:
+          if (driver == "amdgpu")
+          then [nvtop-amd]
+          else if (driver == "nvidia")
+          then [nvtop-nvidia]
+          else if driver == "modeseting"
+          then [nvtop-intel]
+          else [])
+        osConfig.services.xserver.videoDrivers;
+      in
+        if (builtins.length nvtopPkgs > 1)
+        then [nvtop]
+        else nvtopPkgs);
 
     sessionVariables = {
       BROWSER = "firefox";
