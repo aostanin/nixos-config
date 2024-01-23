@@ -28,6 +28,7 @@ with lib; {
       ./gtk
       ./kanshi
       ./obs-studio
+      ./polkit
       ./qt
       ./sway
       ./syncthing
