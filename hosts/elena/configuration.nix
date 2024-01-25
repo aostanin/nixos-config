@@ -64,6 +64,7 @@
   localModules = {
     desktop = {
       enable = true;
+      enableGaming = true;
       primaryOutput = "HDMI-A-1";
       output = {
         "*" = {

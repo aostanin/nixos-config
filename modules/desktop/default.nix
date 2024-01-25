@@ -10,6 +10,14 @@ in {
   options.localModules.desktop = {
     enable = mkEnableOption "desktop";
 
+    enableGaming = mkOption {
+      default = false;
+      type = types.bool;
+      description = ''
+        Add gaming packages.
+      '';
+    };
+
     hasBacklightControl = mkOption {
       default = false;
       type = types.bool;
@@ -106,6 +114,7 @@ in {
       avahi = {
         enable = true;
         nssmdns = true;
+        openFirewall = true;
       };
 
       blueman.enable = true;
@@ -133,20 +142,29 @@ in {
       };
 
       udev = {
-        extraRules = ''
-          # MiniPro
-          SUBSYSTEMS=="usb", ATTRS{idVendor}=="04d8", ATTRS{idProduct}=="e11c", GROUP="users", MODE="0660"
+        extraRules =
+          ''
+            # MiniPro
+            SUBSYSTEMS=="usb", ATTRS{idVendor}=="04d8", ATTRS{idProduct}=="e11c", GROUP="users", MODE="0660"
 
-          # Saleae Logic
-          SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="users", MODE="0660"
+            # Saleae Logic
+            SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="users", MODE="0660"
 
-          # LEOMO TYPE-S
-          ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", GROUP="adbusers", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
-        '';
-        packages = with pkgs; [
-          stlink
-          teensy-udev-rules
-        ];
+            # LEOMO TYPE-S
+            ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", GROUP="adbusers", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
+          ''
+          + optionalString cfg.enableGaming ''
+            # TODO: uaccess alone doesn't work?
+            KERNEL=="hidraw*", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="2009", MODE="0660", TAG+="uaccess", GROUP="input"
+          '';
+        packages = with pkgs;
+          [
+            stlink
+            teensy-udev-rules
+          ]
+          ++ optionals cfg.enableGaming [
+            pkgs.unstable.yuzu
+          ];
       };
 
       udisks2.enable = true;
@@ -207,10 +225,13 @@ in {
         enable = true;
         settings.General.Experimental = true;
       };
+
       opengl = {
         enable = true;
         driSupport32Bit = true; # Needed for Steam
       };
+
+      steam-hardware.enable = mkIf cfg.enableGaming true;
     };
 
     programs = {

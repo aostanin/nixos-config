@@ -79,6 +79,7 @@
   localModules = {
     desktop = {
       enable = true;
+      enableGaming = true;
       hasBattery = true;
       hasBacklightControl = true;
       primaryOutput = "eDP-1";

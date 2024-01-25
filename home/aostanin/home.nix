@@ -33,6 +33,9 @@ with lib; {
       ./sway
       ./syncthing
       ./vscode
+    ]
+    ++ optionals osConfig.localModules.desktop.enableGaming [
+      ./gaming
     ];
 
   xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs/config.nix;

@@ -34,7 +34,7 @@
     };
     settings = {
       auto-optimise-store = true;
-      experimental-features = ["nix-command" "flakes"];
+      experimental-features = ["nix-command" "flakes" "impure-derivations" "ca-derivations"];
     };
   };
 
@@ -73,11 +73,15 @@
     resolvconf.dnsExtensionMechanism = false; # Disable edns0
   };
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      X11Forwarding = true;
+  services = {
+    openssh = {
+      enable = true;
+      settings = {
+        X11Forwarding = true;
+      };
     };
+
+    xserver.videoDrivers = lib.mkDefault [];
   };
 
   programs = {
