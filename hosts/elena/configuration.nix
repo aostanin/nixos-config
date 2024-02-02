@@ -59,6 +59,9 @@
   networking = {
     hostName = "elena";
     hostId = "fc172604";
+
+    # Using ConnectX-3, networking doesn't come back up after sleep without this
+    useNetworkd = true;
   };
 
   localModules = {
