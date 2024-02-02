@@ -49,7 +49,6 @@
           sponsorblock
           statshunters
           temporary-containers
-          tree-style-tab
           ublock-origin
           vimium
         ];
