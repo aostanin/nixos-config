@@ -42,7 +42,10 @@
   networking = {
     hostName = "skye";
     hostId = "e9fbbf71";
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      ensureProfiles.profiles = secrets.networkmanager.profiles;
+    };
     firewall = {
       enable = true;
       allowedTCPPorts = [
