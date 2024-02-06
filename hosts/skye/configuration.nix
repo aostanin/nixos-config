@@ -137,9 +137,12 @@
       };
     };
 
-    logind.extraConfig = ''
-      HandlePowerKey=suspend
-    '';
+    logind = {
+      lidSwitchDocked = "suspend";
+      extraConfig = ''
+        HandlePowerKey=suspend
+      '';
+    };
 
     tlp = {
       enable = true;
