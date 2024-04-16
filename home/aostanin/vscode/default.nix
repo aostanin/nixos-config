@@ -11,22 +11,17 @@
       antyos.openscad
       bbenoist.nix
       editorconfig.editorconfig
-      elmtooling.elm-ls-vscode
       jdinhlife.gruvbox
       mkhl.direnv
       ms-azuretools.vscode-docker
       ms-python.python
       vscodevim.vim
 
-      # Used by elm-ls-vscode but not packaged
-      (pkgs.vscode-utils.buildVscodeMarketplaceExtension {
-        mktplcRef = {
-          name = "vscode-test-explorer";
-          publisher = "hbenl";
-          version = "2.21.1";
-          sha256 = "sha256-BqKSvSL93o00fksumkoY6WUvrhRqxjkBt2a1XwJIQXA=";
-        };
-      })
+      # Elm
+      elmtooling.elm-ls-vscode
+      # TODO: Move to stable
+      pkgs.unstable.vscode-extensions.hbenl.vscode-test-explorer
+      pkgs.unstable.vscode-extensions.ms-vscode.test-adapter-converter
     ];
     userSettings = {
       "editor.fontFamily" = "'Hack Nerd Font', 'monospace', monospace, 'Droid Sans Fallback'";
