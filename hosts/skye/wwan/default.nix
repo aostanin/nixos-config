@@ -6,21 +6,16 @@
   networking.networkmanager = {
     fccUnlockScripts = [
       {
-        # From https://gitlab.freedesktop.org/mobile-broadband/ModemManager/-/merge_requests/1141
+        # From https://gist.github.com/BohdanTkachenko/3f852c352cb2e02cdcbb47419e2fcc74
         id = "8086:7560";
         path = pkgs.writeShellScript "8086-fcc_unlock" ''
           #!/usr/bin/env bash
 
           # SPDX-License-Identifier: CC0-1.0
           # 2024 Stoica Floris <floris@nusunt.eu>
+          # 2024 Modified by Bohdan Tkachenko <bohdan@tkachenko.dev>
           #
-          # Lenovo-shipped Fibocom XMM7560 (8086:7560) FCC unlock
-
-          if [[ "$FCC_UNLOCK_DEBUG_LOG" == '1' ]]; then
-              exec 3>&1 4>&2
-              trap 'exec 2>&4 1>&3' 0 1 2 3
-              exec 1>>/var/log/mm-xmm7560-fcc.log 2>&1
-          fi
+          # Lenovo-shipped XMM7560 (8086:7560) FCC unlock
 
           # require program name and at least 2 arguments
           [ $# -lt 2 ] && exit 1
@@ -57,11 +52,11 @@
           }
 
           log() {
-              echo "$1"
+              logger -t ModemManager -p info "<info> $1"
           }
 
           error() {
-              echo "$1" >&2
+              logger -t ModemManager -p error "<error> $1"
           }
 
           reverseWithLittleEndian() {
@@ -96,6 +91,11 @@
                   UNLOCK_RESPONSE=$(at_command "at+gtfcclockstate")
                   log "at+gtfcclockstate response = $UNLOCK_RESPONSE"
                   UNLOCK_RESPONSE=$(echo "$UNLOCK_RESPONSE" | tr -d '\r')
+
+                  if [ "$UNLOCK_RESPONSE" = "1" ] || [ "$UNLOCK_RESPONSE" = "OK" ]; then
+                      XDNS_RESPONSE=$(at_command "at+xdns=0,1")
+                      log "at+xdns response: ''${XDNS_RESPONSE}"
+                  fi
 
                   if [ "$UNLOCK_RESPONSE" = "1" ]; then
                       log "FCC was unlocked previously"
