@@ -144,6 +144,8 @@
       '';
     };
 
+    ollama.enable = true;
+
     tlp = {
       enable = true;
       settings = {

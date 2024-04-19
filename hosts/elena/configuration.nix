@@ -243,6 +243,11 @@
       HandlePowerKey=suspend
     '';
 
+    ollama = {
+      enable = true;
+      acceleration = "cuda";
+    };
+
     xserver.videoDrivers = ["modesetting" "nvidia"];
   };
 

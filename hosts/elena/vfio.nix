@@ -20,6 +20,7 @@
         ${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi --gpu-reset
       '';
       preDetachCommands = ''
+        systemctl stop ollama
         ${docker} stop $(${getNvidiaContainers})
         ${setGpuLedColor "FF5555"}
       '';
@@ -27,6 +28,7 @@
         # Disable LED
         ${setGpuLedColor "000000"}
         ${docker} start $(${getNvidiaContainers})
+        systemctl start ollama
       '';
     };
   };
