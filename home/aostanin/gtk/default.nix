@@ -19,9 +19,11 @@
   };
 
   home.pointerCursor = {
+    name = "phinger-cursors";
+    package = pkgs.phinger-cursors;
+    size = 24;
     # Fix virt-manager crash https://github.com/NixOS/nixpkgs/issues/207496#issuecomment-1364940915
     gtk.enable = true;
-    package = pkgs.vanilla-dmz;
-    name = "Vanilla-DMZ";
+    x11.enable = true;
   };
 }
