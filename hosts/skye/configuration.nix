@@ -176,7 +176,12 @@
   };
 
   virtualisation = {
-    libvirtd.enable = true;
+    # TODO: Create localModule
+    libvirtd = {
+      enable = true;
+      qemu.ovmf.packages = [pkgs.OVMFFull.fd];
+      qemu.swtpm.enable = true;
+    };
 
     waydroid.enable = true;
   };
