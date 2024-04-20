@@ -17,4 +17,11 @@
     # Workaround for GTK 3.0 theme not applied
     GTK_THEME = "Adwaita:dark";
   };
+
+  home.pointerCursor = {
+    # Fix virt-manager crash https://github.com/NixOS/nixpkgs/issues/207496#issuecomment-1364940915
+    gtk.enable = true;
+    package = pkgs.vanilla-dmz;
+    name = "Vanilla-DMZ";
+  };
 }
