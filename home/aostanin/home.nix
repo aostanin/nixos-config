@@ -45,6 +45,7 @@ with lib; {
 
     packages = with pkgs;
       [
+        appimage-run
         bat
         btop
         cksfv
