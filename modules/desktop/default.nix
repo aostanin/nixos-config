@@ -163,7 +163,7 @@ in {
             teensy-udev-rules
           ]
           ++ optionals cfg.enableGaming [
-            pkgs.unstable.yuzu
+            pkgs.yuzu
           ];
       };
 

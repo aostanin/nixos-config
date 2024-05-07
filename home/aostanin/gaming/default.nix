@@ -2,19 +2,20 @@
   pkgs,
   config,
   lib,
+  nixpkgs-yuzu,
   ...
 }: {
   home.packages = with pkgs; [
     # Tools
     bottles
-    unstable.emulationstation-de
     gamescope
     mangohud
     pegasus-frontend
 
     # Emulators
     cemu
+    dolphin-emu
     retroarch # TODO: Add cores?
-    unstable.yuzu
+    nixpkgs-yuzu.yuzu
   ];
 }

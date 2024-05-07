@@ -8,6 +8,7 @@
     };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-yuzu.url = "github:nixos/nixpkgs/1cba04796fe93e7f657c62f9d1fb9cae9d0dd86e"; # Last version with Yuzu
     nur.url = "github:nix-community/NUR";
     home-manager = {
       url = "github:nix-community/home-manager/release-23.11";
@@ -26,6 +27,7 @@
     self,
     nixpkgs,
     nixpkgs-unstable,
+    nixpkgs-yuzu,
     home-manager,
     nur,
     deploy-rs,
@@ -52,8 +54,7 @@
       lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs;
-          secrets = secrets;
+          inherit inputs secrets;
         };
         modules =
           [
@@ -65,8 +66,7 @@
                   self.overlays.packages
                   (final: prev: {
                     unstable = import nixpkgs-unstable {
-                      inherit system;
-                      inherit config;
+                      inherit config system;
                     };
                   })
                 ];
@@ -94,7 +94,12 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users = import ./home;
-              home-manager.extraSpecialArgs.secrets = secrets;
+              home-manager.extraSpecialArgs = {
+                inherit inputs secrets;
+                nixpkgs-yuzu = import nixpkgs-yuzu {
+                  inherit system;
+                };
+              };
             }
           ]
           ++ extraModules;
