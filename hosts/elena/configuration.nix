@@ -73,9 +73,15 @@
         "*" = {
           disable = "";
         };
+        # "DP-1" = {
+        #   enable = "";
+        #   mode = "3440x1440";
+        #   position = "0 0";
+        # };
         "HDMI-A-1" = {
           enable = "";
           mode = "1920x1080";
+          position = "0 0";
         };
       };
       preStartCommands = ''
@@ -90,7 +96,7 @@
     };
 
     headlessGaming = {
-      enable = true;
+      #enable = true;
       gpuBusId = "PCI:1:0:0";
     };
 

@@ -5,6 +5,7 @@
   ...
 }: let
   # TODO: Audio only works on second launch on, and input only works if Wayland session is logged in?
+  # Input only works because uaccess means user with seat is needed. When logged into wayland, user gets a seat
   cfg = config.localModules.headlessGaming;
 
   sunshinePkg =
@@ -135,12 +136,19 @@ in {
   config = lib.mkIf cfg.enable {
     services.udev.extraRules = ''
       # For Sunshine
-      KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess"
+      KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess", GROUP="input", MODE="0660"
 
       # Assign Sunshine devices to seat
-      SUBSYSTEM=="input", ATTRS{id/product}=="dead", ATTRS{id/vendor}=="beef", TAG+="seat", TAG+="seat1", ENV{ID_SEAT}="seat1"
-      SUBSYSTEM=="input", ATTRS{id/product}=="4038", ATTRS{id/vendor}=="046d", TAG+="seat", TAG+="seat1", ENV{ID_SEAT}="seat1"
+      SUBSYSTEM=="input", ATTRS{id/product}=="dead", ATTRS{id/vendor}=="beef", TAG+="seat", TAG+="${cfg.seat}", ENV{ID_SEAT}="${cfg.seat}"
+      SUBSYSTEM=="input", ATTRS{id/product}=="4038", ATTRS{id/vendor}=="046d", TAG+="seat", TAG+="${cfg.seat}", ENV{ID_SEAT}="${cfg.seat}"
+
+      # What loginctl attach does https://github.com/systemd/systemd/blob/ef9eb646e5fb7b460aca25de06d1315fcf44ca19/src/login/logind-dbus.c#L1559
+      # TODO: Dynamically add to /run/udev/rules.d and run udevadm trigger
+      #TAG=="seat", ENV{ID_FOR_SEAT}=="drm-pci-0000_01_00_0", ENV{ID_SEAT}="${cfg.seat}"
     '';
+
+    # Handles loading uinput and other permissions
+    hardware.steam-hardware.enable = true;
 
     security.wrappers.sunshine = {
       owner = "root";

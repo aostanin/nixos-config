@@ -15,7 +15,6 @@
 
   xdg.configFile."sunshine/sunshine.conf".text = ''
     # Why doesn't NvFBC work?
-    capture = x11
     encoder = nvenc
   '';
 }
