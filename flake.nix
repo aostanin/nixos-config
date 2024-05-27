@@ -39,88 +39,13 @@
     secrets = import ./secrets;
     hosts = {
       elena = {system = "x86_64-linux";};
+      mac-vm = {system = "x86_64-darwin";};
       mareg = {system = "x86_64-linux";};
       roan = {system = "x86_64-linux";};
       skye = {system = "x86_64-linux";};
       tio = {system = "aarch64-linux";};
       vps-oci1 = {system = "x86_64-linux";};
       vps-oci2 = {system = "x86_64-linux";};
-    };
-    mkNixosSystem = {
-      hostname,
-      system,
-      extraModules ? [],
-    }:
-      lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs secrets;
-        };
-        modules =
-          [
-            {
-              nixpkgs = rec {
-                config = import ./home/${secrets.user.username}/nixpkgs/config.nix;
-                overlays = [
-                  nur.overlay
-                  self.overlays.packages
-                  (final: prev: {
-                    unstable = import nixpkgs-unstable {
-                      inherit config system;
-                    };
-                  })
-                ];
-              };
-              system.stateVersion = "23.11";
-
-              # Use same nixpkgs for flakes and system
-              # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
-              nix = {
-                registry = {
-                  nixpkgs.flake = nixpkgs;
-                  nixpkgs-unstable.flake = nixpkgs-unstable;
-                };
-                nixPath = [
-                  "nixpkgs=/etc/channels/nixpkgs"
-                  "nixos-config=/etc/nixos/configuration.nix"
-                  "/nix/var/nix/profiles/per-user/root/channels"
-                ];
-              };
-              environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
-            }
-            (./hosts + "/${hostname}/configuration.nix")
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users = import ./home;
-              home-manager.extraSpecialArgs = {
-                inherit inputs secrets;
-                nixpkgs-yuzu = import nixpkgs-yuzu {
-                  inherit system;
-                };
-              };
-            }
-          ]
-          ++ extraModules;
-      };
-    mkNode = {
-      hostname,
-      system,
-    }: {
-      hostname = secrets.network.zerotier.hosts."${hostname}".address6;
-      sshUser = "root";
-      fastConnection = false;
-      autoRollback = false;
-      magicRollback = false;
-      remoteBuild = true;
-
-      profiles = {
-        system = {
-          user = "root";
-          path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
-        };
-      };
     };
   in
     flake-parts.lib.mkFlake {inherit inputs;} {
@@ -160,20 +85,148 @@
 
         packages = import ./packages {inherit pkgs;};
       };
-      flake = {
-        nixosConfigurations = builtins.mapAttrs (hostname: host:
-          mkNixosSystem {
-            inherit hostname;
-            system = host.system;
-          })
-        hosts;
+      flake = let
+        mkPkgs = system: rec {
+          config = {
+            allowUnfree = true;
+            joypixels.acceptLicense = true;
+            nvidia.acceptLicense = true;
+            permittedInsecurePackages = [
+              "electron-19.1.9"
+              "electron-25.9.0"
+              "schildichat-web-1.11.30-sc.2"
+            ];
+          };
+          overlays = [
+            nur.overlay
+            self.overlays.packages
+            (final: prev: {
+              unstable = import nixpkgs-unstable {
+                inherit config system;
+              };
+            })
+          ];
+        };
+      in {
+        nixosConfigurations = let
+          mkNixosSystem = {
+            hostname,
+            system,
+            extraModules ? [],
+          }:
+            lib.nixosSystem {
+              inherit system;
+              specialArgs = {
+                inherit inputs secrets;
+              };
+              modules =
+                [
+                  {
+                    nixpkgs = mkPkgs system;
+                    system.stateVersion = "23.11";
 
-        deploy.nodes = builtins.mapAttrs (hostname: host:
+                    # Use same nixpkgs for flakes and system
+                    # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
+                    nix = {
+                      registry = {
+                        nixpkgs.flake = nixpkgs;
+                        nixpkgs-unstable.flake = nixpkgs-unstable;
+                      };
+                      nixPath = [
+                        "nixpkgs=/etc/channels/nixpkgs"
+                        "nixos-config=/etc/nixos/configuration.nix"
+                        "/nix/var/nix/profiles/per-user/root/channels"
+                      ];
+                    };
+                    environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
+                  }
+                  (./hosts + "/${hostname}")
+                  home-manager.nixosModules.home-manager
+                  {
+                    home-manager.useGlobalPkgs = true;
+                    home-manager.useUserPackages = true;
+                    # TODO: Deploy ssh keys without home-manager
+                    home-manager.users.root = import ./home/root;
+                    home-manager.extraSpecialArgs = {
+                      inherit inputs secrets;
+                    };
+                  }
+                ]
+                ++ extraModules;
+            };
+        in
+          builtins.mapAttrs (hostname: host:
+            mkNixosSystem {
+              inherit hostname;
+              inherit (host) system;
+            })
+          (lib.filterAttrs (k: v: lib.pathExists (./hosts + "/${k}")) hosts);
+
+        homeConfigurations = let
+          mkHomeConfiguration = {
+            hostname,
+            system,
+          }:
+            home-manager.lib.homeManagerConfiguration rec {
+              pkgs = import nixpkgs ((mkPkgs system) // {inherit system;});
+              modules = [
+                {
+                  home.username = secrets.user.username;
+                  home.homeDirectory =
+                    if pkgs.stdenv.isDarwin
+                    then "/Users/${secrets.user.username}"
+                    else "/home/${secrets.user.username}";
+                  home.stateVersion = "23.11";
+                }
+                ./home/hosts/${hostname}
+              ];
+              extraSpecialArgs = {
+                inherit inputs secrets;
+                nixpkgs-yuzu = import nixpkgs-yuzu {
+                  inherit system;
+                };
+              };
+            };
+        in
+          builtins.mapAttrs (hostname: host:
+            mkHomeConfiguration {
+              inherit hostname;
+              inherit (host) system;
+            })
+          (lib.filterAttrs (k: v: lib.pathExists (./home/hosts + "/${k}")) hosts);
+
+        deploy.nodes = let
+          mkNode = {
+            hostname,
+            system,
+          }: {
+            hostname = secrets.network.zerotier.hosts."${hostname}".address6;
+            sshUser = secrets.user.username;
+            fastConnection = false;
+            autoRollback = false;
+            magicRollback = false;
+            remoteBuild = true;
+
+            profiles =
+              lib.optionalAttrs (builtins.hasAttr hostname self.nixosConfigurations) {
+                system = {
+                  user = "root";
+                  path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
+                };
+              }
+              // lib.optionalAttrs (builtins.hasAttr hostname self.homeConfigurations) {
+                home = {
+                  user = secrets.user.username;
+                  path = deploy-rs.lib.${system}.activate.home-manager self.homeConfigurations."${hostname}";
+                };
+              };
+          };
+        in (builtins.mapAttrs (hostname: host:
           mkNode {
             inherit hostname;
-            system = host.system;
+            inherit (host) system;
           })
-        hosts;
+        hosts);
 
         overlays.packages = final: prev: import ./packages {pkgs = prev;};
       };

@@ -1,0 +1,28 @@
+{
+  imports = [
+    ./3dprinting
+    ./android
+    ./chromium
+    ./common
+    ./desktop
+    ./electronics
+    ./firefox
+    ./fish
+    ./foot
+    ./gaming
+    ./git
+    ./gnupg
+    ./gtk
+    ./mpd
+    ./neovim
+    ./obs-studio
+    ./polkit
+    ./qt
+    ./ssh
+    ./sway
+    ./syncthing
+    ./tmux
+    ./vscode
+    ./zsh
+  ];
+}

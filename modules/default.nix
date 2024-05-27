@@ -1,16 +1,20 @@
 {
   imports = [
+    ./common
     ./desktop
     ./docker
     ./headless-gaming
     ./home-server
     ./intel-amt
+    ./msmtp
+    ./nvtop
     ./pikvm
     ./rkvm
     ./rsync-backup
     ./scrutiny-collector
-    ./virtwold
     ./vfio
+    ./virtwold
+    ./zerotier
     ./zfs
   ];
 }
