@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  nixpkgsConfig,
   ...
 }:
 with lib; let
@@ -27,6 +28,9 @@ in {
       tmux.enable = lib.mkDefault true;
       zsh.enable = lib.mkDefault true;
     };
+
+    nixpkgs.config = import nixpkgsConfig;
+    xdg.configFile."nixpkgs/config.nix".source = nixpkgsConfig;
 
     home = {
       packages = with pkgs;

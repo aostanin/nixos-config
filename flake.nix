@@ -36,7 +36,8 @@
     ...
   }: let
     lib = nixpkgs.lib;
-    secrets = import ./secrets;
+    secretsPath = ./secrets;
+    secrets = import secretsPath;
     hosts = {
       elena = {system = "x86_64-linux";};
       mac-vm = {system = "x86_64-darwin";};
@@ -86,17 +87,9 @@
         packages = import ./packages {inherit pkgs;};
       };
       flake = let
+        nixpkgsConfig = ./nixpkgs-config.nix;
         mkPkgs = system: rec {
-          config = {
-            allowUnfree = true;
-            joypixels.acceptLicense = true;
-            nvidia.acceptLicense = true;
-            permittedInsecurePackages = [
-              "electron-19.1.9"
-              "electron-25.9.0"
-              "schildichat-web-1.11.30-sc.2"
-            ];
-          };
+          config = import nixpkgsConfig;
           overlays = [
             nur.overlay
             self.overlays.packages
@@ -117,7 +110,7 @@
             lib.nixosSystem {
               inherit system;
               specialArgs = {
-                inherit inputs secrets;
+                inherit inputs nixpkgsConfig secrets secretsPath;
               };
               modules =
                 [
@@ -131,6 +124,7 @@
                       registry = {
                         nixpkgs.flake = nixpkgs;
                         nixpkgs-unstable.flake = nixpkgs-unstable;
+                        nixos-config.flake = self;
                       };
                       nixPath = [
                         "nixpkgs=/etc/channels/nixpkgs"
@@ -148,7 +142,7 @@
                     # TODO: Deploy ssh keys without home-manager
                     home-manager.users.root = import ./home/root;
                     home-manager.extraSpecialArgs = {
-                      inherit inputs secrets;
+                      inherit inputs secrets secretsPath;
                     };
                   }
                 ]
@@ -181,7 +175,7 @@
                 ./home/hosts/${hostname}
               ];
               extraSpecialArgs = {
-                inherit inputs secrets;
+                inherit inputs nixpkgsConfig secrets secretsPath;
                 nixpkgs-yuzu = import nixpkgs-yuzu {
                   inherit system;
                 };

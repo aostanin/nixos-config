@@ -4,17 +4,18 @@
   lib,
   osConfig,
   secrets,
+  secretsPath,
   ...
 }: {
   home = {
     stateVersion = osConfig.system.stateVersion;
 
     # TODO: Nix-ify SSH config
-    file.".ssh/config".source = ../../secrets/ssh/ssh_config_root;
+    file.".ssh/config".source = secretsPath + /ssh/ssh_config_root;
 
     # TODO: Remove if home.file allows setting mode: https://github.com/nix-community/home-manager/issues/3090
     activation.copySshPrivateKey = let
-      id_rsa = pkgs.writeText "id_rsa" (builtins.readFile ../../secrets/ssh/id_rsa);
+      id_rsa = pkgs.writeText "id_rsa" (builtins.readFile (secretsPath + /ssh/id_rsa));
       target = config.home.homeDirectory + "/.ssh/id_rsa";
     in
       lib.hm.dag.entryAfter ["writeBoundary"] ''

@@ -3,12 +3,13 @@
   config,
   lib,
   secrets,
+  secretsPath,
   ...
 }: let
   cfg = config.localModules.ssh;
 
   # TODO: Avoid having to import
-  ssh_config = import ../../../secrets/ssh {
+  ssh_config = import (secretsPath + /ssh) {
     pkgs = pkgs;
     secrets = secrets;
   };
@@ -25,7 +26,7 @@ in {
 
     # TODO: Remove if home.file allows setting mode: https://github.com/nix-community/home-manager/issues/3090
     home.activation.copySshPrivateKey = let
-      id_rsa = pkgs.writeText "id_rsa" (builtins.readFile ../../../secrets/ssh/id_rsa);
+      id_rsa = pkgs.writeText "id_rsa" (builtins.readFile (secretsPath + /ssh/id_rsa));
       target = config.home.homeDirectory + "/.ssh/id_rsa";
     in
       lib.hm.dag.entryAfter ["writeBoundary"] ''
