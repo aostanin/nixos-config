@@ -9,6 +9,14 @@ with lib; let
 in {
   options.localModules.common = {
     enable = mkEnableOption "common";
+
+    minimal = mkOption {
+      default = false;
+      type = types.bool;
+      description = ''
+        Don't install some optional packages.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -28,10 +36,7 @@ in {
           cksfv
           ctop
           fd
-          ffmpeg
-          github-cli
           gitui
-          gpsbabel
           jq
           lazygit
           lf
@@ -40,35 +45,39 @@ in {
           minicom
           miniserve
           mqttui
-          nsz
-          ollama
           (p7zip.override {enableUnfree = true;})
           pv
           python3
           rclone
           ripgrep
           sshfs
-          tealdeer
           tig
           tmuxp
-          tokei
-          tuir
-          yt-dlp
         ]
         ++ optionals (!pkgs.stdenv.isDarwin) [
-          # Not available on Darwin
-          appimage-run
           dhex
           httm
           personal-scripts
           powertop
           wol
         ]
-        ++ optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
+        ++ optionals (!cfg.minimal) [
+          ffmpeg
+          github-cli
+          gpsbabel
+          nsz
+          ollama
+          tealdeer
+          tokei
+          tuir
+          yt-dlp
+        ]
+        ++ optionals (!cfg.minimal && pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
           beets # broken on aarch64
-
-          # TODO: This is huge. Don't build on VPS.
           steam-run
+        ]
+        ++ optionals (!cfg.minimal && !pkgs.stdenv.isDarwin) [
+          appimage-run
         ];
 
       sessionVariables = {

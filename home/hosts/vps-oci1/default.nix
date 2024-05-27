@@ -8,5 +8,8 @@
     ../../modules
   ];
 
-  localModules.common.enable = true;
+  localModules.common = {
+    enable = true;
+    minimal = true;
+  };
 }
