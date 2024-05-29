@@ -12,7 +12,6 @@ in {
     "${inputs.nixos-hardware}/lenovo/thinkpad/x250"
     "${inputs.nixos-hardware}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
-    ../../modules
     ./backup.nix
   ];
 

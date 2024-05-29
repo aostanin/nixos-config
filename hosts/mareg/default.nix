@@ -10,7 +10,6 @@
     "${inputs.nixos-hardware}/lenovo/thinkpad/t440p"
     "${inputs.nixos-hardware}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
-    ../../modules
     ./backup.nix
   ];
 

@@ -4,10 +4,6 @@
   lib,
   ...
 }: {
-  imports = [
-    ../../modules
-  ];
-
   localModules = {
     common.enable = true;
 

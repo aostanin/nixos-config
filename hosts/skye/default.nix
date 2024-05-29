@@ -14,7 +14,6 @@
     "${inputs.nixos-hardware}/common/pc/laptop/acpi_call.nix"
     "${inputs.nixos-hardware}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
-    ../../modules
     ./backup.nix
     ./wwan
   ];

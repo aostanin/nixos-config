@@ -117,6 +117,7 @@
                 inherit inputs nixpkgsConfig secrets secretsPath;
               };
               modules = [
+                ./modules
                 {
                   nixpkgs = mkPkgs system;
                   system.stateVersion = "23.11";
@@ -188,6 +189,7 @@
             home-manager.lib.homeManagerConfiguration rec {
               pkgs = import nixpkgs ((mkPkgs system) // {inherit system;});
               modules = [
+                ./home/modules
                 {
                   home.username = secrets.user.username;
                   home.homeDirectory =

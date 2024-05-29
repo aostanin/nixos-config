@@ -10,7 +10,6 @@
     "${inputs.nixos-hardware}/common/cpu/intel"
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
-    ../../modules
     ./backup.nix
     ./backup-external.nix
     #./i915-sriov.nix
