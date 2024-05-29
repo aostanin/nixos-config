@@ -4,51 +4,50 @@
   config,
   secrets,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.home-server;
 
-  networkSubmodule = types.submodule {
+  networkSubmodule = lib.types.submodule {
     options = {
-      enable = mkOption {
-        type = types.bool;
+      enable = lib.mkOption {
+        type = lib.types.bool;
         default = false;
       };
 
-      address = mkOption {
-        type = types.str;
+      address = lib.mkOption {
+        type = lib.types.str;
       };
     };
   };
 in {
   options.localModules.home-server = {
-    enable = mkEnableOption "home-server";
+    enable = lib.mkEnableOption "home-server";
 
-    interface = mkOption {
-      type = types.str;
+    interface = lib.mkOption {
+      type = lib.types.str;
     };
 
-    address = mkOption {
-      type = types.str;
+    address = lib.mkOption {
+      type = lib.types.str;
     };
 
-    macAddress = mkOption {
-      type = types.nullOr types.str;
+    macAddress = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
       default = null;
     };
 
-    iotNetwork = mkOption {
+    iotNetwork = lib.mkOption {
       type = networkSubmodule;
       default = {};
     };
 
-    storageNetwork = mkOption {
+    storageNetwork = lib.mkOption {
       type = networkSubmodule;
       default = {};
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.network.links."11-default" = {
       matchConfig.OriginalName = "*";
       linkConfig.NamePolicy = "mac";
@@ -56,19 +55,19 @@ in {
     };
 
     networking = {
-      vlans.vlan40 = mkIf cfg.iotNetwork.enable {
+      vlans.vlan40 = lib.mkIf cfg.iotNetwork.enable {
         id = 40;
         interface = "br0";
       };
 
-      vlans.vlan50 = mkIf cfg.storageNetwork.enable {
+      vlans.vlan50 = lib.mkIf cfg.storageNetwork.enable {
         id = 50;
         interface = "br0";
       };
 
       bridges.br0.interfaces = [cfg.interface];
       interfaces.br0 = {
-        macAddress = mkIf (cfg.macAddress != null) cfg.macAddress;
+        macAddress = lib.mkIf (cfg.macAddress != null) cfg.macAddress;
         ipv4.addresses = [
           {
             address = cfg.address;
@@ -77,7 +76,7 @@ in {
         ];
       };
 
-      interfaces.vlan40 = mkIf cfg.iotNetwork.enable {
+      interfaces.vlan40 = lib.mkIf cfg.iotNetwork.enable {
         ipv4.addresses = [
           {
             address = cfg.iotNetwork.address;
@@ -86,7 +85,7 @@ in {
         ];
       };
 
-      interfaces.vlan50 = mkIf cfg.storageNetwork.enable {
+      interfaces.vlan50 = lib.mkIf cfg.storageNetwork.enable {
         ipv4.addresses = [
           {
             address = cfg.storageNetwork.address;

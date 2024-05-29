@@ -3,15 +3,14 @@
   pkgs,
   config,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.virtwold;
 in {
   options.localModules.virtwold = {
-    enable = mkEnableOption "virtwold";
+    enable = lib.mkEnableOption "virtwold";
 
-    interfaces = mkOption {
-      type = types.listOf types.str;
+    interfaces = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
       example = ["br0"];
       description = ''
         The interfaces to listen on.
@@ -19,8 +18,8 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    systemd.services = mkMerge (map (interface: {
+  config = lib.mkIf cfg.enable {
+    systemd.services = lib.mkMerge (map (interface: {
         "virtwold-${interface}" = {
           description = "libvirt wake on lan daemon on ${interface}";
           after = ["network.target"];

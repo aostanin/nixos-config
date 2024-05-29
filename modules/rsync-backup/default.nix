@@ -3,22 +3,21 @@
   pkgs,
   config,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.rsyncBackup;
 
-  backupSubmodule = types.submodule {
+  backupSubmodule = lib.types.submodule {
     options = {
-      source = mkOption {
-        type = types.str;
+      source = lib.mkOption {
+        type = lib.types.str;
         example = "root@machine:/storage/appdata";
         description = ''
           Backup source.
         '';
       };
 
-      destination = mkOption {
-        type = types.str;
+      destination = lib.mkOption {
+        type = lib.types.str;
         example = "/storage/backup";
         description = ''
           Backup destination.
@@ -28,18 +27,18 @@ with lib; let
   };
 in {
   options.localModules.rsyncBackup = {
-    enable = mkEnableOption "rsync-backup";
+    enable = lib.mkEnableOption "rsync-backup";
 
-    backups = mkOption {
-      type = types.attrsOf backupSubmodule;
+    backups = lib.mkOption {
+      type = lib.types.attrsOf backupSubmodule;
       description = ''
         Backups definition.
       '';
     };
   };
 
-  config = mkIf cfg.enable {
-    systemd.timers = mkMerge (mapAttrsToList (name: backup: {
+  config = lib.mkIf cfg.enable {
+    systemd.timers = lib.mkMerge (lib.mapAttrsToList (name: backup: {
         "rsync-backup-${name}" = {
           wantedBy = ["timers.target"];
           partOf = ["rsync-backup-${name}.service"];
@@ -54,7 +53,7 @@ in {
       })
       cfg.backups);
 
-    systemd.services = mkMerge (mapAttrsToList (name: backup: {
+    systemd.services = lib.mkMerge (lib.mapAttrsToList (name: backup: {
         "rsync-backup-${name}" = {
           description = "rsync backup for ${name}";
           after = ["network-online.target"];

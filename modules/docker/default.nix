@@ -4,25 +4,24 @@
   config,
   secrets,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.docker;
 in {
   options.localModules.docker = {
-    enable = mkEnableOption "docker";
+    enable = lib.mkEnableOption "docker";
 
-    enableAutoPrune = mkOption {
+    enableAutoPrune = lib.mkOption {
       default = false;
-      type = types.bool;
+      type = lib.types.bool;
     };
 
-    useLocalDns = mkOption {
+    useLocalDns = lib.mkOption {
       default = false;
-      type = types.bool;
+      type = lib.types.bool;
     };
   };
 
-  config = mkIf cfg.enable (let
+  config = lib.mkIf cfg.enable (let
     enableNvidia = builtins.elem "nvidia" config.services.xserver.videoDrivers;
   in {
     # TODO: Switch to podman
@@ -31,7 +30,7 @@ in {
       enableNvidia = enableNvidia;
       storageDriver = "overlay2";
       liveRestore = false;
-      autoPrune = mkIf cfg.enableAutoPrune {
+      autoPrune = lib.mkIf cfg.enableAutoPrune {
         enable = true;
         flags = [
           "--all"
@@ -39,13 +38,13 @@ in {
         ];
       };
       # Docker defaults to Google's DNS
-      extraOptions = mkIf cfg.useLocalDns ''
+      extraOptions = lib.mkIf cfg.useLocalDns ''
         --dns ${secrets.network.home.nameserver} \
         --dns-search lan
       '';
     };
 
-    hardware.opengl = mkIf enableNvidia {
+    hardware.opengl = lib.mkIf enableNvidia {
       enable = true;
       driSupport32Bit = true;
     };

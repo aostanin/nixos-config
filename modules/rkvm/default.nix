@@ -3,40 +3,39 @@
   pkgs,
   config,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.rkvm;
   pkg = pkgs.rkvm;
 in {
   options.localModules.rkvm = {
-    enable = mkOption {
+    enable = lib.mkOption {
       default = cfg.server.enable || cfg.client.enable;
-      type = types.bool;
+      type = lib.types.bool;
       description = ''
         Enable rkvm, a Virtual KVM switch for Linux machines.
       '';
     };
 
     client = {
-      enable = mkEnableOption "rkvm-client";
+      enable = lib.mkEnableOption "rkvm-client";
 
-      server = mkOption {
-        type = types.str;
+      server = lib.mkOption {
+        type = lib.types.str;
         example = "10.0.0.1:5258";
         description = ''
           Address of the rkvm server to connect to.
         '';
       };
 
-      certificate = mkOption {
-        type = types.str;
+      certificate = lib.mkOption {
+        type = lib.types.str;
         description = ''
           Certificate contents.
         '';
       };
 
-      password = mkOption {
-        type = types.str;
+      password = lib.mkOption {
+        type = lib.types.str;
         description = ''
           Password to connect to the rkvm server.
         '';
@@ -44,32 +43,32 @@ in {
     };
 
     server = {
-      enable = mkEnableOption "rkvm-server";
+      enable = lib.mkEnableOption "rkvm-server";
 
-      listen = mkOption {
-        type = types.str;
+      listen = lib.mkOption {
+        type = lib.types.str;
         example = "0.0.0.0:5258";
         description = ''
           Address to bind to.
         '';
       };
 
-      certificate = mkOption {
-        type = types.str;
+      certificate = lib.mkOption {
+        type = lib.types.str;
         description = ''
           Certificate contents.
         '';
       };
 
-      key = mkOption {
-        type = types.str;
+      key = lib.mkOption {
+        type = lib.types.str;
         description = ''
           Key contents.
         '';
       };
 
-      password = mkOption {
-        type = types.str;
+      password = lib.mkOption {
+        type = lib.types.str;
         description = ''
           Password to connect to the rkvm server.
         '';
@@ -77,9 +76,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.services = {
-      rkvm-server = mkIf cfg.server.enable {
+      rkvm-server = lib.mkIf cfg.server.enable {
         description = "rkvm server";
         wantedBy = ["multi-user.target"];
         after = ["network.target"];
@@ -99,7 +98,7 @@ in {
         };
       };
 
-      rkvm-client = mkIf cfg.client.enable {
+      rkvm-client = lib.mkIf cfg.client.enable {
         description = "rkvm client";
         wantedBy = ["multi-user.target"];
         after = ["network-online.target"];

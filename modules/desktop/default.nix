@@ -3,23 +3,22 @@
   pkgs,
   config,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.desktop;
 in {
   options.localModules.desktop = {
-    enable = mkEnableOption "desktop";
+    enable = lib.mkEnableOption "desktop";
 
-    enableGaming = mkOption {
+    enableGaming = lib.mkOption {
       default = false;
-      type = types.bool;
+      type = lib.types.bool;
       description = ''
         Add gaming packages.
       '';
     };
 
-    preStartCommands = mkOption {
-      type = types.lines;
+    preStartCommands = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       description = ''
         Commands to run before starting the desktop.
@@ -27,7 +26,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     localModules = {
       nix-ld.enable = lib.mkDefault true;
     };
@@ -92,7 +91,7 @@ in {
             # LEOMO TYPE-S
             ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", GROUP="adbusers", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
           ''
-          + optionalString cfg.enableGaming ''
+          + lib.optionalString cfg.enableGaming ''
             # TODO: uaccess alone doesn't work?
             KERNEL=="hidraw*", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="2009", MODE="0660", TAG+="uaccess", GROUP="input"
           '';
@@ -101,7 +100,7 @@ in {
             stlink
             teensy-udev-rules
           ]
-          ++ optionals cfg.enableGaming [
+          ++ lib.optionals cfg.enableGaming [
             pkgs.yuzu
           ];
       };
@@ -170,7 +169,7 @@ in {
         driSupport32Bit = true; # Needed for Steam
       };
 
-      steam-hardware.enable = mkIf cfg.enableGaming true;
+      steam-hardware.enable = lib.mkIf cfg.enableGaming true;
     };
 
     programs = {

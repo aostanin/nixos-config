@@ -3,15 +3,14 @@
   pkgs,
   config,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.pikvm;
 in {
   options.localModules.pikvm = {
-    enable = mkEnableOption "pikvm";
+    enable = lib.mkEnableOption "pikvm";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     boot.kernelParams = [
       "video=HDMI-A-1:1280x1024@60e"
     ];

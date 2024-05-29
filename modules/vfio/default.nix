@@ -3,17 +3,16 @@
   pkgs,
   config,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.vfio;
 
   libvirt = config.virtualisation.libvirtd.package;
   nvidiaBin = pkgs.linuxPackages.nvidia_x11.bin;
 
-  lookingGlassSubmodule = types.submodule {
+  lookingGlassSubmodule = lib.types.submodule {
     options = {
-      enable = mkOption {
-        type = types.bool;
+      enable = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
@@ -21,8 +20,8 @@ with lib; let
         '';
       };
 
-      enableShm = mkOption {
-        type = types.bool;
+      enableShm = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
@@ -30,8 +29,8 @@ with lib; let
         '';
       };
 
-      enableKvmfr = mkOption {
-        type = types.bool;
+      enableKvmfr = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
@@ -39,8 +38,8 @@ with lib; let
         '';
       };
 
-      kvmfrSizes = mkOption {
-        type = types.listOf types.int;
+      kvmfrSizes = lib.mkOption {
+        type = lib.types.listOf lib.types.int;
         default = [];
         example = [64];
         description = ''
@@ -48,8 +47,8 @@ with lib; let
         '';
       };
 
-      kvmfrUser = mkOption {
-        type = types.str;
+      kvmfrUser = lib.mkOption {
+        type = lib.types.str;
         default = "root";
         example = "bob";
         description = ''
@@ -59,10 +58,10 @@ with lib; let
     };
   };
 
-  qemuSubmodule = types.submodule {
+  qemuSubmodule = lib.types.submodule {
     options = {
-      user = mkOption {
-        type = types.str;
+      user = lib.mkOption {
+        type = lib.types.str;
         default = "root";
         example = "bob";
         description = ''
@@ -70,8 +69,8 @@ with lib; let
         '';
       };
 
-      devices = mkOption {
-        type = types.listOf types.str;
+      devices = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [];
         example = [
           "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd"
@@ -84,50 +83,50 @@ with lib; let
     };
   };
 
-  gpuSubmodule = types.submodule {
+  gpuSubmodule = lib.types.submodule {
     options = {
-      driver = mkOption {
-        type = types.str;
+      driver = lib.mkOption {
+        type = lib.types.str;
         example = "nvidia";
         description = ''
           Currently only "nvidia" is supported.
         '';
       };
 
-      pciIds = mkOption {
-        type = types.listOf types.str;
+      pciIds = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         example = ["1458:22f7" "1458:aaf0"];
         description = ''
           The PCI ids of the GPU devices.
         '';
       };
 
-      busId = mkOption {
-        type = types.str;
+      busId = lib.mkOption {
+        type = lib.types.str;
         example = "0a:00.0";
         description = ''
           The bus id in the same format as lspci.
         '';
       };
 
-      preDetachCommands = mkOption {
-        type = types.str;
+      preDetachCommands = lib.mkOption {
+        type = lib.types.str;
         default = "";
         description = ''
           Commands to run before detaching the card.
         '';
       };
 
-      postAttachCommands = mkOption {
-        type = types.str;
+      postAttachCommands = lib.mkOption {
+        type = lib.types.str;
         default = "";
         description = ''
           Commands to run after attaching the card.
         '';
       };
 
-      powerManagementCommands = mkOption {
-        type = types.str;
+      powerManagementCommands = lib.mkOption {
+        type = lib.types.str;
         default = "";
         description = ''
           Commands to run to put the card in a low power state.
@@ -136,10 +135,10 @@ with lib; let
     };
   };
 
-  isolateSubmodule = types.submodule {
+  isolateSubmodule = lib.types.submodule {
     options = {
-      enable = mkOption {
-        type = types.bool;
+      enable = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
@@ -147,8 +146,8 @@ with lib; let
         '';
       };
 
-      dropCaches = mkOption {
-        type = types.bool;
+      dropCaches = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
@@ -156,8 +155,8 @@ with lib; let
         '';
       };
 
-      compactMemory = mkOption {
-        type = types.bool;
+      compactMemory = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
@@ -165,8 +164,8 @@ with lib; let
         '';
       };
 
-      isolateCpus = mkOption {
-        type = types.bool;
+      isolateCpus = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
@@ -174,8 +173,8 @@ with lib; let
         '';
       };
 
-      allCpus = mkOption {
-        type = types.listOf types.str;
+      allCpus = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [];
         example = ["0-23"];
         description = ''
@@ -183,8 +182,8 @@ with lib; let
         '';
       };
 
-      hostCpus = mkOption {
-        type = types.listOf types.str;
+      hostCpus = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [];
         example = ["0-5" "12-17"];
         description = ''
@@ -192,8 +191,8 @@ with lib; let
         '';
       };
 
-      guestCpus = mkOption {
-        type = types.listOf types.str;
+      guestCpus = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [];
         example = ["0-1" "12-13" "6-11" "18-23"];
         description = ''
@@ -203,10 +202,10 @@ with lib; let
     };
   };
 
-  vmSubmodule = types.submodule {
+  vmSubmodule = lib.types.submodule {
     options = {
-      gpu = mkOption {
-        type = types.nullOr types.str;
+      gpu = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
         default = null;
         example = "amdRX570";
         description = ''
@@ -214,8 +213,8 @@ with lib; let
         '';
       };
 
-      enableHibernation = mkOption {
-        type = types.bool;
+      enableHibernation = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
@@ -223,7 +222,7 @@ with lib; let
         '';
       };
 
-      isolate = mkOption {
+      isolate = lib.mkOption {
         type = isolateSubmodule;
         default = {};
         description = ''
@@ -231,16 +230,16 @@ with lib; let
         '';
       };
 
-      startCommands = mkOption {
-        type = types.nullOr types.str;
+      startCommands = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
         default = null;
         description = ''
           Commands to run before the VM starts.
         '';
       };
 
-      endCommands = mkOption {
-        type = types.nullOr types.str;
+      endCommands = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
         default = null;
         description = ''
           Commands to run after the VM ends.
@@ -325,7 +324,7 @@ with lib; let
         echo 8 > /sys/bus/pci/devices/0000:${gpu.busId}/resource0_resize
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
-          ${libvirt}/bin/virsh nodedev-detach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+          ${libvirt}/bin/virsh nodedev-detach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
       ''
       else if (gpu.driver == "nvidia")
@@ -349,7 +348,7 @@ with lib; let
         ${pkgs.psmisc}/bin/fuser /dev/nvidia0 && exit 1
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
-          ${libvirt}/bin/virsh nodedev-detach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+          ${libvirt}/bin/virsh nodedev-detach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
       ''
       else throw "Unsupported gpu driver ${gpu.driver}"
@@ -364,7 +363,7 @@ with lib; let
         set -e
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) == "vfio-pci" ]; then
-          ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+          ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
 
         ${gpu.postAttachCommands}
@@ -375,7 +374,7 @@ with lib; let
         set -e
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) == "vfio-pci" ]; then
-          ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+          ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
 
         modprobe i2c_nvidia_gpu
@@ -392,25 +391,25 @@ with lib; let
     );
   gpuAttachAllScript =
     pkgs.writeScriptBin "vfio-gpus-attach"
-    (concatStringsSep "\n"
-      (mapAttrsToList (gpuName: gpu: "${gpuAttachScript gpu}/bin/vfio-gpu-attach") cfg.gpus));
+    (lib.concatStringsSep "\n"
+      (lib.mapAttrsToList (gpuName: gpu: "${gpuAttachScript gpu}/bin/vfio-gpu-attach") cfg.gpus));
   gpuDetachAllScript =
     pkgs.writeScriptBin "vfio-gpus-detach"
-    (concatStringsSep "\n"
-      (mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus));
+    (lib.concatStringsSep "\n"
+      (lib.mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus));
 in {
   options.localModules.vfio = {
-    enable = mkEnableOption "vfio";
+    enable = lib.mkEnableOption "vfio";
 
-    cpuType = mkOption {
-      type = types.str;
+    cpuType = lib.mkOption {
+      type = lib.types.str;
       example = "amd";
       description = ''
         The host CPU type, either "intel" or "amd".
       '';
     };
 
-    lookingGlass = mkOption {
+    lookingGlass = lib.mkOption {
       type = lookingGlassSubmodule;
       default = {};
       description = ''
@@ -418,7 +417,7 @@ in {
       '';
     };
 
-    qemu = mkOption {
+    qemu = lib.mkOption {
       type = qemuSubmodule;
       default = {};
       description = ''
@@ -426,16 +425,16 @@ in {
       '';
     };
 
-    gpus = mkOption {
-      type = types.attrsOf gpuSubmodule;
+    gpus = lib.mkOption {
+      type = lib.types.attrsOf gpuSubmodule;
       default = {};
       description = ''
         The GPUs used for passthrough.
       '';
     };
 
-    vms = mkOption {
-      type = types.attrsOf vmSubmodule;
+    vms = lib.mkOption {
+      type = lib.types.attrsOf vmSubmodule;
       default = {};
       description = ''
         The virtual machines.
@@ -443,7 +442,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       boot = {
         initrd.kernelModules = ["vfio_pci"];
@@ -479,16 +478,16 @@ in {
               "/dev/sev"
             ]
             ++ cfg.qemu.devices
-            ++ optionals (cfg.lookingGlass.enable && cfg.lookingGlass.enableKvmfr) ["/dev/kvmfr0"];
+            ++ lib.optionals (cfg.lookingGlass.enable && cfg.lookingGlass.enableKvmfr) ["/dev/kvmfr0"];
         in ''
           user = "${cfg.qemu.user}"
           cgroup_device_acl = [
-            "${concatStringsSep "\", \"" allDevices}"
+            "${lib.concatStringsSep "\", \"" allDevices}"
           ]
         '';
       };
 
-      hardware.nvidia = mkIf (lists.any (gpu: gpu.driver == "nvidia") (attrsets.attrValues cfg.gpus)) {
+      hardware.nvidia = lib.mkIf (lib.lists.any (gpu: gpu.driver == "nvidia") (lib.attrsets.attrValues cfg.gpus)) {
         nvidiaPersistenced = true;
         powerManagement.enable = true;
       };
@@ -509,34 +508,34 @@ in {
       # Prevent Xorg from opening /dev/nvidia0
       services.xserver.displayManager = {
         setupCommands =
-          concatStringsSep "\n"
-          (mapAttrsToList (gpuName: gpu: "${gpuAttachScript gpu}/bin/vfio-gpu-attach") cfg.gpus);
+          lib.concatStringsSep "\n"
+          (lib.mapAttrsToList (gpuName: gpu: "${gpuAttachScript gpu}/bin/vfio-gpu-attach") cfg.gpus);
         job.preStart =
-          concatStringsSep "\n"
-          (mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus);
+          lib.concatStringsSep "\n"
+          (lib.mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus);
       };
 
       powerManagement.powerUpCommands =
-        concatStringsSep "\n"
-        (mapAttrsToList (gpuName: gpu: gpu.powerManagementCommands) cfg.gpus);
+        lib.concatStringsSep "\n"
+        (lib.mapAttrsToList (gpuName: gpu: gpu.powerManagementCommands) cfg.gpus);
     }
 
-    (mkIf cfg.lookingGlass.enable {
+    (lib.mkIf cfg.lookingGlass.enable {
       environment.systemPackages = [lookingGlassClient];
     })
 
-    (mkIf (cfg.lookingGlass.enable && cfg.lookingGlass.enableShm) {
-      systemd.tmpfiles.rules = mkIf cfg.lookingGlass.enableShm [
+    (lib.mkIf (cfg.lookingGlass.enable && cfg.lookingGlass.enableShm) {
+      systemd.tmpfiles.rules = lib.mkIf cfg.lookingGlass.enableShm [
         "f /dev/shm/looking-glass 0660 1000 qemu-libvirtd -"
       ];
     })
 
-    (mkIf (cfg.lookingGlass.enable && cfg.lookingGlass.enableKvmfr) {
+    (lib.mkIf (cfg.lookingGlass.enable && cfg.lookingGlass.enableKvmfr) {
       boot = {
         kernelModules = ["kvmfr"];
         extraModulePackages = with config.boot.kernelPackages; [kvmfr];
         extraModprobeConfig = ''
-          options kvmfr ${optionalString (cfg.lookingGlass.kvmfrSizes != []) "static_size_mb=${concatStringsSep "," (map toString cfg.lookingGlass.kvmfrSizes)}"}
+          options kvmfr ${lib.optionalString (cfg.lookingGlass.kvmfrSizes != []) "static_size_mb=${lib.concatStringsSep "," (map toString cfg.lookingGlass.kvmfrSizes)}"}
         '';
       };
 
@@ -546,8 +545,8 @@ in {
     })
 
     {
-      systemd.services = mkMerge (mapAttrsToList (vmName: vm: {
-          "hibernate-vm-shutdown-${vmName}" = mkIf vm.enableHibernation {
+      systemd.services = lib.mkMerge (lib.mapAttrsToList (vmName: vm: {
+          "hibernate-vm-shutdown-${vmName}" = lib.mkIf vm.enableHibernation {
             description = "Hibernate VM ${vmName} when host shuts down";
             requires = ["virt-guest-shutdown.target"];
             after = [
@@ -564,7 +563,7 @@ in {
             wantedBy = ["multi-user.target"];
           };
 
-          "hibernate-vm-sleep-${vmName}" = mkIf vm.enableHibernation {
+          "hibernate-vm-sleep-${vmName}" = lib.mkIf vm.enableHibernation {
             description = "Hibernate VM ${vmName} when host goes to sleep";
             before = ["sleep.target"];
             serviceConfig = {
@@ -579,26 +578,26 @@ in {
     }
 
     {
-      environment.etc = mkMerge (mapAttrsToList (vmName: vm: let
+      environment.etc = lib.mkMerge (lib.mapAttrsToList (vmName: vm: let
           hookPath = "libvirt/hooks/qemu.d/${vmName}";
-          hostCpus = concatStringsSep "," vm.isolate.hostCpus;
-          guestCpus = concatStringsSep "," vm.isolate.guestCpus;
-          allCpus = concatStringsSep "," vm.isolate.allCpus;
+          hostCpus = lib.concatStringsSep "," vm.isolate.hostCpus;
+          guestCpus = lib.concatStringsSep "," vm.isolate.guestCpus;
+          allCpus = lib.concatStringsSep "," vm.isolate.allCpus;
         in {
-          "${hookPath}/prepare/begin/01-detach.sh" = mkIf (vm.gpu != null) {
+          "${hookPath}/prepare/begin/01-detach.sh" = lib.mkIf (vm.gpu != null) {
             source = "${gpuDetachScript cfg.gpus.${vm.gpu}}/bin/vfio-gpu-detach";
           };
 
-          "${hookPath}/release/end/01-attach.sh" = mkIf (vm.gpu != null) {
+          "${hookPath}/release/end/01-attach.sh" = lib.mkIf (vm.gpu != null) {
             source = "${gpuAttachScript cfg.gpus.${vm.gpu}}/bin/vfio-gpu-attach";
           };
 
-          "${hookPath}/prepare/begin/02-isolate.sh" = mkIf vm.isolate.enable {
+          "${hookPath}/prepare/begin/02-isolate.sh" = lib.mkIf vm.isolate.enable {
             source = let
               script = pkgs.writeScriptBin "isolate" ''
                 #!${pkgs.stdenv.shell}
                 set -e
-                ${optionalString vm.isolate.isolateCpus ''
+                ${lib.optionalString vm.isolate.isolateCpus ''
                   systemctl set-property --runtime -- user.slice AllowedCPUs=${hostCpus}
                   systemctl set-property --runtime -- system.slice AllowedCPUs=${hostCpus}
                   systemctl set-property --runtime -- init.scope AllowedCPUs=${hostCpus}
@@ -606,25 +605,25 @@ in {
 
                 ${pkgs.vfio-isolate}/bin/vfio-isolate \
                   --undo-file /tmp/isolate-undo-${vmName} \
-                  ${optionalString vm.isolate.dropCaches "drop-caches"} \
-                  ${optionalString vm.isolate.compactMemory "compact-memory"} \
-                  ${optionalString vm.isolate.isolateCpus ''
+                  ${lib.optionalString vm.isolate.dropCaches "drop-caches"} \
+                  ${lib.optionalString vm.isolate.compactMemory "compact-memory"} \
+                  ${lib.optionalString vm.isolate.isolateCpus ''
                   irq-affinity mask C${guestCpus}
                 ''}
 
-                ${optionalString vm.isolate.isolateCpus ''
+                ${lib.optionalString vm.isolate.isolateCpus ''
                   taskset -pc '${hostCpus}' 2
                 ''}
               '';
             in "${script}/bin/isolate";
           };
 
-          "${hookPath}/release/end/02-unisolate.sh" = mkIf vm.isolate.enable {
+          "${hookPath}/release/end/02-unisolate.sh" = lib.mkIf vm.isolate.enable {
             source = let
               script = pkgs.writeScriptBin "unisolate" ''
                 #!${pkgs.stdenv.shell}
                 set -e
-                ${optionalString vm.isolate.isolateCpus ''
+                ${lib.optionalString vm.isolate.isolateCpus ''
                   systemctl set-property --runtime -- user.slice AllowedCPUs=${allCpus}
                   systemctl set-property --runtime -- system.slice AllowedCPUs=${allCpus}
                   systemctl set-property --runtime -- init.scope AllowedCPUs=${allCpus}
@@ -633,14 +632,14 @@ in {
                 ${pkgs.vfio-isolate}/bin/vfio-isolate restore /tmp/isolate-undo-${vmName}
                 rm -f /tmp/isolate-undo-${vmName}
 
-                ${optionalString vm.isolate.isolateCpus ''
+                ${lib.optionalString vm.isolate.isolateCpus ''
                   taskset -pc '${allCpus}' 2
                 ''}
               '';
             in "${script}/bin/unisolate";
           };
 
-          "${hookPath}/prepare/begin/03-start.sh" = mkIf (vm.startCommands != null) {
+          "${hookPath}/prepare/begin/03-start.sh" = lib.mkIf (vm.startCommands != null) {
             source = let
               script = pkgs.writeScriptBin "start" ''
                 #!${pkgs.stdenv.shell}
@@ -650,7 +649,7 @@ in {
             in "${script}/bin/start";
           };
 
-          "${hookPath}/release/end/03-end.sh" = mkIf (vm.endCommands != null) {
+          "${hookPath}/release/end/03-end.sh" = lib.mkIf (vm.endCommands != null) {
             source = let
               script = pkgs.writeScriptBin "end" ''
                 #!${pkgs.stdenv.shell}

@@ -3,15 +3,14 @@
   pkgs,
   config,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.intelAmt;
 in {
   options.localModules.intelAmt = {
-    enable = mkEnableOption "Intel AMT";
+    enable = lib.mkEnableOption "Intel AMT";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     # For SOL
     systemd.services."serial-getty@ttyS0" = {
       enable = true;

@@ -4,23 +4,22 @@
   config,
   secrets,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.scrutinyCollector;
 in {
   options.localModules.scrutinyCollector = {
-    enable = mkEnableOption "scrutiny-collector";
+    enable = lib.mkEnableOption "scrutiny-collector";
 
-    config = mkOption {
-      type = types.attrs;
+    config = lib.mkOption {
+      type = lib.types.attrs;
       default = {};
       description = ''
         Scrutiny config.
       '';
     };
 
-    timerConfig = mkOption {
-      type = types.attrs;
+    timerConfig = lib.mkOption {
+      type = lib.types.attrs;
       default = {};
       description = ''
         Override the systemd timer config.
@@ -28,7 +27,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (
+  config = lib.mkIf cfg.enable (
     let
       configFile = pkgs.writeTextFile {
         name = "scrutiny.yaml";

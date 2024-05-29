@@ -4,20 +4,19 @@
   config,
   secrets,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.zfs;
 in {
   options.localModules.zfs = {
-    enable = mkEnableOption "zfs";
+    enable = lib.mkEnableOption "zfs";
 
-    allowHibernation = mkOption {
+    allowHibernation = lib.mkOption {
       default = false;
-      type = types.bool;
+      type = lib.types.bool;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     boot = {
       supportedFilesystems = ["zfs"];
       zfs = {

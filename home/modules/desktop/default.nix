@@ -3,15 +3,14 @@
   pkgs,
   config,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.desktop;
 in {
   options.localModules.desktop = {
-    enable = mkEnableOption "desktop";
+    enable = lib.mkEnableOption "desktop";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     localModules = {
       "3dprinting".enable = lib.mkDefault true;
       android.enable = lib.mkDefault true;

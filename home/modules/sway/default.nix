@@ -52,11 +52,11 @@ in {
     };
 
     workspaceOutputAssign = lib.mkOption {
-      type = with lib.types; let
-        workspaceOutputOpts = submodule {
+      type = let
+        workspaceOutputOpts = lib.types.submodule {
           options = {
             workspace = lib.mkOption {
-              type = str;
+              type = lib.types.str;
               default = "";
               example = "Web";
               description = ''
@@ -65,7 +65,7 @@ in {
             };
 
             output = lib.mkOption {
-              type = either str (listOf str);
+              type = lib.types.either lib.types.str (lib.types.listOf lib.types.str);
               default = "";
               example = "eDP";
               description = ''
@@ -75,7 +75,7 @@ in {
           };
         };
       in
-        listOf workspaceOutputOpts;
+        lib.types.listOf workspaceOutputOpts;
       default = [];
       description = "Assign workspaces to outputs.";
     };

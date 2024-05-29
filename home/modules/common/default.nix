@@ -4,23 +4,22 @@
   config,
   nixpkgsConfig,
   ...
-}:
-with lib; let
+}: let
   cfg = config.localModules.common;
 in {
   options.localModules.common = {
-    enable = mkEnableOption "common";
+    enable = lib.mkEnableOption "common";
 
-    minimal = mkOption {
+    minimal = lib.mkOption {
       default = false;
-      type = types.bool;
+      type = lib.types.bool;
       description = ''
         Don't install some optional packages.
       '';
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     localModules = {
       git.enable = lib.mkDefault true;
       neovim.enable = lib.mkDefault true;
@@ -58,14 +57,14 @@ in {
           tig
           tmuxp
         ]
-        ++ optionals (!pkgs.stdenv.isDarwin) [
+        ++ lib.optionals (!pkgs.stdenv.isDarwin) [
           dhex
           httm
           personal-scripts
           powertop
           wol
         ]
-        ++ optionals (!cfg.minimal) [
+        ++ lib.optionals (!cfg.minimal) [
           ffmpeg
           github-cli
           gpsbabel
@@ -76,11 +75,11 @@ in {
           tuir
           yt-dlp
         ]
-        ++ optionals (!cfg.minimal && pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
+        ++ lib.optionals (!cfg.minimal && pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
           beets # broken on aarch64
           steam-run
         ]
-        ++ optionals (!cfg.minimal && !pkgs.stdenv.isDarwin) [
+        ++ lib.optionals (!cfg.minimal && !pkgs.stdenv.isDarwin) [
           appimage-run
         ];
 
@@ -94,7 +93,7 @@ in {
 
     programs = {
       # TODO: Broken on Darwin?
-      broot = mkIf (!pkgs.stdenv.isDarwin) {
+      broot = lib.mkIf (!pkgs.stdenv.isDarwin) {
         enable = true;
         settings.modal = true;
       };
