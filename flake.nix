@@ -14,6 +14,10 @@
       url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix/nixpkgs-stable";
@@ -29,6 +33,7 @@
     nixpkgs-unstable,
     nixpkgs-yuzu,
     home-manager,
+    nix-darwin,
     nur,
     deploy-rs,
     pre-commit-hooks,
@@ -105,48 +110,45 @@
           mkNixosSystem = {
             hostname,
             system,
-            extraModules ? [],
           }:
             lib.nixosSystem {
               inherit system;
               specialArgs = {
                 inherit inputs nixpkgsConfig secrets secretsPath;
               };
-              modules =
-                [
-                  {
-                    nixpkgs = mkPkgs system;
-                    system.stateVersion = "23.11";
+              modules = [
+                {
+                  nixpkgs = mkPkgs system;
+                  system.stateVersion = "23.11";
 
-                    # Use same nixpkgs for flakes and system
-                    # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
-                    nix = {
-                      registry = {
-                        nixpkgs.flake = nixpkgs;
-                        nixpkgs-unstable.flake = nixpkgs-unstable;
-                        nixos-config.flake = self;
-                      };
-                      nixPath = [
-                        "nixpkgs=/etc/channels/nixpkgs"
-                        "nixos-config=/etc/nixos/configuration.nix"
-                        "/nix/var/nix/profiles/per-user/root/channels"
-                      ];
+                  # Use same nixpkgs for flakes and system
+                  # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
+                  nix = {
+                    registry = {
+                      nixpkgs.flake = nixpkgs;
+                      nixpkgs-unstable.flake = nixpkgs-unstable;
+                      nixos-config.flake = self;
                     };
-                    environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
-                  }
-                  (./hosts + "/${hostname}")
-                  home-manager.nixosModules.home-manager
-                  {
-                    home-manager.useGlobalPkgs = true;
-                    home-manager.useUserPackages = true;
-                    # TODO: Deploy ssh keys without home-manager
-                    home-manager.users.root = import ./home/root;
-                    home-manager.extraSpecialArgs = {
-                      inherit inputs secrets secretsPath;
-                    };
-                  }
-                ]
-                ++ extraModules;
+                    nixPath = [
+                      "nixpkgs=/etc/channels/nixpkgs"
+                      "nixos-config=/etc/nixos/configuration.nix"
+                      "/nix/var/nix/profiles/per-user/root/channels"
+                    ];
+                  };
+                  environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
+                }
+                (./hosts + "/${hostname}")
+                home-manager.nixosModules.home-manager
+                {
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  # TODO: Deploy ssh keys without home-manager
+                  home-manager.users.root = import ./home/root;
+                  home-manager.extraSpecialArgs = {
+                    inherit inputs secrets secretsPath;
+                  };
+                }
+              ];
             };
         in
           builtins.mapAttrs (hostname: host:
@@ -155,6 +157,28 @@
               inherit (host) system;
             })
           (lib.filterAttrs (k: v: lib.pathExists (./hosts + "/${k}")) hosts);
+
+        darwinConfigurations = let
+          mkDarwinSystem = {
+            hostname,
+            system,
+          }:
+            nix-darwin.lib.darwinSystem {
+              inherit system;
+              specialArgs = {
+                inherit inputs nixpkgsConfig secrets secretsPath;
+              };
+              modules = [
+                (./darwin/hosts + "/${hostname}")
+              ];
+            };
+        in
+          builtins.mapAttrs (hostname: host:
+            mkDarwinSystem {
+              inherit hostname;
+              inherit (host) system;
+            })
+          (lib.filterAttrs (k: v: lib.pathExists (./darwin/hosts + "/${k}")) hosts);
 
         homeConfigurations = let
           mkHomeConfiguration = {
@@ -206,6 +230,12 @@
                 system = {
                   user = "root";
                   path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
+                };
+              }
+              // lib.optionalAttrs (builtins.hasAttr hostname self.darwinConfigurations) {
+                system = {
+                  user = "root";
+                  path = deploy-rs.lib.${system}.activate.darwin self.darwinConfigurations."${hostname}";
                 };
               }
               // lib.optionalAttrs (builtins.hasAttr hostname self.homeConfigurations) {
