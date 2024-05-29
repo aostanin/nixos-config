@@ -28,6 +28,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    localModules = {
+      nix-ld.enable = lib.mkDefault true;
+    };
+
     fonts.packages = with pkgs; [
       dejavu_fonts
       font-awesome

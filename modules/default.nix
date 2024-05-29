@@ -7,6 +7,7 @@
     ./home-server
     ./intel-amt
     ./msmtp
+    ./nix-ld
     ./nvtop
     ./pikvm
     ./rkvm
