@@ -7,9 +7,9 @@
 }: let
   gpus = {
     nvidiaRTX2070Super = let
-      docker = "${pkgs.docker}/bin/docker";
-      jq = "${pkgs.jq}/bin/jq";
-      setGpuLedColor = color: "${pkgs.openrgb}/bin/openrgb --noautoconnect -d 'RTX 2070 Super' -m direct -c ${color}";
+      docker = lib.getExe pkgs.docker;
+      jq = lib.getExe pkgs.jq;
+      setGpuLedColor = color: "${lib.getExe pkgs.openrgb} --noautoconnect -d 'RTX 2070 Super' -m direct -c ${color}";
       getNvidiaContainers = "${docker} inspect $(${docker} ps -aq) | ${jq} -r '.[] | select(any(.HostConfig.DeviceRequests[]?; contains({\"Driver\": \"nvidia\"}))) | .Id' |  xargs";
     in {
       driver = "nvidia";
@@ -17,7 +17,7 @@
       busId = "01:00.0";
       powerManagementCommands = ''
         # Lowers idle from ~13 W to ~6 W. Otherwise the GPU continues displaying the last image.
-        ${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi --gpu-reset
+        ${lib.getExe' pkgs.linuxPackages.nvidia_x11.bin "nvidia-smi"} --gpu-reset
       '';
       preDetachCommands = ''
         ${docker} stop $(${getNvidiaContainers})

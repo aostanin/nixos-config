@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   secrets,
   ...
 }: {
@@ -91,7 +92,7 @@
       serviceConfig.Type = "oneshot";
       after = ["network-online.target"];
       wants = ["network-online.target"];
-      script = "${pkgs.zrepl}/bin/zrepl signal wakeup push";
+      script = "${lib.getExe pkgs.zrepl} signal wakeup push";
     };
   };
 }

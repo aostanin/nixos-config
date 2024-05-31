@@ -30,4 +30,6 @@ buildPythonPackage rec {
 
   # Will fail if cgroups aren't mounted
   doCheck = false;
+
+  meta.mainProgram = "vfio-isolate";
 }

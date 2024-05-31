@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   networking.networkmanager = {
@@ -76,7 +77,7 @@
                   HEX_CHALLENGE=$(printf "%08x" "$CHALLENGE")
                   REVERSE_HEX_CHALLENGE=$(reverseWithLittleEndian "''${HEX_CHALLENGE}")
                   COMBINED_CHALLENGE="''${REVERSE_HEX_CHALLENGE}''${VENDOR_ID_HASH}"
-                  RESPONSE_HASH=$(printf "%s" "$COMBINED_CHALLENGE" | ${pkgs.xxd}/bin/xxd -r -p | sha256sum | cut -d ' ' -f 1)
+                  RESPONSE_HASH=$(printf "%s" "$COMBINED_CHALLENGE" | ${lib.getExe pkgs.xxd} -r -p | sha256sum | cut -d ' ' -f 1)
                   TRUNCATED_RESPONSE=$(printf "%.8s" "''${RESPONSE_HASH}")
                   REVERSED_RESPONSE=$(reverseWithLittleEndian "$TRUNCATED_RESPONSE")
                   RESPONSE=$(printf "%d" "0x''${REVERSED_RESPONSE}")

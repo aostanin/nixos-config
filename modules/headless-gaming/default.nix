@@ -102,12 +102,12 @@
     '';
 
   xinitScript = pkgs.writeShellScript "xinitrc" ''
-    exec ${pkgs.matchbox}/bin/matchbox-window-manager -use_titlebar no &
+    exec ${lib.getExe' pkgs.matchbox "matchbox-window-manager"} -use_titlebar no &
     /run/wrappers/bin/sunshine
   '';
 
   headlessGamingScript = pkgs.writeShellScriptBin "headless-gaming" ''
-    ${pkgs.xorg.xinit}/bin/xinit ${xinitScript} -- ${pkgs.xorg.xorgserver}/bin/X :${toString cfg.vt} \
+    ${lib.getExe pkgs.xorg.xinit} ${xinitScript} -- ${lib.getExe pkgs.xorg.xorgserver} :${toString cfg.vt} \
       -nolisten tcp -nolisten local \
       -config ${xorgConf} \
       -sharevts -novtswitch \
@@ -154,7 +154,7 @@ in {
       owner = "root";
       group = "root";
       capabilities = "cap_sys_admin+p";
-      source = "${sunshinePkg}/bin/sunshine";
+      source = lib.getExe' sunshinePkg "sunshine";
     };
 
     services.xserver = {

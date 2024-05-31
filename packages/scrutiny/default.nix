@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   buildGoModule,
   fetchFromGitHub,
   makeWrapper,

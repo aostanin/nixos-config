@@ -8,11 +8,7 @@
 }: let
   cfg = config.localModules.ssh;
 
-  # TODO: Avoid having to import
-  ssh_config = import (secretsPath + /ssh) {
-    pkgs = pkgs;
-    secrets = secrets;
-  };
+  ssh_config = pkgs.callPackage (secretsPath + /ssh) {inherit secrets;};
 in {
   options.localModules.ssh = {
     enable = lib.mkEnableOption "ssh";

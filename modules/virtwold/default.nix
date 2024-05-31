@@ -27,7 +27,7 @@ in {
           serviceConfig = {
             Restart = "on-failure";
             Type = "simple";
-            ExecStart = "${pkgs.virtwold}/bin/virtwold -interface ${interface}";
+            ExecStart = "${lib.getExe pkgs.virtwold} -interface ${interface}";
           };
           wantedBy = ["multi-user.target"];
         };

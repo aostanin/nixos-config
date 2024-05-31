@@ -53,7 +53,7 @@ in {
           after = ["network-online.target"];
           wants = ["network-online.target"];
           script = ''
-            ${pkgs.scrutiny}/bin/collector-metrics run \
+            ${lib.getExe' pkgs.scrutiny "collector-metrics"} run \
               --config ${configFile} \
               --api-endpoint http://${secrets.network.zerotier.hosts.elena.address}:8081 \
               --host-id ${config.networking.hostName}

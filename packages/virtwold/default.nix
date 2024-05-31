@@ -1,5 +1,4 @@
 {
-  pkgs,
   buildGoPackage,
   fetchFromGitHub,
   libpcap,
@@ -22,4 +21,6 @@ buildGoPackage rec {
   buildInputs = [
     libpcap
   ];
+
+  meta.mainProgram = "virtwold";
 }

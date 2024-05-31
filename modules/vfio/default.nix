@@ -295,9 +295,9 @@
     # Hibernates the VM specified in NAME and waits for it to finish shutting down
     #
 
-    if ${pkgs.libvirt}/bin/virsh dompmsuspend "$1" disk; then
+    if ${lib.getExe' libvirt "virsh"} dompmsuspend "$1" disk; then
       echo "Waiting for domain to finish shutting down.." >&2
-      while ! [ "$(${pkgs.libvirt}/bin/virsh domstate "$1")" == 'shut off' ]; do
+      while ! [ "$(${lib.getExe' libvirt "virsh"} domstate "$1")" == 'shut off' ]; do
         sleep 1
       done
       echo "Domain finished shutting down" >&2
@@ -324,7 +324,7 @@
         echo 8 > /sys/bus/pci/devices/0000:${gpu.busId}/resource0_resize
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
-          ${libvirt}/bin/virsh nodedev-detach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+          ${lib.getExe' libvirt "virsh"} nodedev-detach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
       ''
       else if (gpu.driver == "nvidia")
@@ -345,10 +345,10 @@
 
         # Avoid detaching the GPU if it's in use
         # TODO: Kill processes with --kill?
-        ${pkgs.psmisc}/bin/fuser /dev/nvidia0 && exit 1
+        ${lib.getExe' pkgs.psmisc "fuser"} /dev/nvidia0 && exit 1
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
-          ${libvirt}/bin/virsh nodedev-detach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+          ${lib.getExe' libvirt "virsh"} nodedev-detach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
       ''
       else throw "Unsupported gpu driver ${gpu.driver}"
@@ -363,7 +363,7 @@
         set -e
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) == "vfio-pci" ]; then
-          ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+          ${lib.getExe' libvirt "virsh"} nodedev-reattach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
 
         ${gpu.postAttachCommands}
@@ -374,7 +374,7 @@
         set -e
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) == "vfio-pci" ]; then
-          ${libvirt}/bin/virsh nodedev-reattach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
+          ${lib.getExe' libvirt "virsh"} nodedev-reattach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
 
         modprobe i2c_nvidia_gpu
@@ -392,11 +392,11 @@
   gpuAttachAllScript =
     pkgs.writeScriptBin "vfio-gpus-attach"
     (lib.concatStringsSep "\n"
-      (lib.mapAttrsToList (gpuName: gpu: "${gpuAttachScript gpu}/bin/vfio-gpu-attach") cfg.gpus));
+      (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuAttachScript gpu))) cfg.gpus));
   gpuDetachAllScript =
     pkgs.writeScriptBin "vfio-gpus-detach"
     (lib.concatStringsSep "\n"
-      (lib.mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus));
+      (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuDetachScript gpu))) cfg.gpus));
 in {
   options.localModules.vfio = {
     enable = lib.mkEnableOption "vfio";
@@ -509,10 +509,10 @@ in {
       services.xserver.displayManager = {
         setupCommands =
           lib.concatStringsSep "\n"
-          (lib.mapAttrsToList (gpuName: gpu: "${gpuAttachScript gpu}/bin/vfio-gpu-attach") cfg.gpus);
+          (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuAttachScript gpu))) cfg.gpus);
         job.preStart =
           lib.concatStringsSep "\n"
-          (lib.mapAttrsToList (gpuName: gpu: "${gpuDetachScript gpu}/bin/vfio-gpu-detach") cfg.gpus);
+          (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuDetachScript gpu))) cfg.gpus);
       };
 
       powerManagement.powerUpCommands =
@@ -557,7 +557,7 @@ in {
             serviceConfig = {
               Type = "oneshot";
               RemainAfterExit = true;
-              ExecStop = "${hibernateScript}/bin/hibernate-vm ${vmName}";
+              ExecStop = "${lib.getExe hibernateScript} ${vmName}";
               TimeoutStopSec = "90s";
             };
             wantedBy = ["multi-user.target"];
@@ -568,7 +568,7 @@ in {
             before = ["sleep.target"];
             serviceConfig = {
               Type = "oneshot";
-              ExecStart = "${hibernateScript}/bin/hibernate-vm ${vmName}";
+              ExecStart = "${lib.getExe hibernateScript} ${vmName}";
               TimeoutStartSec = "90s";
             };
             wantedBy = ["sleep.target"];
@@ -585,11 +585,11 @@ in {
           allCpus = lib.concatStringsSep "," vm.isolate.allCpus;
         in {
           "${hookPath}/prepare/begin/01-detach.sh" = lib.mkIf (vm.gpu != null) {
-            source = "${gpuDetachScript cfg.gpus.${vm.gpu}}/bin/vfio-gpu-detach";
+            source = lib.getExe (gpuDetachScript cfg.gpus.${vm.gpu});
           };
 
           "${hookPath}/release/end/01-attach.sh" = lib.mkIf (vm.gpu != null) {
-            source = "${gpuAttachScript cfg.gpus.${vm.gpu}}/bin/vfio-gpu-attach";
+            source = lib.getExe (gpuAttachScript cfg.gpus.${vm.gpu});
           };
 
           "${hookPath}/prepare/begin/02-isolate.sh" = lib.mkIf vm.isolate.enable {
@@ -603,7 +603,7 @@ in {
                   systemctl set-property --runtime -- init.scope AllowedCPUs=${hostCpus}
                 ''}
 
-                ${pkgs.vfio-isolate}/bin/vfio-isolate \
+                ${lib.getExe pkgs.vfio-isolate} \
                   --undo-file /tmp/isolate-undo-${vmName} \
                   ${lib.optionalString vm.isolate.dropCaches "drop-caches"} \
                   ${lib.optionalString vm.isolate.compactMemory "compact-memory"} \
@@ -615,7 +615,7 @@ in {
                   taskset -pc '${hostCpus}' 2
                 ''}
               '';
-            in "${script}/bin/isolate";
+            in (lib.getExe script);
           };
 
           "${hookPath}/release/end/02-unisolate.sh" = lib.mkIf vm.isolate.enable {
@@ -629,14 +629,14 @@ in {
                   systemctl set-property --runtime -- init.scope AllowedCPUs=${allCpus}
                 ''}
 
-                ${pkgs.vfio-isolate}/bin/vfio-isolate restore /tmp/isolate-undo-${vmName}
+                ${lib.getExe pkgs.vfio-isolate} restore /tmp/isolate-undo-${vmName}
                 rm -f /tmp/isolate-undo-${vmName}
 
                 ${lib.optionalString vm.isolate.isolateCpus ''
                   taskset -pc '${allCpus}' 2
                 ''}
               '';
-            in "${script}/bin/unisolate";
+            in (lib.getExe script);
           };
 
           "${hookPath}/prepare/begin/03-start.sh" = lib.mkIf (vm.startCommands != null) {
@@ -646,7 +646,7 @@ in {
                 set -e
                 ${vm.startCommands}
               '';
-            in "${script}/bin/start";
+            in (lib.getExe script);
           };
 
           "${hookPath}/release/end/03-end.sh" = lib.mkIf (vm.endCommands != null) {
@@ -656,7 +656,7 @@ in {
                 set -e
                 ${vm.endCommands}
               '';
-            in "${script}/bin/end";
+            in (lib.getExe script);
           };
         })
         cfg.vms);

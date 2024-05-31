@@ -61,7 +61,7 @@ in {
           path = [pkgs.openssh];
           serviceConfig.Type = "oneshot";
           script = ''
-            ${pkgs.rsync}/bin/rsync \
+            ${lib.getExe pkgs.rsync} \
               -e "ssh -o StrictHostKeyChecking=no" \
               --verbose \
               --stats \

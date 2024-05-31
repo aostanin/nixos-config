@@ -65,7 +65,7 @@ in {
         enable = true;
         plugins = [pkgs.interception-tools-plugins.caps2esc];
         udevmonConfig = ''
-          - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc -m 1 | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+          - JOB: "${lib.getExe' pkgs.interception-tools "intercept"} -g $DEVNODE | ${lib.getExe' pkgs.interception-tools-plugins.caps2esc "caps2esc"} -m 1 | ${lib.getExe' pkgs.interception-tools "uinput"} -d $DEVNODE"
             DEVICE:
               EVENTS:
                 EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
@@ -121,12 +121,12 @@ in {
           '';
         in {
           command = ''
-            ${pkgs.greetd.tuigreet}/bin/tuigreet \
+            ${lib.getExe pkgs.greetd.tuigreet} \
               --time \
               --asterisks \
               --remember \
               --user-menu \
-              --cmd ${startSway}/bin/start-sway
+              --cmd ${lib.getExe startSway}
           '';
         };
       };

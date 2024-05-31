@@ -91,7 +91,7 @@ in {
             password = "${cfg.server.password}"
           '';
         in {
-          ExecStart = "${pkg}/bin/rkvm-server ${configFile}";
+          ExecStart = "${lib.getExe' pkg "rkvm-server"} ${configFile}";
           Restart = "always";
           RestartSec = 5;
           Type = "simple";
@@ -110,7 +110,7 @@ in {
             password = "${cfg.client.password}"
           '';
         in {
-          ExecStart = "${pkg}/bin/rkvm-client ${configFile}";
+          ExecStart = "${lib.getExe' pkg "rkvm-client"} ${configFile}";
           Restart = "always";
           RestartSec = 5;
           Type = "simple";
