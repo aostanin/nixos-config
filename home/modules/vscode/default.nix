@@ -45,10 +45,10 @@ in {
         "terminal.integrated.shellIntegration.enabled" = false;
 
         # Elm
-        "elmLS.elmPath" = "${pkgs.elmPackages.elm}/bin/elm";
-        "elmLS.elmReviewPath" = "${pkgs.elmPackages.elm-review}/bin/elm-review";
-        "elmLS.elmFormatPath" = "${pkgs.elmPackages.elm-format}/bin/elm-format";
-        "elmLS.elmTestPath" = "${pkgs.elmPackages.elm-test}/bin/elm-test";
+        "elmLS.elmPath" = "${lib.getExe pkgs.elmPackages.elm}";
+        "elmLS.elmReviewPath" = "${lib.getExe' pkgs.elmPackages.elm-review "elm-review"}";
+        "elmLS.elmFormatPath" = "${lib.getExe pkgs.elmPackages.elm-format}";
+        "elmLS.elmTestPath" = "${lib.getExe' pkgs.elmPackages.elm-test "elm-test"}";
       };
     };
   };

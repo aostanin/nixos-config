@@ -229,7 +229,7 @@
     };
     services.zrepl-local-push = {
       serviceConfig.Type = "oneshot";
-      script = "${pkgs.zrepl}/bin/zrepl signal wakeup local-push";
+      script = "${lib.getExe pkgs.zrepl} signal wakeup local-push";
     };
   };
 }

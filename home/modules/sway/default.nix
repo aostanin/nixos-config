@@ -115,10 +115,10 @@ in {
           modifier = config.wayland.windowManager.sway.config.modifier;
         in
           lib.mkOptionDefault {
-            "${modifier}+d" = "exec ${rofiPkg}/bin/rofi -show combi";
-            "${modifier}+c" = "exec ${rofiPkg}/bin/rofi -show calc -modi calc -no-show-match -no-sort";
-            "${modifier}+period" = "exec ${rofimojiPkg}/bin/rofimoji";
-            "${modifier}+n" = "exec ${swayncPkg}/bin/swaync-client -t -sw";
+            "${modifier}+d" = "exec ${lib.getExe rofiPkg} -show combi";
+            "${modifier}+c" = "exec ${lib.getExe rofiPkg} -show calc -modi calc -no-show-match -no-sort";
+            "${modifier}+period" = "exec ${lib.getExe' rofimojiPkg "rofimoji"}";
+            "${modifier}+n" = "exec ${lib.getExe' swayncPkg "swaync-client"} -t -sw";
             "${modifier}+Shift+s" = "sticky toggle";
             "${modifier}+h" = "focus left";
             "${modifier}+j" = "focus down";
@@ -134,15 +134,15 @@ in {
             "${modifier}+x" = "[urgent=latest] focus";
             "--whole-window ${modifier}+button4" = "workspace prev";
             "--whole-window ${modifier}+button5" = "workspace next";
-            "Print" = "exec ${flameshotPkg}/bin/flameshot gui";
-            "Control+Mod1+Prior" = "exec ${pkgs.avizo}/bin/volumectl -u up";
-            "XF86AudioRaiseVolume" = "exec ${pkgs.avizo}/bin/volumectl -u up";
-            "Control+Mod1+Next" = "exec ${pkgs.avizo}/bin/volumectl -u down";
-            "XF86AudioLowerVolume" = "exec ${pkgs.avizo}/bin/volumectl -u down";
-            "XF86AudioMute" = "exec ${pkgs.avizo}/bin/volumectl toggle-mute";
-            "XF86AudioMicMute" = "exec ${pkgs.avizo}/bin/volumectl -m toggle-mute";
-            "XF86MonBrightnessUp" = "exec ${pkgs.avizo}/bin/lightctl up";
-            "XF86MonBrightnessDown" = "exec ${pkgs.avizo}/bin/lightctl down";
+            "Print" = "exec ${lib.getExe flameshotPkg} gui";
+            "Control+Mod1+Prior" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u up";
+            "XF86AudioRaiseVolume" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u up";
+            "Control+Mod1+Next" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u down";
+            "XF86AudioLowerVolume" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u down";
+            "XF86AudioMute" = "exec ${lib.getExe' pkgs.avizo "volumectl"} toggle-mute";
+            "XF86AudioMicMute" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -m toggle-mute";
+            "XF86MonBrightnessUp" = "exec ${lib.getExe' pkgs.avizo "lightctl"} up";
+            "XF86MonBrightnessDown" = "exec ${lib.getExe' pkgs.avizo "lightctl"} down";
             # Workaround for https://github.com/nix-community/home-manager/issues/695
             "${modifier}+0" = null;
             "${modifier}+Shift+0" = null;
@@ -402,8 +402,8 @@ in {
         timeouts = [
           {
             timeout = 300;
-            command = "${pkgs.sway}/bin/swaymsg 'output * dpms off'";
-            resumeCommand = "${pkgs.sway}/bin/swaymsg 'output * dpms on'";
+            command = "${lib.getExe' pkgs.sway "swaymsg"} 'output * dpms off'";
+            resumeCommand = "${lib.getExe' pkgs.sway "swaymsg"} 'output * dpms on'";
           }
         ];
       };
@@ -425,7 +425,7 @@ in {
 
       Service = {
         Type = "simple";
-        ExecStart = "${swayncPkg}/bin/swaync";
+        ExecStart = lib.getExe swayncPkg;
         Restart = "always";
       };
 
