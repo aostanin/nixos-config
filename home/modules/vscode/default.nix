@@ -16,9 +16,9 @@ in {
       package = pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
         antyos.openscad
-        bbenoist.nix
         editorconfig.editorconfig
         jdinhlife.gruvbox
+        jnoortheen.nix-ide
         mkhl.direnv
         ms-azuretools.vscode-docker
         ms-python.python
@@ -46,10 +46,19 @@ in {
         "terminal.integrated.shellIntegration.enabled" = false;
 
         # Elm
-        "elmLS.elmPath" = "${lib.getExe pkgs.elmPackages.elm}";
-        "elmLS.elmReviewPath" = "${lib.getExe' pkgs.elmPackages.elm-review "elm-review"}";
-        "elmLS.elmFormatPath" = "${lib.getExe pkgs.elmPackages.elm-format}";
-        "elmLS.elmTestPath" = "${lib.getExe' pkgs.elmPackages.elm-test "elm-test"}";
+        "elmLS.elmPath" = lib.getExe pkgs.elmPackages.elm;
+        "elmLS.elmReviewPath" = lib.getExe' pkgs.elmPackages.elm-review "elm-review";
+        "elmLS.elmFormatPath" = lib.getExe pkgs.elmPackages.elm-format;
+        "elmLS.elmTestPath" = lib.getExe' pkgs.elmPackages.elm-test "elm-test";
+
+        # Nix
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = lib.getExe pkgs.nil;
+        "nix.serverSettings" = {
+          "nil" = {
+            "formatting" = {"command" = [(lib.getExe pkgs.alejandra)];};
+          };
+        };
       };
     };
   };
