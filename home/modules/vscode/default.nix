@@ -22,6 +22,7 @@ in {
         mkhl.direnv
         ms-azuretools.vscode-docker
         ms-python.python
+        rust-lang.rust-analyzer
         vscodevim.vim
 
         # Elm
