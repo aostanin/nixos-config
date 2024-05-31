@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   secrets,
   ...
 }: {
@@ -96,10 +97,23 @@
       };
     };
     services.zrepl-push = {
-      serviceConfig.Type = "oneshot";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecCondition = pkgs.writeShellScript "check_home_network" ''
+          status=$(${lib.getExe' pkgs.iproute2 "ip"} neigh show to ${secrets.network.home.hosts.router.address} nud reachable | grep "${secrets.network.home.hosts.router.macAddress}")
+          if [ -z "$status" ]; then
+            exit 1
+          else
+            exit 0
+          fi
+        '';
+      };
       after = ["network-online.target"];
       wants = ["network-online.target"];
-      script = "${pkgs.zrepl}/bin/zrepl signal wakeup push";
+      script = ''
+        # TODO: Wake up elena
+        ${lib.getExe pkgs.zrepl} signal wakeup push
+      '';
     };
   };
 }
