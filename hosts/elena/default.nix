@@ -123,11 +123,6 @@
   services = {
     autosuspend = {
       enable = true;
-      package = pkgs.autosuspend.overrideAttrs (old: {
-        src = old.src.override {
-          hash = "sha256-cF0GEtOTGm4etWM9U4EE0deg9ISckRaxsvgrwKzB3cs=";
-        };
-      });
       settings = {
         interval = 30;
         idle_time = 1800;

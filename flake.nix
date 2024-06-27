@@ -6,12 +6,12 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-yuzu.url = "github:nixos/nixpkgs/1cba04796fe93e7f657c62f9d1fb9cae9d0dd86e"; # Last version with Yuzu
     nur.url = "github:nix-community/NUR";
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-darwin = {
@@ -25,13 +25,16 @@
     };
     flake-parts.url = "github:hercules-ci/flake-parts";
     nvidia-patch.url = "github:arcnmx/nvidia-patch.nix";
+    nixos-artwork = {
+      url = "github:NixOS/nixos-artwork";
+      flake = false;
+    };
   };
 
   outputs = inputs @ {
     self,
     nixpkgs,
     nixpkgs-unstable,
-    nixpkgs-yuzu,
     home-manager,
     nix-darwin,
     nur,
@@ -115,12 +118,16 @@
               inherit system;
               specialArgs = {
                 inherit inputs nixpkgsConfig secrets secretsPath;
+                nixpkgs-yuzu = import inputs.nixpkgs-yuzu {
+                  inherit system;
+                  config = import ./nixpkgs-config.nix;
+                };
               };
               modules = [
                 ./modules
                 {
                   nixpkgs = mkPkgs system;
-                  system.stateVersion = "23.11";
+                  system.stateVersion = "24.05";
 
                   # Use same nixpkgs for flakes and system
                   # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
@@ -196,14 +203,15 @@
                     if pkgs.stdenv.isDarwin
                     then "/Users/${secrets.user.username}"
                     else "/home/${secrets.user.username}";
-                  home.stateVersion = "23.11";
+                  home.stateVersion = "24.05";
                 }
                 ./home/hosts/${hostname}
               ];
               extraSpecialArgs = {
                 inherit inputs nixpkgsConfig secrets secretsPath;
-                nixpkgs-yuzu = import nixpkgs-yuzu {
+                nixpkgs-yuzu = import inputs.nixpkgs-yuzu {
                   inherit system;
+                  config = import ./nixpkgs-config.nix;
                 };
               };
             };

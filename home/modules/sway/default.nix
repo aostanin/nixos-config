@@ -5,12 +5,6 @@
   ...
 }: let
   cfg = config.localModules.sway;
-  swayncPkg = pkgs.swaynotificationcenter;
-  # TODO: Copy/paste broken on Wayland https://github.com/flameshot-org/flameshot/issues/2848#issuecomment-1199796142
-  flameshotPkg = pkgs.flameshot.overrideAttrs (old: {
-    nativeBuildInputs = old.nativeBuildInputs ++ [pkgs.libsForQt5.kguiaddons];
-    cmakeFlags = ["-DUSE_WAYLAND_CLIPBOARD=true"];
-  });
   rofiPkg = pkgs.rofi-wayland.override {
     plugins = [
       pkgs.rofi-calc
@@ -96,6 +90,7 @@ in {
 
     wayland.windowManager.sway = {
       enable = true;
+      checkConfig = false; # Workaround for https://github.com/nix-community/home-manager/issues/5311
       wrapperFeatures = {
         base = true;
         gtk = true;
@@ -118,7 +113,7 @@ in {
             "${modifier}+d" = "exec ${lib.getExe rofiPkg} -show combi";
             "${modifier}+c" = "exec ${lib.getExe rofiPkg} -show calc -modi calc -no-show-match -no-sort";
             "${modifier}+period" = "exec ${lib.getExe' rofimojiPkg "rofimoji"}";
-            "${modifier}+n" = "exec ${lib.getExe' swayncPkg "swaync-client"} -t -sw";
+            "${modifier}+n" = "exec ${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t -sw";
             "${modifier}+Shift+s" = "sticky toggle";
             "${modifier}+h" = "focus left";
             "${modifier}+j" = "focus down";
@@ -134,7 +129,7 @@ in {
             "${modifier}+x" = "[urgent=latest] focus";
             "--whole-window ${modifier}+button4" = "workspace prev";
             "--whole-window ${modifier}+button5" = "workspace next";
-            "Print" = "exec ${lib.getExe flameshotPkg} gui";
+            "Print" = "exec ${lib.getExe pkgs.flameshot} gui";
             "Control+Mod1+Prior" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u up";
             "XF86AudioRaiseVolume" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u up";
             "Control+Mod1+Next" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u down";
@@ -380,10 +375,7 @@ in {
 
       clipman.enable = true;
 
-      flameshot = {
-        enable = true;
-        package = flameshotPkg;
-      };
+      flameshot.enable = true;
 
       kdeconnect = {
         enable = true;
@@ -408,96 +400,13 @@ in {
         ];
       };
 
+      swaync.enable = true;
+
       udiskie = {
         enable = true;
         automount = false;
         tray = "always";
       };
     };
-
-    # TODO: Switch to home-manager module https://github.com/nix-community/home-manager/pull/4249
-    systemd.user.services.swaync = {
-      Unit = {
-        Description = "Swaync notification daemon";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
-      };
-
-      Service = {
-        Type = "simple";
-        ExecStart = lib.getExe swayncPkg;
-        Restart = "always";
-      };
-
-      Install = {WantedBy = ["graphical-session.target"];};
-    };
-
-    xdg.configFile."swaync/config.json".source = pkgs.writeText "swaync/config.json" ''
-      {
-        "$schema": "/etc/xdg/swaync/configSchema.json",
-        "positionX": "right",
-        "positionY": "top",
-        "layer": "overlay",
-        "control-center-layer": "top",
-        "layer-shell": true,
-        "cssPriority": "application",
-        "control-center-margin-top": 0,
-        "control-center-margin-bottom": 0,
-        "control-center-margin-right": 0,
-        "control-center-margin-left": 0,
-        "notification-2fa-action": true,
-        "notification-inline-replies": false,
-        "notification-icon-size": 64,
-        "notification-body-image-height": 100,
-        "notification-body-image-width": 200,
-        "timeout": 10,
-        "timeout-low": 5,
-        "timeout-critical": 0,
-        "fit-to-screen": true,
-        "control-center-width": 500,
-        "control-center-height": 600,
-        "notification-window-width": 500,
-        "keyboard-shortcuts": true,
-        "image-visibility": "when-available",
-        "transition-time": 200,
-        "hide-on-clear": true,
-        "hide-on-action": true,
-        "script-fail-notify": true,
-        "scripts": {
-        },
-        "notification-visibility": {
-        },
-        "widgets": [
-          "inhibitors",
-          "title",
-          "dnd",
-          "mpris",
-          "notifications"
-        ],
-        "widget-config": {
-          "inhibitors": {
-            "text": "Inhibitors",
-            "button-text": "Clear All",
-            "clear-all-button": true
-          },
-          "title": {
-            "text": "Notifications",
-            "clear-all-button": true,
-            "button-text": "Clear All"
-          },
-          "dnd": {
-            "text": "Do Not Disturb"
-          },
-          "label": {
-            "max-lines": 5,
-            "text": "Label Text"
-          },
-          "mpris": {
-            "image-size": 96,
-            "image-radius": 12
-          }
-        }
-      }
-    '';
   };
 }

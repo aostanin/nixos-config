@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  nixpkgs-yuzu,
   ...
 }: let
   cfg = config.localModules.desktop;
@@ -51,7 +52,7 @@ in {
     services = {
       avahi = {
         enable = true;
-        nssmdns = true;
+        nssmdns4 = true;
         openFirewall = true;
       };
 
@@ -101,7 +102,7 @@ in {
             teensy-udev-rules
           ]
           ++ lib.optionals cfg.enableGaming [
-            pkgs.yuzu
+            nixpkgs-yuzu.yuzu
           ];
       };
 

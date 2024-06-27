@@ -27,9 +27,8 @@ in {
 
         # Elm
         elmtooling.elm-ls-vscode
-        # TODO: Move to stable
-        pkgs.unstable.vscode-extensions.hbenl.vscode-test-explorer
-        pkgs.unstable.vscode-extensions.ms-vscode.test-adapter-converter
+        hbenl.vscode-test-explorer
+        ms-vscode.test-adapter-converter
       ];
       userSettings = {
         "editor.fontFamily" = "'Hack Nerd Font', 'monospace', monospace, 'Droid Sans Fallback'";

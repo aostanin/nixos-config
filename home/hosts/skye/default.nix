@@ -3,6 +3,7 @@
   config,
   lib,
   secrets,
+  inputs,
   ...
 }: {
   localModules = {
@@ -15,7 +16,7 @@
       primaryOutput = "eDP-1";
       output = {
         "*" = {
-          bg = "~/Sync/wallpaper/nix-wallpaper-nineish-dark-gray.png fill";
+          bg = "${inputs.nixos-artwork}/wallpapers/nix-wallpaper-nineish-dark-gray.png fill";
         };
       };
       workspaceOutputAssign = builtins.map (x: {
@@ -47,9 +48,10 @@
 
   services.kanshi = {
     enable = true;
-    profiles = {
-      undocked = {
-        outputs = [
+    settings = [
+      {
+        profile.name = "undocked";
+        profile.outputs = [
           {
             criteria = "eDP-1";
             status = "enable";
@@ -57,9 +59,10 @@
             position = "0,0";
           }
         ];
-      };
-      docked = {
-        outputs = [
+      }
+      {
+        profile.name = "docked";
+        profile.outputs = [
           {
             criteria = "eDP-1";
             status = "enable";
@@ -79,9 +82,10 @@
             position = "440,0";
           }
         ];
-      };
-      parents = {
-        outputs = [
+      }
+      {
+        profile.name = "parents";
+        profile.outputs = [
           {
             criteria = "eDP-1";
             status = "enable";
@@ -96,7 +100,7 @@
             transform = "90";
           }
         ];
-      };
-    };
+      }
+    ];
   };
 }

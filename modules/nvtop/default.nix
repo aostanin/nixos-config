@@ -11,19 +11,20 @@ in {
   };
 
   config = lib.mkIf cfg.enable (let
-    nvtopPkgs = lib.lists.concatMap (driver:
-      if (driver == "amdgpu")
-      then [pkgs.nvtop-amd]
-      else if (driver == "nvidia")
-      then [pkgs.nvtop-nvidia]
-      else if driver == "modeseting"
-      then [pkgs.nvtop-intel]
-      else [])
-    config.services.xserver.videoDrivers;
+    nvtopPkgs = with pkgs.nvtopPackages;
+      lib.lists.concatMap (driver:
+        if (driver == "amdgpu")
+        then [amd]
+        else if (driver == "nvidia")
+        then [nvidia]
+        else if driver == "modeseting"
+        then [intel]
+        else [])
+      config.services.xserver.videoDrivers;
   in {
     environment.systemPackages =
       if (builtins.length nvtopPkgs > 1)
-      then [pkgs.nvtop]
+      then [pkgs.nvtopPackages.full]
       else nvtopPkgs;
   });
 }

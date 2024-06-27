@@ -33,11 +33,9 @@ in {
         # GUI
         audacity
         bitwarden
-        etcher
         filezilla
         gimp
         gparted
-        gtkpod
         jellyfin-media-player
         krita
         libreoffice
@@ -59,7 +57,7 @@ in {
 
         # Chat
         discord
-        schildichat-desktop
+        element-desktop
         slack
         zoom-us
 

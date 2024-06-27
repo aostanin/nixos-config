@@ -7,7 +7,6 @@
   cfg = config.localModules.vfio;
 
   libvirt = config.virtualisation.libvirtd.package;
-  nvidiaBin = pkgs.linuxPackages.nvidia_x11.bin;
 
   lookingGlassSubmodule = lib.types.submodule {
     options = {
@@ -510,10 +509,10 @@ in {
         setupCommands =
           lib.concatStringsSep "\n"
           (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuAttachScript gpu))) cfg.gpus);
-        job.preStart =
-          lib.concatStringsSep "\n"
-          (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuDetachScript gpu))) cfg.gpus);
       };
+      services.displayManager.preStart =
+        lib.concatStringsSep "\n"
+        (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuDetachScript gpu))) cfg.gpus);
 
       powerManagement.powerUpCommands =
         lib.concatStringsSep "\n"
