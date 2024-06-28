@@ -403,7 +403,18 @@ in {
         ];
       };
 
-      swaync.enable = true;
+      swaync = {
+        enable = true;
+        settings = {
+          widgets = [
+            "inhibitors"
+            "title"
+            "dnd"
+            "mpris"
+            "notifications"
+          ];
+        };
+      };
 
       udiskie = {
         enable = true;
