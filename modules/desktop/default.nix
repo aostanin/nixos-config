@@ -42,6 +42,7 @@ in {
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
+      roboto
     ];
 
     environment.systemPackages = with pkgs; [
