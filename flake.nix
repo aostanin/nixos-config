@@ -101,10 +101,12 @@
           overlays = [
             nur.overlay
             self.overlays.packages
-            (final: prev: {
+            (final: prev: rec {
               unstable = import nixpkgs-unstable {
                 inherit config system;
               };
+              # Use 2.4.2 to fix https://github.com/blueman-project/blueman/issues/2317
+              blueman = unstable.blueman;
             })
           ];
         };
