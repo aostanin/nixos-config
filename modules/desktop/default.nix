@@ -35,6 +35,7 @@ in {
     fonts.packages = with pkgs; [
       dejavu_fonts
       font-awesome
+      font-awesome_4 # For compatibility
       ipafont
       joypixels
       kochi-substitute
