@@ -15,6 +15,8 @@ in {
     localModules = {
       msmtp.enable = lib.mkDefault true;
 
+      tailscale.enable = lib.mkDefault true;
+
       zerotier.enable = lib.mkDefault true;
     };
 

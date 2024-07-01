@@ -90,6 +90,13 @@
       enableAutoPrune = true;
     };
 
+    tailscale = {
+      isClient = true;
+      extraSetFlags = [
+        "--accept-routes"
+      ];
+    };
+
     zfs = {
       enable = true;
       allowHibernation = true;

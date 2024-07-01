@@ -112,6 +112,15 @@
       };
     };
 
+    tailscale = {
+      isClient = true;
+      isServer = true;
+      extraSetFlags = [
+        "--advertise-exit-node"
+        "--advertise-routes=10.0.40.0/24"
+      ];
+    };
+
     virtwold = {
       enable = true;
       interfaces = ["br0"];

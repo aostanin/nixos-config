@@ -230,7 +230,7 @@
             hostname,
             system,
           }: {
-            hostname = secrets.network.zerotier.hosts."${hostname}".address6;
+            inherit hostname;
             sshUser = secrets.user.username;
             fastConnection = false;
             autoRollback = false;

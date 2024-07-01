@@ -13,6 +13,7 @@
     ./rkvm
     ./rsync-backup
     ./scrutiny-collector
+    ./tailscale
     ./vfio
     ./virtwold
     ./zerotier
