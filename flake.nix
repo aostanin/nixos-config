@@ -158,6 +158,7 @@
                     inherit inputs secrets secretsPath;
                   };
                 }
+                inputs.nvidia-patch.nixosModules.nvidia-patch
               ];
             };
         in
