@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  nixpkgs-yuzu,
   ...
 }: let
   cfg = config.localModules.desktop;
@@ -104,7 +103,7 @@ in {
             teensy-udev-rules
           ]
           ++ lib.optionals cfg.enableGaming [
-            nixpkgs-yuzu.yuzu
+            yuzu
           ];
       };
 

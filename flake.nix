@@ -116,6 +116,7 @@
               };
               # Use 2.4.2 to fix https://github.com/blueman-project/blueman/issues/2317
               blueman = unstable.blueman;
+              yuzu = inputs.nixpkgs-yuzu.legacyPackages.${system}.yuzu;
             })
           ];
         };
@@ -129,10 +130,6 @@
               inherit system;
               specialArgs = {
                 inherit inputs nixpkgsConfig secrets;
-                nixpkgs-yuzu = import inputs.nixpkgs-yuzu {
-                  inherit system;
-                  config = import ./nixpkgs-config.nix;
-                };
               };
               modules = [
                 ./modules
@@ -227,10 +224,6 @@
               ];
               extraSpecialArgs = {
                 inherit inputs nixpkgsConfig secrets;
-                nixpkgs-yuzu = import inputs.nixpkgs-yuzu {
-                  inherit system;
-                  config = import ./nixpkgs-config.nix;
-                };
               };
             };
         in

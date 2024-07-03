@@ -2,7 +2,6 @@
   pkgs,
   config,
   lib,
-  nixpkgs-yuzu,
   ...
 }: let
   cfg = config.localModules.gaming;
@@ -23,7 +22,7 @@ in {
       cemu
       dolphin-emu
       retroarch # TODO: Add cores?
-      nixpkgs-yuzu.yuzu
+      yuzu
     ];
   };
 }
