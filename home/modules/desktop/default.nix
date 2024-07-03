@@ -41,7 +41,6 @@ in {
         libreoffice
         logseq
         moonlight-qt
-        mullvad-vpn
         steam
         (xfce.thunar.override {
           thunarPlugins = with xfce; [

@@ -74,8 +74,6 @@ in {
         '';
       };
 
-      mullvad-vpn.enable = true;
-
       printing = {
         enable = true;
         drivers = [pkgs.brlaser];
