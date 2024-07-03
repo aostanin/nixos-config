@@ -25,6 +25,10 @@
     };
     flake-parts.url = "github:hercules-ci/flake-parts";
     nvidia-patch.url = "github:arcnmx/nvidia-patch.nix";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-artwork = {
       url = "github:NixOS/nixos-artwork";
       flake = false;
@@ -44,8 +48,7 @@
     ...
   }: let
     lib = nixpkgs.lib;
-    secretsPath = ./secrets;
-    secrets = import secretsPath;
+    secrets = import ./secrets;
     hosts = {
       elena = {system = "x86_64-linux";};
       mac-vm = {system = "x86_64-darwin";};
@@ -67,12 +70,18 @@
         ...
       }: {
         devShells.default = pkgs.mkShell {
-          inherit (self'.checks.pre-commit-check) shellHook;
-
-          buildInputs = [
+          buildInputs = with pkgs; [
             deploy-rs.defaultPackage.${system}
-            pkgs.git-crypt
+            git-crypt
+            sops
+            ssh-to-age
           ];
+
+          shellHook = ''
+            ${self'.checks.pre-commit-check.shellHook}
+
+            export SOPS_AGE_KEY=$(${lib.getExe pkgs.ssh-to-age} -i ~/.ssh/id_ed25519 -private-key)
+          '';
         };
 
         checks = pkgs.lib.attrsets.mergeAttrsList [
@@ -119,7 +128,7 @@
             lib.nixosSystem {
               inherit system;
               specialArgs = {
-                inherit inputs nixpkgsConfig secrets secretsPath;
+                inherit inputs nixpkgsConfig secrets;
                 nixpkgs-yuzu = import inputs.nixpkgs-yuzu {
                   inherit system;
                   config = import ./nixpkgs-config.nix;
@@ -146,18 +155,14 @@
                     ];
                   };
                   environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
-                }
-                (./hosts + "/${hostname}")
-                home-manager.nixosModules.home-manager
-                {
-                  home-manager.useGlobalPkgs = true;
-                  home-manager.useUserPackages = true;
-                  # TODO: Deploy ssh keys without home-manager
-                  home-manager.users.root = import ./home/root;
-                  home-manager.extraSpecialArgs = {
-                    inherit inputs secrets secretsPath;
+
+                  sops = {
+                    defaultSopsFile = ./secrets/secrets.yaml;
+                    age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
                   };
                 }
+                (./hosts + "/${hostname}")
+                inputs.sops-nix.nixosModules.sops
                 inputs.nvidia-patch.nixosModules.nvidia-patch
               ];
             };
@@ -177,7 +182,7 @@
             nix-darwin.lib.darwinSystem {
               inherit system;
               specialArgs = {
-                inherit inputs nixpkgsConfig secrets secretsPath;
+                inherit inputs nixpkgsConfig secrets;
               };
               modules = [
                 (./darwin/hosts + "/${hostname}")
@@ -198,20 +203,30 @@
           }:
             home-manager.lib.homeManagerConfiguration rec {
               pkgs = import nixpkgs ((mkPkgs system) // {inherit system;});
-              modules = [
+              modules = let
+                homeDirectory =
+                  if pkgs.stdenv.isDarwin
+                  then "/Users/${secrets.user.username}"
+                  else "/home/${secrets.user.username}";
+              in [
                 ./home/modules
                 {
-                  home.username = secrets.user.username;
-                  home.homeDirectory =
-                    if pkgs.stdenv.isDarwin
-                    then "/Users/${secrets.user.username}"
-                    else "/home/${secrets.user.username}";
-                  home.stateVersion = "24.05";
+                  home = {
+                    inherit (secrets.user) username;
+                    homeDirectory = homeDirectory;
+                    stateVersion = "24.05";
+                  };
+
+                  sops = {
+                    defaultSopsFile = ./secrets/secrets.yaml;
+                    age.sshKeyPaths = ["${homeDirectory}/.ssh/id_ed25519"];
+                  };
                 }
                 ./home/hosts/${hostname}
+                inputs.sops-nix.homeManagerModules.sops
               ];
               extraSpecialArgs = {
-                inherit inputs nixpkgsConfig secrets secretsPath;
+                inherit inputs nixpkgsConfig secrets;
                 nixpkgs-yuzu = import inputs.nixpkgs-yuzu {
                   inherit system;
                   config = import ./nixpkgs-config.nix;

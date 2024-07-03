@@ -38,14 +38,11 @@
   networking = {
     hostName = "skye";
     hostId = "e9fbbf71";
-    networkmanager = {
-      enable = true;
-      ensureProfiles.profiles = secrets.networkmanager.profiles;
-    };
     firewall = {
       enable = true;
       allowedTCPPorts = [
         22 # SSH
+        22000 # Syncthing
       ];
       allowedTCPPortRanges = [
         {
@@ -56,6 +53,8 @@
       allowedUDPPorts = [
         5353 # Avahi
         9993 # ZeroTier
+        22000 # Syncthing
+        21027 # Syncthing
       ];
       allowedUDPPortRanges = [
         {
@@ -63,15 +62,6 @@
           to = 1764;
         } # KDE Connect
       ];
-      interfaces."${secrets.zerotier.interface}" = {
-        allowedTCPPorts = [
-          22000 # Syncthing
-        ];
-        allowedUDPPorts = [
-          22000 # Syncthing
-          21027 # Syncthing
-        ];
-      };
     };
   };
 
@@ -89,6 +79,8 @@
       enable = true;
       enableAutoPrune = true;
     };
+
+    networkmanager.enable = true;
 
     tailscale = {
       isClient = true;

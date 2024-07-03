@@ -35,10 +35,12 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets."tailscale/auth_key" = {};
+
     services.tailscale = {
       enable = true;
       openFirewall = true;
-      authKeyFile = pkgs.writeText "tailscale-auth" secrets.tailscale.authKey;
+      authKeyFile = config.sops.secrets."tailscale/auth_key".path;
       useRoutingFeatures =
         if (cfg.isClient && cfg.isServer)
         then "both"

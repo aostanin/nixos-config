@@ -6,13 +6,13 @@
   ...
 }: let
   drivePower = let
-    baseUrl = secrets.backupExternal.homeAssistant.baseUrl;
-    token = secrets.backupExternal.homeAssistant.token;
-    entity = secrets.backupExternal.homeAssistant.entity;
+    baseUrl = secrets.homeAssistant.baseUrl;
+    tokenFile = config.sops.secrets."home-assistant/token".path;
+    entity = secrets.backupExternal.homeAssistantEntity;
   in
     pkgs.writeShellScript "drive_power" ''
       ${lib.getExe pkgs.curl} -S -s -o /dev/null -X POST \
-          -H "Authorization: Bearer ${token}" \
+          -H "Authorization: Bearer $(cat ${tokenFile})" \
           -d "{\"entity_id\": \"${entity}\"}" \
           "${baseUrl}/api/services/switch/turn_$1"
     '';
@@ -57,6 +57,8 @@
     fi
   '';
 in {
+  sops.secrets."home-assistant/token" = {};
+
   systemd = {
     timers.backup-external = {
       wantedBy = ["timers.target"];

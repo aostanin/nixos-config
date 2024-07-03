@@ -1,0 +1,17 @@
+keys:
+  - &user_aostanin age1964nq35gd700zn2xehuj9fqel6rwv00u8e3cvpqzs8egrwtuk4gsx3hdf0
+  - &host_elena age1x36w0cpmrlahjmuwfd6wpc8vzt4rkw9dwcu6ktpft6fgw2l0h5kq9hpgv3
+  - &host_roan age1a5ef43c7dq3dc6fsu8ph5ltnsrqt4eluw3343y0jtandp30wz3wq3ymv47
+  - &host_skye age12qv0y9fa3sxadszjrwkm6njul5eryqcenp8krv2j5qhar9qwkgksq5ya7g
+  - &host_vps-oci1 age1zj65k3rjkhwnlh577zcvdxq9cf94z5l5yaqj0lush9m9z70z85tqjs0clj
+  - &host_vps-oci2 age1zkmucm6pnskzuddmtw7ve4kx3rw2amjtta2ew4zwlt54ysh3q3fscrgfmx
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+        - *user_aostanin
+        - *host_elena
+        - *host_roan
+        - *host_skye
+        - *host_vps-oci1
+        - *host_vps-oci2

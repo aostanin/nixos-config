@@ -5,23 +5,18 @@
   secrets,
   ...
 }: {
+  sops.secrets."user/ssh_key" = {};
+
   localModules.rsyncBackup = {
     enable = true;
+    identityFile = config.sops.secrets."user/ssh_key".path;
     backups = {
-      tio-appdata = {
-        source = "root@[${secrets.network.zerotier.hosts.tio.address6}]:/storage/appdata";
-        destination = "/storage/backup/hosts/dir/tio";
-      };
-      tio-libvirt = {
-        source = "root@[${secrets.network.zerotier.hosts.tio.address6}]:/var/lib/libvirt";
-        destination = "/storage/backup/hosts/dir/tio";
-      };
       vps-oci1-appdata = {
-        source = "root@[${secrets.network.zerotier.hosts.vps-oci1.address6}]:/storage/appdata";
+        source = "root@vps-oci1:/storage/appdata";
         destination = "/storage/backup/hosts/dir/vps-oci1";
       };
       vps-oci2-appdata = {
-        source = "root@[${secrets.network.zerotier.hosts.vps-oci2.address6}]:/storage/appdata";
+        source = "root@vps-oci2:/storage/appdata";
         destination = "/storage/backup/hosts/dir/vps-oci2";
       };
     };

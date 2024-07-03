@@ -55,7 +55,7 @@ in {
           script = ''
             ${lib.getExe' pkgs.scrutiny "collector-metrics"} run \
               --config ${configFile} \
-              --api-endpoint http://${secrets.network.zerotier.hosts.elena.address}:8081 \
+              --api-endpoint http://elena:8081 \
               --host-id ${config.networking.hostName}
           '';
         };

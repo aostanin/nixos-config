@@ -3,32 +3,77 @@
   config,
   lib,
   secrets,
-  secretsPath,
   ...
 }: let
   cfg = config.localModules.ssh;
-
-  ssh_config = pkgs.callPackage (secretsPath + /ssh) {inherit secrets;};
 in {
   options.localModules.ssh = {
     enable = lib.mkEnableOption "ssh";
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets."pikvm/password" = {};
+
     programs.ssh = {
       enable = true;
-      matchBlocks = ssh_config.matchBlocks;
-    };
+      matchBlocks = {
+        "*".extraOptions.StrictHostKeyChecking = "no";
 
-    # TODO: Remove if home.file allows setting mode: https://github.com/nix-community/home-manager/issues/3090
-    home.activation.copySshPrivateKey = let
-      id_rsa = pkgs.writeText "id_rsa" (builtins.readFile (secretsPath + /ssh/id_rsa));
-      target = config.home.homeDirectory + "/.ssh/id_rsa";
-    in
-      lib.hm.dag.entryAfter ["writeBoundary"] ''
-        $DRY_RUN_CMD rm -f ${target}
-        $DRY_RUN_CMD cp ${id_rsa} ${target}
-        $DRY_RUN_CMD chmod 600 ${target}
-      '';
+        "git.ostan.in" = {
+          hostname = secrets.network.zerotier.hosts.roan.address6;
+          port = 2222;
+          user = "git";
+        };
+
+        elena = let
+          wake = let
+            inherit (secrets.pikvm) baseUrl username;
+            passwordFile = config.sops.secrets."pikvm/password".path;
+          in
+            # TODO: Make module
+            pkgs.writeShellScript "wake-elena" ''
+              ssh_available()
+              {
+                nc -zw3 elena 22 > /dev/null 2>&1
+              }
+
+              is_on()
+              {
+                curl -s -k -u "${username}:$(cat ${passwordFile})" "${baseUrl}/api/gpio" | \
+                  ${lib.getExe pkgs.jq} -e '.result.state.inputs.atx1_power_led.state == true'
+              }
+
+              toggle_power()
+              {
+                curl -X POST -s -k -o /dev/null -u "${username}:$(cat ${passwordFile})" "${baseUrl}/api/gpio/pulse?channel=atx1_power_button"
+              }
+
+              wait_on()
+              {
+                until ssh_available; do sleep 1; done
+              }
+
+              if ssh_available; then
+                exit 0
+              fi
+
+              if ! is_on; then
+                toggle_power
+                wait_on
+              fi
+            '';
+        in {
+          match = "host elena exec \"${wake} %h\"";
+        };
+
+        mareg.hostname = secrets.network.zerotier.hosts.mareg.address6;
+
+        octopi.user = "pi";
+
+        pikvm.user = "root";
+
+        roan.hostname = secrets.network.zerotier.hosts.roan.address6;
+      };
+    };
   };
 }

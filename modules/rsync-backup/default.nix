@@ -29,6 +29,13 @@ in {
   options.localModules.rsyncBackup = {
     enable = lib.mkEnableOption "rsync-backup";
 
+    identityFile = lib.mkOption {
+      type = lib.types.str;
+      description = ''
+        SSH identity file.
+      '';
+    };
+
     backups = lib.mkOption {
       type = lib.types.attrsOf backupSubmodule;
       description = ''
@@ -62,7 +69,7 @@ in {
           serviceConfig.Type = "oneshot";
           script = ''
             ${lib.getExe pkgs.rsync} \
-              -e "ssh -o StrictHostKeyChecking=no" \
+              -e "ssh -i ${cfg.identityFile} -o StrictHostKeyChecking=no" \
               --verbose \
               --stats \
               --archive \

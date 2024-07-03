@@ -7,10 +7,10 @@
     ./home-server
     ./intel-amt
     ./msmtp
+    ./networkmanager
     ./nix-ld
     ./nvtop
     ./pikvm
-    ./rkvm
     ./rsync-backup
     ./scrutiny-collector
     ./tailscale

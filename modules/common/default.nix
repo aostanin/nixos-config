@@ -112,32 +112,49 @@ in {
       zsh.enable = true;
     };
 
-    users.mutableUsers = false;
-
-    users.users."${secrets.user.username}" = {
-      isNormalUser = true;
-      extraGroups = [
-        "adbusers"
-        "cdrom"
-        "dialout"
-        "disk"
-        "docker"
-        "input"
-        "libvirtd"
-        "networkmanager"
-        "plugdev"
-        "podman"
-        "pulse-access"
-        "wheel"
-      ];
-      shell = pkgs.zsh;
-      hashedPassword = secrets.user.hashedPassword;
-      openssh.authorizedKeys.keys = [secrets.user.sshKey];
+    sops.secrets = let
+      homeDirectory =
+        if pkgs.stdenv.isDarwin
+        then "/Users/${secrets.user.username}"
+        else "/home/${secrets.user.username}";
+    in {
+      "user/hashed_password".neededForUsers = true;
+      "user/ssh_key_${secrets.user.username}" = {
+        key = "user/ssh_key";
+        owner = secrets.user.username;
+        path = "${homeDirectory}/.ssh/id_ed25519";
+      };
     };
 
-    users.users.root = {
-      hashedPassword = secrets.user.hashedPassword;
-      openssh.authorizedKeys.keys = [secrets.user.sshKey];
+    users = {
+      mutableUsers = false;
+      users = {
+        "${secrets.user.username}" = {
+          isNormalUser = true;
+          extraGroups = [
+            "adbusers"
+            "cdrom"
+            "dialout"
+            "disk"
+            "docker"
+            "input"
+            "libvirtd"
+            "networkmanager"
+            "plugdev"
+            "podman"
+            "pulse-access"
+            "wheel"
+          ];
+          shell = pkgs.zsh;
+          hashedPasswordFile = config.sops.secrets."user/hashed_password".path;
+          openssh.authorizedKeys.keys = [secrets.user.sshKey];
+        };
+
+        root = {
+          hashedPasswordFile = config.sops.secrets."user/hashed_password".path;
+          openssh.authorizedKeys.keys = [secrets.user.sshKey];
+        };
+      };
     };
   };
 }

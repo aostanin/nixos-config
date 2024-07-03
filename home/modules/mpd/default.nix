@@ -15,7 +15,7 @@ in {
     programs.ncmpcpp = {
       enable = true;
       settings = {
-        mpd_host = secrets.network.home.hosts.tio.address;
+        mpd_host = "tio";
         user_interface = "alternative";
       };
     };

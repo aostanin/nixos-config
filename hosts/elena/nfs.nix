@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  secrets,
-  ...
-}: {
+{secrets, ...}: {
   fileSystems."/srv/nfs/home" = {
     device = "/home";
     options = ["rbind" "x-systemd.requires=zfs-mount.service"];
