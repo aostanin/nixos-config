@@ -1,12 +1,21 @@
 {
   config,
-  pkgs,
   lib,
-  secrets,
+  inputs,
   ...
 }: let
   cfg = config.localModules.tailscale;
 in {
+  disabledModules = [
+    "services/networking/tailscale.nix"
+  ];
+
+  imports = [
+    # For extraSetFlags https://github.com/NixOS/nixpkgs/pull/309551
+    # TODO: Remove once stable
+    "${inputs.nixpkgs-unstable}/nixos/modules/services/networking/tailscale.nix"
+  ];
+
   options.localModules.tailscale = {
     enable = lib.mkEnableOption "tailscale";
 
@@ -26,8 +35,8 @@ in {
       '';
     };
 
-    extraSetFlags = lib.mkOption {
-      description = "Extra flags to pass to {command}`tailscale set`.";
+    extraFlags = lib.mkOption {
+      description = "Extra flags.";
       type = lib.types.listOf lib.types.str;
       default = [];
       example = ["--advertise-exit-node"];
@@ -41,6 +50,8 @@ in {
       enable = true;
       openFirewall = true;
       authKeyFile = config.sops.secrets."tailscale/auth_key".path;
+      extraUpFlags = cfg.extraFlags;
+      extraSetFlags = cfg.extraFlags;
       useRoutingFeatures =
         if (cfg.isClient && cfg.isServer)
         then "both"
@@ -49,19 +60,6 @@ in {
         else if cfg.isServer
         then "server"
         else "none";
-    };
-
-    # TODO: Remove once stable
-    systemd.services.tailscaled-set = lib.mkIf (cfg.extraSetFlags != []) {
-      after = ["tailscaled.service"];
-      wants = ["tailscaled.service"];
-      wantedBy = ["multi-user.target"];
-      serviceConfig = {
-        Type = "oneshot";
-      };
-      script = ''
-        ${lib.getExe config.services.tailscale.package} set ${lib.escapeShellArgs cfg.extraSetFlags}
-      '';
     };
   };
 }

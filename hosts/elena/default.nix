@@ -115,7 +115,7 @@
     tailscale = {
       isClient = true;
       isServer = true;
-      extraSetFlags = [
+      extraFlags = [
         "--advertise-exit-node"
         "--advertise-routes=10.0.40.0/24"
       ];

@@ -84,7 +84,7 @@
 
     tailscale = {
       isClient = true;
-      extraSetFlags = [
+      extraFlags = [
         "--accept-routes"
       ];
     };
