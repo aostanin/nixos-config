@@ -65,8 +65,6 @@
     };
   };
 
-  time.timeZone = "US/Pacific";
-
   localModules = {
     common.enable = true;
 
