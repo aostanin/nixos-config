@@ -209,6 +209,7 @@ in {
         assigns = {
           "2" = [
             {class = "^discord$";}
+            {class = "^Element$";}
             {class = "^SchildiChat$";}
             {class = "^Skype$";}
             {class = "^Slack$";}
