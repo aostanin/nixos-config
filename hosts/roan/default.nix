@@ -70,6 +70,14 @@ in {
 
     scrutinyCollector.enable = true;
 
+    tailscale = {
+      isServer = true;
+      extraFlags = [
+        "--advertise-exit-node"
+        "--advertise-routes=10.0.40.0/24"
+      ];
+    };
+
     zfs.enable = true;
   };
 

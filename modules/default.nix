@@ -16,7 +16,6 @@
     ./tailscale
     ./vfio
     ./virtwold
-    ./zerotier
     ./zfs
   ];
 }

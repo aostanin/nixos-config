@@ -181,12 +181,11 @@
             type = "tcp";
             listen = ":8888";
             listen_freebind = true;
-            clients = {
-              "127.0.0.1" = "elena";
-              "${secrets.network.zerotier.hosts.roan.address6}" = "roan";
-              "${secrets.network.zerotier.hosts.mareg.address6}" = "mareg";
-              "${secrets.network.zerotier.hosts.skye.address6}" = "skye";
-            };
+            clients =
+              {
+                "127.0.0.1" = "elena";
+              }
+              // lib.mapAttrs' (n: v: lib.nameValuePair v.address n) secrets.network.tailscale.hosts;
           };
           recv = {
             placeholder.encryption = "inherit";

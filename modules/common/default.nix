@@ -16,8 +16,6 @@ in {
       msmtp.enable = lib.mkDefault true;
 
       tailscale.enable = lib.mkDefault true;
-
-      zerotier.enable = lib.mkDefault true;
     };
 
     environment.systemPackages = with pkgs; [

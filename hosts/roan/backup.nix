@@ -45,7 +45,7 @@
           name = "push";
           connect = {
             type = "tcp";
-            address = "[${secrets.network.zerotier.hosts.elena.address6}]:8888";
+            address = "elena:8888";
           };
           filesystems = {
             "rpool/appdata<" = true;

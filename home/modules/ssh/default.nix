@@ -20,7 +20,7 @@ in {
         "*".extraOptions.StrictHostKeyChecking = "no";
 
         "git.ostan.in" = {
-          hostname = secrets.network.zerotier.hosts.roan.address6;
+          hostname = "roan";
           port = 2222;
           user = "git";
         };
@@ -66,13 +66,9 @@ in {
           match = "host elena exec \"${wake} %h\"";
         };
 
-        mareg.hostname = secrets.network.zerotier.hosts.mareg.address6;
-
         octopi.user = "pi";
 
         pikvm.user = "root";
-
-        roan.hostname = secrets.network.zerotier.hosts.roan.address6;
       };
     };
   };
