@@ -44,7 +44,6 @@
             type = "tcp";
             address = "elena:8888";
           };
-          send.encrypted = true;
           filesystems = {
             "rpool/home<" = true;
             "rpool/root<" = true;
