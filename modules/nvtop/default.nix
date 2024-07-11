@@ -17,7 +17,7 @@ in {
         then [amd]
         else if (driver == "nvidia")
         then [nvidia]
-        else if driver == "modeseting"
+        else if driver == "modesetting"
         then [intel]
         else [])
       config.services.xserver.videoDrivers;
