@@ -496,11 +496,9 @@ in {
           stdenv.shell
           util-linux
         ];
-        preStart = ''
-          mkdir -p /var/lib/libvirt/hooks
-          ln -sf ${qemuHook} /var/lib/libvirt/hooks/qemu
-        '';
       };
+
+      virtualisation.libvirtd.hooks.qemu.helper = qemuHook;
 
       environment.systemPackages = [gpuAttachAllScript gpuDetachAllScript];
 
