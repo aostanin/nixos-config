@@ -152,7 +152,7 @@
                   environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
 
                   sops = {
-                    defaultSopsFile = ./secrets/secrets.yaml;
+                    defaultSopsFile = ./secrets/sops/secrets.yaml;
                     age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
                   };
                 }
@@ -213,7 +213,7 @@
                   };
 
                   sops = {
-                    defaultSopsFile = ./secrets/secrets.yaml;
+                    defaultSopsFile = ./secrets/sops/secrets.yaml;
                     age.sshKeyPaths = ["${homeDirectory}/.ssh/id_ed25519"];
                   };
                 }

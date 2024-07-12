@@ -1,2 +1,2 @@
 /secrets/** filter=git-crypt diff=git-crypt
-/secrets/*.yaml !filter !diff
+/secrets/sops/** !filter !diff
