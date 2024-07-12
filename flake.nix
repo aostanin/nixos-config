@@ -110,12 +110,10 @@
           overlays = [
             nur.overlay
             self.overlays.packages
-            (final: prev: rec {
+            (final: prev: {
               unstable = import nixpkgs-unstable {
                 inherit config system;
               };
-              # Use 2.4.2 to fix https://github.com/blueman-project/blueman/issues/2317
-              blueman = unstable.blueman;
               yuzu = inputs.nixpkgs-yuzu.legacyPackages.${system}.yuzu;
             })
           ];
