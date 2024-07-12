@@ -13,6 +13,7 @@ in {
   config = lib.mkIf cfg.enable {
     programs.nix-ld = {
       enable = true;
+      package = pkgs.nix-ld-rs;
       libraries = pkgs.steam-run.fhsenv.args.multiPkgs pkgs;
     };
   };
