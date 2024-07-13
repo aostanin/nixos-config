@@ -20,7 +20,7 @@ in {
     programs.firefox = {
       enable = true;
       profiles = {
-        aostanin = {
+        ${secrets.user.username} = {
           id = 0;
           settings = {
             "browser.aboutConfig.showWarning" = false;

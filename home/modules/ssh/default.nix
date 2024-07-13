@@ -19,7 +19,7 @@ in {
       matchBlocks = {
         "*".extraOptions.StrictHostKeyChecking = "no";
 
-        "git.ostan.in" = {
+        "git.${secrets.domain}" = {
           hostname = "roan";
           port = 2222;
           user = "git";
