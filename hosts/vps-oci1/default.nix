@@ -12,9 +12,10 @@
       "console=ttyS0,115200"
       "console=tty1"
     ];
+    tmp.cleanOnBoot = true;
   };
 
-  boot.tmp.cleanOnBoot = true;
+  zramSwap.enable = true;
 
   networking = {
     hostName = "vps-oci1";
