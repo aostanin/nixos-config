@@ -14,7 +14,14 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
-      terraform = pkgs.opentofu;
+      lib = pkgs.lib;
+      terraform = pkgs.opentofu.withPlugins (p: [
+        p.cloudflare
+        p.local
+        p.null
+        p.random
+        p.tailscale
+      ]);
       terraformConfiguration = terranix.lib.terranixConfiguration {
         inherit system;
         modules = [
@@ -36,9 +43,9 @@
         type = "app";
         program = toString (pkgs.writers.writeBash "terraform" ''
           if [[ -e config.tf.json ]]; then rm -f config.tf.json; fi
-          cp ${terraformConfiguration} config.tf.json
-          ${terraform}/bin/tofu init
-          ${terraform}/bin/tofu "$@"
+          ln -sf ${terraformConfiguration} config.tf.json
+          ${lib.getExe terraform} init
+          ${lib.getExe terraform} "$@"
         '');
       };
 

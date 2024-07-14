@@ -8,14 +8,18 @@
   secrets = import ../secrets/terranix;
 in {
   terraform.required_providers = {
-    adguard.source = "gmichels/adguard";
-    cloudflare.source = "cloudflare/cloudflare";
-    tailscale.source = "tailscale/tailscale";
+    # Workaround for https://github.com/NixOS/nixpkgs/issues/283015#issuecomment-1904909598
+    # adguard.source = "registry.terraform.io/gmichels/adguard";
+    cloudflare.source = "registry.terraform.io/cloudflare/cloudflare";
+    tailscale.source = "registry.terraform.io/tailscale/tailscale";
+    local.source = "registry.terraform.io/hashicorp/local";
+    null.source = "registry.terraform.io/hashicorp/null";
+    random.source = "registry.terraform.io/hashicorp/random";
   };
 
-  provider.adguard = {
-    inherit (secrets.adguard) host username password;
-  };
+  # provider.adguard = {
+  #   inherit (secrets.adguard) host username password;
+  # };
 
   provider.cloudflare.api_token = secrets.cloudflare.apiToken;
 
