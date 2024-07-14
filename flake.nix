@@ -29,6 +29,10 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-artwork = {
       url = "github:NixOS/nixos-artwork";
       flake = false;
@@ -99,9 +103,27 @@
           }
         ];
 
-        formatter = pkgs.alejandra;
-
         packages = import ./packages {inherit pkgs;};
+
+        apps = {
+          bootstrap = {
+            type = "app";
+            program = toString (pkgs.writers.writeBash "bootstrap" ''
+              hostname=$1
+              ssh_host=$2
+              ${lib.getExe pkgs.nixos-anywhere} --flake .#$hostname --extra-files ./secrets/bootstrap/$hostname $ssh_host
+            '');
+          };
+          deploy = {
+            type = "app";
+            program = toString (pkgs.writers.writeBash "bootstrap" ''
+              hostname=$1
+              ${lib.getExe deploy-rs.defaultPackage.${system}} -s .#$hostname
+            '');
+          };
+        };
+
+        formatter = pkgs.alejandra;
       };
       flake = let
         nixpkgsConfig = ./nixpkgs-config.nix;
@@ -159,6 +181,7 @@
                 (./hosts + "/${hostname}")
                 inputs.sops-nix.nixosModules.sops
                 inputs.nvidia-patch.nixosModules.nvidia-patch
+                inputs.disko.nixosModules.disko
               ];
             };
         in
@@ -242,7 +265,7 @@
             fastConnection = false;
             autoRollback = false;
             magicRollback = false;
-            remoteBuild = true;
+            remoteBuild = false;
 
             profiles =
               lib.optionalAttrs (builtins.hasAttr hostname self.nixosConfigurations) {

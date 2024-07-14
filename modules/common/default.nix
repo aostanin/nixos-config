@@ -110,24 +110,29 @@ in {
       zsh.enable = true;
     };
 
-    sops.secrets = let
-      homeDirectory =
-        if pkgs.stdenv.isDarwin
-        then "/Users/${secrets.user.username}"
-        else "/home/${secrets.user.username}";
-    in {
+    sops.secrets = {
       "user/hashed_password".neededForUsers = true;
       "user/ssh_key_${secrets.user.username}" = {
         key = "user/ssh_key";
         owner = secrets.user.username;
-        path = "${homeDirectory}/.ssh/id_ed25519";
       };
     };
+
+    systemd.tmpfiles.rules = let
+      homeDirectory =
+        if pkgs.stdenv.isDarwin
+        then "/Users/${secrets.user.username}"
+        else "/home/${secrets.user.username}";
+    in [
+      # Workaround for https://github.com/Mic92/sops-nix/issues/235#issuecomment-1272535889
+      "d ${homeDirectory}/.ssh 0700 ${secrets.user.username} ${config.users.users.${secrets.user.username}.group} - -"
+      "L+ ${homeDirectory}/.ssh/id_ed25519 - - - - ${config.sops.secrets."user/ssh_key_${secrets.user.username}".path}"
+    ];
 
     users = {
       mutableUsers = false;
       users = {
-        "${secrets.user.username}" = {
+        ${secrets.user.username} = {
           isNormalUser = true;
           extraGroups = [
             "adbusers"
@@ -141,6 +146,7 @@ in {
             "plugdev"
             "podman"
             "pulse-access"
+            "video"
             "wheel"
           ];
           shell = pkgs.zsh;

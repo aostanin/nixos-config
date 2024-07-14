@@ -15,26 +15,7 @@
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  fileSystems."/" = {
-    device = "rpool/root/nixos";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
-
-  fileSystems."/nix" = {
-    device = "rpool/root/nix";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/boot";
-    fsType = "vfat";
-  };
-
-  swapDevices = [
-    {device = "/dev/disk/by-label/swap";}
-  ];
+  disko.devices.disk.main.device = "/dev/disk/by-id/ata-INTEL_SSDSC2BA400G3_BTTV2473033X400HGN";
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }
