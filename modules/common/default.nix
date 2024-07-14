@@ -14,12 +14,14 @@ in {
   config = lib.mkIf cfg.enable {
     localModules = {
       msmtp.enable = lib.mkDefault true;
-
+      nvtop.enable = lib.mkDefault true;
       tailscale.enable = lib.mkDefault true;
     };
 
     environment.systemPackages = with pkgs; [
+      hdparm
       lm_sensors
+      parted
       pciutils
       smartmontools
       usbutils
@@ -34,8 +36,6 @@ in {
       wget
       which
     ];
-
-    localModules.nvtop.enable = true;
 
     time.timeZone = lib.mkDefault "Asia/Tokyo";
 
