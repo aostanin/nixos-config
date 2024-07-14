@@ -108,15 +108,18 @@
         apps = {
           bootstrap = {
             type = "app";
-            program = toString (pkgs.writers.writeBash "bootstrap" ''
+            program = toString (pkgs.writeShellScript "bootstrap" ''
               hostname=$1
               ssh_host=$2
-              ${lib.getExe pkgs.nixos-anywhere} --flake .#$hostname --extra-files ./secrets/bootstrap/$hostname $ssh_host
+              extra_files=$(mktemp -d)
+              ${lib.getExe pkgs.sops} --decrypt secrets/sops/bootstrap/$hostname.tar.enc | ${lib.getExe pkgs.gnutar} -C $extra_files -xp
+              ${lib.getExe pkgs.nixos-anywhere} --flake .#$hostname --extra-files $extra_files $ssh_host
+              rm -rf $extra_files
             '');
           };
           deploy = {
             type = "app";
-            program = toString (pkgs.writers.writeBash "bootstrap" ''
+            program = toString (pkgs.writeShellScript "bootstrap" ''
               hostname=$1
               ${lib.getExe deploy-rs.defaultPackage.${system}} -s .#$hostname
             '');
