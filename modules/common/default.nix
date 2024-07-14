@@ -68,9 +68,10 @@ in {
       };
     };
 
-    security.polkit.enable = true;
-
-    security.sudo.wheelNeedsPassword = false;
+    security = {
+      polkit.enable = true;
+      sudo.wheelNeedsPassword = false;
+    };
 
     boot = {
       kernel.sysctl = {
@@ -86,6 +87,8 @@ in {
     };
 
     hardware.enableRedistributableFirmware = true;
+
+    zramSwap.enable = lib.mkDefault true;
 
     networking = {
       useDHCP = lib.mkDefault false;
@@ -106,7 +109,6 @@ in {
 
     programs = {
       mosh.enable = true;
-
       zsh.enable = true;
     };
 

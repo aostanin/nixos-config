@@ -15,8 +15,6 @@
     tmp.cleanOnBoot = true;
   };
 
-  zramSwap.enable = true;
-
   networking = {
     hostName = "vps-oci2";
     interfaces.ens3.useDHCP = true;

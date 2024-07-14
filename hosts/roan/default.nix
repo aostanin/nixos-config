@@ -35,8 +35,6 @@ in {
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
-  zramSwap.enable = true;
-
   networking = {
     hostName = "roan";
     hostId = "9bc52069";
