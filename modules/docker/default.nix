@@ -10,6 +10,16 @@ in {
   options.localModules.docker = {
     enable = lib.mkEnableOption "docker";
 
+    usePodman = lib.mkOption {
+      default = false;
+      type = lib.types.bool;
+    };
+
+    enableNvidia = lib.mkOption {
+      default = builtins.elem "nvidia" config.services.xserver.videoDrivers;
+      type = lib.types.bool;
+    };
+
     enableAutoPrune = lib.mkOption {
       default = false;
       type = lib.types.bool;
@@ -21,13 +31,10 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable (let
-    enableNvidia = builtins.elem "nvidia" config.services.xserver.videoDrivers;
-  in {
-    # TODO: Switch to podman
-    virtualisation.docker = {
+  config = lib.mkIf cfg.enable {
+    virtualisation.docker = lib.mkIf (!cfg.usePodman) {
       enable = true;
-      enableNvidia = enableNvidia;
+      enableNvidia = cfg.enableNvidia;
       storageDriver = "overlay2";
       liveRestore = false;
       autoPrune = lib.mkIf cfg.enableAutoPrune {
@@ -44,9 +51,38 @@ in {
       '';
     };
 
-    hardware.opengl = lib.mkIf enableNvidia {
+    virtualisation.podman = lib.mkIf cfg.usePodman {
+      enable = true;
+      enableNvidia = cfg.enableNvidia;
+      dockerCompat = true;
+      dockerSocket.enable = true;
+      autoPrune = lib.mkIf cfg.enableAutoPrune {
+        enable = true;
+        flags = [
+          "--all"
+          "--filter \"until=168h\""
+        ];
+      };
+    };
+
+    environment.systemPackages = with pkgs;
+      [
+        dive
+      ]
+      ++ (
+        if cfg.usePodman
+        then [
+          podman-compose
+          podman-tui
+        ]
+        else [
+          docker-compose
+        ]
+      );
+
+    hardware.opengl = lib.mkIf cfg.enableNvidia {
       enable = true;
       driSupport32Bit = true;
     };
-  });
+  };
 }

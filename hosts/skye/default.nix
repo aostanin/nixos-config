@@ -76,6 +76,7 @@
 
     docker = {
       enable = true;
+      usePodman = true;
       enableAutoPrune = true;
     };
 
