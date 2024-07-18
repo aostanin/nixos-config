@@ -78,9 +78,6 @@ in {
         ++ lib.optionals (!cfg.minimal && pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
           beets # broken on aarch64
           steam-run
-        ]
-        ++ lib.optionals (!cfg.minimal && !pkgs.stdenv.isDarwin) [
-          appimage-run
         ];
 
       sessionVariables = {

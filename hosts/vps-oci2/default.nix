@@ -21,7 +21,10 @@
   };
 
   localModules = {
-    common.enable = true;
+    common = {
+      enable = true;
+      minimal = true;
+    };
 
     docker.enable = true;
   };

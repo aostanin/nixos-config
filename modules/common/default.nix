@@ -9,6 +9,14 @@
 in {
   options.localModules.common = {
     enable = lib.mkEnableOption "common";
+
+    minimal = lib.mkOption {
+      default = false;
+      type = lib.types.bool;
+      description = ''
+        Don't install some optional packages.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -65,6 +73,12 @@ in {
         experimental-features = ["nix-command" "flakes" "impure-derivations" "ca-derivations"];
         sandbox = "relaxed";
         trusted-users = [secrets.user.username];
+        extra-substituters = [
+          "https://nix-community.cachix.org"
+        ];
+        trusted-public-keys = [
+          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        ];
       };
     };
 
@@ -108,6 +122,11 @@ in {
     };
 
     programs = {
+      appimage = lib.mkIf (!cfg.minimal) {
+        enable = true;
+        binfmt = true;
+      };
+
       mosh.enable = true;
       zsh.enable = true;
     };
