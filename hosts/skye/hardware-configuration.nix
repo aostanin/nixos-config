@@ -27,21 +27,9 @@
     options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
-  fileSystems."/home" = {
-    device = "rpool/home";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
-
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/9B28-A430";
     fsType = "vfat";
-  };
-
-  fileSystems."/var/lib/docker" = {
-    device = "rpool/docker";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
   };
 
   swapDevices = [
