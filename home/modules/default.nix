@@ -13,6 +13,7 @@
     ./git
     ./gnupg
     ./gtk
+    ./inhibit-bridge
     ./mpd
     ./neovim
     ./obs-studio

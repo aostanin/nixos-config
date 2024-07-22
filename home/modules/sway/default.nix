@@ -365,6 +365,8 @@ in {
       };
     };
 
+    localModules.inhibit-bridge.enable = true;
+
     services = {
       avizo = {
         enable = true;

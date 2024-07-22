@@ -1,4 +1,5 @@
 {pkgs}: {
+  inhibit-bridge = pkgs.callPackage ./inhibit-bridge {};
   personal-scripts = pkgs.callPackage ./personal-scripts {};
   pidcat = pkgs.callPackage ./pidcat {};
   scrutiny = pkgs.callPackage ./scrutiny {};
