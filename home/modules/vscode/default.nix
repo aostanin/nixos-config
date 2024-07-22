@@ -16,6 +16,7 @@ in {
       package = pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
         antyos.openscad
+        continue.continue
         editorconfig.editorconfig
         jdinhlife.gruvbox
         jnoortheen.nix-ide
