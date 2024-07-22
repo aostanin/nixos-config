@@ -112,7 +112,10 @@ in {
         keybindings = let
           modifier = config.wayland.windowManager.sway.config.modifier;
           screenshot = pkgs.writeScriptBin "screenshot" ''
-            ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" - | ${lib.getExe pkgs.satty} -f - --early-exit
+            ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" - |
+              ${lib.getExe pkgs.satty} -f - \
+                --early-exit \
+                --copy-command ${lib.getExe' pkgs.wl-clipboard "wl-copy"}
           '';
         in
           lib.mkOptionDefault {
@@ -230,6 +233,7 @@ in {
           titlebar = false;
           criteria = [
             {app_id = "mpv";}
+            {app_id = "com.gabm.satty";}
             {class = ".*scrcpy.*";}
             {class = "Android Emulator - .*";}
             {class = "Picture-in-Picture";}
