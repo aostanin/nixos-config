@@ -111,6 +111,9 @@ in {
         };
         keybindings = let
           modifier = config.wayland.windowManager.sway.config.modifier;
+          screenshot = pkgs.writeScriptBin "screenshot" ''
+            ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" - | ${lib.getExe pkgs.satty} -f - --early-exit
+          '';
         in
           lib.mkOptionDefault {
             "${modifier}+d" = "exec ${lib.getExe rofiPkg} -show combi";
@@ -132,7 +135,7 @@ in {
             "${modifier}+x" = "[urgent=latest] focus";
             "--whole-window ${modifier}+button4" = "workspace prev";
             "--whole-window ${modifier}+button5" = "workspace next";
-            "Print" = "exec ${lib.getExe pkgs.flameshot} gui";
+            "Print" = "exec ${lib.getExe screenshot}";
             "Control+Mod1+Prior" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u up";
             "XF86AudioRaiseVolume" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u up";
             "Control+Mod1+Next" = "exec ${lib.getExe' pkgs.avizo "volumectl"} -u down";
@@ -380,8 +383,6 @@ in {
       };
 
       clipman.enable = true;
-
-      flameshot.enable = true;
 
       kdeconnect = {
         enable = true;
