@@ -43,8 +43,8 @@
       requestEncryptionCredentials = false;
     };
     tmp.useTmpfs = true;
+    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
     kernelParams = [
-      "i915.enable_fbc=1"
       "zfs.l2arc_noprefetch=0"
       "zfs.l2arc_write_max=536870912"
       "zfs.l2arc_write_boost=1073741824"
@@ -57,6 +57,8 @@
     hostId = "fc172604";
 
     # Using ConnectX-3, networking doesn't come back up after sleep without this
+    # TODO: Use systemd.network.*
+    # TODO: Disable WoL https://wiki.archlinux.org/title/Wake-on-LAN#systemd.link
     useNetworkd = true;
   };
 
@@ -84,7 +86,7 @@
 
     home-server = {
       enable = true;
-      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
+      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.integrated}";
       address = secrets.network.home.hosts.elena.address;
       macAddress = secrets.network.home.hosts.elena.macAddress;
       iotNetwork = {
@@ -97,7 +99,11 @@
       };
     };
 
-    pikvm.enable = true;
+    pikvm = {
+      enable = true;
+      # USB serial prevents PC6 C-State, maxes at PC2
+      enableUsbSerial = false;
+    };
 
     scrutinyCollector = {
       enable = true;
@@ -115,10 +121,6 @@
     tailscale = {
       isClient = true;
       isServer = true;
-      extraFlags = [
-        "--advertise-exit-node"
-        "--advertise-routes=10.0.40.0/24"
-      ];
     };
 
     virtwold = {
@@ -130,9 +132,16 @@
   };
 
   services = {
+    hardware.openrgb.enable = true;
+
     logind.extraConfig = ''
       HandlePowerKey=suspend
     '';
+
+    sunshine = {
+      enable = true;
+      capSysAdmin = true;
+    };
 
     xserver.videoDrivers = ["modesetting" "nvidia"];
   };
@@ -149,6 +158,7 @@
     };
     patch.enable = true;
     modesetting.enable = true;
+    open = true;
     powerManagement.finegrained = true;
     prime = {
       offload = {

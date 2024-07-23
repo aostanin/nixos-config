@@ -9,7 +9,7 @@
     nvidiaRTX2070Super = let
       docker = lib.getExe pkgs.docker;
       jq = lib.getExe pkgs.jq;
-      setGpuLedColor = color: "${lib.getExe pkgs.openrgb} --noautoconnect -d 'RTX 2070 Super' -m direct -c ${color}";
+      setGpuLedColor = color: "${lib.getExe pkgs.openrgb} -d 'RTX 2070 Super' -m direct -c ${color}";
       getNvidiaContainers = "${docker} inspect $(${docker} ps -aq) | ${jq} -r '.[] | select(any(.HostConfig.DeviceRequests[]?; contains({\"Driver\": \"nvidia\"}))) | .Id' |  xargs";
     in {
       driver = "nvidia";
@@ -21,7 +21,7 @@
       '';
       preDetachCommands = ''
         ${docker} stop $(${getNvidiaContainers})
-        ${setGpuLedColor "FF5555"}
+        ${setGpuLedColor "FF4444"}
       '';
       postAttachCommands = ''
         # Disable LED
