@@ -22,6 +22,7 @@ in {
   config = lib.mkIf cfg.enable {
     localModules = {
       msmtp.enable = lib.mkDefault true;
+      nix-ld.enable = lib.mkDefault (!cfg.minimal);
       nvtop.enable = lib.mkDefault true;
       tailscale.enable = lib.mkDefault true;
     };
