@@ -279,11 +279,13 @@ in {
             }
           ];
         };
-        output = {
-          "*" = lib.mkIf (cfg.wallpaper != null) {
-            bg = "${cfg.wallpaper} fill";
-          };
-        } // cfg.output;
+        output =
+          {
+            "*" = lib.mkIf (cfg.wallpaper != null) {
+              bg = "${cfg.wallpaper} fill";
+            };
+          }
+          // cfg.output;
         inherit (cfg) workspaceOutputAssign;
       };
     };

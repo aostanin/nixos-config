@@ -81,8 +81,6 @@ in {
         ];
 
       sessionVariables = {
-        EDITOR = "vi";
-        VISUAL = config.home.sessionVariables.EDITOR;
         MANPAGER = "sh -c 'col -bx | ${lib.getExe pkgs.bat} -l man -p'";
         MANROFFOPT = "-c";
       };

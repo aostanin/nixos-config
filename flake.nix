@@ -38,6 +38,10 @@
       url = "github:NixOS/nixos-artwork";
       flake = false;
     };
+    nixvim = {
+      url = "github:nix-community/nixvim/nixos-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -248,6 +252,7 @@
                 }
                 ./home/hosts/${hostname}
                 inputs.sops-nix.homeManagerModules.sops
+                inputs.nixvim.homeManagerModules.nixvim
               ];
               extraSpecialArgs = {
                 inherit inputs nixpkgsConfig secrets;
