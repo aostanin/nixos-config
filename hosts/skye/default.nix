@@ -43,6 +43,8 @@
       interfaces.tailscale0 = {
         allowedTCPPorts = [
           22 # SSH
+          80 # HTTP
+          443 # HTTPS
           22000 # Syncthing
         ];
         allowedTCPPortRanges = [
