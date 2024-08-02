@@ -52,6 +52,7 @@ in {
             pkgs.nur.repos.rycee.firefox-addons."10ten-ja-reader"
             bitwarden
             cookies-txt
+            libredirect
             multi-account-containers
             simple-tab-groups
             sponsorblock
