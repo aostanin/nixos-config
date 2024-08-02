@@ -111,6 +111,8 @@
       };
     };
 
+    fwupd.enable = true;
+
     logind = {
       lidSwitchDocked = "suspend";
       powerKey = "suspend";
