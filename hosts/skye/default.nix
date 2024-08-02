@@ -68,6 +68,10 @@
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    linux-wifi-hotspot
+  ];
+
   localModules = {
     common.enable = true;
 
