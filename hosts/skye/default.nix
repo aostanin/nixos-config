@@ -102,6 +102,20 @@
     };
   };
 
+  # Mic LED is always on. Turn it off.
+  systemd.services.disable-mic-led = {
+    wantedBy = ["graphical.target"];
+    partOf = ["graphical.target"];
+    after = ["graphical.target"];
+    serviceConfig.Type = "oneshot";
+    script = "echo 0 > /sys/class/leds/platform::micmute/brightness";
+  };
+
+  services.udev.extraRules = ''
+    # Disable wakeup from sleep on touchpad activity
+    KERNEL=="i2c-SYNA88024:00", SUBSYSTEM=="i2c", ATTR{power/wakeup}="disabled"
+  '';
+
   services = {
     fprintd = {
       enable = true;
@@ -145,11 +159,6 @@
         WIFI_PWR_ON_BAT = "off"; # Wi-Fi is unstable in power-saving mode
       };
     };
-
-    udev.extraRules = ''
-      # Disable wakeup from sleep on touchpad activity
-      KERNEL=="i2c-SYNA88024:00", SUBSYSTEM=="i2c", ATTR{power/wakeup}="disabled"
-    '';
 
     xserver.videoDrivers = ["amdgpu"];
   };
