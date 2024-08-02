@@ -40,11 +40,6 @@ in {
       type = networkSubmodule;
       default = {};
     };
-
-    storageNetwork = lib.mkOption {
-      type = networkSubmodule;
-      default = {};
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -57,11 +52,6 @@ in {
     networking = {
       vlans.vlan40 = lib.mkIf cfg.iotNetwork.enable {
         id = 40;
-        interface = "br0";
-      };
-
-      vlans.vlan50 = lib.mkIf cfg.storageNetwork.enable {
-        id = 50;
         interface = "br0";
       };
 
@@ -80,15 +70,6 @@ in {
         ipv4.addresses = [
           {
             address = cfg.iotNetwork.address;
-            prefixLength = 24;
-          }
-        ];
-      };
-
-      interfaces.vlan50 = lib.mkIf cfg.storageNetwork.enable {
-        ipv4.addresses = [
-          {
-            address = cfg.storageNetwork.address;
             prefixLength = 24;
           }
         ];

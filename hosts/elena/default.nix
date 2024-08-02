@@ -13,7 +13,6 @@
     ./backup.nix
     ./backup-external.nix
     #./i915-sriov.nix
-    ./nfs.nix
     ./vfio.nix
     ./power-management.nix
     ./autosuspend.nix
@@ -92,10 +91,6 @@
       iotNetwork = {
         enable = true;
         address = secrets.network.iot.hosts.elena.address;
-      };
-      storageNetwork = {
-        enable = true;
-        address = secrets.network.storage.hosts.elena.address;
       };
     };
 
