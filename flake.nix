@@ -33,6 +33,7 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    impermanence.url = "github:nix-community/impermanence";
     nixos-artwork = {
       url = "github:NixOS/nixos-artwork";
       flake = false;
@@ -112,7 +113,8 @@
               hostname=$1
               ssh_host=$2
               extra_files=$(mktemp -d)
-              ${lib.getExe pkgs.sops} --decrypt secrets/sops/bootstrap/$hostname.tar.enc | ${lib.getExe pkgs.gnutar} -C $extra_files -xp
+              mkdir -p $extra_files/persist
+              ${lib.getExe pkgs.sops} --decrypt secrets/sops/bootstrap/$hostname.tar.enc | ${lib.getExe pkgs.gnutar} -C $extra_files/persist -xp
               ${lib.getExe pkgs.nixos-anywhere} --flake .#$hostname --extra-files $extra_files $ssh_host
               rm -rf $extra_files
             '');
@@ -178,13 +180,14 @@
 
                   sops = {
                     defaultSopsFile = ./secrets/sops/secrets.yaml;
-                    age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+                    age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key" "/persist/etc/ssh/ssh_host_ed25519_key"];
                   };
                 }
                 (./hosts + "/${hostname}")
                 inputs.sops-nix.nixosModules.sops
                 inputs.nvidia-patch.nixosModules.nvidia-patch
                 inputs.disko.nixosModules.disko
+                inputs.impermanence.nixosModules.impermanence
               ];
             };
         in
