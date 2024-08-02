@@ -129,9 +129,7 @@
   services = {
     hardware.openrgb.enable = true;
 
-    logind.extraConfig = ''
-      HandlePowerKey=suspend
-    '';
+    logind.powerKey = "suspend";
 
     sunshine = {
       enable = true;

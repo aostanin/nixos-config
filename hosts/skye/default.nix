@@ -113,9 +113,7 @@
 
     logind = {
       lidSwitchDocked = "suspend";
-      extraConfig = ''
-        HandlePowerKey=suspend
-      '';
+      powerKey = "suspend";
     };
 
     ollama.enable = true;
