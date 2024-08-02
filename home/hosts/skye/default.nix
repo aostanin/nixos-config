@@ -14,11 +14,7 @@
     sway = {
       useNetworkManager = true;
       primaryOutput = "eDP-1";
-      output = {
-        "*" = {
-          bg = "${inputs.nixos-artwork}/wallpapers/nix-wallpaper-nineish-dark-gray.png fill";
-        };
-      };
+      wallpaper = "${inputs.nixos-artwork}/wallpapers/nix-wallpaper-nineish-dark-gray.png";
       workspaceOutputAssign = builtins.map (x: {
         workspace = builtins.toString x;
         output =

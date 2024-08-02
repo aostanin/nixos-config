@@ -28,6 +28,14 @@ in {
       '';
     };
 
+    wallpaper = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        The wallpaper image to use by default.
+      '';
+    };
+
     primaryOutput = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
@@ -123,6 +131,7 @@ in {
             "${modifier}+c" = "exec ${lib.getExe rofiPkg} -show calc -modi calc -no-show-match -no-sort";
             "${modifier}+period" = "exec ${lib.getExe' rofimojiPkg "rofimoji"}";
             "${modifier}+n" = "exec ${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t -sw";
+            "${modifier}+End" = "exec ${lib.getExe config.programs.swaylock.package}";
             "${modifier}+Shift+s" = "sticky toggle";
             "${modifier}+h" = "focus left";
             "${modifier}+j" = "focus down";
@@ -270,7 +279,12 @@ in {
             }
           ];
         };
-        inherit (cfg) output workspaceOutputAssign;
+        output = {
+          "*" = lib.mkIf (cfg.wallpaper != null) {
+            bg = "${cfg.wallpaper} fill";
+          };
+        } // cfg.output;
+        inherit (cfg) workspaceOutputAssign;
       };
     };
 
@@ -291,6 +305,14 @@ in {
           combi-modi = "window,drun,ssh";
           show-icons = true;
           parse-known-hosts = false;
+        };
+      };
+
+      swaylock = {
+        enable = true;
+        settings = {
+          image = lib.mkIf (cfg.wallpaper != null) cfg.wallpaper;
+          indicator-idle-visible = true;
         };
       };
 

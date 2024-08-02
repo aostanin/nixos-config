@@ -173,7 +173,7 @@ in {
       dconf.enable = true;
     };
 
-    security.pam.services.lightdm.enableGnomeKeyring = true;
+    security.pam.services.swaylock = {};
 
     virtualisation.spiceUSBRedirection.enable = true;
   };
