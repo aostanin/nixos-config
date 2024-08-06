@@ -32,6 +32,7 @@ in {
       font-awesome
       font-awesome_4 # For compatibility
       ipafont
+      ipaexfont
       joypixels
       kochi-substitute
       nerdfonts
