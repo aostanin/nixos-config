@@ -138,6 +138,36 @@ in {
         support32Bit = true;
       };
       pulse.enable = true;
+      wireplumber.extraConfig = {
+        # Workaround for wireplumber keeping camera device open
+        # ref: https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2669#note_2362342
+        # TODO: Remove once fixed
+        "10-disable-camera" = {
+          "wireplumber.profiles" = {
+            main = {
+              "monitor.libcamera" = "disabled";
+            };
+          };
+        };
+        "wh-1000xm3-ldac-hq" = {
+          "monitor.bluez.rules" = [
+            {
+              matches = [
+                {
+                  "device.name" = "~bluez_card.*";
+                  "device.product.id" = "0x0cd3";
+                  "device.vendor.id" = "usb:054c";
+                }
+              ];
+              actions = {
+                update-props = {
+                  "bluez5.a2dp.ldac.quality" = "hq";
+                };
+              };
+            }
+          ];
+        };
+      };
     };
 
     # Fix for tuigreet remember not working: https://github.com/NixOS/nixpkgs/issues/248323
