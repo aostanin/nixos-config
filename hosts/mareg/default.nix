@@ -45,9 +45,11 @@
   localModules = {
     common.enable = true;
 
+    cloudflared.enable = true;
+
     docker = {
       enable = true;
-      useLocalDns = true;
+      usePodman = true;
     };
 
     home-server = {

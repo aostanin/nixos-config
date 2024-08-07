@@ -58,6 +58,10 @@
   }: let
     lib = nixpkgs.lib;
     secrets = import ./secrets;
+    sopsFiles = {
+      default = ./secrets/sops/secrets.enc.yaml;
+      terranix = ./secrets/sops/terranix.enc.yaml;
+    };
     hosts = {
       elena = {system = "x86_64-linux";};
       mac-vm = {system = "x86_64-darwin";};
@@ -158,7 +162,7 @@
             lib.nixosSystem {
               inherit system;
               specialArgs = {
-                inherit inputs nixpkgsConfig secrets;
+                inherit inputs nixpkgsConfig secrets sopsFiles;
               };
               modules = [
                 ./modules
@@ -183,7 +187,7 @@
                   environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
 
                   sops = {
-                    defaultSopsFile = ./secrets/sops/secrets.yaml;
+                    defaultSopsFile = sopsFiles.default;
                     age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key" "/persist/etc/ssh/ssh_host_ed25519_key"];
                   };
                 }
@@ -210,7 +214,7 @@
             nix-darwin.lib.darwinSystem {
               inherit system;
               specialArgs = {
-                inherit inputs nixpkgsConfig secrets;
+                inherit inputs nixpkgsConfig secrets sopsFiles;
               };
               modules = [
                 (./darwin/hosts + "/${hostname}")
@@ -246,7 +250,7 @@
                   };
 
                   sops = {
-                    defaultSopsFile = ./secrets/sops/secrets.yaml;
+                    defaultSopsFile = sopsFiles.default;
                     age.sshKeyPaths = ["${homeDirectory}/.ssh/id_ed25519"];
                   };
                 }
@@ -255,7 +259,7 @@
                 inputs.nixvim.homeManagerModules.nixvim
               ];
               extraSpecialArgs = {
-                inherit inputs nixpkgsConfig secrets;
+                inherit inputs nixpkgsConfig secrets sopsFiles;
               };
             };
         in

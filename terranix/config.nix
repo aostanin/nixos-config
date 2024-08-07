@@ -150,14 +150,17 @@ in {
 
   tunnels = {
     # TODO: Setup all tunnels this way
-    roan = {
-      accountId = secrets.cloudflare.accountId;
-    };
+    roan.accountId = secrets.cloudflare.accountId;
+    mareg.accountId = secrets.cloudflare.accountId;
   };
 
   resource.local_sensitive_file.secrets-json = {
     content = builtins.toJSON {
-      tailscale.auth_key = config.resource.tailscale_tailnet_key.nixos_auth_key "key";
+      tailscale.auth_key = config.output.tailscale_auth_key.value;
+      cloudflare.tunnels = {
+        roan.tunnel_token = config.output.tunnel_token_roan.value;
+        mareg.tunnel_token = config.output.tunnel_token_mareg.value;
+      };
     };
     filename = "secrets/secrets.json";
     file_permission = "0640";
@@ -188,18 +191,4 @@ in {
     filename = "secrets/tailscale.json";
     file_permission = "0640";
   };
-
-  # resource.local_file.cloudflare-json = {
-  #   content = builtins.toJSON {
-  #     cloudflare.tunnels =
-  #       lib.mapAttrs (n: v: {
-  #         name = config.data.tailscale_device.${n} "name";
-  #         address = config.data.tailscale_device.${n} "addresses[0]";
-  #         address6 = config.data.tailscale_device.${n} "addresses[1]";
-  #       })
-  #       secrets.tailscale.devices;
-  #   };
-  #   filename = "secrets/cloudflare.json";
-  #   file_permission = "0640";
-  # };
 }

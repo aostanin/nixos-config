@@ -1,5 +1,6 @@
 {
   imports = [
+    ./cloudflared
     ./common
     ./desktop
     ./docker
