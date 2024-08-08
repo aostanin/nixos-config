@@ -23,6 +23,7 @@
     ./sway
     ./syncthing
     ./tmux
+    ./trayscale
     ./vscode
     ./zsh
   ];

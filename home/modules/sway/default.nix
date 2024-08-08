@@ -396,7 +396,11 @@ in {
       };
     };
 
-    localModules.inhibit-bridge.enable = true;
+    localModules = {
+      inhibit-bridge.enable = true;
+
+      trayscale.enable = true;
+    };
 
     services = {
       avizo = {
