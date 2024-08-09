@@ -50,6 +50,11 @@ in {
   localModules = {
     common.enable = true;
 
+    coredns = {
+      enable = true;
+      upstreamDns = "${secrets.network.home.hosts.roan.address}:5300";
+    };
+
     docker = {
       enable = true;
       useLocalDns = true;

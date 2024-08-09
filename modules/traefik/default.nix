@@ -3,6 +3,7 @@
   config,
   lib,
   options,
+  secrets,
   ...
 }: let
   cfg = config.localModules.traefik;
@@ -12,6 +13,7 @@ in {
 
     domain = lib.mkOption {
       type = lib.types.str;
+      default = secrets.domain;
       description = ''
         The domain name.
       '';

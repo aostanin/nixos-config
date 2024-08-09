@@ -2,6 +2,7 @@
   imports = [
     ./cloudflared
     ./common
+    ./coredns
     ./desktop
     ./docker
     ./headless-gaming
