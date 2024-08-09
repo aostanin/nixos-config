@@ -65,6 +65,11 @@ in {
       };
     };
 
+    virtualisation.oci-containers.backend =
+      if cfg.usePodman
+      then "podman"
+      else "docker";
+
     environment.systemPackages = with pkgs;
       [
         dive

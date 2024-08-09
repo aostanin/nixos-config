@@ -15,6 +15,7 @@
     ./rsync-backup
     ./scrutiny-collector
     ./tailscale
+    ./traefik
     ./vfio
     ./virtwold
     ./zfs

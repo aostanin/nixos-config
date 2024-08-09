@@ -67,6 +67,11 @@
 
     scrutinyCollector.enable = true;
 
+    traefik = {
+      inherit (secrets) domain;
+      enable = true;
+    };
+
     zfs.enable = true;
   };
 

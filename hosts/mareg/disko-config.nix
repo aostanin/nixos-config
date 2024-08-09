@@ -52,52 +52,50 @@
         };
 
         datasets = {
-          root = {
+          local = {
             type = "zfs_fs";
             options.canmount = "off";
           };
-          "root/nixos" = {
+          "local/root" = {
             type = "zfs_fs";
             mountpoint = "/";
+            postCreateHook = "zfs snapshot rpool/local/root@blank";
           };
-          "root/nix" = {
+          "local/nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
           };
-
-          home = {
+          "local/containers" = {
             type = "zfs_fs";
-            mountpoint = "/home";
+            mountpoint = "/persist/var/lib/containers";
           };
 
-          appdata = {
+          system = {
+            type = "zfs_fs";
+            options.canmount = "off";
+          };
+          "system/persist" = {
+            type = "zfs_fs";
+            mountpoint = "/persist";
+          };
+          "system/images" = {
+            type = "zfs_fs";
+            mountpoint = "/persist/var/lib/libvirt/images";
+            options.recordsize = "64K";
+          };
+          "system/appdata" = {
             type = "zfs_fs";
             mountpoint = "/storage/appdata";
-            options.canmount = "off";
-          };
-          "appdata/docker" = {
-            type = "zfs_fs";
-          };
-          "appdata/libvirt" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/libvirt";
           };
 
-          virtualization = {
+          user = {
             type = "zfs_fs";
             options.canmount = "off";
           };
-          "virtualization/docker" = {
+          "user/home" = {
             type = "zfs_fs";
-            mountpoint = "/var/lib/docker";
-          };
-          "virtualization/images" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/libvirt/images";
-            options = {
-              canmount = "off";
-              recordsize = "64K";
-            };
+            mountpoint = "/home";
+            postCreateHook = "zfs snapshot rpool/user/home@blank";
           };
         };
       };
