@@ -48,8 +48,6 @@
     self,
     nixpkgs,
     nixpkgs-unstable,
-    home-manager,
-    nix-darwin,
     nur,
     deploy-rs,
     pre-commit-hooks,
@@ -72,8 +70,29 @@
       vps-oci1 = {system = "x86_64-linux";};
       vps-oci2 = {system = "x86_64-linux";};
     };
+    nixpkgsConfig = ./nixpkgs-config.nix;
+    mkPkgs = system: rec {
+      config = import nixpkgsConfig;
+      overlays = [
+        nur.overlay
+        self.overlays.packages
+        (final: prev: {
+          unstable = import nixpkgs-unstable {
+            inherit config system;
+          };
+          yuzu = inputs.nixpkgs-yuzu.legacyPackages.${system}.yuzu;
+        })
+      ];
+    };
   in
     flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = with flake-parts.lib; let
+        args = {inherit secrets sopsFiles hosts nixpkgsConfig mkPkgs;};
+      in [
+        (importApply ./nixos/flake-module.nix args)
+        (importApply ./darwin/flake-module.nix args)
+        (importApply ./home/flake-module.nix args)
+      ];
       systems = ["x86_64-linux" "aarch64-linux"];
       perSystem = {
         config,
@@ -138,138 +157,7 @@
 
         formatter = pkgs.alejandra;
       };
-      flake = let
-        nixpkgsConfig = ./nixpkgs-config.nix;
-        mkPkgs = system: rec {
-          config = import nixpkgsConfig;
-          overlays = [
-            nur.overlay
-            self.overlays.packages
-            (final: prev: {
-              unstable = import nixpkgs-unstable {
-                inherit config system;
-              };
-              yuzu = inputs.nixpkgs-yuzu.legacyPackages.${system}.yuzu;
-            })
-          ];
-        };
-      in {
-        nixosConfigurations = let
-          mkNixosSystem = {
-            hostname,
-            system,
-          }:
-            lib.nixosSystem {
-              inherit system;
-              specialArgs = {
-                inherit inputs nixpkgsConfig secrets sopsFiles;
-              };
-              modules = [
-                ./nixos/modules
-                {
-                  nixpkgs = mkPkgs system;
-                  system.stateVersion = "24.05";
-
-                  # Use same nixpkgs for flakes and system
-                  # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
-                  nix = {
-                    registry = {
-                      nixpkgs.flake = nixpkgs;
-                      nixpkgs-unstable.flake = nixpkgs-unstable;
-                      nixos-config.flake = self;
-                    };
-                    nixPath = [
-                      "nixpkgs=/etc/channels/nixpkgs"
-                      "nixos-config=/etc/nixos/configuration.nix"
-                      "/nix/var/nix/profiles/per-user/root/channels"
-                    ];
-                  };
-                  environment.etc."channels/nixpkgs".source = nixpkgs.outPath;
-
-                  sops = {
-                    defaultSopsFile = sopsFiles.default;
-                    age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key" "/persist/etc/ssh/ssh_host_ed25519_key"];
-                  };
-                }
-                (./nixos/hosts + "/${hostname}")
-                inputs.sops-nix.nixosModules.sops
-                inputs.nvidia-patch.nixosModules.nvidia-patch
-                inputs.disko.nixosModules.disko
-                inputs.impermanence.nixosModules.impermanence
-              ];
-            };
-        in
-          builtins.mapAttrs (hostname: host:
-            mkNixosSystem {
-              inherit hostname;
-              inherit (host) system;
-            })
-          (lib.filterAttrs (k: v: lib.pathExists (./nixos/hosts + "/${k}")) hosts);
-
-        darwinConfigurations = let
-          mkDarwinSystem = {
-            hostname,
-            system,
-          }:
-            nix-darwin.lib.darwinSystem {
-              inherit system;
-              specialArgs = {
-                inherit inputs nixpkgsConfig secrets sopsFiles;
-              };
-              modules = [
-                (./darwin/hosts + "/${hostname}")
-              ];
-            };
-        in
-          builtins.mapAttrs (hostname: host:
-            mkDarwinSystem {
-              inherit hostname;
-              inherit (host) system;
-            })
-          (lib.filterAttrs (k: v: lib.pathExists (./darwin/hosts + "/${k}")) hosts);
-
-        homeConfigurations = let
-          mkHomeConfiguration = {
-            hostname,
-            system,
-          }:
-            home-manager.lib.homeManagerConfiguration rec {
-              pkgs = import nixpkgs ((mkPkgs system) // {inherit system;});
-              modules = let
-                homeDirectory =
-                  if pkgs.stdenv.isDarwin
-                  then "/Users/${secrets.user.username}"
-                  else "/home/${secrets.user.username}";
-              in [
-                ./home/modules
-                {
-                  home = {
-                    inherit (secrets.user) username;
-                    homeDirectory = homeDirectory;
-                    stateVersion = "24.05";
-                  };
-
-                  sops = {
-                    defaultSopsFile = sopsFiles.default;
-                    age.sshKeyPaths = ["${homeDirectory}/.ssh/id_ed25519"];
-                  };
-                }
-                ./home/hosts/${hostname}
-                inputs.sops-nix.homeManagerModules.sops
-                inputs.nixvim.homeManagerModules.nixvim
-              ];
-              extraSpecialArgs = {
-                inherit inputs nixpkgsConfig secrets sopsFiles;
-              };
-            };
-        in
-          builtins.mapAttrs (hostname: host:
-            mkHomeConfiguration {
-              inherit hostname;
-              inherit (host) system;
-            })
-          (lib.filterAttrs (k: v: lib.pathExists (./home/hosts + "/${k}")) hosts);
-
+      flake = {
         deploy.nodes = let
           mkNode = {
             hostname,
