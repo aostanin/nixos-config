@@ -63,14 +63,13 @@
       };
     };
 
+    impermanence.enable = true;
+
     intelAmt.enable = true;
 
     scrutinyCollector.enable = true;
 
-    traefik = {
-      inherit (secrets) domain;
-      enable = true;
-    };
+    traefik.enable = true;
 
     zfs.enable = true;
   };

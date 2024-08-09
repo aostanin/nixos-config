@@ -165,7 +165,7 @@
                 inherit inputs nixpkgsConfig secrets sopsFiles;
               };
               modules = [
-                ./modules
+                ./nixos/modules
                 {
                   nixpkgs = mkPkgs system;
                   system.stateVersion = "24.05";
@@ -191,7 +191,7 @@
                     age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key" "/persist/etc/ssh/ssh_host_ed25519_key"];
                   };
                 }
-                (./hosts + "/${hostname}")
+                (./nixos/hosts + "/${hostname}")
                 inputs.sops-nix.nixosModules.sops
                 inputs.nvidia-patch.nixosModules.nvidia-patch
                 inputs.disko.nixosModules.disko
@@ -204,7 +204,7 @@
               inherit hostname;
               inherit (host) system;
             })
-          (lib.filterAttrs (k: v: lib.pathExists (./hosts + "/${k}")) hosts);
+          (lib.filterAttrs (k: v: lib.pathExists (./nixos/hosts + "/${k}")) hosts);
 
         darwinConfigurations = let
           mkDarwinSystem = {

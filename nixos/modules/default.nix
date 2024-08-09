@@ -7,6 +7,7 @@
     ./docker
     ./headless-gaming
     ./home-server
+    ./impermanence
     ./intel-amt
     ./msmtp
     ./networkmanager
