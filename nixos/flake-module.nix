@@ -46,7 +46,7 @@
 
               sops = {
                 defaultSopsFile = sopsFiles.default;
-                age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+                age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key" "/persist/etc/ssh/ssh_host_ed25519_key"];
               };
             }
             (./hosts + "/${hostname}")
