@@ -229,6 +229,7 @@ in {
             {class = "^Skype$";}
             {class = "^Slack$";}
             {app_id = "^thunderbird$";}
+            {title = "^LINE$"; class = "^steam_proton$";}
           ];
           "3" = [
             {class = "^Logseq$";}
