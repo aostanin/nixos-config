@@ -33,6 +33,7 @@ in {
       ];
       userSettings = {
         "editor.fontFamily" = "'Hack Nerd Font', 'monospace', monospace, 'Droid Sans Fallback'";
+        "editor.formatOnSave" = true;
         "editor.renderControlCharacters" = true;
         "editor.renderWhitespace" = "boundary";
         "editor.wordWrap" = "on";
@@ -44,6 +45,9 @@ in {
 
         # Workaround for terminal not working https://github.com/NixOS/nixpkgs/issues/181610
         "terminal.integrated.shellIntegration.enabled" = false;
+
+        # Rust
+        "rust-analyzer.rustfmt.overrideCommand" = [(lib.getExe pkgs.rustPackages.rustfmt)];
 
         # Elm
         "elmLS.elmPath" = lib.getExe pkgs.elmPackages.elm;

@@ -31,7 +31,7 @@ in {
         }
       ];
 
-      options = {
+      opts = {
         # General options
         compatible = false;
 
@@ -100,11 +100,13 @@ in {
       colorschemes.gruvbox.enable = true;
 
       plugins = {
+        barbar.enable = true;
         comment.enable = true;
         fugitive.enable = true;
         gitgutter.enable = true;
         lualine.enable = true;
         nix.enable = true;
+        nvim-tree.enable = true;
         openscad.enable = true;
         telescope = {
           enable = true;

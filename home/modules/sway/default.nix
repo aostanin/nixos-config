@@ -229,7 +229,10 @@ in {
             {class = "^Skype$";}
             {class = "^Slack$";}
             {app_id = "^thunderbird$";}
-            {title = "^LINE$"; class = "^steam_proton$";}
+            {
+              title = "^LINE$";
+              class = "^steam_proton$";
+            }
           ];
           "3" = [
             {class = "^Logseq$";}
@@ -292,6 +295,7 @@ in {
     };
 
     home.packages = with pkgs; [
+      gnome.adwaita-icon-theme
       i3-swallow
       pavucontrol
       wayvnc
