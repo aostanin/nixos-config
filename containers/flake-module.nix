@@ -10,46 +10,45 @@
   ...
 }: {
   flake = let
-    inherit (inputs) nixpkgs home-manager;
+    inherit (inputs) nixpkgs;
     inherit (nixpkgs) lib;
-    mkHomeConfiguration = {
+    home-manager = inputs.home-manager-containers;
+    mkContainerConfiguration = {
       hostname,
       system,
     }:
-      home-manager.lib.homeManagerConfiguration rec {
+      home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs ((mkPkgs system) // {inherit system;});
         modules = let
-          homeDirectory =
-            if pkgs.stdenv.isDarwin
-            then "/Users/${secrets.user.username}"
-            else "/home/${secrets.user.username}";
+          homeDirectory = "/home/container";
         in [
           ./modules
           {
             home = {
-              inherit (secrets.user) username;
+              username = "container";
               homeDirectory = homeDirectory;
               stateVersion = "24.05";
+              enableNixpkgsReleaseCheck = false; # TODO: Remove once stable
             };
 
             systemd.user.startServices = "sd-switch";
 
             sops = {
-              defaultSopsFile = sopsFiles.default;
+              defaultSopsFile = sopsFiles.containers;
               age.sshKeyPaths = ["${homeDirectory}/.ssh/id_ed25519"];
             };
           }
           ./hosts/${hostname}
           inputs.sops-nix.homeManagerModules.sops
-          inputs.nixvim.homeManagerModules.nixvim
         ];
         extraSpecialArgs = {
-          inherit inputs nixpkgsConfig secrets sopsFiles;
+          inherit hostname inputs nixpkgsConfig;
+          secrets = secrets.containers;
         };
       };
   in {
-    homeConfigurations = builtins.mapAttrs (hostname: host:
-      mkHomeConfiguration {
+    containerConfigurations = builtins.mapAttrs (hostname: host:
+      mkContainerConfiguration {
         inherit hostname;
         inherit (host) system;
       })

@@ -14,6 +14,10 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    home-manager-containers = {
+      url = "github:n-hass/home-manager/podman-module";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -59,6 +63,7 @@
     sopsFiles = {
       default = ./secrets/sops/secrets.enc.yaml;
       terranix = ./secrets/sops/terranix.enc.yaml;
+      containers = ./secrets/sops/containers/secrets.enc.yaml;
     };
     hosts = {
       elena = {system = "x86_64-linux";};
@@ -90,6 +95,7 @@
         args = {inherit secrets sopsFiles hosts nixpkgsConfig mkPkgs;};
       in [
         (importApply ./nixos/flake-module.nix args)
+        (importApply ./containers/flake-module.nix args)
         (importApply ./darwin/flake-module.nix args)
         (importApply ./home/flake-module.nix args)
       ];
@@ -181,6 +187,12 @@
                 system = {
                   user = "root";
                   path = deploy-rs.lib.${system}.activate.darwin self.darwinConfigurations."${hostname}";
+                };
+              }
+              // lib.optionalAttrs (builtins.hasAttr hostname self.containerConfigurations) {
+                containers = {
+                  user = "container";
+                  path = deploy-rs.lib.${system}.activate.home-manager self.containerConfigurations."${hostname}";
                 };
               }
               // lib.optionalAttrs (builtins.hasAttr hostname self.homeConfigurations) {

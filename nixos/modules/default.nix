@@ -2,6 +2,7 @@
   imports = [
     ./cloudflared
     ./common
+    ./containers
     ./coredns
     ./desktop
     ./docker
@@ -14,6 +15,7 @@
     ./nix-ld
     ./nvtop
     ./pikvm
+    ./redir
     ./rsync-backup
     ./scrutiny-collector
     ./tailscale

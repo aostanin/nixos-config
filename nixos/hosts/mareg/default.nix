@@ -45,12 +45,9 @@
   localModules = {
     common.enable = true;
 
-    cloudflared.enable = true;
+    containers.enable = true;
 
-    docker = {
-      enable = true;
-      usePodman = true;
-    };
+    cloudflared.enable = true;
 
     home-server = {
       enable = true;
@@ -68,8 +65,6 @@
     intelAmt.enable = true;
 
     scrutinyCollector.enable = true;
-
-    traefik.enable = true;
 
     zfs.enable = true;
   };

@@ -1,5 +1,4 @@
 {
-  pkgs,
   config,
   lib,
   options,
@@ -21,7 +20,27 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets."traefik" = {};
+    sops.secrets = {
+      "traefik/authelia/forward_auth_address" = {};
+      "traefik/basic_auth_users" = {};
+      "traefik/cloudflare/email" = {};
+      "traefik/cloudflare/api_token" = {};
+    };
+
+    sops.templates."traefik.env".content = ''
+      CF_API_EMAIL=${config.sops.placeholder."traefik/cloudflare/email"}
+      CF_DNS_API_TOKEN=${config.sops.placeholder."traefik/cloudflare/api_token"}
+    '';
+
+    sops.templates."traefik-dynamic.toml".content = ''
+      [http.middlewares.auth.basicAuth]
+      users = "${config.sops.placeholder."traefik/basic_auth_users"}"
+
+      [http.middlewares.authelia.forwardAuth]
+      address = "${config.sops.placeholder."traefik/authelia/forward_auth_address"}"
+      authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name"
+      trustForwardHeader = "true"
+    '';
 
     services.traefik = {
       enable = true;
@@ -31,7 +50,7 @@ in {
         else if config.virtualisation.podman.enable
         then "podman"
         else options.services.traefik.group;
-      environmentFiles = [config.sops.secrets."traefik".path];
+      environmentFiles = [config.sops.templates."traefik.env".path];
       staticConfigOptions = let
         host = config.networking.hostName;
         domain = cfg.domain;
@@ -41,7 +60,14 @@ in {
           sendAnonymousUsage = false;
         };
         log.level = "INFO";
-        providers.docker.exposedByDefault = false;
+        providers.docker = {
+          endpoint =
+            if config.virtualisation.podman.enable
+            then "unix:///run/podman/podman.sock"
+            else "unix:///run/docker.sock";
+          network = "proxy";
+          exposedByDefault = false;
+        };
         serversTransport.insecureSkipVerify = true;
         certificatesResolvers.default.acme = {
           email = "admin@${cfg.domain}";
@@ -79,16 +105,7 @@ in {
           };
         };
       };
-      # Using dynamicConfigOptions escapes the quotes needed for go templating
-      dynamicConfigFile = pkgs.writeText "dynamic.toml" ''
-        [http.middlewares.auth.basicAuth]
-        users = "{{ env "BASIC_AUTH_USERS" }}"
-
-        [http.middlewares.authelia.forwardAuth]
-        address = "{{ env "AUTHELIA_FORWARD_AUTH_ADDRESS" }}"
-        authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name"
-        trustForwardHeader = "true"
-      '';
+      dynamicConfigFile = config.sops.templates."traefik-dynamic.toml".path;
     };
   };
 }

@@ -12,27 +12,25 @@
   flake = let
     inherit (inputs) nixpkgs nix-darwin;
     inherit (nixpkgs) lib;
-  in {
-    darwinConfigurations = let
-      mkDarwinSystem = {
-        hostname,
-        system,
-      }:
-        nix-darwin.lib.darwinSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs nixpkgsConfig secrets sopsFiles;
-          };
-          modules = [
-            (./hosts + "/${hostname}")
-          ];
+    mkDarwinSystem = {
+      hostname,
+      system,
+    }:
+      nix-darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs nixpkgsConfig secrets sopsFiles;
         };
-    in
-      builtins.mapAttrs (hostname: host:
-        mkDarwinSystem {
-          inherit hostname;
-          inherit (host) system;
-        })
-      (lib.filterAttrs (k: v: lib.pathExists (./hosts + "/${k}")) hosts);
+        modules = [
+          (./hosts + "/${hostname}")
+        ];
+      };
+  in {
+    darwinConfigurations = builtins.mapAttrs (hostname: host:
+      mkDarwinSystem {
+        inherit hostname;
+        inherit (host) system;
+      })
+    (lib.filterAttrs (k: v: lib.pathExists (./hosts + "/${k}")) hosts);
   };
 }
