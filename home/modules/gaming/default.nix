@@ -22,6 +22,7 @@ in {
       cemu
       dolphin-emu
       retroarch # TODO: Add cores?
+      unstable.rpcs3
       yuzu
     ];
   };
