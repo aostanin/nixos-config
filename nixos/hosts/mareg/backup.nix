@@ -1,8 +1,6 @@
 {
-  config,
   pkgs,
   lib,
-  secrets,
   ...
 }: {
   services.zrepl = {
@@ -13,8 +11,8 @@
           name = "snap-frequent";
           type = "snap";
           filesystems = {
-            "rpool/home<" = true;
-            "rpool/root<" = true;
+            "rpool/system<" = true;
+            "rpool/user<" = true;
           };
           snapshotting = {
             type = "periodic";
@@ -45,9 +43,8 @@
             address = "elena:8888";
           };
           filesystems = {
-            "rpool/home<" = true;
-            "rpool/root<" = true;
-            "rpool/root/nix<" = false;
+            "rpool/system<" = true;
+            "rpool/user<" = true;
           };
           snapshotting.type = "manual";
           pruning = {
