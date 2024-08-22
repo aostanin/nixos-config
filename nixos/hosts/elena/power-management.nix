@@ -13,7 +13,6 @@
   ];
 in {
   boot.kernelParams = [
-    "consoleblank=300"
     "pcie_aspm.policy=powersupersave"
     "snd_hda_intel.power_save=1"
     "nmi_watchdog=0" # Match PowerTOP

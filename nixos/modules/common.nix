@@ -48,6 +48,8 @@ in {
 
     time.timeZone = lib.mkDefault "Asia/Tokyo";
 
+    boot.kernelParams = ["consoleblank=300"];
+
     console = {
       font = "Lat2-Terminus16";
       keyMap = "jp106";
