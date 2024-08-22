@@ -78,6 +78,8 @@
       useLocalDns = true;
     };
 
+    forgejo-runner.enable = true;
+
     headlessGaming = {
       #enable = true;
       gpuBusId = "PCI:1:0:0";
