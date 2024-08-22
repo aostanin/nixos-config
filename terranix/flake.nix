@@ -20,6 +20,7 @@
         p.local
         p.null
         p.random
+        p.sops
         p.tailscale
       ]);
       terraformConfiguration = terranix.lib.terranixConfiguration {
@@ -37,6 +38,10 @@
           terraform
           terranix.defaultPackage.${system}
         ];
+
+        shellHook = ''
+          export SOPS_AGE_KEY=$(${lib.getExe pkgs.ssh-to-age} -i ~/.ssh/id_ed25519 -private-key)
+        '';
       };
 
       apps.terraform = {

@@ -9,35 +9,19 @@
 in {
   terraform.required_providers = {
     # Workaround for https://github.com/NixOS/nixpkgs/issues/283015#issuecomment-1904909598
-    # adguard.source = "registry.terraform.io/gmichels/adguard";
     cloudflare.source = "registry.terraform.io/cloudflare/cloudflare";
-    tailscale.source = "registry.terraform.io/tailscale/tailscale";
     local.source = "registry.terraform.io/hashicorp/local";
     null.source = "registry.terraform.io/hashicorp/null";
     random.source = "registry.terraform.io/hashicorp/random";
+    sops.source = "registry.terraform.io/carlpett/sops";
+    tailscale.source = "registry.terraform.io/tailscale/tailscale";
   };
 
-  # provider.adguard = {
-  #   inherit (secrets.adguard) host username password;
-  # };
+  data.sops_file.secrets.source_file = toString ../secrets/sops/secrets.enc.yaml;
 
-  provider.cloudflare.api_token = secrets.cloudflare.apiToken;
+  provider.cloudflare.api_token = "\${data.sops_file.secrets.data[\"cloudflare.api_token\"]}";
 
-  provider.tailscale.api_key = secrets.tailscale.apiKey;
-
-  # TODO: Remove in favor of CoreDNS
-  # resource.adguard_rewrite = let
-  #   servers = lib.filterAttrs (n: v: v.lanIp != null) secrets.servers;
-  # in
-  #   lib.mkMerge (builtins.attrValues (builtins.mapAttrs (server: config: (builtins.listToAttrs (builtins.map (subdomain: {
-  #       name = builtins.replaceStrings ["."] ["_"] subdomain;
-  #       value = {
-  #         domain = "${subdomain}.${domain}";
-  #         answer = config.lanIp;
-  #       };
-  #     })
-  #     config.subdomains)))
-  #   servers));
+  provider.tailscale.api_key = "\${data.sops_file.secrets.data[\"tailscale.api_key\"]}";
 
   resource.cloudflare_record = let
     servers = lib.filterAttrs (n: v: v.tunnelId != null) secrets.servers;
@@ -46,7 +30,7 @@ in {
         (lib.mapAttrs' (server: config:
           lib.attrsets.nameValuePair "${server}-cf" {
             allow_overwrite = true;
-            zone_id = secrets.cloudflare.zones.${domain}.zoneId;
+            zone_id = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
             type = "CNAME";
             name = "${server}-cf";
             value = "${config.tunnelId}.cfargotunnel.com";
@@ -58,7 +42,7 @@ in {
           name = builtins.replaceStrings ["."] ["_"] subdomain;
           value = {
             allow_overwrite = true;
-            zone_id = secrets.cloudflare.zones.${domain}.zoneId;
+            zone_id = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
             type = "CNAME";
             name = subdomain;
             value = "${server}-cf.${domain}";
@@ -150,8 +134,8 @@ in {
 
   tunnels = {
     # TODO: Setup all tunnels this way
-    roan.accountId = secrets.cloudflare.accountId;
-    mareg.accountId = secrets.cloudflare.accountId;
+    roan.accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+    mareg.accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
   };
 
   resource.local_sensitive_file.secrets-json = {

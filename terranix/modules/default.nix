@@ -1,5 +1,5 @@
 {
   imports = [
-    ./tunnel
+    ./tunnel.nix
   ];
 }
