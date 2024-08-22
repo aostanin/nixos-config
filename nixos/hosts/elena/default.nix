@@ -129,8 +129,6 @@
   };
 
   services = {
-    hardware.openrgb.enable = true;
-
     logind.powerKey = "suspend";
 
     sunshine = {
