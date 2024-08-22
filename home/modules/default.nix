@@ -1,30 +1,30 @@
 {
   imports = [
-    ./3dprinting
-    ./android
-    ./chromium
-    ./common
-    ./desktop
-    ./electronics
-    ./firefox
-    ./fish
-    ./foot
-    ./gaming
-    ./git
-    ./gnupg
-    ./gtk
-    ./inhibit-bridge
-    ./mpd
-    ./neovim
-    ./obs-studio
-    ./polkit
-    ./qt
-    ./ssh
-    ./sway
-    ./syncthing
-    ./tmux
-    ./trayscale
-    ./vscode
-    ./zsh
+    ./3dprinting.nix
+    ./android.nix
+    ./chromium.nix
+    ./common.nix
+    ./desktop.nix
+    ./electronics.nix
+    ./firefox.nix
+    ./fish.nix
+    ./foot.nix
+    ./gaming.nix
+    ./git.nix
+    ./gnupg.nix
+    ./gtk.nix
+    ./inhibit-bridge.nix
+    ./mpd.nix
+    ./neovim.nix
+    ./obs-studio.nix
+    ./polkit.nix
+    ./qt.nix
+    ./ssh.nix
+    ./sway.nix
+    ./syncthing.nix
+    ./tmux.nix
+    ./trayscale.nix
+    ./vscode.nix
+    ./zsh.nix
   ];
 }

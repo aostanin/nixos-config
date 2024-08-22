@@ -1,6 +1,6 @@
 {
   imports = [
-    ./traefik
-    ./whoami
+    ./traefik.nix
+    ./whoami.nix
   ];
 }

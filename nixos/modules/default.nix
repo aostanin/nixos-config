@@ -1,27 +1,27 @@
 {
   imports = [
-    ./cloudflared
-    ./common
-    ./containers
-    ./coredns
-    ./desktop
-    ./docker
-    ./headless-gaming
-    ./home-server
-    ./impermanence
-    ./intel-amt
-    ./msmtp
-    ./networkmanager
-    ./nix-ld
-    ./nvtop
-    ./pikvm
-    ./redir
-    ./rsync-backup
-    ./scrutiny-collector
-    ./tailscale
-    ./traefik
-    ./vfio
-    ./virtwold
-    ./zfs
+    ./cloudflared.nix
+    ./common.nix
+    ./containers.nix
+    ./coredns.nix
+    ./desktop.nix
+    ./docker.nix
+    ./headless-gaming.nix
+    ./home-server.nix
+    ./impermanence.nix
+    ./intel-amt.nix
+    ./msmtp.nix
+    ./networkmanager.nix
+    ./nix-ld.nix
+    ./nvtop.nix
+    ./pikvm.nix
+    ./redir.nix
+    ./rsync-backup.nix
+    ./scrutiny-collector.nix
+    ./tailscale.nix
+    ./traefik.nix
+    ./vfio.nix
+    ./virtwold.nix
+    ./zfs.nix
   ];
 }
