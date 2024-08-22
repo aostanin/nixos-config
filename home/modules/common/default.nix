@@ -41,6 +41,7 @@ in {
           fd
           gitui
           jq
+          just
           lazygit
           lf
           lftp
