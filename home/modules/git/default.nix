@@ -23,7 +23,7 @@ in {
       userEmail = secrets.user.emailAddress;
       extraConfig = {
         init = {
-          defaultBranch = "master";
+          defaultBranch = "main";
         };
         pull = {
           ff = "only";
