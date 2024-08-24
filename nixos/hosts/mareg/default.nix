@@ -52,6 +52,11 @@
         bulk = "/storage/appdata/containers/bulk";
       };
       services = {
+        adguardhome = {
+          enable = true;
+          dnsPort = 5300;
+        };
+        authelia.enable = true;
         mealie.enable = true;
         miniflux.enable = true;
         uptime-kuma.enable = true;

@@ -15,7 +15,7 @@ in {
     autoupdate = containerLib.mkAutoupdateOption name;
     proxy = mkProxyOption "auth" {};
     volumes = mkVolumesOption name {
-      data = {
+      config = {
         user = uid;
         group = gid;
       };
@@ -50,7 +50,7 @@ in {
           AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE = "/run/secrets/storage_encryption_key";
         };
         volumes = [
-          "${cfg.volumes.data.path}:/config"
+          "${cfg.volumes.config.path}:/config"
           "/run/secrets/containers/authelia/jwt_secret:/run/secrets/jwt_secret:ro"
           "/run/secrets/containers/authelia/session_secret:/run/secrets/session_secret:ro"
           "/run/secrets/containers/authelia/storage_encryption_key:/run/secrets/storage_encryption_key:ro"
