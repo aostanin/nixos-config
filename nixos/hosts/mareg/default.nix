@@ -53,6 +53,8 @@
       };
       services = {
         mealie.enable = true;
+        miniflux.enable = true;
+        uptime-kuma.enable = true;
         whoami.enable = true;
       };
     };

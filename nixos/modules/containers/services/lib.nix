@@ -70,7 +70,14 @@
         type = submodule {
           options =
             lib.mapAttrs (
-              n: v: mkVolumeOption name v
+              n: v:
+                mkVolumeOption name (v
+                  // {
+                    volumeName =
+                      if (lib.hasAttr "volumeName" v)
+                      then v.volumeName
+                      else n;
+                  })
             )
             volumes;
         };
