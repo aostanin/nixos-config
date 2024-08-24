@@ -57,6 +57,7 @@
           dnsPort = 5300;
         };
         authelia.enable = true;
+        home-assistant.enable = true;
         mealie.enable = true;
         miniflux.enable = true;
         uptime-kuma.enable = true;
