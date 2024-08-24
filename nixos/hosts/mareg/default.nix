@@ -52,6 +52,7 @@
         bulk = "/storage/appdata/containers/bulk";
       };
       services = {
+        mealie.enable = true;
         whoami.enable = true;
       };
     };

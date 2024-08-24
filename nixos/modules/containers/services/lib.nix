@@ -12,6 +12,74 @@
     "${name}.${host}.ts.${domain}"
   ];
 
+  mkAutoupdateOption = name: lib.mkEnableOption "autoupdate ${name}";
+
+  mkVolumeOption = with lib.types;
+    name: {
+      storageType ? "default",
+      volumeName ? "data",
+      user ? "root",
+      group ? "root",
+      mode ? "0750",
+    }:
+      lib.mkOption {
+        type = submodule {
+          options = {
+            path = lib.mkOption {
+              type = str;
+              default = "${config.localModules.containers.storage.${storageType}}/${name}/${volumeName}";
+              description = ''
+                ${volumeName} path.
+              '';
+            };
+
+            user = lib.mkOption {
+              type = str;
+              default = user;
+              description = ''
+                ${volumeName} user.
+              '';
+            };
+
+            group = lib.mkOption {
+              type = str;
+              default = group;
+              description = ''
+                ${volumeName} group.
+              '';
+            };
+
+            mode = lib.mkOption {
+              type = str;
+              default = mode;
+              description = ''
+                ${volumeName} mode.
+              '';
+            };
+          };
+        };
+        default = {};
+        description = ''
+          ${volumeName} volume.
+        '';
+      };
+
+  mkVolumesOption = with lib.types;
+    name: volumes:
+      lib.mkOption {
+        type = submodule {
+          options =
+            lib.mapAttrs (
+              n: v: mkVolumeOption name v
+            )
+            volumes;
+        };
+        default = {};
+        description = ''
+          ${name} volumes.
+        '';
+      };
+
   mkProxyTypeOption = with lib.types;
     proxyType:
       lib.mkOption {
@@ -85,6 +153,12 @@
         '';
       };
 
+  mkContainerDefaultConfig = {
+    environment = {
+      TZ = config.time.timeZone;
+    };
+  };
+
   mkContainerProxyConfig = name: cfg:
     lib.mkIf cfg.enable {
       labels = let
@@ -130,9 +204,18 @@
       ];
     };
 
+  mkContainerAutoupdateConfig = name: cfg:
+    lib.mkIf cfg {
+      labels = {
+        "io.containers.autoupdate" = "registry";
+      };
+    };
+
   mkServiceProxyConfig = name: cfg:
     lib.mkIf cfg.enable {
       after = ["podman-proxy-network.service"];
       requires = ["podman-proxy-network.service"];
     };
+
+  mkTmpfileVolumesConfig = cfg: lib.mapAttrsToList (n: v: "d '${v.path}' ${v.mode} ${v.user} ${v.group} - -") cfg;
 }
