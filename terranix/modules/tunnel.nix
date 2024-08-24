@@ -10,12 +10,19 @@
       accountId = lib.mkOption {
         type = lib.types.str;
       };
+
+      service = lib.mkOption {
+        type = lib.types.str;
+        default = "https://traefik:443";
+      };
     };
   };
 in {
-  options.tunnels = lib.mkOption {
-    type = lib.types.attrsOf tunnelSubmodule;
-    default = {};
+  options = {
+    tunnels = lib.mkOption {
+      type = lib.types.attrsOf tunnelSubmodule;
+      default = {};
+    };
   };
 
   config = {
@@ -37,7 +44,7 @@ in {
             origin_request.no_tls_verify = true;
             ingress_rule = [
               {
-                service = "https://traefik:443";
+                inherit (tunnelConfig) service;
               }
             ];
           };

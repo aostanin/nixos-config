@@ -143,21 +143,34 @@
         STOP_CHARGE_THRESH_BAT0 = 80;
 
         # CPU
+        CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
         CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+        CPU_BOOST_ON_AC = 1;
+        CPU_BOOST_ON_BAT = 0;
+
+        # Graphics
+        RADEON_DPM_PERF_LEVEL_ON_AC = "auto";
+        RADEON_DPM_PERF_LEVEL_ON_BAT = "low";
 
         # PCIe
         RUNTIME_PM_ON_AC = "auto";
         RUNTIME_PM_ON_BAT = "auto";
         PCIE_ASPM_ON_AC = "powersave";
-        PCIE_ASPM_ON_BAT = "powersave";
+        PCIE_ASPM_ON_BAT = "powersupersave";
+
+        # Platform
+        PLATFORM_PROFILE_ON_AC = "balanced";
+        PLATFORM_PROFILE_ON_BAT = "low-power";
+
+        # Radio Devices
+        DEVICES_TO_DISABLE_ON_STARTUP = "nfc";
+        DEVICES_TO_DISABLE_ON_BAT_NOT_IN_USE = "wwan";
+        DEVICES_TO_DISABLE_ON_LAN_CONNECT = "wifi wwan";
+        DEVICES_TO_ENABLE_ON_LAN_DISCONNECT = "wifi";
 
         # USB
         USB_EXCLUDE_AUDIO = 0;
         USB_EXCLUDE_PRINTER = 0;
-        USB_DENYLIST = "04d9:4545"; # Keyboard
-
-        # Wi-Fi
-        WIFI_PWR_ON_BAT = "off"; # Wi-Fi is unstable in power-saving mode
       };
     };
 

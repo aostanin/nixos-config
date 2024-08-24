@@ -134,8 +134,13 @@ in {
 
   tunnels = {
     # TODO: Setup all tunnels this way
-    roan.accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
-    mareg.accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+    roan = {
+      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+    };
+    mareg = {
+      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+      service = "https://127.0.0.1:443";
+    };
   };
 
   resource.local_sensitive_file.secrets-json = {
