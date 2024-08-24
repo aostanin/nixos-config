@@ -32,15 +32,24 @@ in {
       CF_DNS_API_TOKEN=${config.sops.placeholder."traefik/cloudflare/api_token"}
     '';
 
-    sops.templates."traefik-dynamic.toml".content = ''
-      [http.middlewares.auth.basicAuth]
-      users = "${config.sops.placeholder."traefik/basic_auth_users"}"
+    sops.templates."traefik-dynamic.toml" = {
+      owner = "traefik";
+      content = ''
+        [http.middlewares.auth.basicAuth]
+        users = "${config.sops.placeholder."traefik/basic_auth_users"}"
 
-      [http.middlewares.authelia.forwardAuth]
-      address = "${config.sops.placeholder."traefik/authelia/forward_auth_address"}"
-      authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name"
-      trustForwardHeader = "true"
-    '';
+        [http.middlewares.authelia.forwardAuth]
+        address = "${config.sops.placeholder."traefik/authelia/forward_auth_address"}"
+        authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name"
+        trustForwardHeader = "true"
+      '';
+    };
+
+    localModules.containers.networks.proxy = {};
+    systemd.services.traefik = {
+      after = ["podman-proxy-network.service"];
+      requires = ["podman-proxy-network.service"];
+    };
 
     services.traefik = {
       enable = true;

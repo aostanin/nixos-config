@@ -2,7 +2,7 @@
   imports = [
     ./cloudflared.nix
     ./common.nix
-    ./containers.nix
+    ./containers
     ./coredns.nix
     ./desktop.nix
     ./docker.nix

@@ -45,9 +45,16 @@
   localModules = {
     common.enable = true;
 
-    containers.enable = true;
-
-    cloudflared.enable = true;
+    containers = {
+      enable = true;
+      storage = {
+        default = "/storage/appdata/containers/storage";
+        bulk = "/storage/appdata/containers/bulk";
+      };
+      services = {
+        whoami.enable = true;
+      };
+    };
 
     home-server = {
       enable = true;

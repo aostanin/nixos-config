@@ -1,6 +1,5 @@
 keys:
   - &user_aostanin age1964nq35gd700zn2xehuj9fqel6rwv00u8e3cvpqzs8egrwtuk4gsx3hdf0
-  - &user_container age14g62xn2glz4h0dwdjpg3xmz43dygr6dratrpulz6pm6kgp63236qse6lqe
   - &host_elena age1x36w0cpmrlahjmuwfd6wpc8vzt4rkw9dwcu6ktpft6fgw2l0h5kq9hpgv3
   - &host_mareg age16eggdxzrl9mjhw32cms2hcgukwsxahfsxeuwwtyex0e4e0k0r5pqe6yl3d
   - &host_roan age1a5ef43c7dq3dc6fsu8ph5ltnsrqt4eluw3343y0jtandp30wz3wq3ymv47
@@ -22,8 +21,3 @@ creation_rules:
     key_groups:
       - age:
         - *user_aostanin
-  - path_regex: secrets/sops/containers/[^/]+\.(yaml|json|env|ini)$
-    key_groups:
-      - age:
-        - *user_aostanin
-        - *user_container

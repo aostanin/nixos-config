@@ -14,10 +14,6 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager-containers = {
-      url = "github:n-hass/home-manager/podman-module";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -95,7 +91,6 @@
         args = {inherit secrets sopsFiles hosts nixpkgsConfig mkPkgs;};
       in [
         (importApply ./nixos/flake-module.nix args)
-        (importApply ./containers/flake-module.nix args)
         (importApply ./darwin/flake-module.nix args)
         (importApply ./home/flake-module.nix args)
       ];
@@ -147,16 +142,10 @@
               ssh_host=$2
               extra_files=$(mktemp -d)
               mkdir -p $extra_files/persist
+              # TODO: don't hardcode persist
               ${lib.getExe pkgs.sops} --decrypt secrets/sops/bootstrap/$hostname.tar.enc | ${lib.getExe pkgs.gnutar} -C $extra_files/persist -xp
               ${lib.getExe pkgs.nixos-anywhere} --flake .#$hostname --extra-files $extra_files $ssh_host
               rm -rf $extra_files
-            '');
-          };
-          deploy = {
-            type = "app";
-            program = toString (pkgs.writeShellScript "bootstrap" ''
-              hostname=$1
-              ${lib.getExe deploy-rs.defaultPackage.${system}} -s .#$hostname
             '');
           };
         };
@@ -187,12 +176,6 @@
                 system = {
                   user = "root";
                   path = deploy-rs.lib.${system}.activate.darwin self.darwinConfigurations."${hostname}";
-                };
-              }
-              // lib.optionalAttrs (builtins.hasAttr hostname self.containerConfigurations) {
-                containers = {
-                  user = "container";
-                  path = deploy-rs.lib.${system}.activate.home-manager self.containerConfigurations."${hostname}";
                 };
               }
               // lib.optionalAttrs (builtins.hasAttr hostname self.homeConfigurations) {

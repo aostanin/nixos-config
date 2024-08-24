@@ -302,27 +302,6 @@
         "type": "github"
       }
     },
-    "home-manager-containers": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1723621879,
-        "narHash": "sha256-7/VysfDaFfmFJ7zgt2H8J04PkSO2bMjoN7e0wwUu6Ek=",
-        "owner": "n-hass",
-        "repo": "home-manager",
-        "rev": "639ab4410badd2a7a4c28b678452e1dc2d30450a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "n-hass",
-        "ref": "podman-module",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
     "home-manager_2": {
       "inputs": {
         "nixpkgs": [
@@ -677,7 +656,6 @@
         "disko": "disko",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
-        "home-manager-containers": "home-manager-containers",
         "impermanence": "impermanence",
         "nix-darwin": "nix-darwin",
         "nixos-artwork": "nixos-artwork",
