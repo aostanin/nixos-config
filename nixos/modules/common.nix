@@ -27,6 +27,9 @@ in {
       tailscale.enable = lib.mkDefault true;
     };
 
+    # For zsh completion
+    environment.pathsToLink = ["/share/zsh"];
+
     environment.systemPackages = with pkgs; [
       hdparm
       lm_sensors
@@ -38,7 +41,6 @@ in {
       file
       git
       htop
-      ncdu
       neovim
       psmisc
       tmux

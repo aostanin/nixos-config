@@ -39,6 +39,7 @@ in {
           cksfv
           ctop
           fd
+          gdu
           gitui
           jq
           just

@@ -13,25 +13,20 @@ in {
   config = lib.mkIf cfg.enable {
     programs.zsh = {
       enable = true;
+      enableCompletion = true;
       autosuggestion.enable = true;
-      oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "vi-mode"
-        ];
-      };
-      initExtra = ''
-        autoload zmv
-        source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-        source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-        export PATH=$HOME/.local/bin:$PATH
-      '';
-      localVariables = {
-        CASE_SENSITIVE = "true";
-        DISABLE_AUTO_UPDATE = "true";
-      };
+      historySubstringSearch.enable = true;
+      syntaxHighlighting.enable = true;
+      oh-my-zsh.enable = true;
+      plugins = [
+        {
+          name = "vi-mode";
+          src = pkgs.zsh-vi-mode;
+          file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
+        }
+      ];
       shellAliases = {
-        ncdu = "ncdu --color dark";
+        ncdu = "gdu";
       };
     };
   };
