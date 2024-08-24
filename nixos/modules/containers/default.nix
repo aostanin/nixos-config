@@ -11,18 +11,18 @@ in {
     ./services
   ];
 
-  options.localModules.containers = let
+  options.localModules.containers = with lib.types; let
     storageSubmodule = lib.types.submodule {
       options = {
         default = lib.mkOption {
-          type = lib.types.str;
+          type = str;
           description = ''
             Default storage path.
           '';
         };
 
         bulk = lib.mkOption {
-          type = lib.types.str;
+          type = str;
           description = ''
             Default bulk storage path.
           '';
@@ -33,7 +33,7 @@ in {
     enable = lib.mkEnableOption "containers";
 
     host = lib.mkOption {
-      type = lib.types.str;
+      type = str;
       default = config.networking.hostName;
       description = ''
         Host name.
@@ -41,11 +41,21 @@ in {
     };
 
     domain = lib.mkOption {
-      type = lib.types.str;
+      type = str;
       default = secrets.domain;
       description = ''
         Domain name.
       '';
+    };
+
+    uid = lib.mkOption {
+      type = int;
+      default = 500;
+    };
+
+    gid = lib.mkOption {
+      type = int;
+      default = 500;
     };
 
     storage = lib.mkOption {
@@ -66,5 +76,15 @@ in {
     };
 
     virtualisation.oci-containers.backend = "podman";
+
+    users.users.container = {
+      isSystemUser = true;
+      uid = cfg.uid;
+      group = "container";
+    };
+
+    users.groups.container = {
+      gid = cfg.gid;
+    };
   };
 }

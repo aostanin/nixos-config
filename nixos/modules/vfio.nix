@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  secrets,
   ...
 }: let
   cfg = config.localModules.vfio;
@@ -523,7 +524,7 @@ in {
 
     (lib.mkIf (cfg.lookingGlass.enable && cfg.lookingGlass.enableShm) {
       systemd.tmpfiles.rules = lib.mkIf cfg.lookingGlass.enableShm [
-        "f /dev/shm/looking-glass 0660 1000 qemu-libvirtd -"
+        "f /dev/shm/looking-glass 0660 ${secrets.user.username} qemu-libvirtd -"
       ];
     })
 

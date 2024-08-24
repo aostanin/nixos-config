@@ -5,7 +5,7 @@
   ...
 }:
 with containerLib; let
-  name = "mealie";
+  name = "authelia";
   cfg = config.localModules.containers.services.${name};
   uid = toString config.localModules.containers.uid;
   gid = toString config.localModules.containers.gid;
@@ -13,7 +13,7 @@ in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
     autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption name {};
+    proxy = mkProxyOption "auth" {};
     volumes = mkVolumesOption name {
       data = {
         user = uid;
@@ -30,22 +30,31 @@ in {
         tailscale.enable = lib.mkDefault true;
         lan.enable = lib.mkDefault true;
         net.enable = lib.mkDefault true;
-        net.auth = lib.mkDefault "authelia";
       };
+    };
+
+    sops.secrets = {
+      "containers/authelia/jwt_secret".owner = "container";
+      "containers/authelia/session_secret".owner = "container";
+      "containers/authelia/storage_encryption_key".owner = "container";
     };
 
     virtualisation.oci-containers.containers.${name} = lib.mkMerge [
       {
-        image = "ghcr.io/mealie-recipes/mealie:latest";
+        image = "docker.io/authelia/authelia:latest";
         environment = {
-          ALLOW_SIGNUP = "false";
           PUID = uid;
           PGID = gid;
-          MAX_WORKERS = "1";
-          WEB_CONCURRENCY = "1";
-          BASE_URL = lib.head cfg.proxy.hosts;
+          AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE = "/run/secrets/jwt_secret";
+          AUTHELIA_SESSION_SECRET_FILE = "/run/secrets/session_secret";
+          AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE = "/run/secrets/storage_encryption_key";
         };
-        volumes = ["${cfg.volumes.data.path}:/app/data"];
+        volumes = [
+          "${cfg.volumes.data.path}:/config"
+          "/run/secrets/containers/authelia/jwt_secret:/run/secrets/jwt_secret:ro"
+          "/run/secrets/containers/authelia/session_secret:/run/secrets/session_secret:ro"
+          "/run/secrets/containers/authelia/storage_encryption_key:/run/secrets/storage_encryption_key:ro"
+        ];
       }
       mkContainerDefaultConfig
       (mkContainerProxyConfig name cfg.proxy)
