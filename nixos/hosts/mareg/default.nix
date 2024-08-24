@@ -61,6 +61,10 @@
         miniflux.enable = true;
         uptime-kuma.enable = true;
         whoami.enable = true;
+
+        piper.enable = true;
+        whisper.enable = true;
+        openwakeword.enable = true;
       };
     };
 
