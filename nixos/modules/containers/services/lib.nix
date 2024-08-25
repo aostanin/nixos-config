@@ -20,7 +20,7 @@
       volumeName ? "data",
       user ? "root",
       group ? "root",
-      mode ? "0750",
+      mode ? "0755",
     }:
       lib.mkOption {
         type = submodule {
@@ -121,6 +121,14 @@
           options = {
             enable = lib.mkEnableOption "proxy";
 
+            network = lib.mkOption {
+              type = str;
+              default = "proxy";
+              description = ''
+                Docker network to use for connections.
+              '';
+            };
+
             hosts = lib.mkOption {
               type = listOf str;
               default = mkDefaultHosts name {
@@ -181,6 +189,7 @@
       in
         {
           "traefik.enable" = "true";
+          "traefik.docker.network" = cfg.network;
           "traefik.http.services.${name}.loadbalancer.server.port" = lib.mkIf (cfg.port != null) (toString cfg.port);
           "traefik.http.services.${name}.loadbalancer.server.scheme" = cfg.scheme;
         }
@@ -207,7 +216,7 @@
         };
 
       extraOptions = [
-        "--network=proxy"
+        "--network=${cfg.network}"
       ];
     };
 

@@ -5,27 +5,15 @@
   ...
 }:
 with containerLib; let
-  name = "adguardhome";
+  name = "searxng";
   cfg = config.localModules.containers.services.${name};
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
     autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption "adguard" {port = 80;};
-    adminProxy = mkProxyOption "${name}-admin" {port = 3000;};
+    proxy = mkProxyOption "searx" {};
     volumes = mkVolumesOption name {
-      work = {};
-      conf = {};
-    };
-
-    dnsListenAddress = lib.mkOption {
-      type = lib.types.str;
-      default = "0.0.0.0";
-    };
-
-    dnsPort = lib.mkOption {
-      type = lib.types.int;
-      default = 53;
+      data = {};
     };
   };
 
@@ -35,28 +23,21 @@ in {
       proxy = {
         enable = lib.mkDefault true;
         tailscale.enable = lib.mkDefault true;
-      };
-      adminProxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
+        lan.enable = lib.mkDefault true;
+        net = {
+          enable = lib.mkDefault true;
+          auth = lib.mkDefault "authelia";
+        };
       };
     };
 
     virtualisation.oci-containers.containers.${name} = lib.mkMerge [
       {
-        image = "docker.io/adguard/adguardhome:latest";
-        ports = [
-          "${cfg.dnsListenAddress}:${toString cfg.dnsPort}:53/tcp"
-          "${cfg.dnsListenAddress}:${toString cfg.dnsPort}:53/udp"
-        ];
-        volumes = [
-          "${cfg.volumes.work.path}:/opt/adguardhome/work"
-          "${cfg.volumes.conf.path}:/opt/adguardhome/conf"
-        ];
+        image = "docker.io/searxng/searxng:latest";
+        volumes = ["${cfg.volumes.data.path}:/etc/searxng"];
       }
       mkContainerDefaultConfig
       (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerProxyConfig "${name}-admin" cfg.adminProxy)
       (mkContainerAutoupdateConfig name cfg.autoupdate)
     ];
 

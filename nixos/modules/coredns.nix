@@ -46,9 +46,7 @@ in {
       enable = true;
       config = ''
         . {
-          view tailscale {
-            expr incidr(client_ip(), '100.64.0.0/10')
-          }
+          bind ${secrets.network.tailscale.hosts.${config.networking.hostName}.address}
           hosts {
             ${machinesLan}
             ${hostsTailscale}
@@ -59,12 +57,12 @@ in {
           forward ${secrets.terranix.tailscale.tailnetName} 100.100.100.100
           forward lan 10.0.0.1
           forward . ${cfg.upstreamDns}
-          log
           errors
           cache
         }
 
         . {
+          bind lo br0
           hosts {
             ${machinesLan}
             ${hostsLan}
@@ -75,11 +73,16 @@ in {
           forward ${secrets.terranix.tailscale.tailnetName} 100.100.100.100
           forward lan 10.0.0.1
           forward . ${cfg.upstreamDns}
-          log
           errors
           cache
         }
       '';
+    };
+
+    # TailScale address is not available on boot
+    systemd.services.coredns.unitConfig = {
+      StartLimitInterval = 5;
+      StartLimitBurst = 10;
     };
   };
 }

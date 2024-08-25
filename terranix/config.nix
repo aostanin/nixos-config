@@ -99,6 +99,7 @@ in {
 
   resource.tailscale_dns_nameservers.nameservers = {
     nameservers = [
+      # TODO: Add second server
       (config.data.tailscale_device.roan "addresses[0]")
     ];
   };
@@ -136,6 +137,7 @@ in {
     # TODO: Setup all tunnels this way
     roan = {
       accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+      service = "https://127.0.0.1:443";
     };
     mareg = {
       accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";

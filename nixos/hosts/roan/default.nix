@@ -52,12 +52,52 @@ in {
 
     coredns = {
       enable = true;
-      upstreamDns = "${secrets.network.home.hosts.roan.address}:5300";
+      upstreamDns = "127.0.0.1:5300";
     };
 
-    docker = {
+    containers = {
       enable = true;
-      useLocalDns = true;
+      storage = {
+        default = "/storage/appdata/docker/ssd";
+        bulk = "/storage/appdata/docker/bulk";
+      };
+      services = {
+        adguardhome = {
+          enable = true;
+          dnsListenAddress = "127.0.0.1";
+          dnsPort = 5300;
+        };
+        authelia.enable = true;
+        invidious.enable = true;
+        redlib = {
+          inherit (secrets.redlib) subscriptions;
+          enable = true;
+        };
+        searxng.enable = true;
+        vaultwarden.enable = true;
+
+        # Home automation
+        frigate = {
+          enable = true;
+          devices = [
+            "/dev/bus/usb"
+            "/dev/dri/renderD128"
+          ];
+        };
+        home-assistant.enable = true;
+        ir-mqtt-bridge.enable = true;
+        mosquitto.enable = true;
+        valetudopng.enable = true;
+        zigbee2mqtt = {
+          enable = true;
+          adapterPath = "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_5c9c4df6b1c9eb118d7d8b4f1d69213e-if00-port0";
+        };
+
+        # Voice assistant
+        piper.enable = true;
+        whisper.enable = true;
+        openwakeword.enable = true;
+      };
     };
 
     home-server = {
@@ -85,6 +125,9 @@ in {
 
     zfs.enable = true;
   };
+
+  # TODO: Remove once all containers migrated from docker-compose to podman
+  services.traefik.staticConfigOptions.providers.docker.network = config.networking.hostName;
 
   services = {
     logind.lidSwitch = "ignore";

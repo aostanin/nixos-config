@@ -74,7 +74,7 @@ in {
             if config.virtualisation.podman.enable
             then "unix:///run/podman/podman.sock"
             else "unix:///run/docker.sock";
-          network = "proxy";
+          network = lib.mkDefault "proxy";
           exposedByDefault = false;
         };
         serversTransport.insecureSkipVerify = true;
