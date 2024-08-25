@@ -69,12 +69,18 @@ in {
         };
         authelia.enable = true;
         invidious.enable = true;
+        jobcan.enable = true;
+        netbootxyz.enable = true;
         redlib = {
           inherit (secrets.redlib) subscriptions;
           enable = true;
         };
         searxng.enable = true;
+        tasmoadmin.enable = true;
         vaultwarden.enable = true;
+
+        grafana.enable = true;
+        influxdb.enable = true;
 
         # Home automation
         frigate = {
@@ -92,6 +98,7 @@ in {
           enable = true;
           adapterPath = "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_5c9c4df6b1c9eb118d7d8b4f1d69213e-if00-port0";
         };
+        zwift-offline.enable = true;
 
         # Voice assistant
         piper.enable = true;
