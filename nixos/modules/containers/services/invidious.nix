@@ -9,7 +9,6 @@
 with containerLib; let
   name = "invidious";
   cfg = config.localModules.containers.services.${name};
-  uid = toString config.localModules.containers.uid;
   src = pkgs.fetchFromGitHub {
     owner = "iv-org";
     repo = "invidious";

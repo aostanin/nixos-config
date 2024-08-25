@@ -2,6 +2,7 @@
   config,
   lib,
   options,
+  pkgs,
   secrets,
   ...
 }: let
@@ -32,7 +33,14 @@ in {
       CF_DNS_API_TOKEN=${config.sops.placeholder."traefik/cloudflare/api_token"}
     '';
 
-    sops.templates."traefik-dynamic.toml" = {
+    sops.templates."traefik-dynamic.toml" = let
+      zwift-offline = pkgs.fetchFromGitHub {
+        owner = "zoffline";
+        repo = "zwift-offline";
+        rev = "zoffline_1.0.134206";
+        sha256 = "sha256-B3kXIPWDIVcAzrqSR6HMtaSFMCAtRlCUyi1JvZdoyLQ=";
+      };
+    in {
       owner = "traefik";
       content = ''
         [http.middlewares.auth.basicAuth]
@@ -42,6 +50,12 @@ in {
         address = "${config.sops.placeholder."traefik/authelia/forward_auth_address"}"
         authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name"
         trustForwardHeader = "true"
+
+        ${lib.optionalString config.localModules.containers.services.zwift-offline.enable ''
+          [[tls.certificates]]
+          certFile = "${zwift-offline}/ssl/cert-zwift-com.pem"
+          keyFile = "${zwift-offline}/ssl/key-zwift-com.pem"
+        ''}
       '';
     };
 

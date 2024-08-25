@@ -22,5 +22,6 @@ moduleArgs @ {pkgs, ...}: {
     (import ./valetudopng.nix args)
     (import ./vaultwarden.nix args)
     (import ./zigbee2mqtt.nix args)
+    (import ./zwift-offline.nix args)
   ];
 }
