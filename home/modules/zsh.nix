@@ -25,6 +25,10 @@ in {
           file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
         }
       ];
+      localVariables = {
+        CASE_SENSITIVE = "true";
+        DISABLE_AUTO_UPDATE = "true";
+      };
       shellAliases = {
         ncdu = "gdu";
       };
