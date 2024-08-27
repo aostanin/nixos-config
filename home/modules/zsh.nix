@@ -17,14 +17,10 @@ in {
       autosuggestion.enable = true;
       historySubstringSearch.enable = true;
       syntaxHighlighting.enable = true;
-      oh-my-zsh.enable = true;
-      plugins = [
-        {
-          name = "vi-mode";
-          src = pkgs.zsh-vi-mode;
-          file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
-        }
-      ];
+      oh-my-zsh = {
+        enable = true;
+        plugins = ["vi-mode"];
+      };
       localVariables = {
         CASE_SENSITIVE = "true";
         DISABLE_AUTO_UPDATE = "true";
