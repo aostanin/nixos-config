@@ -144,7 +144,9 @@
     package = pkgs.unstable.linuxPackages_6_8.nvidia_x11;
     patch.enable = true;
     modesetting.enable = true;
-    open = true;
+    # TODO: Open has issues with VFIO
+    # ref: https://www.reddit.com/r/VFIO/comments/xt5cdm/dmesg_shows_thousands_of_these_errors_ioremap/
+    # open = true;
     powerManagement.finegrained = true;
     prime = {
       offload = {
