@@ -155,6 +155,14 @@
               '';
             };
 
+            service = lib.mkOption {
+              type = nullOr str;
+              default = null;
+              description = ''
+                Traefik service.
+              '';
+            };
+
             tailscale = mkProxyTypeOption "TailScale";
 
             lan = mkProxyTypeOption "LAN";
@@ -186,6 +194,10 @@
             then "auth@file"
             else ""
           );
+        service =
+          if cfg.service != null
+          then cfg.service
+          else name;
       in
         {
           "traefik.enable" = "true";
@@ -197,21 +209,21 @@
           "traefik.http.routers.${name}-ts.rule" = "ClientIP(`100.64.0.0/10`) && (${hostRules})";
           "traefik.http.routers.${name}-ts.priority" = "15";
           "traefik.http.routers.${name}-ts.entrypoints" = "websecure";
-          "traefik.http.routers.${name}-ts.service" = name;
+          "traefik.http.routers.${name}-ts.service" = service;
           "traefik.http.routers.${name}-ts.middlewares" = authMiddleware cfg.tailscale.auth;
         }
         // lib.optionalAttrs cfg.lan.enable {
           "traefik.http.routers.${name}-lan.rule" = "ClientIP(`10.0.0.0/24`) && (${hostRules})";
           "traefik.http.routers.${name}-lan.priority" = "10";
           "traefik.http.routers.${name}-lan.entrypoints" = "websecure";
-          "traefik.http.routers.${name}-lan.service" = name;
+          "traefik.http.routers.${name}-lan.service" = service;
           "traefik.http.routers.${name}-lan.middlewares" = authMiddleware cfg.lan.auth;
         }
         // lib.optionalAttrs cfg.net.enable {
           "traefik.http.routers.${name}-default.rule" = hostRules;
           "traefik.http.routers.${name}-default.priority" = "5";
           "traefik.http.routers.${name}-default.entrypoints" = "websecure";
-          "traefik.http.routers.${name}-default.service" = name;
+          "traefik.http.routers.${name}-default.service" = service;
           "traefik.http.routers.${name}-default.middlewares" = authMiddleware cfg.net.auth;
         };
 

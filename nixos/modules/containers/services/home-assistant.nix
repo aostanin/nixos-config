@@ -22,8 +22,6 @@ in {
       autoupdate = lib.mkDefault true;
       proxy = {
         enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
-        lan.enable = lib.mkDefault true;
         net.enable = lib.mkDefault true;
       };
     };
@@ -44,20 +42,6 @@ in {
       mkContainerDefaultConfig
       (mkContainerAutoupdateConfig name cfg.autoupdate)
     ];
-
-    # TODO: Configure traefik instead?
-    virtualisation.oci-containers.containers."${name}-forwarder" = lib.mkMerge [
-      {
-        image = "docker.io/alpine/socat:latest";
-        dependsOn = [name];
-        cmd = ["TCP-LISTEN:8123,fork,reuseaddr" "TCP:host.containers.internal:8123"];
-      }
-      mkContainerDefaultConfig
-      (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.services."podman-${name}" = mkServiceProxyConfig name cfg.proxy;
 
     systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
   };

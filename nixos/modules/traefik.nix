@@ -33,6 +33,7 @@ in {
       CF_DNS_API_TOKEN=${config.sops.placeholder."traefik/cloudflare/api_token"}
     '';
 
+    # TODO: Force use a folder (/etc/traefik?) for config
     sops.templates."traefik-dynamic.toml" = let
       zwift-offline = pkgs.fetchFromGitHub {
         owner = "zoffline";
@@ -56,6 +57,18 @@ in {
           certFile = "${zwift-offline}/ssl/cert-zwift-com.pem"
           keyFile = "${zwift-offline}/ssl/key-zwift-com.pem"
         ''}
+
+        ${lib.optionalString config.localModules.containers.services.home-assistant.enable (let
+          cfg = config.localModules.containers.services.home-assistant;
+          hostRules = lib.concatStringsSep " || " (map (host: "Host(`${host}`)") cfg.proxy.hosts);
+        in ''
+          [http.routers.home-assistant]
+            rule = "${hostRules}"
+            entrypoints = "websecure"
+            service = "home-assistant"
+          [[http.services.home-assistant.loadbalancer.servers]]
+            url = "http://127.0.0.1:${toString cfg.proxy.port}"
+        '')}
       '';
     };
 
