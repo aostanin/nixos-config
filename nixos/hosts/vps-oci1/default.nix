@@ -28,4 +28,7 @@
 
     docker.enable = true;
   };
+
+  # TailScale incorrectly detects resolved DNS mode and fails to set up MagicDNS.
+  services.resolved.enable = true;
 }
