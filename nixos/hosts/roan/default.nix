@@ -67,7 +67,11 @@ in {
           dnsListenAddress = "127.0.0.1";
           dnsPort = 5300;
         };
+        archivebox.enable = true;
         authelia.enable = true;
+        changedetection.enable = true;
+        forgejo.enable = true;
+        guacamole.enable = true;
         invidious.enable = true;
         jobcan.enable = true;
         netbootxyz.enable = true;
@@ -76,7 +80,9 @@ in {
           enable = true;
         };
         searxng.enable = true;
+        syncthing.enable = true;
         tasmoadmin.enable = true;
+        unifi.enable = true;
         vaultwarden.enable = true;
 
         grafana.enable = true;
@@ -132,9 +138,6 @@ in {
 
     zfs.enable = true;
   };
-
-  # TODO: Remove once all containers migrated from docker-compose to podman
-  services.traefik.staticConfigOptions.providers.docker.network = config.networking.hostName;
 
   services = {
     logind.lidSwitch = "ignore";

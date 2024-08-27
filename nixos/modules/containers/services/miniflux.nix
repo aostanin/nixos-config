@@ -23,7 +23,6 @@ in {
       proxy = {
         enable = lib.mkDefault true;
         tailscale.enable = lib.mkDefault true;
-        lan.enable = lib.mkDefault true;
       };
     };
 
@@ -67,7 +66,7 @@ in {
 
     virtualisation.oci-containers.containers."${name}-db" = lib.mkMerge [
       {
-        image = "docker.io/postgres:15";
+        image = "docker.io/library/postgres:15";
         environment = {
           POSTGRES_USER = "miniflux";
           POSTGRES_DB = "miniflux";
@@ -86,7 +85,11 @@ in {
       (mkContainerAutoupdateConfig name cfg.autoupdate)
     ];
 
-    systemd.services."podman-${name}" = mkServiceProxyConfig name cfg.proxy;
+    systemd.services."podman-${name}" = lib.mkMerge [
+      (mkServiceProxyConfig name cfg.proxy)
+      (mkServiceNetworksConfig name [name])
+    ];
+    systemd.services."podman-${name}-db" = mkServiceNetworksConfig name [name];
 
     systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
   };

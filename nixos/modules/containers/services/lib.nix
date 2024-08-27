@@ -240,10 +240,12 @@
     };
 
   mkServiceProxyConfig = name: cfg:
-    lib.mkIf cfg.enable {
-      after = ["podman-proxy-network.service"];
-      requires = ["podman-proxy-network.service"];
-    };
+    lib.mkIf cfg.enable (mkServiceNetworksConfig name ["proxy"]);
+
+  mkServiceNetworksConfig = name: networks: {
+    after = map (n: "podman-${n}-network.service") networks;
+    requires = map (n: "podman-${n}-network.service") networks;
+  };
 
   mkTmpfileVolumesConfig = cfg: lib.mapAttrsToList (n: v: "d '${v.path}' ${v.mode} ${v.user} ${v.group} - -") cfg;
 }

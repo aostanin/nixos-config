@@ -27,8 +27,6 @@ in {
       autoupdate = lib.mkDefault true;
       proxy = {
         enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
-        lan.enable = lib.mkDefault true;
         net.enable = lib.mkDefault true;
       };
     };

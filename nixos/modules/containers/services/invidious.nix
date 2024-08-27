@@ -32,8 +32,6 @@ in {
         enable = lib.mkDefault true;
         tailscale.enable = lib.mkDefault true;
         lan.enable = lib.mkDefault true;
-        net.enable = lib.mkDefault true;
-        net.auth = lib.mkDefault "authelia";
       };
     };
 
@@ -73,7 +71,6 @@ in {
       {
         image = "quay.io/invidious/invidious:latest";
         dependsOn = ["${name}-db"];
-        hostname = name;
         volumes = [
           "${config.sops.templates."${name}-config.yml".path}:/invidious/config/config.yml"
         ];
@@ -93,8 +90,7 @@ in {
 
     virtualisation.oci-containers.containers."${name}-db" = lib.mkMerge [
       {
-        image = "docker.io/postgres:14";
-        hostname = "${name}-db";
+        image = "docker.io/library/postgres:14";
         environment = {
           POSTGRES_USER = "invidious";
           POSTGRES_DB = "invidious";
@@ -116,7 +112,11 @@ in {
       (mkContainerAutoupdateConfig name cfg.autoupdate)
     ];
 
-    systemd.services."podman-${name}" = mkServiceProxyConfig name cfg.proxy;
+    systemd.services."podman-${name}" = lib.mkMerge [
+      (mkServiceProxyConfig name cfg.proxy)
+      (mkServiceNetworksConfig name [name])
+    ];
+    systemd.services."podman-${name}-db" = mkServiceNetworksConfig name [name];
 
     systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
   };

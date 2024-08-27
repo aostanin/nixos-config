@@ -24,10 +24,8 @@ in {
         enable = lib.mkDefault true;
         tailscale.enable = lib.mkDefault true;
         lan.enable = lib.mkDefault true;
-        net = {
-          enable = lib.mkDefault true;
-          auth = lib.mkDefault "authelia";
-        };
+        net.enable = lib.mkDefault true;
+        net.auth = lib.mkDefault "authelia";
       };
     };
 
