@@ -53,6 +53,8 @@ in {
     coredns = {
       enable = true;
       upstreamDns = "127.0.0.1:5300";
+      enableLan = true;
+      additionalBindInterfaces = ["br0"];
     };
 
     containers = {
@@ -67,6 +69,7 @@ in {
           dnsListenAddress = "127.0.0.1";
           dnsPort = 5300;
         };
+        adguardhome-sync.enable = true;
         archivebox.enable = true;
         authelia.enable = true;
         changedetection.enable = true;

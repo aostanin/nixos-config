@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   lib,
   secrets,
   ...
@@ -22,6 +23,22 @@ in {
       default = secrets.domain;
       description = ''
         DNS server to forward requests to.
+      '';
+    };
+
+    enableLan = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Serve home LAN hosts to local network.
+      '';
+    };
+
+    additionalBindInterfaces = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [];
+      description = ''
+        Additional interfaces, besides tailscale0 and lo, to listen on.
       '';
     };
   };
@@ -62,10 +79,14 @@ in {
         }
 
         . {
-          bind lo br0
+          bind lo ${lib.concatStringsSep " " cfg.additionalBindInterfaces}
           hosts {
             ${machinesLan}
-            ${hostsLan}
+            ${
+          if cfg.enableLan
+          then hostsLan
+          else hostsTailscale
+        }
             fallthrough
           }
           rewrite name regex (.*\.)?(.*)\.ts\.${lib.escapeRegex cfg.domain} {2}.${secrets.terranix.tailscale.tailnetName} answer auto
@@ -80,9 +101,14 @@ in {
     };
 
     # TailScale address is not available on boot
-    systemd.services.coredns.unitConfig = {
-      StartLimitInterval = 5;
-      StartLimitBurst = 10;
+    # ref: https://github.com/tailscale/tailscale/issues/11504
+    systemd.services.coredns = {
+      preStart = ''
+        until ${lib.getExe' pkgs.iproute2 "ip"} -4 -json addr show tailscale0 | ${lib.getExe pkgs.jq} -e '. != []'; do
+          sleep 1
+        done
+      '';
+      after = ["tailscale.service"];
     };
   };
 }

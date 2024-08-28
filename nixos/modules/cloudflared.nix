@@ -15,7 +15,9 @@ in {
     sops.secrets."cloudflare/tunnels/${config.networking.hostName}/tunnel_token".sopsFile = sopsFiles.terranix;
 
     systemd.services.cloudflared = {
-      after = ["network.target" "network-online.target"];
+      after =
+        ["network.target" "network-online.target"]
+        ++ (lib.optional config.services.coredns.enable "coredns.service");
       wants = ["network.target" "network-online.target"];
       wantedBy = ["multi-user.target"];
       serviceConfig = {

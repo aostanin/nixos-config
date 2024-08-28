@@ -33,10 +33,20 @@
         bulk = "/storage/appdata/docker/bulk";
       };
       services = {
+        adguardhome = {
+          enable = true;
+          dnsListenAddress = "127.0.0.1";
+          dnsPort = 5300;
+        };
         mealie.enable = true;
         miniflux.enable = true;
         uptime-kuma.enable = true;
       };
+    };
+
+    coredns = {
+      enable = true;
+      upstreamDns = "127.0.0.1:5300";
     };
   };
 

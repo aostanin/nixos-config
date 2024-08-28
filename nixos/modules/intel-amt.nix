@@ -16,6 +16,7 @@ in {
       enable = true;
       serviceConfig = {
         Environment = "TERM=xterm-256color";
+        Restart = "always";
       };
     };
 

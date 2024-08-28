@@ -99,8 +99,8 @@ in {
 
   resource.tailscale_dns_nameservers.nameservers = {
     nameservers = [
-      # TODO: Add second server
       (config.data.tailscale_device.roan "addresses[0]")
+      (config.data.tailscale_device.vps-oci2 "addresses[0]")
     ];
   };
 

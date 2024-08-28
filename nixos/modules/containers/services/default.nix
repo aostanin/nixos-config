@@ -4,6 +4,7 @@ moduleArgs @ {pkgs, ...}: {
     args = moduleArgs // {inherit containerLib;};
   in [
     (import ./adguardhome.nix args)
+    (import ./adguardhome-sync.nix args)
     (import ./archivebox.nix args)
     (import ./authelia.nix args)
     (import ./changedetection.nix args)
