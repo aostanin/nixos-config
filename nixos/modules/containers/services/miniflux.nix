@@ -33,7 +33,7 @@ in {
     };
 
     sops.templates."${name}.env".content = ''
-      DATABASE_URL=postgres://miniflux:${config.sops.placeholder."containers/miniflux/postgres_password"}@${name}-db/miniflux?sslmode=disable
+      DATABASE_URL=postgres://postgres:${config.sops.placeholder."containers/miniflux/postgres_password"}@${name}-db/miniflux?sslmode=disable
       ADMIN_USERNAME=${config.sops.placeholder."containers/miniflux/admin_username"}
       ADMIN_PASSWORD=${config.sops.placeholder."containers/miniflux/admin_password"}
     '';
@@ -66,9 +66,9 @@ in {
 
     virtualisation.oci-containers.containers."${name}-db" = lib.mkMerge [
       {
-        image = "docker.io/library/postgres:15";
+        image = "docker.io/library/postgres:11-alpine";
         environment = {
-          POSTGRES_USER = "miniflux";
+          POSTGRES_USER = "postgres";
           POSTGRES_DB = "miniflux";
         };
         environmentFiles = [config.sops.templates."${name}-db.env".path];

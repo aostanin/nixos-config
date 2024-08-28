@@ -143,6 +143,10 @@ in {
       accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
       service = "https://127.0.0.1:443";
     };
+    vps-oci2 = {
+      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+      service = "https://127.0.0.1:443";
+    };
   };
 
   resource.local_sensitive_file.secrets-json = {
@@ -151,6 +155,7 @@ in {
       cloudflare.tunnels = {
         roan.tunnel_token = config.output.tunnel_token_roan.value;
         mareg.tunnel_token = config.output.tunnel_token_mareg.value;
+        vps-oci2.tunnel_token = config.output.tunnel_token_vps-oci2.value;
       };
     };
     filename = "secrets/secrets.json";
@@ -165,7 +170,10 @@ in {
     };
 
     provisioner.local-exec = {
-      command = "${pkgs.sops}/bin/sops --encrypt --output secrets/secrets.enc.json secrets/secrets.json";
+      command = ''
+        cp secrets/secrets.json ../secrets/sops/terranix.enc.yaml && \
+        ${pkgs.sops}/bin/sops --encrypt --output ../secrets/sops/terranix.enc.yaml ../secrets/sops/terranix.enc.yaml
+      '';
     };
   };
 
