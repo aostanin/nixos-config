@@ -6,16 +6,6 @@
 }: let
   cfg = config.localModules.tailscale;
 in {
-  disabledModules = [
-    "services/networking/tailscale.nix"
-  ];
-
-  imports = [
-    # For extraSetFlags https://github.com/NixOS/nixpkgs/pull/309551
-    # TODO: Remove once stable
-    "${inputs.nixpkgs-unstable}/nixos/modules/services/networking/tailscale.nix"
-  ];
-
   options.localModules.tailscale = {
     enable = lib.mkEnableOption "tailscale";
 
