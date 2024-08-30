@@ -1,19 +1,13 @@
 {
   lib,
   config,
-  containerLib,
   ...
-}:
-with containerLib; let
+}: let
   name = "whisper";
   cfg = config.localModules.containers.services.${name};
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    volumes = mkVolumesOption name {
-      data = {};
-    };
 
     port = lib.mkOption {
       type = lib.types.int;
@@ -31,22 +25,12 @@ in {
     };
   };
 
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
+  config = lib.mkIf cfg.enable {
+    localModules.containers.containers.${name} = {
+      raw.image = "docker.io/rhasspy/wyoming-whisper:latest";
+      raw.ports = ["${toString cfg.port}:10300"];
+      volumes.data.destination = "/data";
+      raw.cmd = ["--model" cfg.model "--language" cfg.language];
     };
-
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "docker.io/rhasspy/wyoming-whisper:latest";
-        ports = ["${toString cfg.port}:10300"];
-        volumes = ["${cfg.volumes.data.path}:/data"];
-        cmd = ["--model" cfg.model "--language" cfg.language];
-      }
-      mkContainerDefaultConfig
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
   };
 }

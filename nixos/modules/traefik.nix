@@ -22,8 +22,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     sops.secrets = {
-      "traefik/authelia/forward_auth_address" = {};
-      "traefik/basic_auth_users" = {};
+      "traefik/basic_auth_users".owner = "traefik";
       "traefik/cloudflare/email" = {};
       "traefik/cloudflare/api_token" = {};
     };
@@ -33,46 +32,6 @@ in {
       CF_DNS_API_TOKEN=${config.sops.placeholder."traefik/cloudflare/api_token"}
     '';
 
-    # TODO: Force use a folder (/etc/traefik?) for config
-    sops.templates."traefik-dynamic.toml" = let
-      zwift-offline = pkgs.fetchFromGitHub {
-        owner = "zoffline";
-        repo = "zwift-offline";
-        rev = "zoffline_1.0.134206";
-        sha256 = "sha256-B3kXIPWDIVcAzrqSR6HMtaSFMCAtRlCUyi1JvZdoyLQ=";
-      };
-    in {
-      owner = "traefik";
-      content = ''
-        [http.middlewares.auth.basicAuth]
-        users = "${config.sops.placeholder."traefik/basic_auth_users"}"
-
-        [http.middlewares.authelia.forwardAuth]
-        address = "${config.sops.placeholder."traefik/authelia/forward_auth_address"}"
-        authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name"
-        trustForwardHeader = "true"
-
-        ${lib.optionalString config.localModules.containers.services.zwift-offline.enable ''
-          [[tls.certificates]]
-          certFile = "${zwift-offline}/ssl/cert-zwift-com.pem"
-          keyFile = "${zwift-offline}/ssl/key-zwift-com.pem"
-        ''}
-
-        ${lib.optionalString config.localModules.containers.services.home-assistant.enable (let
-          cfg = config.localModules.containers.services.home-assistant;
-          hostRules = lib.concatStringsSep " || " (map (host: "Host(`${host}`)") cfg.proxy.hosts);
-        in ''
-          [http.routers.home-assistant]
-            rule = "${hostRules}"
-            entrypoints = "websecure"
-            service = "home-assistant"
-          [[http.services.home-assistant.loadbalancer.servers]]
-            url = "http://127.0.0.1:${toString cfg.proxy.port}"
-        '')}
-      '';
-    };
-
-    localModules.containers.networks.proxy = {};
     systemd.services.traefik = {
       after = ["podman-proxy-network.service"];
       requires = ["podman-proxy-network.service"];
@@ -141,7 +100,16 @@ in {
           };
         };
       };
-      dynamicConfigFile = config.sops.templates."traefik-dynamic.toml".path;
+      dynamicConfigOptions = {
+        http.middlewares.auth.basicAuth.usersFile = config.sops.secrets."traefik/basic_auth_users".path;
+
+        http.middlewares.authelia.forwardAuth = {
+          # TODO: Dynamically find the host running authelia
+          address = "http://${secrets.network.tailscale.hosts.roan.address}:9091/api/authz/forward-auth";
+          authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name";
+          trustForwardHeader = "true";
+        };
+      };
     };
   };
 }

@@ -1,10 +1,8 @@
 {
   lib,
   config,
-  containerLib,
   ...
-}:
-with containerLib; let
+}: let
   name = "adguardhome-sync";
   cfg = config.localModules.containers.services.${name};
   uid = toString config.localModules.containers.uid;
@@ -12,43 +10,25 @@ with containerLib; let
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption name {port = 8080;};
-    volumes = mkVolumesOption name {
-      config = {
+  };
+
+  config = lib.mkIf cfg.enable {
+    localModules.containers.containers.${name} = {
+      raw.image = "docker.io/linuxserver/adguardhome-sync:latest";
+      raw.environment = {
+        PUID = uid;
+        PGID = gid;
+      };
+      # TODO: Automatically set up master/replicants?
+      volumes.config = {
+        destination = "/config";
         user = uid;
         group = gid;
       };
-    };
-  };
-
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
       proxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
+        enable = true;
+        port = 8080;
       };
     };
-
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "docker.io/linuxserver/adguardhome-sync:latest";
-        environment = {
-          PUID = uid;
-          PGID = gid;
-        };
-        volumes = [
-          "${cfg.volumes.config.path}:/config"
-        ];
-      }
-      mkContainerDefaultConfig
-      (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.services."podman-${name}" = mkServiceProxyConfig name cfg.proxy;
-
-    systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
   };
 }

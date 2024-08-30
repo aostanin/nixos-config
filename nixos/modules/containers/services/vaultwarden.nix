@@ -1,10 +1,8 @@
 {
   lib,
   config,
-  containerLib,
   ...
-}:
-with containerLib; let
+}: let
   name = "vaultwarden";
   cfg = config.localModules.containers.services.${name};
   uid = toString config.localModules.containers.uid;
@@ -12,25 +10,9 @@ with containerLib; let
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption "bitwarden" {port = 8080;};
-    volumes = mkVolumesOption name {
-      data = {
-        user = uid;
-        group = gid;
-      };
-    };
   };
 
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
-      proxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
-      };
-    };
-
+  config = lib.mkIf cfg.enable {
     sops.secrets = {
       "containers/vaultwarden/yubico_client_id" = {};
       "containers/vaultwarden/yubico_secret_key" = {};
@@ -41,27 +23,25 @@ in {
       YUBICO_SECRET_KEY=${config.sops.placeholder."containers/vaultwarden/yubico_secret_key"}
     '';
 
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "docker.io/vaultwarden/server:latest";
-        user = "${uid}:${gid}";
-        environment = {
-          DOMAIN = "https://${lib.head cfg.proxy.hosts}";
-          ROCKET_PORT = "8080";
-          SIGNUPS_ALLOWED = "false";
-        };
-        environmentFiles = [config.sops.templates."${name}.env".path];
-        volumes = [
-          "${cfg.volumes.data.path}:/data"
-        ];
-      }
-      mkContainerDefaultConfig
-      (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.services."podman-${name}" = mkServiceProxyConfig name cfg.proxy;
-
-    systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
+    localModules.containers.containers.${name} = {
+      raw.image = "docker.io/vaultwarden/server:latest";
+      raw.user = "${uid}:${gid}";
+      raw.environment = {
+        DOMAIN = "https://${lib.head (config.lib.containers.mkHosts "bitwarden")}";
+        ROCKET_PORT = "8080";
+        SIGNUPS_ALLOWED = "false";
+      };
+      raw.environmentFiles = [config.sops.templates."${name}.env".path];
+      volumes.data = {
+        destination = "/data";
+        user = uid;
+        group = gid;
+      };
+      proxy = {
+        enable = true;
+        names = ["bitwarden"];
+        port = 8080;
+      };
+    };
   };
 }

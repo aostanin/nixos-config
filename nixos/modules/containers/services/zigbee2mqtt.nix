@@ -1,54 +1,30 @@
 {
   lib,
   config,
-  containerLib,
   ...
-}:
-with containerLib; let
+}: let
   name = "zigbee2mqtt";
   cfg = config.localModules.containers.services.${name};
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption name {port = 8080;};
-    volumes = mkVolumesOption name {
-      data = {};
-    };
 
     adapterPath = lib.mkOption {
       type = lib.types.str;
-      description = ''
-        Path to the Zigbee adapter, usually /dev/serial/by-id/<DEVICE>.
-      '';
+      description = "Path to the Zigbee adapter, usually /dev/serial/by-id/<DEVICE>.";
     };
   };
 
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
+  config = lib.mkIf cfg.enable {
+    localModules.containers.containers.${name} = {
+      raw.image = "docker.io/koenkk/zigbee2mqtt:latest";
+      volumes.data.destination = "/app/data";
+      raw.volumes = ["/run/udev:/run/udev:ro"];
+      raw.extraOptions = ["--device" "${cfg.adapterPath}:/dev/ttyACM0"];
       proxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
+        enable = true;
+        port = 8080;
       };
     };
-
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "docker.io/koenkk/zigbee2mqtt:latest";
-        volumes = [
-          "${cfg.volumes.data.path}:/app/data"
-          "/run/udev:/run/udev:ro"
-        ];
-        extraOptions = ["--device" "${cfg.adapterPath}:/dev/ttyACM0"];
-      }
-      mkContainerDefaultConfig
-      (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.services."podman-${name}" = mkServiceProxyConfig name cfg.proxy;
-
-    systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
   };
 }

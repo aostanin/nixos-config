@@ -2,28 +2,16 @@
   lib,
   config,
   secrets,
-  containerLib,
   ...
-}:
-with containerLib; let
+}: let
   name = "jobcan";
   cfg = config.localModules.containers.services.${name};
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption name {};
   };
 
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
-      proxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
-      };
-    };
-
+  config = lib.mkIf cfg.enable {
     sops.secrets = {
       "forgejo/registry_token" = {};
       "containers/jobcan/api_token" = {};
@@ -41,23 +29,17 @@ in {
       SLACK_CHANNEL=${config.sops.placeholder."containers/jobcan/slack_channel"}
     '';
 
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "${secrets.forgejo.registry}/${secrets.forgejo.username}/jobcan";
-        login = {
-          inherit (secrets.forgejo) registry username;
-          passwordFile = config.sops.secrets."forgejo/registry_token".path;
-        };
-        environment = {
-          RUST_LOG = "debug";
-        };
-        environmentFiles = [config.sops.templates."${name}.env".path];
-      }
-      mkContainerDefaultConfig
-      (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.services."podman-${name}" = mkServiceProxyConfig name cfg.proxy;
+    localModules.containers.containers.${name} = {
+      raw.image = "${secrets.forgejo.registry}/${secrets.forgejo.username}/jobcan";
+      raw.login = {
+        inherit (secrets.forgejo) registry username;
+        passwordFile = config.sops.secrets."forgejo/registry_token".path;
+      };
+      raw.environment = {
+        RUST_LOG = "debug";
+      };
+      raw.environmentFiles = [config.sops.templates."${name}.env".path];
+      proxy.enable = true;
+    };
   };
 }

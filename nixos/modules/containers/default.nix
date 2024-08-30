@@ -7,6 +7,7 @@
   cfg = config.localModules.containers;
 in {
   imports = [
+    ./containers.nix
     ./networks.nix
     ./services
   ];

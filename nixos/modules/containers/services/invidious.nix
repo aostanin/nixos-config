@@ -2,11 +2,9 @@
   lib,
   pkgs,
   config,
-  containerLib,
   secrets,
   ...
-}:
-with containerLib; let
+}: let
   name = "invidious";
   cfg = config.localModules.containers.services.${name};
   src = pkgs.fetchFromGitHub {
@@ -18,23 +16,9 @@ with containerLib; let
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption name {port = 3000;};
-    volumes = mkVolumesOption name {
-      db = {};
-    };
   };
 
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
-      proxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
-        lan.enable = lib.mkDefault true;
-      };
-    };
-
+  config = lib.mkIf cfg.enable {
     sops.secrets = {
       "containers/invidious/postgres_password" = {};
       "containers/invidious/hmac_key" = {};
@@ -50,7 +34,7 @@ in {
           port: 5432
         check_tables: true
         external_port: 443
-        domain: ${lib.head cfg.proxy.hosts}
+        domain: ${lib.head (config.lib.containers.mkHosts name)}
         https_only: true
         # statistics_enabled: false
         hmac_key: ${config.sops.placeholder."containers/invidious/hmac_key"}
@@ -65,59 +49,48 @@ in {
       POSTGRES_PASSWORD=${config.sops.placeholder."containers/invidious/postgres_password"}
     '';
 
-    localModules.containers.networks.${name} = {};
+    localModules.containers.containers.${name} = {
+      raw.image = "quay.io/invidious/invidious:latest";
+      networks = [name];
+      raw.dependsOn = ["${name}-db"];
+      raw.volumes = [
+        "${config.sops.templates."${name}-config.yml".path}:/invidious/config/config.yml"
+      ];
+      raw.extraOptions = [
+        "--health-cmd"
+        "wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/comments/jNQXAC9IVRw || exit 1"
+        "--health-interval=30s"
+        "--health-timeout=5s"
+        "--health-retries=2"
+        "--health-start-period=30s"
+      ];
+      proxy = {
+        enable = true;
+        port = 3000;
+      };
+    };
 
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "quay.io/invidious/invidious:latest";
-        dependsOn = ["${name}-db"];
-        volumes = [
-          "${config.sops.templates."${name}-config.yml".path}:/invidious/config/config.yml"
-        ];
-        extraOptions = [
-          "--network=${name}"
-          "--health-cmd"
-          "wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/comments/jNQXAC9IVRw || exit 1"
-          "--health-interval=30s"
-          "--health-timeout=5s"
-          "--health-retries=2"
-        ];
-      }
-      mkContainerDefaultConfig
-      (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    virtualisation.oci-containers.containers."${name}-db" = lib.mkMerge [
-      {
-        image = "docker.io/library/postgres:14";
-        environment = {
-          POSTGRES_USER = "invidious";
-          POSTGRES_DB = "invidious";
-        };
-        environmentFiles = [config.sops.templates."${name}-db.env".path];
-        volumes = [
-          "${cfg.volumes.db.path}:/var/lib/postgresql/data"
-          "${src}/config/sql:/config/sql"
-
-          "${src}/docker/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh"
-        ];
-        extraOptions = [
-          "--network=${name}"
-          "--health-cmd"
-          "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
-        ];
-      }
-      mkContainerDefaultConfig
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.services."podman-${name}" = lib.mkMerge [
-      (mkServiceProxyConfig name cfg.proxy)
-      (mkServiceNetworksConfig name [name])
-    ];
-    systemd.services."podman-${name}-db" = mkServiceNetworksConfig name [name];
-
-    systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
+    localModules.containers.containers."${name}-db" = {
+      raw.image = "docker.io/library/postgres:14";
+      networks = [name];
+      raw.environment = {
+        POSTGRES_USER = "invidious";
+        POSTGRES_DB = "invidious";
+      };
+      raw.environmentFiles = [config.sops.templates."${name}-db.env".path];
+      volumes.db = {
+        parent = name;
+        destination = "/var/lib/postgresql/data";
+      };
+      raw.volumes = [
+        "${src}/config/sql:/config/sql"
+        "${src}/docker/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh"
+      ];
+      raw.extraOptions = [
+        "--health-cmd"
+        "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
+        "--health-start-period=30s"
+      ];
+    };
   };
 }

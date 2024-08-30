@@ -1,22 +1,13 @@
 {
   lib,
   config,
-  containerLib,
   ...
-}:
-with containerLib; let
+}: let
   name = "adguardhome";
   cfg = config.localModules.containers.services.${name};
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption "adguard" {port = 80;};
-    adminProxy = mkProxyOption "${name}-admin" {port = 3000;};
-    volumes = mkVolumesOption name {
-      work = {};
-      conf = {};
-    };
 
     dnsListenAddress = lib.mkOption {
       type = lib.types.str;
@@ -29,39 +20,27 @@ in {
     };
   };
 
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
-      proxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
+  config = lib.mkIf cfg.enable {
+    localModules.containers.containers.${name} = {
+      raw.image = "docker.io/adguard/adguardhome:latest";
+      raw.ports = [
+        "${cfg.dnsListenAddress}:${toString cfg.dnsPort}:53/tcp"
+        "${cfg.dnsListenAddress}:${toString cfg.dnsPort}:53/udp"
+      ];
+      volumes = {
+        work.destination = "/opt/adguardhome/work";
+        conf.destination = "/opt/adguardhome/conf";
       };
-      adminProxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
+      proxies = {
+        "adguard" = {
+          enable = true;
+          port = 80;
+        };
+        "${name}-admin" = {
+          enable = true;
+          port = 3000;
+        };
       };
     };
-
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "docker.io/adguard/adguardhome:latest";
-        ports = [
-          "${cfg.dnsListenAddress}:${toString cfg.dnsPort}:53/tcp"
-          "${cfg.dnsListenAddress}:${toString cfg.dnsPort}:53/udp"
-        ];
-        volumes = [
-          "${cfg.volumes.work.path}:/opt/adguardhome/work"
-          "${cfg.volumes.conf.path}:/opt/adguardhome/conf"
-        ];
-      }
-      mkContainerDefaultConfig
-      (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerProxyConfig "${name}-admin" cfg.adminProxy)
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.services."podman-${name}" = mkServiceProxyConfig name cfg.proxy;
-
-    systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
   };
 }

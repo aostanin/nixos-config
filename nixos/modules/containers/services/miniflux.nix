@@ -1,31 +1,16 @@
 {
   lib,
   config,
-  containerLib,
   ...
-}:
-with containerLib; let
+}: let
   name = "miniflux";
   cfg = config.localModules.containers.services.${name};
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    proxy = mkProxyOption name {};
-    volumes = mkVolumesOption name {
-      db = {};
-    };
   };
 
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
-      proxy = {
-        enable = lib.mkDefault true;
-        tailscale.enable = lib.mkDefault true;
-      };
-    };
-
+  config = lib.mkIf cfg.enable {
     sops.secrets = {
       "containers/miniflux/admin_username" = {};
       "containers/miniflux/admin_password" = {};
@@ -42,55 +27,41 @@ in {
       POSTGRES_PASSWORD=${config.sops.placeholder."containers/miniflux/postgres_password"}
     '';
 
-    localModules.containers.networks.${name} = {};
+    localModules.containers.containers.${name} = {
+      raw.image = "docker.io/miniflux/miniflux:latest";
+      networks = [name];
+      raw.dependsOn = ["${name}-db"];
+      raw.environment = {
+        "RUN_MIGRATIONS" = "1";
+        "CREATE_ADMIN" = "1";
+      };
+      raw.environmentFiles = [config.sops.templates."${name}.env".path];
+      raw.extraOptions = [
+        "--health-cmd"
+        "/usr/bin/miniflux -healthcheck auto"
+        "--health-start-period=30s"
+      ];
+      proxy.enable = true;
+    };
 
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "docker.io/miniflux/miniflux:latest";
-        dependsOn = ["${name}-db"];
-        environment = {
-          "RUN_MIGRATIONS" = "1";
-          "CREATE_ADMIN" = "1";
-        };
-        environmentFiles = [config.sops.templates."${name}.env".path];
-        extraOptions = [
-          "--network=${name}"
-          "--health-cmd"
-          "/usr/bin/miniflux -healthcheck auto"
-        ];
-      }
-      mkContainerDefaultConfig
-      (mkContainerProxyConfig name cfg.proxy)
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    virtualisation.oci-containers.containers."${name}-db" = lib.mkMerge [
-      {
-        image = "docker.io/library/postgres:11-alpine";
-        environment = {
-          POSTGRES_USER = "postgres";
-          POSTGRES_DB = "miniflux";
-        };
-        environmentFiles = [config.sops.templates."${name}-db.env".path];
-        volumes = ["${cfg.volumes.db.path}:/var/lib/postgresql/data"];
-        extraOptions = [
-          "--network=${name}"
-          "--health-cmd"
-          "pg_isready -U miniflux"
-          "--health-interval=10s"
-          "--health-start-period=30s"
-        ];
-      }
-      mkContainerDefaultConfig
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.services."podman-${name}" = lib.mkMerge [
-      (mkServiceProxyConfig name cfg.proxy)
-      (mkServiceNetworksConfig name [name])
-    ];
-    systemd.services."podman-${name}-db" = mkServiceNetworksConfig name [name];
-
-    systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
+    localModules.containers.containers."${name}-db" = {
+      raw.image = "docker.io/library/postgres:11-alpine";
+      networks = [name];
+      raw.environment = {
+        POSTGRES_USER = "postgres";
+        POSTGRES_DB = "miniflux";
+      };
+      raw.environmentFiles = [config.sops.templates."${name}-db.env".path];
+      volumes.db = {
+        parent = name;
+        destination = "/var/lib/postgresql/data";
+      };
+      raw.extraOptions = [
+        "--health-cmd"
+        "pg_isready -U miniflux"
+        "--health-interval=10s"
+        "--health-start-period=30s"
+      ];
+    };
   };
 }

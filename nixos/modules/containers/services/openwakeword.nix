@@ -1,19 +1,13 @@
 {
   lib,
   config,
-  containerLib,
   ...
-}:
-with containerLib; let
+}: let
   name = "openwakeword";
   cfg = config.localModules.containers.services.${name};
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
-    autoupdate = containerLib.mkAutoupdateOption name;
-    volumes = mkVolumesOption name {
-      custom = {};
-    };
 
     port = lib.mkOption {
       type = lib.types.int;
@@ -26,22 +20,12 @@ in {
     };
   };
 
-  config = lib.mkIf (config.localModules.containers.enable && cfg.enable) {
-    localModules.containers.services.${name} = {
-      autoupdate = lib.mkDefault true;
+  config = lib.mkIf cfg.enable {
+    localModules.containers.containers.${name} = {
+      raw.image = "docker.io/rhasspy/wyoming-openwakeword:latest";
+      raw.ports = ["${toString cfg.port}:10400"];
+      volumes.custom.destination = "/custom";
+      raw.cmd = ["--preload-model" cfg.model "--custom-model-dir" "/custom"];
     };
-
-    virtualisation.oci-containers.containers.${name} = lib.mkMerge [
-      {
-        image = "docker.io/rhasspy/wyoming-openwakeword:latest";
-        ports = ["${toString cfg.port}:10400"];
-        volumes = ["${cfg.volumes.custom.path}:/custom"];
-        cmd = ["--preload-model" cfg.model "--custom-model-dir" "/custom"];
-      }
-      mkContainerDefaultConfig
-      (mkContainerAutoupdateConfig name cfg.autoupdate)
-    ];
-
-    systemd.tmpfiles.rules = mkTmpfileVolumesConfig cfg.volumes;
   };
 }
