@@ -79,7 +79,7 @@ in {
         address = secrets.network.home.defaultGateway;
         interface = "br0";
       };
-      nameservers = secrets.network.home.nameserversAdguard;
+      nameservers = lib.mkDefault secrets.network.home.nameserversAdguard;
     };
   };
 }

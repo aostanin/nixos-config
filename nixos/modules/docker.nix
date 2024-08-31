@@ -46,7 +46,11 @@ in {
       };
       # Docker defaults to Google's DNS
       extraOptions = lib.mkIf cfg.useLocalDns ''
-        --dns ${secrets.network.home.nameserver} \
+        --dns ${
+          if config.services.tailscale.enable
+          then "100.100.100.100"
+          else secrets.network.home.nameserver
+        } \
         --dns-search lan
       '';
     };

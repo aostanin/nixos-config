@@ -51,5 +51,10 @@ in {
         then "server"
         else "none";
     };
+
+    # TODO: With resolved, TailScale DNS is used alongside system DNS.
+    # The host will resolve with TailScale DNS, but containers will use the
+    # original DNS for some reason.
+    networking.nameservers = ["100.100.100.100"];
   };
 }
