@@ -30,7 +30,7 @@ in {
     '';
 
     localModules.containers.containers.${name} = {
-      raw.image = "${secrets.forgejo.registry}/${secrets.forgejo.username}/jobcan";
+      raw.image = "${secrets.forgejo.registry}/${secrets.forgejo.username}/jobcan:latest";
       raw.login = {
         inherit (secrets.forgejo) registry username;
         passwordFile = config.sops.secrets."forgejo/registry_token".path;

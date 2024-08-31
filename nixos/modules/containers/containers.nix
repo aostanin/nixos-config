@@ -83,9 +83,15 @@
   mkVolumesSubmodule = containerName:
     lib.types.submodule (args @ {name, ...}: {
       options = {
+        name = lib.mkOption {
+          type = lib.types.str;
+          default = name;
+          description = "The name of the volume.";
+        };
+
         source = lib.mkOption {
           type = lib.types.str;
-          default = "${config.localModules.containers.storage.${args.config.storageType}}/${args.config.parent}/${name}";
+          default = "${config.localModules.containers.storage.${args.config.storageType}}/${args.config.parent}/${args.config.name}";
           description = "The source of the mount.";
         };
 

@@ -143,6 +143,10 @@ in {
       accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
       service = "https://127.0.0.1:443";
     };
+    vps-oci1 = {
+      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+      service = "https://127.0.0.1:443";
+    };
     vps-oci2 = {
       accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
       service = "https://127.0.0.1:443";
@@ -153,9 +157,11 @@ in {
     content = builtins.toJSON {
       tailscale.auth_key = config.output.tailscale_auth_key.value;
       cloudflare.tunnels = {
+        # TODO: Use for all
         roan.tunnel_token = config.output.tunnel_token_roan.value;
         mareg.tunnel_token = config.output.tunnel_token_mareg.value;
         vps-oci2.tunnel_token = config.output.tunnel_token_vps-oci2.value;
+        vps-oci1.tunnel_token = config.output.tunnel_token_vps-oci1.value;
       };
     };
     filename = "secrets/secrets.json";

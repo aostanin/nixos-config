@@ -14,10 +14,12 @@
     ./grafana.nix
     ./guacamole.nix
     ./jobcan.nix
+    ./matrix.nix
     ./mealie.nix
     ./miniflux.nix
     ./mosquitto.nix
     ./netbootxyz.nix
+    ./nginx.nix
     ./openwakeword.nix
     ./piper.nix
     ./redlib.nix
