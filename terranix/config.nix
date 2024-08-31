@@ -6,6 +6,9 @@
 }: let
   inherit (import ../secrets) domain;
   secrets = import ../secrets/terranix;
+
+  tailscaleDevice = name: attribute:
+    lib.tfRef "local.tailscale_devices.${name}.${attribute}";
 in {
   terraform.required_providers = {
     # Workaround for https://github.com/NixOS/nixpkgs/issues/283015#issuecomment-1904909598
@@ -65,6 +68,17 @@ in {
 
   data.tailscale_devices.devices = {};
 
+  locals.tailscale_tailnet_suffix = ".${secrets.tailscale.tailnetName}";
+  locals.tailscale_devices = ''    ''${{
+    for device in data.tailscale_devices.devices.devices :
+      trimsuffix(device.name, local.tailscale_tailnet_suffix) => {
+        id = device.id
+        name = device.name
+        address = device.addresses[0]
+        address6 = device.addresses[1]
+      }
+    }}'';
+
   resource.tailscale_acl.acl = {
     acl = builtins.toJSON {
       tagOwners = {
@@ -86,7 +100,7 @@ in {
         }
       ];
       nodeAttrs = lib.mapAttrsToList (n: v: {
-        target = [(config.data.tailscale_device.${n} "addresses[0]")];
+        target = [(tailscaleDevice n "address")];
         attr = ["mullvad"];
       }) (lib.filterAttrs (n: v: v.enableMullvad) secrets.tailscale.devices);
     };
@@ -99,36 +113,31 @@ in {
 
   resource.tailscale_dns_nameservers.nameservers = {
     nameservers = [
-      (config.data.tailscale_device.roan "addresses[0]")
-      (config.data.tailscale_device.vps-oci2 "addresses[0]")
+      (tailscaleDevice "roan" "address")
+      (tailscaleDevice "vps-oci2" "address")
     ];
   };
 
-  data.tailscale_device =
-    lib.mapAttrs (n: v: {
-      name = "${n}.${secrets.tailscale.tailnetName}";
-    })
-    secrets.tailscale.devices;
-
   resource.tailscale_device_key =
     lib.mapAttrs (n: v: {
-      device_id = config.data.tailscale_device.${n} "id";
+      count = lib.tfRef "contains(keys(local.tailscale_devices), \"${n}\") ? 1 : 0";
+      device_id = tailscaleDevice n "id";
       key_expiry_disabled = true;
     })
     secrets.tailscale.devices;
 
   resource.tailscale_device_tags =
     lib.mapAttrs (n: v: {
-      device_id = config.data.tailscale_device.${n} "id";
-      tags =
-        []
-        ++ lib.optionals v.isServer ["tag:server"];
+      count = lib.tfRef "contains(keys(local.tailscale_devices), \"${n}\") ? 1 : 0";
+      device_id = tailscaleDevice n "id";
+      tags = lib.optional v.isServer "tag:server";
     })
     secrets.tailscale.devices;
 
   resource.tailscale_device_subnet_routes =
     lib.mapAttrs (n: v: {
-      device_id = config.data.tailscale_device.${n} "id";
+      count = lib.tfRef "contains(keys(local.tailscale_devices), \"${n}\") ? 1 : 0";
+      device_id = tailscaleDevice n "id";
       routes = v.routes;
     })
     secrets.tailscale.devices;
@@ -151,6 +160,10 @@ in {
       accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
       service = "https://127.0.0.1:443";
     };
+    vps-oci-arm1 = {
+      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+      service = "https://127.0.0.1:443";
+    };
   };
 
   resource.local_sensitive_file.secrets-json = {
@@ -162,6 +175,7 @@ in {
         mareg.tunnel_token = config.output.tunnel_token_mareg.value;
         vps-oci2.tunnel_token = config.output.tunnel_token_vps-oci2.value;
         vps-oci1.tunnel_token = config.output.tunnel_token_vps-oci1.value;
+        vps-oci-arm1.tunnel_token = config.output.tunnel_token_vps-oci-arm1.value;
       };
     };
     filename = "secrets/secrets.json";
@@ -183,17 +197,10 @@ in {
     };
   };
 
-  resource.local_file.tailscale-json = {
-    content = builtins.toJSON {
-      tailscale.hosts =
-        lib.mapAttrs (n: v: {
-          name = config.data.tailscale_device.${n} "name";
-          address = config.data.tailscale_device.${n} "addresses[0]";
-          address6 = config.data.tailscale_device.${n} "addresses[1]";
-        })
-        secrets.tailscale.devices;
-    };
-    filename = "secrets/tailscale.json";
+  locals.tailscale_json = "\${{ tailscale = { hosts = local.tailscale_devices } }}";
+  resource.local_file.tailscale-yaml = {
+    content = lib.tfRef "jsonencode(local.tailscale_json)";
+    filename = "../secrets/network/tailscale.json";
     file_permission = "0640";
   };
 }

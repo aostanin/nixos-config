@@ -26,7 +26,17 @@
       minimal = true;
     };
 
-    docker.enable = true;
+    containers = {
+      enable = true;
+      storage = {
+        default = "/storage/appdata/docker/ssd";
+        bulk = "/storage/appdata/docker/bulk";
+      };
+      services = {
+        matrix.enable = true;
+        nginx.enable = true;
+      };
+    };
   };
 
   # TailScale incorrectly detects resolved DNS mode and fails to set up MagicDNS.

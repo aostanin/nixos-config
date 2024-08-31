@@ -10,7 +10,6 @@
     "${inputs.nixos-hardware}/lenovo/thinkpad/t440p"
     "${inputs.nixos-hardware}/common/pc/laptop/ssd"
     ./hardware-configuration.nix
-    ./disko-config.nix
     ./backup.nix
   ];
 
@@ -85,6 +84,14 @@
     intelAmt.enable = true;
 
     scrutinyCollector.enable = true;
+
+    tailscale = {
+      isServer = true;
+      extraFlags = [
+        "--advertise-exit-node"
+        "--advertise-routes=10.0.40.0/24"
+      ];
+    };
 
     zfs.enable = true;
   };

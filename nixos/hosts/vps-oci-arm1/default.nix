@@ -8,16 +8,13 @@
   ];
 
   boot = {
-    kernelParams = [
-      "console=ttyS0,115200"
-      "console=tty1"
-    ];
     tmp.cleanOnBoot = true;
   };
 
   networking = {
-    hostName = "vps-oci2";
-    interfaces.ens3.useDHCP = true;
+    hostName = "vps-oci-arm1";
+    hostId = "1da26099";
+    interfaces.enp0s6.useDHCP = true;
   };
 
   localModules = {
@@ -33,23 +30,10 @@
         bulk = "/storage/appdata/docker/bulk";
       };
       services = {
-        adguardhome = {
-          enable = true;
-          dnsListenAddress = "127.0.0.1";
-          dnsPort = 5300;
-        };
-        uptime-kuma.enable = true;
-
-        # TODO: Move to roan
-        mealie.enable = true;
-        miniflux.enable = true;
       };
     };
 
-    coredns = {
-      enable = true;
-      upstreamDns = "127.0.0.1:5300";
-    };
+    forgejo-runner.enable = true;
   };
 
   # TailScale incorrectly detects resolved DNS mode and fails to set up MagicDNS.

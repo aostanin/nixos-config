@@ -15,12 +15,6 @@
                 mountpoint = "/boot";
               };
             };
-            swap = {
-              size = "16G";
-              content = {
-                type = "swap";
-              };
-            };
             rpool = {
               size = "100%";
               content = {

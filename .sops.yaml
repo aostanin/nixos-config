@@ -6,6 +6,7 @@ keys:
   - &host_skye age12qv0y9fa3sxadszjrwkm6njul5eryqcenp8krv2j5qhar9qwkgksq5ya7g
   - &host_vps-oci1 age1zj65k3rjkhwnlh577zcvdxq9cf94z5l5yaqj0lush9m9z70z85tqjs0clj
   - &host_vps-oci2 age1zkmucm6pnskzuddmtw7ve4kx3rw2amjtta2ew4zwlt54ysh3q3fscrgfmx
+  - &host_vps-oci-arm1 age1s6c3tdtd9q2lv55jrpyur6wmlt4xpcqlge64qnuqwdzgqgu8uvysslug4e
 creation_rules:
   - path_regex: secrets/sops/[^/]+\.(yaml|json|env|ini)$
     key_groups:
@@ -17,6 +18,7 @@ creation_rules:
         - *host_skye
         - *host_vps-oci1
         - *host_vps-oci2
+        - *host_vps-oci-arm1
   - path_regex: secrets/sops/bootstrap/.*$
     key_groups:
       - age:

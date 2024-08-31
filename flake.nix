@@ -59,7 +59,6 @@
     sopsFiles = {
       default = ./secrets/sops/secrets.enc.yaml;
       terranix = ./secrets/sops/terranix.enc.yaml;
-      containers = ./secrets/sops/containers/secrets.enc.yaml;
     };
     hosts = {
       elena = {system = "x86_64-linux";};
@@ -70,6 +69,7 @@
       tio = {system = "aarch64-linux";};
       vps-oci1 = {system = "x86_64-linux";};
       vps-oci2 = {system = "x86_64-linux";};
+      vps-oci-arm1 = {system = "aarch64-linux";};
     };
     nixpkgsConfig = ./nixpkgs-config.nix;
     mkPkgs = system: rec {
@@ -120,7 +120,7 @@
         checks = pkgs.lib.attrsets.mergeAttrsList [
           (deploy-rs.lib.${system}.deployChecks {
             # Only check nodes with the same system
-            nodes = pkgs.lib.attrsets.filterAttrs (name: value: hosts.${name}.system == system) self.deploy.nodes;
+            nodes = lib.filterAttrs (n: v: hosts.${n}.system == system) self.deploy.nodes;
           })
           {
             pre-commit-check = pre-commit-hooks.lib.${system}.run {
