@@ -89,7 +89,7 @@ in {
     };
 
     programs = {
-      # TODO: Broken on Darwin?
+      # Broken on Darwin
       broot = lib.mkIf (!pkgs.stdenv.isDarwin) {
         enable = true;
         settings.modal = true;
