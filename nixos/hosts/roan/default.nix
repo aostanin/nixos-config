@@ -82,6 +82,7 @@ in {
           inherit (secrets.redlib) subscriptions;
           enable = true;
         };
+        scrutiny.enable = true;
         searxng.enable = true;
         syncthing.enable = true;
         tasmoadmin.enable = true;

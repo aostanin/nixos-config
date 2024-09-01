@@ -23,6 +23,7 @@
     ./openwakeword.nix
     ./piper.nix
     ./redlib.nix
+    ./scrutiny.nix
     ./searxng.nix
     ./syncthing.nix
     ./tasmoadmin.nix
