@@ -51,20 +51,7 @@
         bulk = "/storage/appdata/containers/bulk";
       };
       services = {
-        adguardhome = {
-          enable = true;
-          dnsPort = 5300;
-        };
-        authelia.enable = true;
-        home-assistant.enable = true;
-        mealie.enable = true;
-        miniflux.enable = true;
-        uptime-kuma.enable = true;
         whoami.enable = true;
-
-        piper.enable = true;
-        whisper.enable = true;
-        openwakeword.enable = true;
       };
     };
 

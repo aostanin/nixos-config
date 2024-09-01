@@ -30,6 +30,7 @@
         bulk = "/storage/appdata/docker/bulk";
       };
       services = {
+        whoami.enable = true;
       };
     };
 
