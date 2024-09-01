@@ -54,11 +54,6 @@
   networking = {
     hostName = "elena";
     hostId = "fc172604";
-
-    # Using ConnectX-3, networking doesn't come back up after sleep without this
-    # TODO: Use systemd.network.*
-    # TODO: Disable WoL https://wiki.archlinux.org/title/Wake-on-LAN#systemd.link
-    useNetworkd = true;
   };
 
   localModules = {

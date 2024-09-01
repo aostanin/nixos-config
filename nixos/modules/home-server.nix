@@ -43,43 +43,90 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.network.links."11-default" = {
-      matchConfig.OriginalName = "*";
-      linkConfig.NamePolicy = "mac";
-      linkConfig.MACAddressPolicy = "persistent";
+    networking = {
+      useNetworkd = true;
+      nameservers = lib.mkDefault secrets.network.home.nameserversAdguard;
     };
 
-    networking = {
-      vlans.vlan40 = lib.mkIf cfg.iotNetwork.enable {
-        id = 40;
-        interface = "br0";
+    systemd.network = {
+      links."11-default" = {
+        matchConfig.OriginalName = "*";
+        linkConfig.NamePolicy = "mac";
+        linkConfig.MACAddressPolicy = "persistent";
       };
 
-      bridges.br0.interfaces = [cfg.interface];
-      interfaces.br0 = {
-        macAddress = lib.mkIf (cfg.macAddress != null) cfg.macAddress;
-        ipv4.addresses = [
-          {
-            address = cfg.address;
-            prefixLength = 24;
-          }
+      networks.${cfg.interface} = {
+        matchConfig.Name = cfg.interface;
+        networkConfig = {
+          DHCP = "no";
+          IPv6AcceptRA = "no";
+          LinkLocalAddressing = "no";
+          IPv6PrivacyExtensions = "kernel";
+          Bridge = "br0";
+          # MACVLAN = "macvlan0";
+        };
+      };
+
+      netdevs.br0 = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br0";
+          MACAddress = lib.mkIf (cfg.macAddress != null) cfg.macAddress;
+        };
+      };
+
+      networks.br0 = {
+        matchConfig.Name = "br0";
+        networkConfig = {
+          DHCP = "no";
+          IPv6PrivacyExtensions = "kernel";
+          Address = "${cfg.address}/24";
+          VLAN = lib.optional cfg.iotNetwork.enable "vlan40";
+        };
+        routes = [
+          {routeConfig.Gateway = secrets.network.home.defaultGateway;}
         ];
       };
 
-      interfaces.vlan40 = lib.mkIf cfg.iotNetwork.enable {
-        ipv4.addresses = [
-          {
-            address = cfg.iotNetwork.address;
-            prefixLength = 24;
-          }
-        ];
+      # TODO: Issues with IPv6 on home network when using MACVLAN
+      # netdevs.macvlan0 = {
+      #   netdevConfig = {
+      #     Name = "macvlan0";
+      #     Kind = "macvlan";
+      #     MACAddress = lib.mkIf (cfg.macAddress != null) cfg.macAddress;
+      #   };
+      #   macvlanConfig.Mode = "bridge";
+      # };
+
+      # networks.macvlan0 = {
+      #   matchConfig.Name = "macvlan0";
+      #   networkConfig = {
+      #     DHCP = "no";
+      #     IPv6PrivacyExtensions = "kernel";
+      #     Address = "${cfg.address}/24";
+      #     VLAN = lib.optional cfg.iotNetwork.enable "vlan40";
+      #   };
+      #   routes = [
+      #     {routeConfig.Gateway = secrets.network.home.defaultGateway;}
+      #   ];
+      # };
+
+      netdevs.vlan40 = lib.mkIf cfg.iotNetwork.enable {
+        netdevConfig = {
+          Kind = "vlan";
+          Name = "vlan40";
+        };
+        vlanConfig.Id = 40;
       };
 
-      defaultGateway = {
-        address = secrets.network.home.defaultGateway;
-        interface = "br0";
+      networks.vlan40 = {
+        matchConfig.Name = "vlan40";
+        networkConfig = {
+          DHCP = "no";
+          IPv6PrivacyExtensions = "kernel";
+          Address = "${cfg.iotNetwork.address}/24";
+        };
       };
-      nameservers = lib.mkDefault secrets.network.home.nameserversAdguard;
     };
   };
 }
