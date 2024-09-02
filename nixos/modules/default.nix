@@ -7,7 +7,6 @@
     ./desktop.nix
     ./docker.nix
     ./forgejo-runner.nix
-    ./headless-gaming.nix
     ./home-server.nix
     ./impermanence.nix
     ./intel-amt.nix
