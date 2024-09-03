@@ -29,12 +29,12 @@ in {
         lib.concatStringsSep " || " (map (host: "Host(`${host}`)")
           (config.lib.containers.mkHosts "home"));
     in {
-      http.routers.home-assistant = {
+      http.routers.${name} = {
         rule = hostRules;
         entrypoints = "websecure";
         service = name;
       };
-      http.services.home-assistant.loadbalancer.servers = [
+      http.services.${name}.loadbalancer.servers = [
         {url = "http://127.0.0.1:8123";}
       ];
     };

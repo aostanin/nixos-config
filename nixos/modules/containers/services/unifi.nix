@@ -6,11 +6,19 @@
 }: let
   name = "unifi";
   cfg = config.localModules.containers.services.${name};
-  uid = toString config.localModules.containers.uid;
-  gid = toString config.localModules.containers.gid;
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
+
+    uid = lib.mkOption {
+      type = lib.types.int;
+      default = config.localModules.containers.uid;
+    };
+
+    gid = lib.mkOption {
+      type = lib.types.int;
+      default = config.localModules.containers.gid;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -44,8 +52,8 @@ in {
         # "5514:5514/udp" # Remote syslog capture
       ];
       raw.environment = {
-        PUID = uid;
-        PGID = gid;
+        PUID = toString cfg.uid;
+        PGID = toString cfg.gid;
         MONGO_USER = "unifi";
         MONGO_HOST = "${name}-db";
         MONGO_PORT = "27017";
@@ -55,8 +63,8 @@ in {
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
       volumes.config = {
         destination = "/config";
-        user = uid;
-        group = gid;
+        user = toString cfg.uid;
+        group = toString cfg.gid;
       };
       proxy = {
         enable = true;

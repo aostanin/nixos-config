@@ -5,11 +5,19 @@
 }: let
   name = "vaultwarden";
   cfg = config.localModules.containers.services.${name};
-  uid = toString config.localModules.containers.uid;
-  gid = toString config.localModules.containers.gid;
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
+
+    uid = lib.mkOption {
+      type = lib.types.int;
+      default = config.localModules.containers.uid;
+    };
+
+    gid = lib.mkOption {
+      type = lib.types.int;
+      default = config.localModules.containers.gid;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -25,7 +33,7 @@ in {
 
     localModules.containers.containers.${name} = {
       raw.image = "docker.io/vaultwarden/server:latest";
-      raw.user = "${uid}:${gid}";
+      raw.user = "${toString cfg.uid}:${toString cfg.gid}";
       raw.environment = {
         DOMAIN = "https://${lib.head (config.lib.containers.mkHosts "bitwarden")}";
         ROCKET_PORT = "8080";
@@ -34,8 +42,8 @@ in {
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
       volumes.data = {
         destination = "/data";
-        user = uid;
-        group = gid;
+        user = toString cfg.uid;
+        group = toString cfg.gid;
       };
       proxy = {
         enable = true;

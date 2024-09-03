@@ -16,15 +16,20 @@ in {
 
     services.gitea-actions-runner = {
       package = pkgs.forgejo-actions-runner;
-      instances.default = {
+      instances.default = let
+        arch =
+          if pkgs.system == "aarch64-linux"
+          then "-arm64"
+          else "";
+      in {
         enable = true;
         name = config.networking.hostName;
         url = secrets.forgejo.url;
         tokenFile = config.sops.secrets."forgejo/runner_token".path;
         labels = [
-          "nixos:host"
-          "ubuntu-latest:docker://catthehacker/ubuntu:act-latest"
-          "ubuntu-22.04:docker://catthehacker/ubuntu:act-22.04"
+          "nixos${arch}:host"
+          "ubuntu-latest${arch}:docker://catthehacker/ubuntu:act-latest"
+          "ubuntu-22.04${arch}:docker://catthehacker/ubuntu:act-22.04"
         ];
       };
     };

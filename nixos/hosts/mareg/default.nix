@@ -49,6 +49,7 @@
       storage = {
         default = "/storage/appdata/containers/storage";
         bulk = "/storage/appdata/containers/bulk";
+        temp = "/storage/appdata/temp";
       };
       services = {
         whoami.enable = true;

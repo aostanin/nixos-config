@@ -14,6 +14,12 @@
     "${name}.${host}.ts.${domain}"
   ];
 
+  trustedClientIps = [
+    "100.64.0.0/10" # TailScale
+    "10.89.0.0/16" # Podman networks
+    "10.0.0.0/24" # LAN
+  ];
+
   mkProxyTypeSubmodule = enableByDefault:
     lib.types.submodule {
       options = {
@@ -107,7 +113,7 @@
         };
 
         storageType = lib.mkOption {
-          type = lib.types.enum ["default" "bulk"];
+          type = lib.types.enum ["default" "bulk" "temp"];
           default = "default";
           description = ''
             The type of storage to use for this volume.
@@ -115,6 +121,8 @@
             `default` is for configuration files and other relatively small files.
 
             `bulk` is for large media files.
+
+            `temp` is for temporary files.
           '';
         };
 
@@ -194,7 +202,9 @@ in {
       ) "proxy";
   in
     lib.mkIf config.localModules.containers.enable {
-      lib.containers.mkHosts = mkHosts;
+      lib.containers = {
+        inherit mkHosts trustedClientIps;
+      };
 
       localModules.containers.networks =
         lib.listToAttrs (map (n: lib.nameValuePair n {})
@@ -219,11 +229,7 @@ in {
               ]
               ++ (lib.mapAttrsToList (name: proxy: let
                   hostRules = lib.concatStringsSep " || " (map (host: "Host(`${host}`)") proxy.hosts);
-                  trustedClientRules = lib.concatStringsSep " || " (map (host: "ClientIP(`${host}`)") [
-                    "100.64.0.0/10" # TailScale
-                    "10.89.0.0/16" # Podman networks
-                    "10.0.0.0/24" # LAN
-                  ]);
+                  trustedClientRules = lib.concatStringsSep " || " (map (host: "ClientIP(`${host}`)") trustedClientIps);
                   authMiddleware = auth:
                     lib.mkIf (auth != null) (
                       if auth == "authelia"

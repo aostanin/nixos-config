@@ -57,12 +57,26 @@ in {
 
   resource.tailscale_tailnet_key.nixos_auth_key = {
     reusable = true;
+    ephemeral = false;
     preauthorized = true;
     description = "NixOS Terraform";
   };
 
   output.tailscale_auth_key = {
     value = config.resource.tailscale_tailnet_key.nixos_auth_key "key";
+    sensitive = true;
+  };
+
+  resource.tailscale_tailnet_key.nixos_auth_key_ephemeral = {
+    reusable = true;
+    ephemeral = true;
+    preauthorized = true;
+    tags = ["tag:ephemeral"];
+    description = "NixOS Terraform Ephemeral";
+  };
+
+  output.tailscale_auth_key_ephemeral = {
+    value = config.resource.tailscale_tailnet_key.nixos_auth_key_ephemeral "key";
     sensitive = true;
   };
 
@@ -83,6 +97,8 @@ in {
     acl = builtins.toJSON {
       tagOwners = {
         "tag:server" = ["autogroup:admin"];
+        "tag:ephemeral" = ["autogroup:admin"];
+        "tag:mullvad" = ["tag:ephemeral"];
       };
       acls = [
         {
@@ -99,10 +115,17 @@ in {
           users = ["autogroup:nonroot" "root"];
         }
       ];
-      nodeAttrs = lib.mapAttrsToList (n: v: {
-        target = [(tailscaleDevice n "address")];
-        attr = ["mullvad"];
-      }) (lib.filterAttrs (n: v: v.enableMullvad) secrets.tailscale.devices);
+      nodeAttrs =
+        lib.mapAttrsToList (n: v: {
+          target = [(tailscaleDevice n "address")];
+          attr = ["mullvad"];
+        }) (lib.filterAttrs (n: v: v.enableMullvad) secrets.tailscale.devices)
+        ++ [
+          {
+            target = ["tag:mullvad"];
+            attr = ["mullvad"];
+          }
+        ];
     };
     overwrite_existing_content = true;
   };
@@ -168,7 +191,10 @@ in {
 
   resource.local_sensitive_file.secrets-json = {
     content = builtins.toJSON {
-      tailscale.auth_key = config.output.tailscale_auth_key.value;
+      tailscale = {
+        auth_key = config.output.tailscale_auth_key.value;
+        auth_key_ephemeral = config.output.tailscale_auth_key_ephemeral.value;
+      };
       cloudflare.tunnels = {
         # TODO: Use for all
         roan.tunnel_token = config.output.tunnel_token_roan.value;

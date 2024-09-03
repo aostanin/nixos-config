@@ -56,14 +56,6 @@ in {
       raw.volumes = [
         "${config.sops.templates."${name}-config.yml".path}:/invidious/config/config.yml"
       ];
-      raw.extraOptions = [
-        "--health-cmd"
-        "wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/comments/jNQXAC9IVRw || exit 1"
-        "--health-interval=30s"
-        "--health-timeout=5s"
-        "--health-retries=2"
-        "--health-start-period=30s"
-      ];
       proxy = {
         enable = true;
         port = 3000;

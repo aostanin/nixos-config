@@ -83,7 +83,7 @@
     docker = {
       enable = true;
       # TODO: Not having docker enabled breaks networking in nixos-containers
-      # usePodman = true;
+      usePodman = true;
       enableAutoPrune = true;
     };
 

@@ -59,6 +59,126 @@
   localModules = {
     common.enable = true;
 
+    containers = {
+      enable = true;
+      storage = {
+        default = "/storage/appdata/docker/ssd";
+        bulk = "/storage/appdata/docker/bulk";
+        temp = "/storage/appdata/temp";
+      };
+      services = let
+        uid = 1000;
+        gid = 100;
+      in {
+        comfyui.enable = true;
+        open-webui.enable = true;
+        stable-diffusion.enable = true;
+
+        meshcentral.enable = true;
+
+        immich = {
+          enable = true;
+          uploadLocation = "/storage/personal/photos/sync/immich";
+          volumes = [
+            "/storage/personal/photos:/mnt/media/photos:ro"
+            "/var/empty:/mnt/media/photos/sync/immich:ro"
+          ];
+          devices = [
+            "/dev/dri/renderD128"
+            "/dev/dri/card0"
+          ];
+        };
+
+        jellyfin = {
+          enable = true;
+          inherit uid gid;
+          volumes = ["/storage/media/videos:/srv/media/videos:ro"];
+          devices = [
+            "/dev/dri/renderD128"
+            "/dev/dri/card0"
+          ];
+        };
+        navidrome = {
+          enable = true;
+          volumes = ["/storage/media/music:/music:ro"];
+        };
+        xbvr = {
+          enable = true;
+          volumes = ["/storage/media/adult/vr:/videos"];
+        };
+        tdarr = {
+          enable = true;
+          inherit uid gid;
+          volumes = ["/storage/media:/media"];
+        };
+        calibre-web = {
+          enable = true;
+          inherit uid gid;
+          volumes = ["/storage/media/books:/books"];
+        };
+        komga = {
+          enable = true;
+          inherit uid gid;
+          volumes = ["/storage/media/manga:/data"];
+        };
+        audiobookshelf = {
+          enable = true;
+          volumes = ["/storage/media/audiobooks:/audiobooks"];
+        };
+
+        nzbget = {
+          enable = true;
+          inherit uid gid;
+          volumes = ["/storage/download/usenet:/downloads/usenet"];
+        };
+        qbittorrent = {
+          enable = true;
+          inherit uid gid;
+          volumes = ["/storage/download/torrent:/downloads/torrent"];
+        };
+        lidarr = {
+          enable = true;
+          inherit uid gid;
+          volumes = [
+            "/storage/download/torrent:/downloads/torrent:ro"
+            "/storage/download/usenet:/downloads/usenet"
+            "/storage/media/music/auto:/music"
+          ];
+        };
+        radarr = {
+          enable = true;
+          inherit uid gid;
+          volumes = [
+            "/storage/download/torrent:/downloads/torrent:ro"
+            "/storage/download/usenet:/downloads/usenet"
+            "/storage/media/videos/movies:/movies"
+          ];
+        };
+        sonarr = {
+          enable = true;
+          inherit uid gid;
+          volumes = [
+            "/storage/download/torrent:/downloads/torrent:ro"
+            "/storage/download/usenet:/downloads/usenet"
+            "/storage/media/videos/tv:/tv"
+          ];
+        };
+        prowlarr = {
+          enable = true;
+          inherit uid gid;
+        };
+        bazarr = {
+          enable = true;
+          inherit uid gid;
+          volumes = [
+            "/storage/media/videos/movies:/movies"
+            "/storage/media/videos/tv:/tv"
+          ];
+        };
+        jellyseerr.enable = true;
+      };
+    };
+
     desktop = {
       enable = true;
       enableGaming = true;
@@ -66,11 +186,6 @@
         export WLR_DRM_DEVICES=$(readlink -f /dev/dri/by-path/pci-0000:00:02.0-card)
         export __EGL_VENDOR_LIBRARY_FILENAMES=/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json
       '';
-    };
-
-    docker = {
-      enable = true;
-      useLocalDns = true;
     };
 
     forgejo-runner.enable = true;

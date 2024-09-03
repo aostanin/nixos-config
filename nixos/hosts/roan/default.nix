@@ -62,6 +62,7 @@ in {
       storage = {
         default = "/storage/appdata/docker/ssd";
         bulk = "/storage/appdata/docker/bulk";
+        temp = "/storage/appdata/temp";
       };
       services = {
         adguardhome = {

@@ -3,36 +3,59 @@
     ./adguardhome.nix
     ./adguardhome-sync.nix
     ./archivebox.nix
+    ./audiobookshelf.nix
     ./authelia.nix
+    ./bazarr.nix
+    ./calibre-web.nix
     ./changedetection.nix
-    ./home-assistant.nix
-    ./influxdb.nix
-    ./invidious.nix
-    ./ir-mqtt-bridge.nix
+    ./comfyui.nix
     ./forgejo.nix
     ./frigate.nix
     ./grafana.nix
     ./guacamole.nix
+    ./home-assistant.nix
+    ./immich.nix
+    ./influxdb.nix
+    ./invidious.nix
+    ./ir-mqtt-bridge.nix
+    ./jellyfin.nix
+    ./jellyseerr.nix
     ./jobcan.nix
+    ./komga.nix
+    ./lidarr.nix
     ./matrix.nix
     ./mealie.nix
+    ./meshcentral.nix
     ./miniflux.nix
     ./mosquitto.nix
+    ./navidrome.nix
     ./netbootxyz.nix
     ./nginx.nix
+    ./nzbget.nix
+    ./ollama.nix
+    ./open-webui.nix
+    ./openedai-speech.nix
     ./openwakeword.nix
     ./piper.nix
+    ./prowlarr.nix
+    ./qbittorrent.nix
+    ./radarr.nix
     ./redlib.nix
     ./scrutiny.nix
     ./searxng.nix
+    ./sonarr.nix
+    ./stable-diffusion.nix
     ./syncthing.nix
     ./tasmoadmin.nix
-    ./whisper.nix
-    ./whoami.nix
+    ./tdarr.nix
     ./unifi.nix
     ./uptime-kuma.nix
     ./valetudopng.nix
     ./vaultwarden.nix
+    ./vpn.nix
+    ./whisper.nix
+    ./whoami.nix
+    ./xbvr.nix
     ./zigbee2mqtt.nix
     ./zwift-offline.nix
   ];

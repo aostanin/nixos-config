@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  inputs,
+  sopsFiles,
   ...
 }: let
   cfg = config.localModules.tailscale;
@@ -34,7 +34,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets."tailscale/auth_key" = {};
+    sops.secrets."tailscale/auth_key".sopsFile = sopsFiles.terranix;
 
     services.tailscale = {
       enable = true;

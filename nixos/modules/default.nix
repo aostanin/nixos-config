@@ -5,7 +5,6 @@
     ./containers
     ./coredns.nix
     ./desktop.nix
-    ./docker.nix
     ./forgejo-runner.nix
     ./home-server.nix
     ./impermanence.nix
@@ -15,6 +14,7 @@
     ./nix-ld.nix
     ./nvtop.nix
     ./pikvm.nix
+    ./podman.nix
     ./redir.nix
     ./rsync-backup.nix
     ./scrutiny-collector.nix

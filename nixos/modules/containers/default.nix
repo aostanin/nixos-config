@@ -28,6 +28,13 @@ in {
             Default bulk storage path.
           '';
         };
+
+        temp = lib.mkOption {
+          type = str;
+          description = ''
+            Default temp storage path.
+          '';
+        };
       };
     };
   in {
@@ -49,14 +56,21 @@ in {
       '';
     };
 
+    createUser = lib.mkOption {
+      type = bool;
+      default = true;
+    };
+
     uid = lib.mkOption {
       type = int;
       default = 500;
+      description = "Default uid for containers running as a user.";
     };
 
     gid = lib.mkOption {
       type = int;
       default = 500;
+      description = "Default gid for containers running as a user.";
     };
 
     storage = lib.mkOption {
@@ -72,23 +86,20 @@ in {
       in
         lib.mkDefault defaultNetworkAccessEnabled;
 
-      docker = {
-        enable = true;
-        usePodman = true;
-      };
+      podman.enable = true;
 
       traefik.enable = true;
     };
 
     virtualisation.oci-containers.backend = "podman";
 
-    users.users.container = {
+    users.users.container = lib.mkIf cfg.createUser {
       isSystemUser = true;
       uid = cfg.uid;
       group = "container";
     };
 
-    users.groups.container = {
+    users.groups.container = lib.mkIf cfg.createUser {
       gid = cfg.gid;
     };
   };

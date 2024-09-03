@@ -5,11 +5,19 @@
 }: let
   name = "authelia";
   cfg = config.localModules.containers.services.${name};
-  uid = toString config.localModules.containers.uid;
-  gid = toString config.localModules.containers.gid;
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
+
+    uid = lib.mkOption {
+      type = lib.types.int;
+      default = config.localModules.containers.uid;
+    };
+
+    gid = lib.mkOption {
+      type = lib.types.int;
+      default = config.localModules.containers.gid;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -23,8 +31,8 @@ in {
     localModules.containers.containers.${name} = {
       raw.image = "docker.io/authelia/authelia:latest";
       raw.environment = {
-        PUID = uid;
-        PGID = gid;
+        PUID = toString cfg.uid;
+        PGID = toString cfg.gid;
         AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE = "/run/secrets/jwt_secret";
         AUTHELIA_SESSION_SECRET_FILE = "/run/secrets/session_secret";
         AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE = "/run/secrets/storage_encryption_key";
@@ -33,8 +41,8 @@ in {
       raw.ports = ["9091:9091"];
       volumes.config = {
         destination = "/config";
-        user = uid;
-        group = gid;
+        user = toString cfg.uid;
+        group = toString cfg.gid;
       };
       raw.volumes = [
         "/run/secrets/containers/authelia/jwt_secret:/run/secrets/jwt_secret:ro"

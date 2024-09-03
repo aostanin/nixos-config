@@ -5,11 +5,19 @@
 }: let
   name = "changedetection";
   cfg = config.localModules.containers.services.${name};
-  uid = toString config.localModules.containers.uid;
-  gid = toString config.localModules.containers.gid;
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
+
+    uid = lib.mkOption {
+      type = lib.types.int;
+      default = config.localModules.containers.uid;
+    };
+
+    gid = lib.mkOption {
+      type = lib.types.int;
+      default = config.localModules.containers.gid;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -18,15 +26,15 @@ in {
       networks = [name];
       raw.dependsOn = ["${name}-playwright-chrome"];
       raw.environment = {
-        PUID = uid;
-        PGID = gid;
+        PUID = toString cfg.uid;
+        PGID = toString cfg.gid;
         PLAYWRIGHT_DRIVER_URL = "ws://${name}-playwright-chrome:3000/?stealth=1&--disable-web-security=true";
         HIDE_REFERER = "true";
       };
       volumes.data = {
         destination = "/datastore";
-        user = uid;
-        group = gid;
+        user = toString cfg.uid;
+        group = toString cfg.gid;
       };
       proxy = {
         enable = true;
