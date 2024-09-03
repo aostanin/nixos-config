@@ -80,14 +80,12 @@
       enableGaming = true;
     };
 
-    docker = {
+    networkmanager.enable = true;
+
+    podman = {
       enable = true;
-      # TODO: Not having docker enabled breaks networking in nixos-containers
-      usePodman = true;
       enableAutoPrune = true;
     };
-
-    networkmanager.enable = true;
 
     tailscale = {
       isClient = true;
