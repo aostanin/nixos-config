@@ -7,10 +7,11 @@
 }: let
   gpus = {
     nvidiaRTX2070Super = let
-      docker = lib.getExe pkgs.docker;
+      podman = lib.getExe pkgs.podman;
       jq = lib.getExe pkgs.jq;
       setGpuLedColor = color: "${lib.getExe pkgs.openrgb} --noautoconnect -d 'RTX 2070 Super' -m direct -c ${color}";
-      getNvidiaContainers = "${docker} inspect $(${docker} ps -aq) | ${jq} -r '.[] | select(any(.HostConfig.DeviceRequests[]?; contains({\"Driver\": \"nvidia\"}))) | .Id' |  xargs";
+      # Maybe using systemd's Conflicts= would be cleaner.
+      getNvidiaServices = "${podman} inspect $(${podman} ps -aq) | ${jq} -r '.[] | select(any(.HostConfig.Devices[]?; contains({\"PathOnHost\": \"/dev/nvidia0\"}))) | \"podman-\\(.Name).service\"' |  xargs";
     in {
       driver = "nvidia";
       pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
@@ -20,13 +21,15 @@
         ${lib.getExe' pkgs.linuxPackages.nvidia_x11.bin "nvidia-smi"} --gpu-reset
       '';
       preDetachCommands = ''
-        ${docker} stop $(${getNvidiaContainers})
+        ${getNvidiaServices} > /tmp/nvidia-services
+        systemctl stop $(cat /tmp/nvidia-services)
         ${setGpuLedColor "FF4444"}
       '';
       postAttachCommands = ''
         # Disable LED
         ${setGpuLedColor "000000"}
-        ${docker} start $(${getNvidiaContainers})
+        systemctl start $(cat /tmp/nvidia-services)
+        rm /tmp/nvidia-services
       '';
     };
   };

@@ -16,7 +16,7 @@
     enable = true;
     settings = {
       interval = 30;
-      idle_time = 1800;
+      idle_time = 30 * 60;
       # The default can't find echo
       wakeup_cmd = let
         echo = lib.getExe' pkgs.coreutils "echo";
