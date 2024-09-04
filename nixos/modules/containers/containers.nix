@@ -16,7 +16,7 @@
 
   trustedClientIps = [
     "100.64.0.0/10" # TailScale
-    "10.89.0.0/16" # Podman networks
+    "10.88.0.0/15" # Podman networks
     "10.0.0.0/24" # LAN
   ];
 
