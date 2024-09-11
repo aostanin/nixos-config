@@ -107,6 +107,11 @@ in {
 
       starship.enable = true;
 
+      yazi = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+
       zoxide.enable = true;
     };
 
