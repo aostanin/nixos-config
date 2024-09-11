@@ -73,6 +73,22 @@
   ];
 
   localModules = {
+    backup = {
+      enable = true;
+      paths = [
+        "/home"
+        # "/storage/appdata"
+        "/var/lib/libvirt"
+        "/var/lib/nixos"
+        "/var/lib/tailscale"
+        "/var/lib/traefik"
+      ];
+      exclude = [
+        "/home/*/.local/share/containers"
+        "/home/*/.local/share/Steam/steamapps"
+      ];
+    };
+
     common.enable = true;
 
     desktop = {

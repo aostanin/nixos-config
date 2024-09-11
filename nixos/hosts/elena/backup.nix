@@ -5,22 +5,19 @@
   secrets,
   ...
 }: {
-  sops.secrets."user/ssh_key" = {};
+  sops.secrets."restic/ssh_key" = {};
 
-  localModules.rsyncBackup = {
-    enable = true;
-    identityFile = config.sops.secrets."user/ssh_key".path;
-    backups = {
-      vps-oci1-appdata = {
-        source = "root@vps-oci1:/storage/appdata";
-        destination = "/storage/backup/hosts/dir/vps-oci1";
-      };
-      vps-oci2-appdata = {
-        source = "root@vps-oci2:/storage/appdata";
-        destination = "/storage/backup/hosts/dir/vps-oci2";
-      };
+  users = {
+    users.backup = {
+      isNormalUser = true;
+      group = "backup";
+      home = "/storage/backup/restic";
+      openssh.authorizedKeys.keys = [secrets.restic.publicSshKey];
     };
+    groups.backup = {};
   };
+
+  sops.secrets."user/ssh_key" = {};
 
   services.zrepl = {
     enable = true;

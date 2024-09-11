@@ -48,6 +48,18 @@ in {
   powerManagement.powertop.enable = true;
 
   localModules = {
+    backup = {
+      enable = true;
+      paths = [
+        "/home"
+        "/storage/appdata"
+        "/var/lib/libvirt"
+        "/var/lib/nixos"
+        "/var/lib/tailscale"
+        "/var/lib/traefik"
+      ];
+    };
+
     common.enable = true;
 
     coredns = {

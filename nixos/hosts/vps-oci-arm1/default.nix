@@ -18,6 +18,14 @@
   };
 
   localModules = {
+    backup = {
+      enable = true;
+      paths = [
+        "/home"
+        "/persist"
+      ];
+    };
+
     common = {
       enable = true;
       minimal = true;

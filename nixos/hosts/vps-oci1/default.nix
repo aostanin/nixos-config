@@ -21,6 +21,17 @@
   };
 
   localModules = {
+    backup = {
+      enable = true;
+      paths = [
+        "/home"
+        "/storage/appdata"
+        "/var/lib/nixos"
+        "/var/lib/tailscale"
+        "/var/lib/traefik"
+      ];
+    };
+
     common = {
       enable = true;
       minimal = true;

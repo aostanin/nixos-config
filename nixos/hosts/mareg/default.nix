@@ -42,6 +42,14 @@
   powerManagement.powertop.enable = true;
 
   localModules = {
+    backup = {
+      enable = true;
+      paths = [
+        "/home"
+        "/persist"
+      ];
+    };
+
     common.enable = true;
 
     containers = {
