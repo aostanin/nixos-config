@@ -101,6 +101,14 @@ in {
         tasmoadmin.enable = true;
         unifi.enable = true;
         vaultwarden.enable = true;
+        webtop = {
+          enable = true;
+          devices = ["/dev/dri"];
+          additionalPackages = [
+            "font-noto-cjk"
+            "wine"
+          ];
+        };
 
         grafana.enable = true;
         influxdb.enable = true;
