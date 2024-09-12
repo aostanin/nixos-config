@@ -23,7 +23,6 @@ in {
   data.sops_file.secrets.source_file = toString ../secrets/sops/secrets.enc.yaml;
 
   provider.cloudflare.api_token = "\${data.sops_file.secrets.data[\"cloudflare.api_token\"]}";
-
   provider.tailscale.api_key = "\${data.sops_file.secrets.data[\"tailscale.api_key\"]}";
 
   resource.cloudflare_record = let
@@ -59,6 +58,7 @@ in {
     reusable = true;
     ephemeral = false;
     preauthorized = true;
+    tags = ["tag:managed"];
     description = "NixOS Terraform";
   };
 
@@ -97,8 +97,9 @@ in {
     acl = builtins.toJSON {
       tagOwners = {
         "tag:server" = ["autogroup:admin"];
+        "tag:managed" = ["autogroup:admin"];
         "tag:ephemeral" = ["autogroup:admin"];
-        "tag:mullvad" = ["tag:ephemeral"];
+        "tag:mullvad" = ["tag:managed" "tag:ephemeral"];
       };
       acls = [
         {
@@ -165,28 +166,15 @@ in {
     })
     secrets.tailscale.devices;
 
-  tunnels = {
-    # TODO: Setup all tunnels this way
-    roan = {
-      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
-      service = "https://127.0.0.1:443";
-    };
-    mareg = {
-      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
-      service = "https://127.0.0.1:443";
-    };
-    vps-oci1 = {
-      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
-      service = "https://127.0.0.1:443";
-    };
-    vps-oci2 = {
-      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
-      service = "https://127.0.0.1:443";
-    };
-    vps-oci-arm1 = {
-      accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
-      service = "https://127.0.0.1:443";
-    };
+  tunnels = let
+    accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
+  in {
+    elena.accountId = accountId;
+    mareg.accountId = accountId;
+    roan.accountId = accountId;
+    vps-oci1.accountId = accountId;
+    vps-oci2.accountId = accountId;
+    vps-oci-arm1.accountId = accountId;
   };
 
   resource.local_sensitive_file.secrets-json = {
@@ -196,9 +184,9 @@ in {
         auth_key_ephemeral = config.output.tailscale_auth_key_ephemeral.value;
       };
       cloudflare.tunnels = {
-        # TODO: Use for all
-        roan.tunnel_token = config.output.tunnel_token_roan.value;
+        elena.tunnel_token = config.output.tunnel_token_mareg.value;
         mareg.tunnel_token = config.output.tunnel_token_mareg.value;
+        roan.tunnel_token = config.output.tunnel_token_roan.value;
         vps-oci2.tunnel_token = config.output.tunnel_token_vps-oci2.value;
         vps-oci1.tunnel_token = config.output.tunnel_token_vps-oci1.value;
         vps-oci-arm1.tunnel_token = config.output.tunnel_token_vps-oci-arm1.value;
@@ -224,7 +212,7 @@ in {
   };
 
   locals.tailscale_json = "\${{ tailscale = { hosts = local.tailscale_devices } }}";
-  resource.local_file.tailscale-yaml = {
+  resource.local_file.tailscale-json = {
     content = lib.tfRef "jsonencode(local.tailscale_json)";
     filename = "../secrets/network/tailscale.json";
     file_permission = "0640";

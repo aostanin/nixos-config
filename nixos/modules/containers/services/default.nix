@@ -53,6 +53,7 @@
     ./valetudopng.nix
     ./vaultwarden.nix
     ./vpn.nix
+    ./webtop.nix
     ./whisper.nix
     ./whoami.nix
     ./xbvr.nix

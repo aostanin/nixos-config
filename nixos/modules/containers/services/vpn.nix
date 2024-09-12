@@ -6,6 +6,11 @@
 }: let
   name = "vpn";
   cfg = config.localModules.containers.services.${name};
+
+  authKey =
+    if cfg.ephemeral
+    then "tailscale/auth_key_ephemeral"
+    else "tailscale/auth_key";
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
@@ -15,16 +20,22 @@ in {
       default = "container-${config.networking.hostName}";
       description = "TailScale hostname.";
     };
+
+    ephemeral = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Run as an ephemeral node.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     sops.secrets = {
-      "tailscale/auth_key_ephemeral".sopsFile = sopsFiles.terranix;
+      ${authKey}.sopsFile = sopsFiles.terranix;
       "containers/vpn/exit_node" = {};
     };
 
     sops.templates."${name}.env".content = ''
-      TS_AUTHKEY=${config.sops.placeholder."tailscale/auth_key_ephemeral"}
+      TS_AUTHKEY=${config.sops.placeholder.${authKey}}
       TS_EXTRA_ARGS=--exit-node=${config.sops.placeholder."containers/vpn/exit_node"} --exit-node-allow-lan-access=false --accept-routes=false --advertise-tags=tag:mullvad
     '';
 
@@ -36,7 +47,7 @@ in {
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_USERSPACE = "false"; # Needed to use exit node
       };
-      volumes.data.destination = "/var/lib/tailscale";
+      volumes.data.destination = lib.mkIf (!cfg.ephemeral) "/var/lib/tailscale";
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
       raw.extraOptions = [
         "--device=/dev/net/tun"
