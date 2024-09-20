@@ -87,6 +87,9 @@ in {
 
             # LEOMO TYPE-S
             ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", GROUP="adbusers", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
+
+            # Blockstream Jade
+            ATTRS{idProduct}=="55d4", ATTRS{idVendor}=="1a86", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on", GROUP="plugdev", MODE="0660"
           ''
           + lib.optionalString cfg.enableGaming ''
             # TODO: uaccess alone doesn't work?
