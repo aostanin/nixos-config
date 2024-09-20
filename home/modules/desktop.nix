@@ -41,6 +41,7 @@ in {
         libreoffice
         logseq
         moonlight-qt
+        sparrow
         steam
         (xfce.thunar.override {
           thunarPlugins = with xfce; [

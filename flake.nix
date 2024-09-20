@@ -82,6 +82,10 @@
             inherit config system;
           };
           yuzu = inputs.nixpkgs-yuzu.legacyPackages.${system}.yuzu;
+          hwi = prev.hwi.overrideAttrs (old: {
+            # Blockstream Jade needs cbor2
+            propagatedBuildInputs = old.propagatedBuildInputs ++ [prev.python3Packages.cbor2];
+          });
         })
       ];
     };
