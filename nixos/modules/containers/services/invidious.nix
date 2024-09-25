@@ -22,6 +22,8 @@ in {
     sops.secrets = {
       "containers/invidious/postgres_password" = {};
       "containers/invidious/hmac_key" = {};
+      "containers/invidious/visitor_data" = {};
+      "containers/invidious/po_token" = {};
     };
 
     sops.templates."${name}-config.yml" = {
@@ -33,6 +35,9 @@ in {
           host: invidious-db
           port: 5432
         check_tables: true
+        signature_server: inv-sig-helper:12999
+        visitor_data: ${config.sops.placeholder."containers/invidious/visitor_data"}
+        po_token: ${config.sops.placeholder."containers/invidious/po_token"}
         external_port: 443
         domain: ${lib.head (config.lib.containers.mkHosts name)}
         https_only: true
@@ -59,6 +64,15 @@ in {
       proxy = {
         enable = true;
         port = 3000;
+      };
+    };
+
+    localModules.containers.containers.inv-sig-helper = {
+      raw.image = "quay.io/invidious/inv-sig-helper:latest";
+      networks = [name];
+      raw.cmd = ["--tcp" "0.0.0.0:12999"];
+      raw.environment = {
+        RUST_LOG = "info";
       };
     };
 
