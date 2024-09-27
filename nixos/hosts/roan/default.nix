@@ -91,6 +91,7 @@ in {
         invidious.enable = true;
         jobcan.enable = true;
         netbootxyz.enable = true;
+        ollama.enable = true;
         redlib = {
           inherit (secrets.redlib) subscriptions;
           enable = true;

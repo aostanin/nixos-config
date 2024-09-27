@@ -8,6 +8,11 @@
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
+
+    enableNvidia = lib.mkOption {
+      type = lib.types.bool;
+      default = config.localModules.podman.enableNvidia;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -18,7 +23,7 @@ in {
         config.destination = "/app/config";
         voices.destination = "/app/voices";
       };
-      raw.extraOptions = ["--device=nvidia.com/gpu=all"];
+      raw.extraOptions = lib.mkIf cfg.enableNvidia ["--device=nvidia.com/gpu=all"];
     };
   };
 }

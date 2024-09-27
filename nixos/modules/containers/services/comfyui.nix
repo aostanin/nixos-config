@@ -9,6 +9,11 @@
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
+
+    enableNvidia = lib.mkOption {
+      type = lib.types.bool;
+      default = config.localModules.podman.enableNvidia;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -28,7 +33,7 @@ in {
           storageType = "bulk";
         };
       };
-      raw.extraOptions = ["--device=nvidia.com/gpu=all"];
+      raw.extraOptions = lib.mkIf cfg.enableNvidia ["--device=nvidia.com/gpu=all"];
       proxy = {
         enable = true;
         port = 7860;

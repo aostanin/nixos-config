@@ -8,6 +8,11 @@
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
+
+    enableNvidia = lib.mkOption {
+      type = lib.types.bool;
+      default = config.localModules.podman.enableNvidia;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -34,7 +39,7 @@ in {
       };
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
       volumes.data.destination = "/app/backend/data";
-      raw.extraOptions = ["--device=nvidia.com/gpu=all"];
+      raw.extraOptions = lib.mkIf cfg.enableNvidia ["--device=nvidia.com/gpu=all"];
       proxy = {
         enable = true;
         names = ["ai"];
