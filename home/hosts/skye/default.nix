@@ -80,6 +80,23 @@
         ];
       }
       {
+        profile.name = "docked-single";
+        profile.outputs = [
+          {
+            criteria = "eDP-1";
+            status = "enable";
+            mode = "1920x1200";
+            position = "3440,240";
+          }
+          {
+            criteria = secrets.monitors.lg.name;
+            status = "enable";
+            mode = "3440x1440";
+            position = "0,0";
+          }
+        ];
+      }
+      {
         profile.name = "parents";
         profile.outputs = [
           {
