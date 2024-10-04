@@ -31,6 +31,7 @@
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
+      "zfs.zfs_arc_max=8589934592"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
