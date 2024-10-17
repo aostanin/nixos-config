@@ -13,7 +13,7 @@
 
       service = lib.mkOption {
         type = lib.types.str;
-        default = "https://traefik:443";
+        default = "https://127.0.0.1:443";
       };
     };
   };
@@ -52,7 +52,6 @@ in {
       })
       tunnels);
 
-    # TODO: Export to nix module?
     output = lib.mkMerge (lib.mapAttrsToList (tunnelName: tunnelConfig: {
         "tunnel_id_${tunnelName}".value = config.resource.cloudflare_tunnel."${tunnelName}" "id";
 

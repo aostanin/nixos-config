@@ -22,7 +22,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules.containers.containers.${name} = {
-      raw.image = "codeberg.org/forgejo/forgejo:8";
+      raw.image = "codeberg.org/forgejo/forgejo:9";
       raw.ports = ["2222:22"];
       raw.environment = let
         inherit (config.localModules.containers) domain;

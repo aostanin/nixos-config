@@ -51,6 +51,7 @@ in {
             proxied = true;
           };
         })
+        # TODO: Only public
         config.subdomains)))
       servers));
 
@@ -169,6 +170,8 @@ in {
   tunnels = let
     accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
   in {
+    # TODO: Set up each service separately
+    # TODO: Limit home assistant to only Google IPs https://community.home-assistant.io/t/expose-home-assistant-for-google-ips-only-ipv4-only/184646/2
     elena.accountId = accountId;
     mareg.accountId = accountId;
     roan.accountId = accountId;

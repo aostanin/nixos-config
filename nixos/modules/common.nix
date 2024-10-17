@@ -97,6 +97,7 @@ in {
         # Enable all SysRq keys
         "kernel.sysrq" = 1;
         # Don't filter bridge traffic
+        # ref: https://wiki.libvirt.org/Net.bridge.bridge-nf-call_and_sysctl.conf.html
         "net.bridge.bridge-nf-call-arptables" = 0;
         "net.bridge.bridge-nf-call-iptables" = 0;
         "net.bridge.bridge-nf-call-ip6tables" = 0;

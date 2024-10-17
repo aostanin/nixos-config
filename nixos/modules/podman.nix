@@ -59,6 +59,7 @@ in {
       };
     };
 
+    # TODO: Need to login. Add options to set auth.
     systemd.timers.podman-auto-update = lib.mkIf cfg.enableAutoUpdate {
       enable = true;
       timerConfig.OnCalendar = "weekly";

@@ -44,7 +44,6 @@ in {
           jq
           just
           lazygit
-          lf
           lftp
           lsix
           minicom
@@ -70,7 +69,6 @@ in {
           ffmpeg
           github-cli
           gpsbabel
-          nsz
           ollama
           tealdeer
           tokei
@@ -118,6 +116,13 @@ in {
     xdg.configFile = {
       "libvirt/libvirt.conf".text = ''
         uri_default='qemu:///system'
+      '';
+    };
+
+    home.file = {
+      ".cargo/config.toml".text = ''
+        [net]
+        git-fetch-with-cli = true
       '';
     };
   };

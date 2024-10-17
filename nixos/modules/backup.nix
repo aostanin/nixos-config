@@ -53,6 +53,7 @@ in {
         Persistent = true;
         RandomizedDelaySec = "30m";
       };
+      # TODO: Only on WiFi and charging
       backupPrepareCommand = let
         inherit (secrets.pikvm) baseUrl username;
         passwordFile = config.sops.secrets."pikvm/password".path;
@@ -80,7 +81,7 @@ in {
 
         if ! is_on; then
           toggle_power
-          wait_on
+          sleep 30
         fi
       '';
     };

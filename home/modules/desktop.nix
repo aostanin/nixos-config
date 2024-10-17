@@ -33,6 +33,7 @@ in {
         # GUI
         audacity
         bitwarden
+        feishin
         filezilla
         gimp
         gparted

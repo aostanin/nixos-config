@@ -292,4 +292,19 @@
       ExecStart = "/storage/appdata/scripts/mam/update_mam.sh";
     };
   };
+
+  services.samba = {
+    enable = true;
+    enableNmbd = false;
+    enableWinbindd = false;
+    openFirewall = true;
+    shares.media = {
+      path = "/storage/media";
+      writable = "false";
+      comment = "media";
+    };
+    extraConfig = ''
+      acl allow execute always = yes
+    '';
+  };
 }

@@ -28,8 +28,7 @@
       "intel_pstate=active"
       "i915.enable_fbc=1"
       "zfs.zfs_arc_max=2147483648"
-      "acpi_osi=\"!Windows 2013\"" # Needed to disable NVIDIA card
-      "acpi_osi=Linux"
+      "iomem=relaxed" # To flash firmware
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
@@ -60,6 +59,7 @@
         temp = "/storage/appdata/temp";
       };
       services = {
+        ollama.enable = true;
         whoami.enable = true;
       };
     };
@@ -105,10 +105,6 @@
     };
 
     xserver.videoDrivers = ["modesetting"];
-  };
-
-  hardware = {
-    nvidiaOptimus.disable = true;
   };
 
   virtualisation.libvirtd.enable = true;
