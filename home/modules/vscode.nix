@@ -19,11 +19,13 @@ in {
         continue.continue
         editorconfig.editorconfig
         jdinhlife.gruvbox
+        jebbs.plantuml
         jnoortheen.nix-ide
         mkhl.direnv
         ms-azuretools.vscode-docker
         ms-python.python
         rust-lang.rust-analyzer
+        tamasfe.even-better-toml
         vscodevim.vim
 
         # Elm
