@@ -51,7 +51,7 @@
         in
           toString (pkgs.writeShellScript "check_jellyfin_sessions" ''
             sessions=$(${lib.getExe pkgs.curl} -s ${baseUrl}/sessions?api_key=$(cat ${tokenFile}))
-            echo $sessions | ${lib.getExe pkgs.jq} -e '. | map(select(.NowPlayingItem != null)) != []'
+            echo $sessions | ${lib.getExe pkgs.jq} -e '. | select(map(select(.NowPlayingItem != null)) != [] and map(select(.PlayState.IsPaused)) == [])'
           '');
       };
       qbittorrent = {
