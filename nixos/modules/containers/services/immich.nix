@@ -39,7 +39,7 @@ in {
       DB_DATABASE_NAME=${name}
       REDIS_HOSTNAME=${name}-redis
       LOG_LEVEL=log
-      IMMICH_SERVER_URL=http://${name}-server:3001
+      IMMICH_SERVER_URL=http://${name}-server:2283
       IMMICH_MACHINE_LEARNING_URL=http://${name}-machine-learning:3003
     '';
 
@@ -69,7 +69,7 @@ in {
       raw.extraOptions = lib.map (d: "--device=${d}") cfg.devices;
       proxy = {
         enable = true;
-        port = 3001;
+        port = 2283;
       };
     };
 
