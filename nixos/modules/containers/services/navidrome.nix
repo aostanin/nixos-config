@@ -22,6 +22,7 @@ in {
       raw.environment = {
         # 1 am in UTC
         ND_SCANSCHEDULE = "0 16 * * *";
+        ND_AUTOIMPORTPLAYLISTS = "false";
       };
       volumes.data.destination = "/data";
       raw.volumes = cfg.volumes;

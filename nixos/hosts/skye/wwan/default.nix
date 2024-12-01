@@ -67,6 +67,7 @@
 
           VENDOR_ID_HASH="bb23be7f"
 
+          sleep 2
           for i in {1..9}; do
               log "Requesting challenge from WWAN modem (attempt #''${i})"
               RAW_CHALLENGE=$(at_command "at+gtfcclockgen")
@@ -105,6 +106,7 @@
 
                   if [ "$UNLOCK_RESPONSE" = "OK" ]; then
                       log "FCC unlock success"
+                      at_command "AT+XDNS=0,1"
                       exit 0
                   else
                       error "Unlock failed. Got response: $UNLOCK_RESPONSE"

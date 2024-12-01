@@ -68,7 +68,7 @@ in {
     };
 
     localModules.containers.containers.qbit_manage = lib.mkIf cfg.enableQbitManage {
-      raw.image = "docker.io/bobokun/qbit_manage:latest";
+      raw.image = "ghcr.io/stuffanthings/qbit_manage:latest";
       raw.dependsOn = ["qbittorrent"];
       raw.environment = {
         QBT_SCHEDULE = "30";

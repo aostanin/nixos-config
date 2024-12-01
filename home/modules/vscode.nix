@@ -47,6 +47,7 @@ in {
 
         # Workaround for terminal not working https://github.com/NixOS/nixpkgs/issues/181610
         "terminal.integrated.shellIntegration.enabled" = false;
+        "terminal.integrated.sendKeybindingsToShell" = true;
 
         # Rust
         "rust-analyzer.rustfmt.overrideCommand" = [(lib.getExe pkgs.rustPackages.rustfmt)];

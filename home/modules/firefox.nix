@@ -53,6 +53,7 @@ in {
             auto-tab-discard
             bitwarden
             cookies-txt
+            keepa
             libredirect
             multi-account-containers
             simple-tab-groups

@@ -88,6 +88,7 @@ in {
         changedetection.enable = true;
         forgejo.enable = true;
         guacamole.enable = true;
+        hauk.enable = true;
         invidious.enable = true;
         jobcan.enable = true;
         netbootxyz.enable = true;

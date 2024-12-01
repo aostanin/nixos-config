@@ -13,6 +13,7 @@
     ./frigate.nix
     ./grafana.nix
     ./guacamole.nix
+    ./hauk.nix
     ./home-assistant.nix
     ./immich.nix
     ./influxdb.nix
