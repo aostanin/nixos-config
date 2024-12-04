@@ -14,7 +14,7 @@ in {
     programs.nix-ld = {
       enable = true;
       package = pkgs.nix-ld-rs;
-      libraries = (pkgs.steam-run.fhsenv.args.multiPkgs pkgs) ++ [pkgs.fuse];
+      libraries = (pkgs.steam-fhsenv-without-steam.args.multiPkgs pkgs) ++ [pkgs.fuse];
     };
   };
 }

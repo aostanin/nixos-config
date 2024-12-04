@@ -29,7 +29,7 @@ in {
       "iommu=pt"
       "intel_pstate=active"
       "i915.enable_fbc=1"
-      "zfs.zfs_arc_max=2147483648"
+      "zfs.zfs_arc_max=${toString (2 * 1024 * 1024 * 1024)}"
       "msr.allow_writes=on" # For undervolt
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];

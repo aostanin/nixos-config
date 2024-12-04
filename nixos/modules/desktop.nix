@@ -37,7 +37,8 @@ in {
       kochi-substitute
       nerdfonts
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
       noto-fonts-emoji
       roboto
     ];
@@ -193,9 +194,9 @@ in {
         settings.General.Experimental = true;
       };
 
-      opengl = {
+      graphics = {
         enable = true;
-        driSupport32Bit = true; # Needed for Steam
+        enable32Bit = true; # Needed for Steam
       };
 
       printers.ensurePrinters = [

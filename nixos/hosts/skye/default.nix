@@ -7,12 +7,7 @@
   ...
 }: {
   imports = [
-    "${inputs.nixos-hardware}/common/cpu/amd"
-    "${inputs.nixos-hardware}/common/cpu/amd/pstate.nix"
-    "${inputs.nixos-hardware}/common/gpu/amd"
-    "${inputs.nixos-hardware}/common/pc/laptop"
-    "${inputs.nixos-hardware}/common/pc/laptop/acpi_call.nix"
-    "${inputs.nixos-hardware}/common/pc/laptop/ssd"
+    "${inputs.nixos-hardware}/lenovo/thinkpad/t14/amd/gen4"
     ./hardware-configuration.nix
     ./backup.nix
     ./wwan
@@ -27,7 +22,8 @@
       efi.canTouchEfiVariables = true;
     };
     tmp.useTmpfs = true;
-    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    # TODO: Update to 6.11 once zfs 2.2.7
+    # kernelPackages = pkgs.linuxPackages_6_11;
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"

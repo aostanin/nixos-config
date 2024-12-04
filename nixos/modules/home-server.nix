@@ -84,7 +84,7 @@ in {
           VLAN = lib.optional cfg.iotNetwork.enable "vlan40";
         };
         routes = [
-          {routeConfig.Gateway = secrets.network.home.defaultGateway;}
+          {Gateway = secrets.network.home.defaultGateway;}
         ];
       };
 

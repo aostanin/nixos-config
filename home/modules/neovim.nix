@@ -46,7 +46,6 @@ in {
 
         # File encoding options
         encoding = "utf-8";
-        termencoding = "utf-8";
         fileencoding = "utf-8";
         fileencodings = "utf-8,euc-jp,sjis,iso-2022-jp,cp932";
         fileformats = "unix,dos,mac";
@@ -71,7 +70,7 @@ in {
         laststatus = 2; # Always show
 
         # Tab line
-        showtabline = 2; #Always show
+        showtabline = 2; # Always show
 
         # Various options
         hidden = true; # Allow unsaved changes in abandoned buffers
@@ -115,6 +114,7 @@ in {
             "<C-p>" = "find_files";
           };
         };
+        web-devicons.enable = true;
       };
     };
   };

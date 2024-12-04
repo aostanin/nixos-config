@@ -29,7 +29,7 @@
             home = {
               inherit (secrets.user) username;
               homeDirectory = homeDirectory;
-              stateVersion = "24.05";
+              stateVersion = "24.11";
             };
 
             systemd.user.startServices = "sd-switch";

@@ -27,7 +27,7 @@ in {
           serviceConfig = {
             Restart = "on-failure";
             Type = "simple";
-            ExecStart = "${lib.getExe pkgs.virtwold} -interface ${interface}";
+            ExecStart = "${lib.getExe pkgs.virtwold} --interface ${interface} --libvirturi qemu:///system";
           };
           wantedBy = ["multi-user.target"];
         };

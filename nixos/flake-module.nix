@@ -25,7 +25,7 @@
           ./modules
           {
             nixpkgs = mkPkgs system;
-            system.stateVersion = "24.05";
+            system.stateVersion = "24.11";
 
             # Use same nixpkgs for flakes and system
             # ref: https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html

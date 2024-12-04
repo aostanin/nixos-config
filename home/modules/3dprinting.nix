@@ -13,7 +13,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       blender
-      (cura.override {plugins = with pkgs.curaPlugins; [octoprint];})
+      cura
       freecad
       meshlab
       openscad

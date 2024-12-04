@@ -42,11 +42,11 @@
       requestEncryptionCredentials = false;
     };
     tmp.useTmpfs = true;
-    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
     kernelParams = [
       "zfs.l2arc_noprefetch=0"
       "zfs.l2arc_write_max=536870912"
       "zfs.l2arc_write_boost=1073741824"
+      "zfs.zfs_arc_max=${toString (96 * 1024 * 1024 * 1024)}"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
@@ -295,16 +295,18 @@
 
   services.samba = {
     enable = true;
-    enableNmbd = false;
-    enableWinbindd = false;
+    nmbd.enable = false;
+    winbindd.enable = false;
     openFirewall = true;
-    shares.media = {
-      path = "/storage/media";
-      writable = "false";
-      comment = "media";
+    settings = {
+      global = {
+        "acl allow execute always" = "yes";
+      };
+      media = {
+        path = "/storage/media";
+        writable = "false";
+        comment = "media";
+      };
     };
-    extraConfig = ''
-      acl allow execute always = yes
-    '';
   };
 }

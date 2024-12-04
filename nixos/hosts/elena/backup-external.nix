@@ -86,7 +86,7 @@ in {
             sleep 1
         done
 
-        ${lib.getExe' zfsUser "zpool"} import -f external
+        ${lib.getExe' zfsUser "zpool"} import -fN external
 
         ${zreplWait} external-push
 

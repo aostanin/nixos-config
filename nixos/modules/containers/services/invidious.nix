@@ -45,9 +45,7 @@ in {
         hmac_key: ${config.sops.placeholder."containers/invidious/hmac_key"}
         registration_enabled: false
       '';
-      # TODO: Want to set this to 1000, but sops requires a username.
-      # ref: https://github.com/Mic92/sops-nix/issues/514
-      owner = secrets.user.username;
+      uid = 1000;
     };
 
     sops.templates."${name}-db.env".content = ''

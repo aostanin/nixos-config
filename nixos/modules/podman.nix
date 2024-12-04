@@ -53,9 +53,9 @@ in {
     hardware = lib.mkIf cfg.enableNvidia {
       nvidia-container-toolkit.enable = true;
 
-      opengl = {
+      graphics = {
         enable = true;
-        driSupport32Bit = true;
+        enable32Bit = true;
       };
     };
 

@@ -295,7 +295,7 @@ in {
     };
 
     home.packages = with pkgs; [
-      gnome.adwaita-icon-theme
+      adwaita-icon-theme
       i3-swallow
       pavucontrol
       wayvnc

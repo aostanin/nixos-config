@@ -22,6 +22,9 @@
           inherit inputs nixpkgsConfig secrets sopsFiles;
         };
         modules = [
+          {
+            system.stateVersion = 5;
+          }
           (./hosts + "/${hostname}")
         ];
       };
