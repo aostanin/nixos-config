@@ -17,7 +17,6 @@
     ./pikvm.nix
     ./podman.nix
     ./redir.nix
-    ./rsync-backup.nix
     ./scrutiny-collector.nix
     ./tailscale.nix
     ./traefik.nix

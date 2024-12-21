@@ -26,6 +26,7 @@ in {
     };
 
     home.pointerCursor = {
+      # TODO: Cursor doesn't work
       name = "phinger-cursors";
       package = pkgs.phinger-cursors;
       size = 24;

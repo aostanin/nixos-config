@@ -38,7 +38,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules.containers.containers.${name} = {
-      raw.image = "docker.io/linuxserver/qbittorrent:latest";
+      raw.image = "docker.io/linuxserver/qbittorrent:5.0.2";
       raw.dependsOn = lib.optional cfg.enableVpn "vpn";
       raw.environment = {
         PUID = toString cfg.uid;

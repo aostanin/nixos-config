@@ -79,6 +79,8 @@
 
     intelAmt.enable = true;
 
+    nvtop.package = pkgs.nvtopPackages.intel;
+
     scrutinyCollector.enable = true;
 
     tailscale = {
@@ -103,8 +105,6 @@
         STOP_CHARGE_THRESH_BAT0 = 90;
       };
     };
-
-    xserver.videoDrivers = ["modesetting"];
   };
 
   virtualisation.libvirtd.enable = true;

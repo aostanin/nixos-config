@@ -86,6 +86,7 @@ in {
         archivebox.enable = true;
         authelia.enable = true;
         changedetection.enable = true;
+        dawarich.enable = true;
         forgejo.enable = true;
         guacamole.enable = true;
         hauk.enable = true;
@@ -145,6 +146,8 @@ in {
 
     intelAmt.enable = true;
 
+    nvtop.package = pkgs.nvtopPackages.intel;
+
     scrutinyCollector.enable = true;
 
     tailscale = {
@@ -176,8 +179,6 @@ in {
       coreOffset = -40;
       gpuOffset = -30;
     };
-
-    xserver.videoDrivers = ["modesetting"];
   };
 
   virtualisation.libvirtd.enable = true;

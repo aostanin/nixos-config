@@ -9,6 +9,7 @@
     ./calibre-web.nix
     ./changedetection.nix
     ./comfyui.nix
+    ./dawarich.nix
     ./forgejo.nix
     ./frigate.nix
     ./grafana.nix
@@ -37,6 +38,7 @@
     ./open-webui.nix
     ./openedai-speech.nix
     ./openwakeword.nix
+    ./photon.nix
     ./piper.nix
     ./prowlarr.nix
     ./qbittorrent.nix

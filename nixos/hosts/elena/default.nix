@@ -42,6 +42,7 @@
       requestEncryptionCredentials = false;
     };
     tmp.useTmpfs = true;
+    kernelPackages = pkgs.linuxPackages_6_11;
     kernelParams = [
       "zfs.l2arc_noprefetch=0"
       "zfs.l2arc_write_max=536870912"
@@ -240,6 +241,8 @@
       enable = true;
       capSysAdmin = true;
     };
+
+    udev.packages = with pkgs; [openrgb];
 
     xserver.videoDrivers = ["modesetting" "nvidia"];
   };

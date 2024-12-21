@@ -23,7 +23,7 @@ in {
     localModules = {
       msmtp.enable = lib.mkDefault true;
       nix-ld.enable = lib.mkDefault (!cfg.minimal);
-      nvtop.enable = lib.mkDefault true;
+      nvtop.enable = lib.mkDefault (!cfg.minimal);
       tailscale.enable = lib.mkDefault true;
     };
 
@@ -123,8 +123,6 @@ in {
           X11Forwarding = true;
         };
       };
-
-      xserver.videoDrivers = lib.mkDefault [];
     };
 
     programs = {

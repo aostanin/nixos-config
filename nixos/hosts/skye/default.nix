@@ -22,12 +22,17 @@
       efi.canTouchEfiVariables = true;
     };
     tmp.useTmpfs = true;
-    # TODO: Update to 6.11 once zfs 2.2.7
-    # kernelPackages = pkgs.linuxPackages_6_11;
+    kernelPackages = pkgs.linuxPackages_6_11;
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
       "zfs.zfs_arc_max=8589934592"
+    ];
+    kernelPatches = [
+      {
+        name = "wifi-ath11k-support-hibernation";
+        patch = ./0001-Reapply-wifi-ath11k-support-hibernation.patch;
+      }
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
@@ -95,6 +100,8 @@
 
     networkmanager.enable = true;
 
+    nvtop.package = pkgs.nvtopPackages.amd;
+
     podman = {
       enable = true;
       enableAutoPrune = true;
@@ -140,8 +147,9 @@
     fwupd.enable = true;
 
     logind = {
-      lidSwitchDocked = "suspend";
-      powerKey = "suspend";
+      lidSwitch = "suspend-then-hibernate";
+      lidSwitchDocked = config.services.logind.lidSwitch;
+      powerKey = config.services.logind.lidSwitch;
     };
 
     ollama.enable = true;
@@ -184,9 +192,9 @@
         USB_EXCLUDE_PRINTER = 0;
       };
     };
-
-    xserver.videoDrivers = ["amdgpu"];
   };
+
+  systemd.sleep.extraConfig = "HibernateDelaySec=1h";
 
   virtualisation = {
     # TODO: Create localModule

@@ -8,7 +8,6 @@
     };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-yuzu.url = "github:nixos/nixpkgs/1cba04796fe93e7f657c62f9d1fb9cae9d0dd86e"; # Last version with Yuzu
     nur.url = "github:nix-community/NUR";
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
@@ -75,13 +74,12 @@
     mkPkgs = system: rec {
       config = import nixpkgsConfig;
       overlays = [
-        nur.overlay
+        nur.overlays.default
         self.overlays.packages
         (final: prev: {
           unstable = import nixpkgs-unstable {
             inherit config system;
           };
-          yuzu = inputs.nixpkgs-yuzu.legacyPackages.${system}.yuzu;
           hwi = prev.hwi.overrideAttrs (old: {
             # Blockstream Jade needs cbor2
             propagatedBuildInputs = old.propagatedBuildInputs ++ [prev.python3Packages.cbor2];

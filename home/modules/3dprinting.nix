@@ -13,7 +13,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       blender
-      cura
+      nur.repos.xeals.cura5
       freecad
       meshlab
       openscad

@@ -102,7 +102,7 @@ in {
             teensy-udev-rules
           ]
           ++ lib.optionals cfg.enableGaming [
-            yuzu
+            nur.repos.aprilthepink.suyu-mainline
           ];
       };
 
@@ -173,11 +173,6 @@ in {
         };
       };
     };
-
-    # Fix for tuigreet remember not working: https://github.com/NixOS/nixpkgs/issues/248323
-    systemd.tmpfiles.rules = [
-      "d '/var/cache/tuigreet' - greeter greeter - -"
-    ];
 
     xdg.portal = {
       enable = true;

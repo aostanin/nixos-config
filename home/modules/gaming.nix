@@ -22,8 +22,9 @@ in {
       cemu
       dolphin-emu
       retroarch # TODO: Add cores?
-      unstable.rpcs3
-      yuzu
+      rpcs3
+      ryujinx
+      nur.repos.aprilthepink.suyu-mainline
     ];
   };
 }

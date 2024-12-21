@@ -8,23 +8,11 @@
 in {
   options.localModules.nvtop = {
     enable = lib.mkEnableOption "nvtop";
+
+    package = lib.mkPackageOption pkgs.nvtopPackages "full" {};
   };
 
-  config = lib.mkIf cfg.enable (let
-    nvtopPkgs = with pkgs.nvtopPackages;
-      lib.lists.concatMap (driver:
-        if (driver == "amdgpu")
-        then [amd]
-        else if (driver == "nvidia")
-        then [nvidia]
-        else if driver == "modesetting"
-        then [intel]
-        else [])
-      config.services.xserver.videoDrivers;
-  in {
-    environment.systemPackages =
-      if (builtins.length nvtopPkgs > 1)
-      then [pkgs.nvtopPackages.full]
-      else nvtopPkgs;
-  });
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = [cfg.package];
+  };
 }

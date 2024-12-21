@@ -45,7 +45,9 @@ in {
         hmac_key: ${config.sops.placeholder."containers/invidious/hmac_key"}
         registration_enabled: false
       '';
-      uid = 1000;
+      # TODO: Want to set this to 1000, but sops requires a username.
+      # ref: https://github.com/Mic92/sops-nix/issues/514
+      owner = secrets.user.username;
     };
 
     sops.templates."${name}-db.env".content = ''
@@ -72,6 +74,8 @@ in {
       raw.environment = {
         RUST_LOG = "info";
       };
+      # inv-sig-helper is updated often and breaks when outdated
+      raw.extraOptions = ["--pull=newer"];
     };
 
     localModules.containers.containers."${name}-db" = {
