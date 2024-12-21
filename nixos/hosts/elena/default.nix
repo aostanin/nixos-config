@@ -12,7 +12,6 @@
     ./hardware-configuration.nix
     ./backup.nix
     ./backup-external.nix
-    #./i915-sriov.nix
     ./vfio.nix
     ./power-management.nix
     ./autosuspend.nix
