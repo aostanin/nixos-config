@@ -88,7 +88,7 @@ in {
           rev = "2.0.3";
           sha256 = "sha256-ZMEUBC2Y4J1+4tHfsMxqzTO/P1ef3aB81OAhEs+Tdc4=";
         };
-      in ["${sharedSecretAuthenticator}/shared_secret_authenticator.py:/usr/local/lib/python3.11/site-packages/shared_secret_authenticator.py:ro"];
+      in ["${sharedSecretAuthenticator}/shared_secret_authenticator.py:/usr/local/lib/python3.12/site-packages/shared_secret_authenticator.py:ro"];
       proxy = {
         enable = true;
         names = ["matrix"];

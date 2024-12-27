@@ -81,6 +81,7 @@ in {
         };
       };
       raw.volumes = cfg.volumes;
+      raw.extraOptions = ["--pull=newer"];
     };
 
     localModules.containers.services.vpn.enable = lib.mkIf cfg.enableVpn true;
