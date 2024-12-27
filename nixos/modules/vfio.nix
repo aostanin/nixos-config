@@ -595,17 +595,14 @@ in {
               script = pkgs.writeScriptBin "isolate" ''
                 #!${pkgs.stdenv.shell}
                 set -e
-                ${lib.optionalString vm.isolate.isolateCpus ''
-                  systemctl set-property --runtime -- user.slice AllowedCPUs=${hostCpus}
-                  systemctl set-property --runtime -- system.slice AllowedCPUs=${hostCpus}
-                  systemctl set-property --runtime -- init.scope AllowedCPUs=${hostCpus}
-                ''}
-
                 ${lib.getExe pkgs.vfio-isolate} \
                   --undo-file /tmp/isolate-undo-${vmName} \
                   ${lib.optionalString vm.isolate.dropCaches "drop-caches"} \
                   ${lib.optionalString vm.isolate.compactMemory "compact-memory"} \
                   ${lib.optionalString vm.isolate.isolateCpus ''
+                  cpuset-modify --cpus C${hostCpus} /system.slice \
+                  cpuset-modify --cpus C${hostCpus} /user.slice \
+                  cpu-governor performance C${guestCpus} \
                   irq-affinity mask C${guestCpus}
                 ''}
 
@@ -621,12 +618,6 @@ in {
               script = pkgs.writeScriptBin "unisolate" ''
                 #!${pkgs.stdenv.shell}
                 set -e
-                ${lib.optionalString vm.isolate.isolateCpus ''
-                  systemctl set-property --runtime -- user.slice AllowedCPUs=${allCpus}
-                  systemctl set-property --runtime -- system.slice AllowedCPUs=${allCpus}
-                  systemctl set-property --runtime -- init.scope AllowedCPUs=${allCpus}
-                ''}
-
                 ${lib.getExe pkgs.vfio-isolate} restore /tmp/isolate-undo-${vmName}
                 rm -f /tmp/isolate-undo-${vmName}
 
