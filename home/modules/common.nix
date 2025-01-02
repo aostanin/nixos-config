@@ -54,7 +54,9 @@ in {
           python3
           rclone
           ripgrep
+          s-tui
           sshfs
+          stress
           tig
           tmuxp
         ]

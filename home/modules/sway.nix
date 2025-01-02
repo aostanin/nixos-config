@@ -419,6 +419,8 @@ in {
         };
       };
 
+      caffeine.enable = true;
+
       clipman.enable = true;
 
       kdeconnect = {
