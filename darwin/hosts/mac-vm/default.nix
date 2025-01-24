@@ -8,13 +8,24 @@
 }: {
   nix = {
     settings = {
-      experimental-features = "nix-command flakes";
+      experimental-features = ["nix-command" "flakes"];
       trusted-users = [
         "root"
-        secrets.user.username
+        "@admin"
       ];
     };
-    linux-builder.enable = true;
+    linux-builder = {
+      enable = true;
+      ephemeral = true;
+      config = {
+        virtualisation = {
+          darwin-builder = {
+            memorySize = 8 * 1024;
+          };
+          cores = 4;
+        };
+      };
+    };
   };
 
   services.nix-daemon.enable = true;

@@ -54,7 +54,6 @@ in {
           python3
           rclone
           ripgrep
-          s-tui
           sshfs
           stress
           tig
@@ -65,6 +64,7 @@ in {
           httm
           personal-scripts
           powertop
+          s-tui
           wol
         ]
         ++ lib.optionals (!cfg.minimal) [
