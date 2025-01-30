@@ -18,6 +18,7 @@ in {
         antyos.openscad
         continue.continue
         editorconfig.editorconfig
+        graphql.vscode-graphql
         jdinhlife.gruvbox
         jebbs.plantuml
         jnoortheen.nix-ide
