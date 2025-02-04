@@ -15,16 +15,17 @@ in {
     sops.secrets = {
       "forgejo/registry_token" = {};
       "containers/jobcan/api_token" = {};
-      "containers/jobcan/jobcan_username" = {};
-      "containers/jobcan/jobcan_password" = {};
+      "containers/jobcan/moneyforward_username" = {};
+      "containers/jobcan/moneyforward_password" = {};
       "containers/jobcan/slack_token" = {};
       "containers/jobcan/slack_channel" = {};
     };
 
     sops.templates."${name}.env".content = ''
       API_TOKEN=${config.sops.placeholder."containers/jobcan/api_token"}
-      JOBCAN_USERNAME=${config.sops.placeholder."containers/jobcan/jobcan_username"}
-      JOBCAN_PASSWORD=${config.sops.placeholder."containers/jobcan/jobcan_password"}
+      MODE=moneyforward
+      MONEYFORWARD_USERNAME=${config.sops.placeholder."containers/jobcan/moneyforward_username"}
+      MONEYFORWARD_PASSWORD=${config.sops.placeholder."containers/jobcan/moneyforward_password"}
       SLACK_TOKEN=${config.sops.placeholder."containers/jobcan/slack_token"}
       SLACK_CHANNEL=${config.sops.placeholder."containers/jobcan/slack_channel"}
     '';
