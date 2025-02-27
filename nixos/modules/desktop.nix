@@ -99,6 +99,7 @@ in {
         packages = with pkgs;
           [
             stlink
+            platformio-core.udev
             teensy-udev-rules
           ]
           ++ lib.optionals cfg.enableGaming [
