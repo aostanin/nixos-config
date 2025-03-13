@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  inputs,
   ...
 }: let
   cfg = config.localModules.desktop;
@@ -55,6 +56,7 @@ in {
         virt-manager
         wineWowPackages.stable
         wl-clipboard
+        inputs.zen-browser.packages.${pkgs.system}.default
 
         # Chat
         discord
