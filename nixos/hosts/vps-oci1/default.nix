@@ -45,8 +45,6 @@
         temp = "/storage/appdata/temp";
       };
       services = {
-        matrix.enable = true;
-        nginx.enable = true;
       };
     };
   };

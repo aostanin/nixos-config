@@ -34,12 +34,13 @@
     containers = {
       enable = true;
       storage = {
-        default = "/storage/appdata/docker/ssd";
-        bulk = "/storage/appdata/docker/bulk";
-        temp = "/storage/appdata/temp";
+        default = "/persist/storage/appdata/docker/ssd";
+        bulk = "/persist/storage/appdata/docker/bulk";
+        temp = "/persist/storage/appdata/temp";
       };
       services = {
-        whoami.enable = true;
+        matrix.enable = true;
+        nginx.enable = true;
       };
     };
 
