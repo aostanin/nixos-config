@@ -49,6 +49,7 @@ in {
           minicom
           miniserve
           mqttui
+          nix-tree
           (p7zip.override {enableUnfree = true;})
           pv
           python3
@@ -85,6 +86,7 @@ in {
       sessionVariables = {
         MANPAGER = "sh -c 'col -bx | ${lib.getExe pkgs.bat} -l man -p'";
         MANROFFOPT = "-c";
+        NIXPKGS_ALLOW_UNFREE = "1";
       };
     };
 
