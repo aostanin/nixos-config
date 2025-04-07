@@ -22,7 +22,7 @@
       efi.canTouchEfiVariables = true;
     };
     tmp.useTmpfs = true;
-    kernelPackages = pkgs.linuxPackages_6_11;
+    kernelPackages = pkgs.linuxPackages_6_12;
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"

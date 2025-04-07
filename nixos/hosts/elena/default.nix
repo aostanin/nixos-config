@@ -41,7 +41,7 @@
       requestEncryptionCredentials = false;
     };
     tmp.useTmpfs = true;
-    kernelPackages = pkgs.linuxPackages_6_11;
+    kernelPackages = pkgs.linuxPackages_6_12;
     kernelParams = [
       "zfs.l2arc_noprefetch=0"
       "zfs.l2arc_write_max=536870912"
@@ -247,20 +247,11 @@
   };
 
   hardware.nvidia = {
-    # TODO: Fixes issues with suspend. Remove once >555.58 is stable.
-    package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "555.58";
-      sha256_64bit = "sha256-bXvcXkg2kQZuCNKRZM5QoTaTjF4l2TtrsKUvyicj5ew=";
-      sha256_aarch64 = "sha256-7XswQwW1iFP4ji5mbRQ6PVEhD4SGWpjUJe1o8zoXYRE=";
-      openSha256 = "sha256-hEAmFISMuXm8tbsrB+WiUcEFuSGRNZ37aKWvf0WJ2/c=";
-      settingsSha256 = "sha256-vWnrXlBCb3K5uVkDFmJDVq51wrCoqgPF03lSjZOuU8M=";
-      persistencedSha256 = "sha256-lyYxDuGDTMdGxX3CaiWUh1IQuQlkI2hPEs5LI20vEVw=";
-    };
     patch.enable = true;
     modesetting.enable = true;
     # TODO: Open has issues with VFIO
     # ref: https://www.reddit.com/r/VFIO/comments/xt5cdm/dmesg_shows_thousands_of_these_errors_ioremap/
-    # open = true;
+    open = false;
     powerManagement.finegrained = true;
     prime = {
       offload = {
