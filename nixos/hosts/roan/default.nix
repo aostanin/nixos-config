@@ -92,6 +92,8 @@ in {
         hauk.enable = true;
         invidious.enable = true;
         jobcan.enable = true;
+        mealie.enable = true;
+        miniflux.enable = true;
         netbootxyz.enable = true;
         ollama.enable = true;
         redlib = {
