@@ -22,6 +22,7 @@ in {
         jdinhlife.gruvbox
         jebbs.plantuml
         jnoortheen.nix-ide
+        llvm-vs-code-extensions.vscode-clangd
         mkhl.direnv
         ms-azuretools.vscode-docker
         ms-python.python
@@ -49,6 +50,9 @@ in {
         # Workaround for terminal not working https://github.com/NixOS/nixpkgs/issues/181610
         "terminal.integrated.shellIntegration.enabled" = false;
         "terminal.integrated.sendKeybindingsToShell" = true;
+
+        # C++
+        "clangd.path" = lib.getExe' pkgs.clang-tools "clangd";
 
         # Rust
         "rust-analyzer.rustfmt.overrideCommand" = [(lib.getExe pkgs.rustPackages.rustfmt)];
