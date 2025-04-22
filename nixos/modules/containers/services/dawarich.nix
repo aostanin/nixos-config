@@ -8,10 +8,15 @@
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
+
+    enablePhoton = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    localModules.containers.services.photon.enable = lib.mkDefault true;
+    localModules.containers.services.photon.enable = lib.mkDefault cfg.enablePhoton;
 
     sops.secrets = {
       "containers/${name}/postgres_password" = {};
@@ -28,7 +33,7 @@ in {
       DATABASE_NAME=${name}
       DATABASE_PORT=5432
       REDIS_URL=redis://${name}-redis:6379/1
-      PHOTON_API_HOST=photon.${domain}
+      ${lib.optionalString cfg.enablePhoton "PHOTON_API_HOST=photon.${domain}"}
       DISTANCE_UNIT=km
       DISABLE_TELEMETRY=true
     '';

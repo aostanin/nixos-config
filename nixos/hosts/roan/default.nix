@@ -86,7 +86,10 @@ in {
         archivebox.enable = true;
         authelia.enable = true;
         changedetection.enable = true;
-        dawarich.enable = true;
+        dawarich = {
+          enable = true;
+          enablePhoton = false;
+        };
         forgejo.enable = true;
         guacamole.enable = true;
         hauk.enable = true;

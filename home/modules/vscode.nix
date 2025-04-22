@@ -16,8 +16,9 @@ in {
       package = pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
         antyos.openscad
-        continue.continue
         editorconfig.editorconfig
+        github.copilot
+        github.copilot-chat
         graphql.vscode-graphql
         jdinhlife.gruvbox
         jebbs.plantuml
