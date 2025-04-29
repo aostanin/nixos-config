@@ -51,10 +51,6 @@
           dnsPort = 5300;
         };
         uptime-kuma.enable = true;
-
-        # TODO: Move to roan
-        mealie.enable = true;
-        miniflux.enable = true;
       };
     };
 

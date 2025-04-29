@@ -91,6 +91,15 @@ in {
 
             # Blockstream Jade
             ATTRS{idProduct}=="55d4", ATTRS{idVendor}=="1a86", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on", GROUP="plugdev", MODE="0660", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="jade%n"
+
+            # Trezor
+            SUBSYSTEM=="usb", ATTR{idVendor}=="534c", ATTR{idProduct}=="0001", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+            KERNEL=="hidraw*", ATTRS{idVendor}=="534c", ATTRS{idProduct}=="0001", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+            # Trezor v2
+            SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c0", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+            SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c1", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+            KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c1", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
           ''
           + lib.optionalString cfg.enableGaming ''
             # TODO: uaccess alone doesn't work?
@@ -221,5 +230,7 @@ in {
     security.pam.services.swaylock = {};
 
     virtualisation.spiceUSBRedirection.enable = true;
+
+    users.groups.plugdev = {};
   };
 }

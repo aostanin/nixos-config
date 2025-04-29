@@ -27,6 +27,8 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets."podman/auth_file" = lib.mkIf cfg.enableAutoUpdate {};
+
     virtualisation.podman = {
       enable = true;
       dockerCompat = true;
@@ -59,10 +61,14 @@ in {
       };
     };
 
-    # TODO: Need to login. Add options to set auth.
     systemd.timers.podman-auto-update = lib.mkIf cfg.enableAutoUpdate {
       enable = true;
+      wantedBy = ["multi-user.target"];
       timerConfig.OnCalendar = "weekly";
+    };
+
+    systemd.services.podman-auto-update = lib.mkIf cfg.enableAutoUpdate {
+      environment.REGISTRY_AUTH_FILE = config.sops.secrets."podman/auth_file".path;
     };
 
     # podman push is unstable with the default (6)

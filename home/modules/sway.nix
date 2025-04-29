@@ -226,7 +226,6 @@ in {
             {class = "^discord$";}
             {class = "^Element$";}
             {class = "^SchildiChat$";}
-            {class = "^Skype$";}
             {class = "^Slack$";}
             {app_id = "^thunderbird$";}
             {

@@ -14,11 +14,6 @@ in {
     localModules.containers.containers.${name} = {
       raw.image = "ghcr.io/home-assistant/home-assistant:stable";
       volumes.config.destination = "/config";
-      raw.environment = {
-        # TODO: Temporary workaround for missing deps
-        # ref: https://github.com/home-assistant/core/issues/127966#issuecomment-2439414558
-        PYTHONPATH = "/config/deps";
-      };
       raw.volumes = [
         "/etc/localtime:/etc/localtime:ro"
         "/run/dbus:/run/dbus:ro"

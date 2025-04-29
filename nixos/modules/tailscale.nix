@@ -52,6 +52,11 @@ in {
         else "none";
     };
 
+    systemd.services.tailscaled.environment = {
+      # TS_DEBUG_ALWAYS_USE_DERP = "true";
+      TS_DISCO_PONG_IPV4_DELAY = "300ms"; # Bias towards IPv6
+    };
+
     # TODO: With resolved, TailScale DNS is used alongside system DNS.
     # The host will resolve with TailScale DNS, but containers will use the
     # original DNS for some reason.

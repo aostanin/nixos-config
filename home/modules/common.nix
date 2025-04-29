@@ -25,6 +25,7 @@ in {
       neovim.enable = lib.mkDefault true;
       ssh.enable = lib.mkDefault true;
       tmux.enable = lib.mkDefault true;
+      zellij.enable = lib.mkDefault true;
       zsh.enable = lib.mkDefault true;
     };
 

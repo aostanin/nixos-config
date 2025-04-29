@@ -40,12 +40,6 @@ in {
       default = true;
       description = "Enable the WhatsApp bridge.";
     };
-
-    enableSkypeBridge = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable the Skype bridge.";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -159,21 +153,6 @@ in {
       raw.dependsOn = ["synapse"];
       volumes.data = {
         name = "synapse/mautrix-whatsapp";
-        parent = name;
-        destination = "/data";
-      };
-    };
-
-    localModules.containers.containers.go-skype-bridge = lib.mkIf cfg.enableSkypeBridge {
-      raw.image = "${secrets.forgejo.registry}/${secrets.forgejo.username}/go-skype-bridge:latest";
-      raw.login = {
-        inherit (secrets.forgejo) registry username;
-        passwordFile = config.sops.secrets."forgejo/registry_token".path;
-      };
-      networks = [name];
-      raw.dependsOn = ["synapse"];
-      volumes.data = {
-        name = "synapse/go-skype-bridge";
         parent = name;
         destination = "/data";
       };

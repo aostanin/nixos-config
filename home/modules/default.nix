@@ -25,6 +25,7 @@
     ./tmux.nix
     ./trayscale.nix
     ./vscode.nix
+    ./zellij.nix
     ./zsh.nix
   ];
 }

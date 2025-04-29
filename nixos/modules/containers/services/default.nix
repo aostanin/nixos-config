@@ -24,6 +24,7 @@
     ./jellyseerr.nix
     ./jobcan.nix
     ./komga.nix
+    ./librespeed.nix
     ./lidarr.nix
     ./matrix.nix
     ./mealie.nix

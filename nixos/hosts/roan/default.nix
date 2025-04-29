@@ -95,6 +95,7 @@ in {
         hauk.enable = true;
         invidious.enable = true;
         jobcan.enable = true;
+        librespeed.enable = true;
         mealie.enable = true;
         miniflux.enable = true;
         netbootxyz.enable = true;

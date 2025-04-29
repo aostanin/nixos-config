@@ -62,6 +62,8 @@ in {
       proxy = {
         enable = true;
         port = 3000;
+        default.enable = true;
+        default.auth = "authelia";
       };
     };
 
@@ -75,6 +77,7 @@ in {
       # inv-sig-helper is updated often and breaks when outdated
       raw.extraOptions = ["--pull=newer"];
     };
+    systemd.services.podman-inv-sig-helper.serviceConfig.RestartSec = 60;
 
     localModules.containers.containers."${name}-db" = {
       raw.image = "docker.io/library/postgres:14";
