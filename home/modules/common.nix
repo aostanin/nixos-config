@@ -42,6 +42,7 @@ in {
           fd
           gdu
           gitui
+          gping
           jq
           just
           lazygit

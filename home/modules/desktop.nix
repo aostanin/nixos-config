@@ -54,6 +54,7 @@ in {
         })
         thunderbird
         virt-manager
+        unstable.windsurf
         wineWowPackages.stable
         wl-clipboard
 
