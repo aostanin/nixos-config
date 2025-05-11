@@ -55,6 +55,7 @@ in {
           (p7zip.override {enableUnfree = true;})
           pv
           python3
+          rainfrog
           rclone
           ripgrep
           sshfs
