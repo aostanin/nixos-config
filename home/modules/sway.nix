@@ -13,9 +13,7 @@
       })
     ];
   };
-  rofimojiPkg = pkgs.rofimoji.override {
-    rofi = rofiPkg;
-  };
+  rofimojiPkg = pkgs.rofimoji;
 in {
   options.localModules.sway = {
     enable = lib.mkEnableOption "sway";
@@ -88,7 +86,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     i18n.inputMethod = {
-      enabled = "fcitx5";
+      enable = true;
+      type = "fcitx5";
       fcitx5.addons = with pkgs; [
         fcitx5-mozc
       ];

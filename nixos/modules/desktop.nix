@@ -35,7 +35,7 @@ in {
       ipaexfont
       joypixels
       kochi-substitute
-      nerdfonts
+      nerd-fonts.hack
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
@@ -44,7 +44,7 @@ in {
     ];
 
     environment.systemPackages = with pkgs; [
-      kde-gtk-config
+      kdePackages.kde-gtk-config
       spice-gtk # Fix for USB redirection in virt-manager
     ];
 

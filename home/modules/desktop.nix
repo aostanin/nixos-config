@@ -30,48 +30,50 @@ in {
     };
 
     home = {
-      packages = with pkgs; [
-        # GUI
-        audacity
-        bitwarden
-        feishin
-        filezilla
-        gimp
-        gparted
-        jellyfin-media-player
-        krita
-        libreoffice
-        logseq
-        moonlight-qt
-        sparrow
-        steam
-        (xfce.thunar.override {
-          thunarPlugins = with xfce; [
-            thunar-archive-plugin
-            thunar-volman
-            tumbler
-          ];
-        })
-        thunderbird
-        virt-manager
-        unstable.windsurf
-        wineWowPackages.stable
-        wl-clipboard
+      packages = with pkgs;
+        [
+          # GUI
+          audacity
+          bitwarden
+          feishin
+          filezilla
+          gimp
+          gparted
+          jellyfin-media-player
+          krita
+          libreoffice
+          logseq
+          moonlight-qt
+          sparrow
+          steam
+          (xfce.thunar.override {
+            thunarPlugins = with xfce; [
+              thunar-archive-plugin
+              thunar-volman
+              tumbler
+            ];
+          })
+          thunderbird
+          virt-manager
+          unstable.windsurf
+          wineWowPackages.stable
+          wl-clipboard
 
-        # Chat
-        discord
-        element-desktop
-        slack
-        zoom-us
-
-        # Plasma
-        (ark.override {unfreeEnableUnrar = true;})
-        gwenview
-        kate
-        krdc
-        okular
-        spectacle
-      ];
+          # Chat
+          discord
+          element-desktop
+          slack
+          zoom-us
+        ]
+        ++ (with pkgs.kdePackages; [
+          # Plasma
+          ark
+          gwenview
+          kate
+          krdc
+          okular
+          spectacle
+        ]);
     };
 
     programs = {

@@ -10,7 +10,7 @@
 in {
   imports = [
     "${inputs.nixos-hardware}/lenovo/thinkpad/x250"
-    "${inputs.nixos-hardware}/common/pc/laptop/ssd"
+    "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
   ];
@@ -94,7 +94,6 @@ in {
         guacamole.enable = true;
         hauk.enable = true;
         invidious.enable = true;
-        jobcan.enable = true;
         librespeed.enable = true;
         mealie.enable = true;
         miniflux.enable = true;

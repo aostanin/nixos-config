@@ -11,6 +11,8 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    hardware.bluetooth.enable = lib.mkDefault true;
+
     localModules.containers.containers.${name} = {
       raw.image = "ghcr.io/home-assistant/home-assistant:stable";
       volumes.config.destination = "/config";

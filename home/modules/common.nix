@@ -38,6 +38,7 @@ in {
           bat
           btop
           cksfv
+          claude-code
           ctop
           fd
           gdu
@@ -107,7 +108,7 @@ in {
 
       lsd = {
         enable = true;
-        enableAliases = true;
+        enableZshIntegration = true;
       };
 
       starship.enable = true;

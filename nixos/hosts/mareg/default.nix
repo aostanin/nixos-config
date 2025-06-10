@@ -8,7 +8,7 @@
 }: {
   imports = [
     "${inputs.nixos-hardware}/lenovo/thinkpad/t440p"
-    "${inputs.nixos-hardware}/common/pc/laptop/ssd"
+    "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
   ];

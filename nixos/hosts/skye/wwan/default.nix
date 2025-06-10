@@ -4,7 +4,7 @@
   lib,
   ...
 }: {
-  networking.networkmanager = {
+  networking.modemmanager = {
     fccUnlockScripts = [
       {
         # From https://gist.github.com/BohdanTkachenko/3f852c352cb2e02cdcbb47419e2fcc74

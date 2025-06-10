@@ -42,7 +42,7 @@
           "browser.gesture.swipe.left" = "cmd_scrollLeft";
           "browser.gesture.swipe.right" = "cmd_scrollRight";
         };
-        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
           pkgs.nur.repos.rycee.firefox-addons."10ten-ja-reader"
           auto-tab-discard
           bitwarden
