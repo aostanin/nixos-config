@@ -28,12 +28,6 @@
       "iommu=pt"
       "zfs.zfs_arc_max=8589934592"
     ];
-    kernelPatches = [
-      {
-        name = "wifi-ath11k-support-hibernation";
-        patch = ./0001-Reapply-wifi-ath11k-support-hibernation.patch;
-      }
-    ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
@@ -147,7 +141,7 @@
     fwupd.enable = true;
 
     logind = {
-      lidSwitch = "suspend-then-hibernate";
+      lidSwitch = "suspend";
       lidSwitchDocked = config.services.logind.lidSwitch;
       powerKey = config.services.logind.lidSwitch;
     };
@@ -183,8 +177,6 @@
 
         # Radio Devices
         DEVICES_TO_DISABLE_ON_STARTUP = "nfc";
-        DEVICES_TO_DISABLE_ON_BAT_NOT_IN_USE = "wwan";
-        DEVICES_TO_DISABLE_ON_LAN_CONNECT = "wifi wwan";
         DEVICES_TO_ENABLE_ON_LAN_DISCONNECT = "wifi";
 
         # USB
