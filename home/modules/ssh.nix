@@ -66,8 +66,6 @@ in {
           match = "host elena exec \"${wake} %h\"";
         };
 
-        octopi.user = "pi";
-
         pikvm.user = "root";
       };
     };

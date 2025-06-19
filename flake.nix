@@ -63,6 +63,7 @@
       elena = {system = "x86_64-linux";};
       mac-vm = {system = "x86_64-darwin";};
       mareg = {system = "x86_64-linux";};
+      octopi = {system = "aarch64-linux";};
       roan = {system = "x86_64-linux";};
       skye = {system = "x86_64-linux";};
       tio = {system = "aarch64-linux";};
