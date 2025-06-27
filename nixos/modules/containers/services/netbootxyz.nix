@@ -22,7 +22,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules.containers.containers.${name} = {
-      raw.image = "docker.io/linuxserver/netbootxyz:latest";
+      raw.image = "ghcr.io/netbootxyz/netbootxyz:latest";
       raw.environment = {
         PUID = toString cfg.uid;
         PGID = toString cfg.gid;
