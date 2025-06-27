@@ -18,10 +18,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
-    pre-commit-hooks = {
-      url = "github:cachix/pre-commit-hooks.nix/nixpkgs-stable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     nvidia-patch.url = "github:arcnmx/nvidia-patch.nix";
     sops-nix = {
@@ -41,6 +37,7 @@
       url = "github:nix-community/nixvim/nixos-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
   };
 
   outputs = inputs @ {
@@ -49,7 +46,6 @@
     nixpkgs-unstable,
     nur,
     deploy-rs,
-    pre-commit-hooks,
     flake-parts,
     ...
   }: let
@@ -61,6 +57,13 @@
     };
     hosts = {
       elena = {system = "x86_64-linux";};
+      every-router = {
+        system = "aarch64-linux";
+        additionalModules = [
+          inputs.nixos-sbc.nixosModules.default
+          inputs.nixos-sbc.nixosModules.boards.bananapi.bpir3mini
+        ];
+      };
       mac-vm = {system = "x86_64-darwin";};
       mareg = {system = "x86_64-linux";};
       octopi = {system = "aarch64-linux";};
@@ -114,8 +117,6 @@
           ];
 
           shellHook = ''
-            ${self'.checks.pre-commit-check.shellHook}
-
             export SOPS_AGE_KEY=$(${lib.getExe pkgs.ssh-to-age} -i ~/.ssh/id_ed25519 -private-key)
           '';
         };
@@ -125,14 +126,6 @@
             # Only check nodes with the same system
             nodes = lib.filterAttrs (n: v: hosts.${n}.system == system) self.deploy.nodes;
           })
-          {
-            pre-commit-check = pre-commit-hooks.lib.${system}.run {
-              src = ./.;
-              hooks = {
-                alejandra.enable = true;
-              };
-            };
-          }
         ];
 
         packages = import ./packages {inherit pkgs;};

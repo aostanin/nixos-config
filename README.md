@@ -16,6 +16,7 @@
 | Host         | Description            |
 | ------------ | ---------------------- |
 | elena        | Home Desktop           |
+| every-router | BananaPi R3 Mini       |
 | mac-vm       | macOS VM on elena      |
 | mareg        | ThinkPad T440p         |
 | octopi       | Raspberry Pi 3         |

@@ -1,6 +1,7 @@
 keys:
   - &user_aostanin age1964nq35gd700zn2xehuj9fqel6rwv00u8e3cvpqzs8egrwtuk4gsx3hdf0
   - &host_elena age1x36w0cpmrlahjmuwfd6wpc8vzt4rkw9dwcu6ktpft6fgw2l0h5kq9hpgv3
+  - &host_every-router age1l6qax0endg0x9zfk33wpeyn3zhkezwkfhznc40vcpnkeclu0wesqekyl8g
   - &host_mareg age16eggdxzrl9mjhw32cms2hcgukwsxahfsxeuwwtyex0e4e0k0r5pqe6yl3d
   - &host_octopi age1thlnl7fdkprt3aj22enhy95cx4l8cf08gymyz5fe3jmfzn5c99nsfq5axn
   - &host_roan age1a5ef43c7dq3dc6fsu8ph5ltnsrqt4eluw3343y0jtandp30wz3wq3ymv47
@@ -14,6 +15,7 @@ creation_rules:
       - age:
         - *user_aostanin
         - *host_elena
+        - *host_every-router
         - *host_mareg
         - *host_octopi
         - *host_roan
