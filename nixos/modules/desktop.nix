@@ -209,7 +209,7 @@ in {
           name = "Brother_HL-2270DW_series";
           description = "Brother HL-2270DW series";
           location = "Local Printer";
-          model = "drv:///brlaser.drv/br2270dw.ppd";
+          model = "drv:///brlaser.drv/br2270d.ppd";
           deviceUri = "dnssd://Brother%20HL-2270DW%20series._pdl-datastream._tcp.local/";
           ppdOptions = {
             Duplex = "DuplexNoTumble";
