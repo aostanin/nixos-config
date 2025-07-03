@@ -173,6 +173,7 @@ in {
     # TODO: Set up each service separately
     # TODO: Limit home assistant to only Google IPs https://community.home-assistant.io/t/expose-home-assistant-for-google-ips-only-ipv4-only/184646/2
     elena.accountId = accountId;
+    every-router.accountId = accountId;
     mareg.accountId = accountId;
     roan.accountId = accountId;
     vps-oci1.accountId = accountId;
@@ -188,6 +189,7 @@ in {
       };
       cloudflare.tunnels = {
         elena.tunnel_token = config.output.tunnel_token_mareg.value;
+        every-router.tunnel_token = config.output.tunnel_token_every-router.value;
         mareg.tunnel_token = config.output.tunnel_token_mareg.value;
         roan.tunnel_token = config.output.tunnel_token_roan.value;
         vps-oci2.tunnel_token = config.output.tunnel_token_vps-oci2.value;

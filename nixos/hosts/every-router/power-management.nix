@@ -22,6 +22,7 @@
     echo 30000 > /sys/class/thermal/thermal_zone0/trip_point_4_temp
   '';
 
+  # Increase mid fan speed
   hardware.deviceTree.overlays = [
     {
       name = "bpi-r3-mini-fan-pwm";

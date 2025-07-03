@@ -21,7 +21,7 @@ in {
 
   # Restart Klipper when the printer is powered on
   services.udev.extraRules = ''
-    SUBSYSTEM=="usb", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", ACTION=="add", RUN+="/bin/sh -c 'echo RESTART > /run/klipper/tty'"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", ACTION=="add", RUN+="/bin/sh -c 'echo RESTART > ${config.services.klipper.inputTTY}'"
   '';
 
   services.klipper = {

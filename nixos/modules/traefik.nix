@@ -1,8 +1,6 @@
 {
   config,
   lib,
-  options,
-  pkgs,
   secrets,
   ...
 }: let
@@ -32,7 +30,7 @@ in {
       CF_DNS_API_TOKEN=${config.sops.placeholder."traefik/cloudflare/api_token"}
     '';
 
-    systemd.services.traefik = {
+    systemd.services.traefik = lib.mkIf config.localModules.containers.enable {
       after = ["podman-proxy-network.service"];
       requires = ["podman-proxy-network.service"];
     };
@@ -40,11 +38,12 @@ in {
     services.traefik = {
       enable = true;
       group =
-        if config.virtualisation.docker.enable
-        then "docker"
-        else if config.virtualisation.podman.enable
-        then "podman"
-        else options.services.traefik.group;
+        lib.mkIf config.localModules.containers.enable
+        (
+          if config.virtualisation.docker.enable
+          then "docker"
+          else "podman"
+        );
       environmentFiles = [config.sops.templates."traefik.env".path];
       staticConfigOptions = let
         host = config.networking.hostName;
@@ -55,7 +54,7 @@ in {
           sendAnonymousUsage = false;
         };
         log.level = "INFO";
-        providers.docker = {
+        providers.docker = lib.mkIf config.localModules.containers.enable {
           endpoint =
             if config.virtualisation.podman.enable
             then "unix:///run/podman/podman.sock"

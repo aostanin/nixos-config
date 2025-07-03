@@ -6,6 +6,14 @@
     # Starlink stats are broken in versions below 2025.6
     package = pkgs.unstable.home-assistant;
     config = {
+      http = {
+        use_x_forwarded_for = true;
+        trusted_proxies = [
+          "127.0.0.1"
+          "::1"
+          "100.64.0.0/10" # Tailscale
+        ];
+      };
       bluetooth = {};
       config = {};
       history = {};
@@ -112,11 +120,11 @@
         version = "1.18.0-beta";
 
         src = pkgs.fetchFromGitHub {
-          # TODO: Use upstream version when LiTime fix is merged
-          owner = "aostanin";
+          owner = "patman15";
           repo = "BMS_BLE-HA";
-          rev = "e91bbf4944e53c4c44584e3612d9642cd0af32b9";
-          hash = "sha256-AAwqpt0LTZzFpUfbqRpgwCHRiLqd3kwcQkq0L8Ww0R8=";
+          # TODO: Use release tag once LiTime fix is released
+          rev = "81c3cd7d27d94364e1daf1a7b5c913cbcdb7e526";
+          hash = "sha256-K5xKWNnb6jsThR6oSvQlhHlqaxvaFnQZ8HxHU5tA/Lg=";
         };
       };
       ef_ble = pkgs.buildHomeAssistantComponent rec {

@@ -186,5 +186,17 @@ in {
     };
   };
 
+  # TODO: Temporary forward to every-router
+  services.traefik.dynamicConfigOptions = {
+    http.routers.home-assistant-every = {
+      rule = "Host(`every.${config.localModules.containers.domain}`)";
+      entrypoints = "websecure";
+      service = "home-assistant-every";
+    };
+    http.services.home-assistant-every.loadbalancer.servers = [
+      {url = "https://every-router:443";}
+    ];
+  };
+
   virtualisation.libvirtd.enable = true;
 }

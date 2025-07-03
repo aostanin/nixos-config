@@ -1,6 +1,11 @@
-{...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
+    ./backup.nix
     ./home-assistant.nix
     ./network.nix
     ./router.nix
@@ -16,5 +21,21 @@
       enable = true;
       minimal = true;
     };
+
+    # FIXME: When cloudflared is enabled, all network traffic breaks when Starlink is disconnected
+    # cloudflared.enable = true;
+
+    traefik.enable = true;
+  };
+
+  services.traefik.dynamicConfigOptions = {
+    http.routers.home-assistant = {
+      rule = "Host(`every.${config.localModules.containers.domain}`)";
+      entrypoints = "websecure";
+      service = "home-assistant";
+    };
+    http.services.home-assistant.loadbalancer.servers = [
+      {url = "http://127.0.0.1:8123";}
+    ];
   };
 }
