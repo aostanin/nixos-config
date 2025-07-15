@@ -127,13 +127,19 @@ in {
         control_pin = "PB0";
         x_offset = -31.8;
         y_offset = -40.5;
-        z_offset = 3.65;
+        z_offset = 3.605;
         speed = 35;
         samples = 3;
         samples_result = "median";
         samples_tolerance = 0.0075;
         samples_tolerance_retries = 10;
         stow_on_each_sample = false;
+      };
+      "filament_motion_sensor btt" = {
+        detection_length = 7;
+        extruder = "extruder";
+        switch_pin = "PA4";
+        pause_on_runout = true;
       };
       safe_z_home = {
         home_xy_position = "147, 154";

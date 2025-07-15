@@ -45,6 +45,8 @@
       nginx.locations."/webcam/".proxyPass = "http://127.0.0.1:8080/";
     };
 
+    nginx.clientMaxBodySize = "100M";
+
     ustreamer = {
       enable = true;
       device = "/dev/v4l/by-id/usb-046d_C270_HD_WEBCAM_49407AC0-video-index0";
