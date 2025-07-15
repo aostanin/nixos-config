@@ -186,8 +186,8 @@ in {
     };
   };
 
-  # TODO: Temporary forward to every-router
   services.traefik.dynamicConfigOptions = {
+    # TODO: Temporary forward to every-router
     http.routers.home-assistant-every = {
       rule = "Host(`every.${config.localModules.containers.domain}`)";
       entrypoints = "websecure";
