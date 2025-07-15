@@ -4,7 +4,10 @@
   services.home-assistant = {
     enable = true;
     # Starlink stats are broken in versions below 2025.6
-    package = pkgs.unstable.home-assistant;
+    package = pkgs.unstable.home-assistant.overrideAttrs (oldAttrs: {
+      # Fails under QEMU
+      doInstallCheck = false;
+    });
     config = {
       http = {
         use_x_forwarded_for = true;
@@ -114,23 +117,22 @@
       "switchbot"
     ];
     customComponents = let
-      bms_ble = pkgs.buildHomeAssistantComponent {
+      bms_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "patman15";
         domain = "bms_ble";
-        version = "1.18.0-beta";
+        version = "1.18.0";
 
         src = pkgs.fetchFromGitHub {
           owner = "patman15";
           repo = "BMS_BLE-HA";
-          # TODO: Use release tag once LiTime fix is released
-          rev = "81c3cd7d27d94364e1daf1a7b5c913cbcdb7e526";
-          hash = "sha256-K5xKWNnb6jsThR6oSvQlhHlqaxvaFnQZ8HxHU5tA/Lg=";
+          tag = version;
+          hash = "sha256-6nOi18cNT/kzx2VID3gHAONoeK0vgMqOQQPV06eCi+g=";
         };
       };
       ef_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "rabits";
         domain = "ef_ble";
-        version = "0.4.14";
+        version = "0.17.0-a.2";
 
         dependencies = with pkgs.home-assistant.python.pkgs; [
           ecdsa
@@ -140,10 +142,12 @@
         ];
 
         src = pkgs.fetchFromGitHub {
-          inherit owner;
+          # TODO: Switch to release once EcoFlow Alternator Charger support is merged
+          # inherit owner;
+          owner = "GnoX";
           repo = "ha-ef-ble";
           tag = "v${version}";
-          hash = "sha256-PGHUNw3if50JrpjbXkBdpYw31fB0PdEKsaAchJJNqhI=";
+          hash = "sha256-c9xiRjy3QMHwyFRurIUH576LOoKLv3xFPSIuMTVEiUU=";
         };
       };
     in [
@@ -206,7 +210,9 @@
       };
     in [
       starlink-grpc
+      # FIXME: Why are these two needed? Should be propogated?
       python3Packages.grpcio
+      python3Packages.crc
     ];
   };
 }
