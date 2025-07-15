@@ -38,7 +38,7 @@ in {
           bat
           btop
           cksfv
-          claude-code
+          unstable.claude-code
           ctop
           fd
           gdu
