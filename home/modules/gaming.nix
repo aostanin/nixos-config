@@ -24,7 +24,6 @@ in {
       retroarch # TODO: Add cores?
       rpcs3
       ryujinx
-      nur.repos.aprilthepink.suyu-mainline
     ];
   };
 }

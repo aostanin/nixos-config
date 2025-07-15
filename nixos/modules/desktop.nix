@@ -105,15 +105,11 @@ in {
             # TODO: uaccess alone doesn't work?
             KERNEL=="hidraw*", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="2009", MODE="0660", TAG+="uaccess", GROUP="input"
           '';
-        packages = with pkgs;
-          [
-            stlink
-            platformio-core.udev
-            teensy-udev-rules
-          ]
-          ++ lib.optionals cfg.enableGaming [
-            nur.repos.aprilthepink.suyu-mainline
-          ];
+        packages = with pkgs; [
+          stlink
+          platformio-core.udev
+          teensy-udev-rules
+        ];
       };
 
       udisks2.enable = true;
