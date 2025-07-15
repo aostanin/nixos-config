@@ -401,8 +401,6 @@ in {
 
     localModules = {
       inhibit-bridge.enable = true;
-
-      trayscale.enable = true;
     };
 
     services = {
