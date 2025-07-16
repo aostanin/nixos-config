@@ -21,7 +21,7 @@
           "sidebar.verticalTabs" = true;
 
           "browser.ml.chat.enabled" = true;
-          "browser.ml.chat.provider" = "https://chatgpt.com";
+          "browser.ml.chat.provider" = "https://claude.ai/new";
 
           # Needed for dark mode for simple-tab-groups
           "svg.context-properties.content.enabled" = true;
