@@ -400,7 +400,7 @@ in {
     };
 
     localModules = {
-      inhibit-bridge.enable = true;
+      inhibridge.enable = true;
     };
 
     services = {

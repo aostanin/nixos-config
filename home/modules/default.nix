@@ -13,7 +13,7 @@
     ./git.nix
     ./gnupg.nix
     ./gtk.nix
-    ./inhibit-bridge.nix
+    ./inhibridge.nix
     ./mpd.nix
     ./neovim.nix
     ./obs-studio.nix

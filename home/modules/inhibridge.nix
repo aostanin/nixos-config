@@ -4,22 +4,22 @@
   lib,
   ...
 }: let
-  cfg = config.localModules.inhibit-bridge;
+  cfg = config.localModules.inhibridge;
 in {
-  options.localModules.inhibit-bridge = {
-    enable = lib.mkEnableOption "inhibit-bridge";
+  options.localModules.inhibridge = {
+    enable = lib.mkEnableOption "inhibridge";
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.user.services.inhibit-bridge = {
+    systemd.user.services.inhibridge = {
       Unit = {
-        Description = "inhibit-bridge";
+        Description = "inhibridge";
         Wants = ["graphical-session.target"];
         After = ["graphical-session.target"];
       };
       Service = {
         Type = "simple";
-        ExecStart = "${lib.getExe pkgs.inhibit-bridge} -verbose";
+        ExecStart = "${lib.getExe pkgs.inhibridge}";
         Restart = "on-failure";
         RestartSec = 1;
         TimeoutStopSec = 10;
