@@ -1,8 +1,5 @@
 {
-  config,
   pkgs,
-  inputs,
-  secrets,
   lib,
   ...
 }: {
@@ -15,30 +12,18 @@
     crossPkgs.linuxKernel.packagesFor (crossPkgs.linux_6_12.override {
       kernelPatches = [
         {
-          # Cold boot PCIe/NVMe have stability issues.
-          # See: https://forum.banana-pi.org/t/bpi-r3-problem-with-pcie/15152
-          #
-          # FrankW's first patch added a 100ms sleep, this was rejected upstream.
-          # Jianjun posted a patch to the forum for testing, and it appears to me
-          # to have accidentally missed a write to the registers between the two
-          # sleeps.  This version is modified to include the write, and results
-          # in the PCI bridge appearing reliably, but not the NVMe device.
-          #
-          # Without this patch, the PCI bridge is not present, and rescan does
-          # not discover it.  Removing the bridge and then rescanning repeatably
-          # gets the NVMe working on cold-boot.
-          #name = "PCI: mediatek-gen3: handle PERST after reset";
-          #patch = ./linux-mtk-pcie.patch;
           name = "pcie-mediatek-gen3-PERST-for-100ms.patch";
-          patch = ./611-pcie-mediatek-gen3-PERST-for-100ms.patch;
+          patch = pkgs.fetchurl {
+            url = "https://raw.githubusercontent.com/openwrt/openwrt/166d9d5ea2e70891d2cf757ee96de823aeec8c53/target/linux/mediatek/patches-6.12/611-pcie-mediatek-gen3-PERST-for-100ms.patch";
+            hash = "sha256-IK1JEOvjabjfRMfQyXcx5evx22UIVITqLXsSl0SKfaQ=";
+          };
         }
         {
-          # Prevent crashing due to missing rates in wifi data
-          #
-          # See: https://forum.banana-pi.org/t/bpi-r3-crash-in-sta-set-sinfo-0xa18/15290
-          # https://github.com/openwrt/openwrt/issues/13198
           name = "avoid-crashing-missing-band.patch";
-          patch = ./780-avoid-crashing-missing-band.patch;
+          patch = pkgs.fetchurl {
+            url = "https://raw.githubusercontent.com/openwrt/openwrt/166d9d5ea2e70891d2cf757ee96de823aeec8c53/package/kernel/mac80211/patches/subsys/230-avoid-crashing-missing-band.patch";
+            hash = "sha256-47EW0suzH7m9QF7CC9WV2l6eKKJPvPJD4Vw4wuwK4Rs=";
+          };
         }
       ];
 
