@@ -179,7 +179,6 @@
 
         # Radio Devices
         DEVICES_TO_DISABLE_ON_STARTUP = "nfc";
-        DEVICES_TO_ENABLE_ON_LAN_DISCONNECT = "wifi";
 
         # USB
         USB_EXCLUDE_AUDIO = 0;
