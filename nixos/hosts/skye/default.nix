@@ -130,8 +130,6 @@
   '';
 
   services = {
-    flatpak.enable = true;
-
     fprintd = {
       enable = true;
       tod = {

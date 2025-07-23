@@ -38,8 +38,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
-    # Use main branch for https://github.com/gmodena/nix-flatpak/issues/135
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=main";
   };
 
   outputs = inputs @ {
