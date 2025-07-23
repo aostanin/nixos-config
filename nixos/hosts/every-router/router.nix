@@ -50,15 +50,12 @@
       domain = "lan";
       expand-hosts = true;
       no-resolv = true;
-      # Use Tailscale DNS first, otherwise fallback to public DNS servers
-      strict-order = true;
-      server =
-        (
-          if config.services.tailscale.enable
-          then ["100.100.100.100"]
-          else []
-        )
-        ++ ["1.1.1.1" "8.8.8.8"];
+      server = [
+        "1.1.1.1"
+        "1.0.0.1"
+        "8.8.8.8"
+        "8.8.4.4"
+      ];
     };
   };
 

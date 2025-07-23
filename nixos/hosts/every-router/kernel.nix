@@ -22,7 +22,7 @@
           name = "avoid-crashing-missing-band.patch";
           patch = pkgs.fetchurl {
             url = "https://raw.githubusercontent.com/openwrt/openwrt/166d9d5ea2e70891d2cf757ee96de823aeec8c53/package/kernel/mac80211/patches/subsys/230-avoid-crashing-missing-band.patch";
-            hash = "sha256-47EW0suzH7m9QF7CC9WV2l6eKKJPvPJD4Vw4wuwK4Rs=";
+            hash = "sha256-W14qBOetBSFteVlZP6qZfVXixB3c6fiTOqHjxakmGF4=";
           };
         }
       ];
