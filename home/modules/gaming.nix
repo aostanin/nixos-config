@@ -24,6 +24,7 @@ in {
       retroarch # TODO: Add cores?
       rpcs3
       ryujinx
+      suyu-appimage
     ];
   };
 }
