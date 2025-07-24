@@ -16,6 +16,7 @@
       };
       dhcpV4Config.RouteMetric = 10;
       ipv6AcceptRAConfig.RouteMetric = 10;
+      linkConfig.RequiredForOnline = "no";
     };
 
     netdevs.br-lan = {
