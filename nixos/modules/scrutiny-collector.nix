@@ -53,7 +53,7 @@ in {
           after = ["network-online.target"];
           wants = ["network-online.target"];
           script = ''
-            ${lib.getExe' pkgs.scrutiny "collector-metrics"} run \
+            ${lib.getExe pkgs.scrutiny-collector} run \
               --config ${configFile} \
               --api-endpoint ${secrets.scrutiny.baseUrl} \
               --host-id ${config.networking.hostName}
