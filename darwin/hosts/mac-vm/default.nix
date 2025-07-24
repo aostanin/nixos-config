@@ -7,6 +7,7 @@
   ...
 }: {
   nix = {
+    enable = true;
     settings = {
       experimental-features = ["nix-command" "flakes"];
       trusted-users = [
@@ -27,8 +28,6 @@
       };
     };
   };
-
-  services.nix-daemon.enable = true;
 
   programs.zsh.enable = true;
 
