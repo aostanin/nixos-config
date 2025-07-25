@@ -1,11 +1,16 @@
 {
   config,
+  pkgs,
   secrets,
   ...
 }: {
   sops.secrets = {
     "${config.networking.hostName}/wlan/password" = {};
   };
+
+  environment.systemPackages = with pkgs; [
+    iw
+  ];
 
   services.hostapd = {
     enable = true;
