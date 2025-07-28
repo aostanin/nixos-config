@@ -19,17 +19,9 @@ in {
       withNodeJs = false;
       withRuby = false;
 
-      globals.mapleader = ",";
+      nixpkgs.config.allowUnfree = true;
 
-      keymaps = [
-        {
-          key = "<leader>/";
-          action = "<cmd>nohlsearch<CR>";
-          options = {
-            silent = true;
-          };
-        }
-      ];
+      globals.mapleader = ",";
 
       opts = {
         # General options
@@ -77,9 +69,174 @@ in {
         backup = false; # Don't write ~ files all over
         swapfile = false; # Don't write .swp files
         cursorline = true; # Highlight current line
-        ttyfast = true; # Faster redrawing
         termguicolors = true; # True color support
       };
+
+      colorschemes.gruvbox.enable = true;
+
+      keymaps = [
+        {
+          key = "<leader>/";
+          action = "<cmd>nohlsearch<CR>";
+          options = {
+            silent = true;
+            desc = "No highlight search";
+          };
+        }
+        {
+          key = "<leader>e";
+          action = "<cmd>Neotree toggle<CR>";
+        }
+
+        # Buffers
+        {
+          key = "<S-h>";
+          action = "<cmd>BufferLineCyclePrev<CR>";
+          options.desc = "Previous buffer";
+        }
+        {
+          key = "<S-l>";
+          action = "<cmd>BufferLineCycleNext<CR>";
+          options.desc = "Next buffer";
+        }
+        {
+          key = "<A-h>";
+          action = "<cmd>BufferLineMovePrev<CR>";
+          options.desc = "Move buffer left";
+        }
+        {
+          key = "<A-l>";
+          action = "<cmd>BufferLineMoveNext<CR>";
+          options.desc = "Move buffer right";
+        }
+        {
+          key = "<leader>x";
+          action = "<cmd>Bdelete<CR>";
+          options.desc = "Close buffer";
+        }
+        {
+          key = "<leader>bp";
+          action = "<cmd>BufferLineTogglePin<CR>";
+          options.desc = "Pin/unpin buffer";
+        }
+        {
+          key = "<leader>bP";
+          action = "<cmd>BufferLinePick<CR>";
+          options.desc = "Pick buffer";
+        }
+        {
+          key = "<leader>bc";
+          action = "<cmd>BufferLinePickClose<CR>";
+          options.desc = "Pick buffer to close";
+        }
+
+        # Splits
+        {
+          key = "<leader>v";
+          action = "<cmd>vsplit<CR>";
+          options.desc = "Split vertically";
+        }
+        {
+          key = "<leader>s";
+          action = "<cmd>split<CR>";
+          options.desc = "Split horizontally";
+        }
+
+        # Navigation
+        {
+          key = "<C-h>";
+          action = "<C-w>h";
+          options.desc = "Move to left window";
+        }
+        {
+          key = "<C-l>";
+          action = "<C-w>l";
+          options.desc = "Move to right window";
+        }
+        {
+          key = "<C-j>";
+          action = "<C-w>j";
+          options.desc = "Move to window below";
+        }
+        {
+          key = "<C-k>";
+          action = "<C-w>k";
+          options.desc = "Move to window above";
+        }
+
+        # Terminal
+        {
+          key = "<Esc>";
+          action = "<C-\\><C-n>";
+          mode = "t";
+          options.desc = "Exit terminal";
+        }
+        {
+          key = "<C-h>";
+          action = "<C-\\><C-n><C-w>h";
+          mode = "t";
+          options.desc = "Move to left window";
+        }
+        {
+          key = "<C-l>";
+          action = "<C-\\><C-n><C-w>l";
+          mode = "t";
+          options.desc = "Move to right window";
+        }
+        {
+          key = "<C-j>";
+          action = "<C-\\><C-n><C-w>j";
+          mode = "t";
+          options.desc = "Move to window below";
+        }
+        {
+          key = "<C-k>";
+          action = "<C-\\><C-n><C-w>k";
+          mode = "t";
+          options.desc = "Move to window above";
+        }
+
+        # Comments
+        {
+          mode = "n";
+          key = "<C-_>";
+          action = "gcc";
+          options = {
+            remap = true;
+            desc = "Toggle comment";
+          };
+        }
+        {
+          mode = "v";
+          key = "<C-_>";
+          action = "gc";
+          options = {
+            remap = true;
+            desc = "Toggle comment";
+          };
+        }
+
+        # Claude Code
+        {
+          key = "<leader>ac";
+          action = "<cmd>ClaudeCode<CR>";
+          options.desc = "Toggle Claude Code";
+        }
+
+        # Keep visual selection after indent
+        {
+          mode = "v";
+          key = ">";
+          action = ">gv";
+          options.desc = "Indent and reselect";
+        }
+        {
+          mode = "v";
+          key = "<";
+          action = "<gv";
+          options.desc = "Outdent and reselect";
+        }
+      ];
 
       extraConfigLua = ''
         -- Japanese specific
@@ -94,27 +251,203 @@ in {
             vim.opt_local.list = false
           end,
         })
+
+        -- For auto-session
+        vim.opt.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
+        require('claudecode').setup({
+          -- Keymaps don't seem to work, so disable and set manually
+          keymaps = {
+            toggle = {
+              normal = false,
+              terminal = false,
+              variants = {
+                continue = false,
+                verbose = false,
+              },
+            },
+            window_navigation = false,
+            scrolling = false,
+          },
+        })
+
+        -- Auto-unlist claude-code buffer
+        vim.api.nvim_create_autocmd("TermOpen", {
+          pattern = "*",
+          callback = function()
+            local buf_name = vim.api.nvim_buf_get_name(0)
+            if string.find(buf_name, "claude-") then
+              vim.bo.buflisted = false
+            end
+          end,
+        })
       '';
 
-      colorschemes.gruvbox.enable = true;
+      extraPlugins = [
+        # ref: https://github.com/nix-community/nixvim/issues/3500
+        pkgs.unstable.vimPlugins.claudecode-nvim
+      ];
 
       plugins = {
-        barbar.enable = true;
+        auto-session.enable = true;
+
+        blink-copilot.enable = true;
+
+        blink-cmp = {
+          enable = true;
+          settings = {
+            sources = {
+              default = [
+                "copilot"
+                "lsp"
+                "path"
+                "snippets"
+                "buffer"
+              ];
+              providers.copilot = {
+                name = "copilot";
+                module = "blink-copilot";
+                score_offset = 100;
+                async = true;
+                opts = {
+                  max_completions = 3;
+                  max_attempts = 4;
+                  kind_name = "Copilot";
+                  kind_icon = " ";
+                  kind_hl = false;
+                  debounce = 200;
+                  auto_refresh = {
+                    backward = true;
+                    forward = true;
+                  };
+                };
+              };
+            };
+          };
+        };
+
+        bufdelete.enable = true;
+
+        bufferline.enable = true;
+
         comment.enable = true;
-        fugitive.enable = true;
-        gitgutter.enable = true;
+
+        conform-nvim = {
+          enable = true;
+          settings = {
+            formatters_by_ft = {
+              elm = ["elm_format"];
+              nix = ["alejandra"];
+              rust = ["rustfmt"];
+            };
+            format_on_save = {
+              lsp_format = "fallback";
+              timeout_ms = 500;
+            };
+            formatters = {
+              alejandra.command = lib.getExe pkgs.alejandra;
+              elm_format.command = lib.getExe pkgs.elmPackages.elm-format;
+              rustfmt.command = lib.getExe pkgs.rustPackages.rustfmt;
+            };
+          };
+        };
+
+        copilot-lua = {
+          enable = true;
+          settings = {
+            suggestion.enabled = false;
+            panel.enabled = false;
+          };
+        };
+
+        gitsigns = {
+          enable = true;
+          settings.current_line_blame = true;
+        };
+
+        guess-indent.enable = true;
+
+        lsp = {
+          enable = true;
+          keymaps = {
+            lspBuf = {
+              "gd" = "definition";
+              "gr" = "references";
+              "K" = "hover";
+              "<leader>rn" = "rename";
+              "<leader>ca" = "code_action";
+            };
+            diagnostic = {
+              "[d" = "goto_prev";
+              "]d" = "goto_next";
+            };
+          };
+          servers = {
+            elmls.enable = true;
+            nixd.enable = true;
+            openscad_lsp.enable = true;
+            rust_analyzer = {
+              enable = true;
+              installCargo = true;
+              installRustc = true;
+            };
+          };
+        };
+
         lualine.enable = true;
-        nix.enable = true;
-        nvim-tree.enable = true;
-        openscad.enable = true;
+
+        neo-tree = {
+          enable = true;
+          filesystem = {
+            filteredItems.visible = true;
+            followCurrentFile.enabled = true;
+          };
+        };
+
+        oil = {
+          # enable = true;
+          settings = {
+            default_file_explorer = true;
+            view_options = {
+              show_hidden = true;
+            };
+          };
+        };
+
+        render-markdown.enable = true;
+
         telescope = {
           enable = true;
           keymaps = {
-            "<leader>fg" = "live_grep";
             "<C-p>" = "find_files";
+            "<leader>fb" = "buffers";
+            "<leader>fd" = "diagnostics";
+            "<leader>fg" = "live_grep";
+            "<leader>fh" = "help_tags";
+            "<leader>fk" = "keymaps";
+            "<leader>fr" = "lsp_references";
+            "<leader>fs" = "lsp_document_symbols";
+            "<leader>fS" = "lsp_workspace_symbols";
           };
         };
+
+        treesitter = {
+          enable = true;
+          settings = {
+            highlight.enable = true;
+            indent.enable = true;
+          };
+        };
+
         web-devicons.enable = true;
+
+        which-key = {
+          enable = true;
+          settings = {
+            delay = 200;
+            preset = "modern";
+          };
+        };
       };
     };
   };
