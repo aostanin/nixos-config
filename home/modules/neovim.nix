@@ -26,11 +26,12 @@ in {
       opts = {
         # General options
         compatible = false;
+        timeoutlen = 300;
 
-        # Tab key is 4 spaces
-        tabstop = 4;
-        softtabstop = 4;
-        shiftwidth = 4;
+        # Tab key is 2 spaces
+        tabstop = 2;
+        softtabstop = 2;
+        shiftwidth = 2;
         expandtab = true;
 
         # Indent options
@@ -100,6 +101,16 @@ in {
           options.desc = "Next buffer";
         }
         {
+          key = "<S-Left>";
+          action = "<cmd>BufferLineCyclePrev<CR>";
+          options.desc = "Previous buffer";
+        }
+        {
+          key = "<S-Right>";
+          action = "<cmd>BufferLineCycleNext<CR>";
+          options.desc = "Next buffer";
+        }
+        {
           key = "<A-h>";
           action = "<cmd>BufferLineMovePrev<CR>";
           options.desc = "Move buffer left";
@@ -110,9 +121,24 @@ in {
           options.desc = "Move buffer right";
         }
         {
+          key = "<A-Left>";
+          action = "<cmd>BufferLineMovePrev<CR>";
+          options.desc = "Move buffer left";
+        }
+        {
+          key = "<A-Right>";
+          action = "<cmd>BufferLineMoveNext<CR>";
+          options.desc = "Move buffer right";
+        }
+        {
           key = "<leader>x";
           action = "<cmd>Bdelete<CR>";
           options.desc = "Close buffer";
+        }
+        {
+          key = "<leader>b";
+          action = "";
+          options.desc = "Bufferline";
         }
         {
           key = "<leader>bp";
@@ -163,10 +189,30 @@ in {
           action = "<C-w>k";
           options.desc = "Move to window above";
         }
+        {
+          key = "<C-Left>";
+          action = "<C-w>h";
+          options.desc = "Move to left window";
+        }
+        {
+          key = "<C-Right>";
+          action = "<C-w>l";
+          options.desc = "Move to right window";
+        }
+        {
+          key = "<C-Down>";
+          action = "<C-w>j";
+          options.desc = "Move to window below";
+        }
+        {
+          key = "<C-Up>";
+          action = "<C-w>k";
+          options.desc = "Move to window above";
+        }
 
         # Terminal
         {
-          key = "<Esc>";
+          key = "<Esc><Esc>";
           action = "<C-\\><C-n>";
           mode = "t";
           options.desc = "Exit terminal";
@@ -195,6 +241,58 @@ in {
           mode = "t";
           options.desc = "Move to window above";
         }
+        {
+          key = "<C-Left>";
+          action = "<C-\\><C-n><C-w>h";
+          mode = "t";
+          options.desc = "Move to left window";
+        }
+        {
+          key = "<C-Right>";
+          action = "<C-\\><C-n><C-w>l";
+          mode = "t";
+          options.desc = "Move to right window";
+        }
+        {
+          key = "<C-Down>";
+          action = "<C-\\><C-n><C-w>j";
+          mode = "t";
+          options.desc = "Move to window below";
+        }
+        {
+          key = "<C-Up>";
+          action = "<C-\\><C-n><C-w>k";
+          mode = "t";
+          options.desc = "Move to window above";
+        }
+
+        # Copy to system clipboard
+        {
+          mode = ["n" "v"];
+          key = "<leader>y";
+          action = ''"+y'';
+          options.desc = "Copy to system clipboard";
+        }
+        {
+          mode = ["n" "v"];
+          key = "<leader>Y";
+          action = ''"+Y'';
+          options.desc = "Copy line to system clipboard";
+        }
+
+        # Paste from system clipboard
+        {
+          mode = ["n" "v"];
+          key = "<leader>p";
+          action = ''"+p'';
+          options.desc = "Paste from system clipboard";
+        }
+        {
+          mode = ["n" "v"];
+          key = "<leader>P";
+          action = ''"+P'';
+          options.desc = "Paste before from system clipboard";
+        }
 
         # Comments
         {
@@ -218,9 +316,55 @@ in {
 
         # Claude Code
         {
+          key = "<leader>a";
+          action = "";
+          options.desc = "AI/Claude Code";
+        }
+        {
           key = "<leader>ac";
           action = "<cmd>ClaudeCode<CR>";
-          options.desc = "Toggle Claude Code";
+          options.desc = "Toggle Claude";
+        }
+        {
+          key = "<leader>af";
+          action = "<cmd>ClaudeCodeFocus<CR>";
+          options.desc = "Focus Claude";
+        }
+        {
+          key = "<leader>ar";
+          action = "<cmd>ClaudeCode --resume<CR>";
+          options.desc = "Resume Claude";
+        }
+        {
+          key = "<leader>aC";
+          action = "<cmd>ClaudeCode --continue<CR>";
+          options.desc = "Continue Claude";
+        }
+        {
+          key = "<leader>am";
+          action = "<cmd>ClaudeCodeSelectModel<CR>";
+          options.desc = "Select Claude model";
+        }
+        {
+          key = "<leader>ab";
+          action = "<cmd>ClaudeCodeAdd %<CR>";
+          options.desc = "Add current buffer";
+        }
+        {
+          mode = "v";
+          key = "<leader>as";
+          action = "<cmd>ClaudeCodeSend<CR>";
+          options.desc = "Send to Claude";
+        }
+        {
+          key = "<leader>aa";
+          action = "<cmd>ClaudeCodeDiffAccept<CR>";
+          options.desc = "Accept diff";
+        }
+        {
+          key = "<leader>ad";
+          action = "<cmd>ClaudeCodeDiffDeny<CR>";
+          options.desc = "Deny diff";
         }
 
         # Keep visual selection after indent
@@ -235,6 +379,18 @@ in {
           key = "<";
           action = "<gv";
           options.desc = "Outdent and reselect";
+        }
+
+        # Telescope
+        {
+          key = "<leader>f";
+          action = "";
+          options.desc = "Telescope";
+        }
+        {
+          key = "<leader>ft";
+          action = "<cmd>TodoTelescope<CR>";
+          options.desc = "Telescope Todo";
         }
       ];
 
@@ -430,6 +586,8 @@ in {
             "<leader>fS" = "lsp_workspace_symbols";
           };
         };
+
+        todo-comments.enable = true;
 
         treesitter = {
           enable = true;
