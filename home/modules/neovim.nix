@@ -493,8 +493,11 @@ in {
           settings = {
             formatters_by_ft = {
               elm = ["elm_format"];
+              markdown = ["prettier"];
               nix = ["alejandra"];
+              python = ["black"];
               rust = ["rustfmt"];
+              sh = ["shfmt"];
             };
             format_on_save = {
               lsp_format = "fallback";
@@ -502,8 +505,14 @@ in {
             };
             formatters = {
               alejandra.command = lib.getExe pkgs.alejandra;
+              black.command = lib.getExe pkgs.black;
               elm_format.command = lib.getExe pkgs.elmPackages.elm-format;
+              prettier.command = lib.getExe pkgs.nodePackages.prettier;
               rustfmt.command = lib.getExe pkgs.rustPackages.rustfmt;
+              shfmt = {
+                command = lib.getExe pkgs.shfmt;
+                prepend_args = ["-i" "2" "-ci" "-bn"];
+              };
             };
           };
         };
