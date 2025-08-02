@@ -58,6 +58,7 @@ in {
           unstable.windsurf
           wineWowPackages.stable
           wl-clipboard
+          zathura
 
           # Chat
           discord
