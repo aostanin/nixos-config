@@ -21,7 +21,10 @@ in {
 
       nixpkgs.config.allowUnfree = true;
 
-      globals.mapleader = ",";
+      globals = {
+        mapleader = " ";
+        maplocalleader = ",";
+      };
 
       opts = {
         # General options
@@ -437,7 +440,31 @@ in {
             end
           end,
         })
+
+        -- Filetype-specific keybinding for ClaudeCodeTreeAdd
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = { "NvimTree", "neo-tree", "oil" },
+          callback = function()
+            vim.keymap.set("n", "<leader>as", "<cmd>ClaudeCodeTreeAdd<cr>", {
+              buffer = true,
+              desc = "Add file",
+            })
+          end,
+        })
       '';
+
+      env = {
+        # For diagram mmdc
+        PUPPETEER_EXECUTABLE_PATH = lib.getExe pkgs.firefox;
+      };
+
+      extraPackages = with pkgs; [
+        # For diagram
+        d2
+        gnuplot
+        mermaid-cli
+        plantuml
+      ];
 
       extraPlugins = [
         # ref: https://github.com/nix-community/nixvim/issues/3500
@@ -493,11 +520,17 @@ in {
           settings = {
             formatters_by_ft = {
               elm = ["elm_format"];
+              javascript = ["biome" "biome-organize-imports"];
+              javascriptreact = ["biome" "biome-organize-imports"];
               markdown = ["prettier"];
               nix = ["alejandra"];
               python = ["black"];
               rust = ["rustfmt"];
               sh = ["shfmt"];
+              sql = ["pg_format"];
+              typescript = ["biome" "biome-organize-imports"];
+              typescriptreact = ["biome" "biome-organize-imports"];
+              yaml = ["prettier"];
             };
             format_on_save = {
               lsp_format = "fallback";
@@ -506,7 +539,10 @@ in {
             formatters = {
               alejandra.command = lib.getExe pkgs.alejandra;
               black.command = lib.getExe pkgs.black;
+              biome.command = lib.getExe pkgs.biome;
+              biome-organize-imports.command = lib.getExe pkgs.biome;
               elm_format.command = lib.getExe pkgs.elmPackages.elm-format;
+              pg_format.command = lib.getExe pkgs.pgformatter;
               prettier.command = lib.getExe pkgs.nodePackages.prettier;
               rustfmt.command = lib.getExe pkgs.rustPackages.rustfmt;
               shfmt = {
@@ -525,12 +561,28 @@ in {
           };
         };
 
+        diagram.enable = true;
+
         gitsigns = {
           enable = true;
           settings.current_line_blame = true;
         };
 
         guess-indent.enable = true;
+
+        image = {
+          enable = true;
+          settings = {
+            # TODO: Switch to a term that supports kitty image protocol?
+            backend = "ueberzug";
+            integrations = {
+              markdown = {
+                only_render_image_at_cursor = true;
+                only_render_image_at_cursor_mode = "popup";
+              };
+            };
+          };
+        };
 
         lsp = {
           enable = true;
@@ -569,13 +621,50 @@ in {
           };
         };
 
+        neorg = {
+          enable = false;
+          settings = {
+            load = {
+              "core.concealer" = {
+                config = {
+                  icon_preset = "varied";
+                };
+              };
+              "core.defaults" = {
+                __empty = null;
+              };
+              "core.dirman" = {
+                config = {
+                  workspaces = {
+                    notes = "~/Sync/norg";
+                  };
+                };
+              };
+              "core.journal" = {
+                config = {
+                  strategy = "flat";
+                };
+              };
+            };
+          };
+          telescopeIntegration.enable = true;
+        };
+
         oil = {
-          # enable = true;
+          enable = false;
           settings = {
             default_file_explorer = true;
             view_options = {
               show_hidden = true;
             };
+          };
+        };
+
+        orgmode = {
+          enable = true;
+          settings = {
+            org_agenda_files = "~/Sync/org/**/*";
+            org_default_notes_file = "~/Sync/org/notes.org";
           };
         };
 
