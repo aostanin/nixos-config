@@ -10,8 +10,8 @@
   src = pkgs.fetchFromGitHub {
     owner = "iv-org";
     repo = "invidious";
-    rev = "v2.20240427";
-    sha256 = "sha256-P4Tz7spHfAopRmbw27x+7UAn2d9o7QWzBdFXYsnwIoQ=";
+    rev = "v2.20250517.0";
+    sha256 = "sha256-Qdqq+OXmuvO8ub8d+X8NWH1QwlhRRy2OsaBaxy34Vio=";
   };
 in {
   options.localModules.containers.services.${name} = {
