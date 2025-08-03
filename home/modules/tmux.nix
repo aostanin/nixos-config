@@ -17,7 +17,11 @@ in {
       baseIndex = 1;
       clock24 = true;
       escapeTime = 0;
+      extraConfig = ''
+        set -g allow-passthrough on
+      '';
       keyMode = "vi";
+      mouse = true;
       plugins = with pkgs.tmuxPlugins; [
         pain-control
       ];
