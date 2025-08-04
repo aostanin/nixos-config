@@ -11,10 +11,18 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
     gtk = {
       enable = true;
-      theme.name = "Adwaita-dark";
-      iconTheme.name = "Adwaita";
+      theme = {
+        name = "Adwaita-dark";
+        package = pkgs.gnome-themes-extra;
+      };
+      iconTheme = {
+        name = "Adwaita";
+        package = pkgs.adwaita-icon-theme;
+      };
       gtk3.extraConfig = {
         gtk-application-prefer-dark-theme = 1;
       };
@@ -25,14 +33,16 @@ in {
       GTK_THEME = "Adwaita:dark";
     };
 
-    home.pointerCursor = {
-      # TODO: Cursor doesn't work
-      name = "phinger-cursors";
+    home.pointerCursor = rec {
+      name = "phinger-cursors-dark";
       package = pkgs.phinger-cursors;
       size = 24;
-      # Fix virt-manager crash https://github.com/NixOS/nixpkgs/issues/207496#issuecomment-1364940915
       gtk.enable = true;
-      x11.enable = true;
+      sway.enable = lib.mkDefault config.wayland.windowManager.sway.enable;
+      x11 = {
+        enable = true;
+        defaultCursor = name;
+      };
     };
   };
 }
