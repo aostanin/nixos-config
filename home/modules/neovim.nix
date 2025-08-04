@@ -520,6 +520,7 @@ in {
           settings = {
             formatters_by_ft = {
               elm = ["elm_format"];
+              go = ["gofmt"];
               javascript = ["biome" "biome-organize-imports"];
               javascriptreact = ["biome" "biome-organize-imports"];
               markdown = ["prettier"];
@@ -542,6 +543,7 @@ in {
               biome.command = lib.getExe pkgs.biome;
               biome-organize-imports.command = lib.getExe pkgs.biome;
               elm_format.command = lib.getExe pkgs.elmPackages.elm-format;
+              gofmt.command = lib.getExe' pkgs.go "gofmt";
               pg_format.command = lib.getExe pkgs.pgformatter;
               prettier.command = lib.getExe pkgs.nodePackages.prettier;
               rustfmt.command = lib.getExe pkgs.rustPackages.rustfmt;
