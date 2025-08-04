@@ -149,16 +149,6 @@ in {
       };
       pulse.enable = true;
       wireplumber.extraConfig = {
-        # Workaround for wireplumber keeping camera device open
-        # ref: https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2669#note_2362342
-        # TODO: Remove once fixed
-        "10-disable-camera" = {
-          "wireplumber.profiles" = {
-            main = {
-              "monitor.libcamera" = "disabled";
-            };
-          };
-        };
         "wh-1000xm3-ldac-hq" = {
           "monitor.bluez.rules" = [
             {
@@ -182,8 +172,19 @@ in {
 
     xdg.portal = {
       enable = true;
-      config.common.default = "*";
-      wlr.enable = true;
+      config.sway = {
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+        "org.freedesktop.impl.portal.Screenshot" = "wlr";
+        "org.freedesktop.impl.portal.Inhibit" = "none";
+      };
+      wlr = {
+        enable = true;
+        settings.screencast = {
+          exec_before = "${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} --inhibitor-add xdg-desktop-portal-wlr";
+          exec_after = "${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} --inhibitor-remove xdg-desktop-portal-wlr";
+        };
+      };
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
       ];

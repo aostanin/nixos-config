@@ -114,7 +114,7 @@ in {
         terminal = "foot";
         focus = {
           followMouse = false;
-          mouseWarping = false;
+          mouseWarping = true;
         };
         keybindings = let
           modifier = config.wayland.windowManager.sway.config.modifier;
@@ -293,8 +293,6 @@ in {
     };
 
     home.packages = with pkgs; [
-      adwaita-icon-theme
-      i3-swallow
       pavucontrol
       wayvnc
       wdisplays
@@ -386,6 +384,7 @@ in {
               all-outputs = true;
               enable-bar-scroll = true;
               disable-scroll-wraparound = true;
+              warp-on-scroll = false;
             };
             idle_inhibitor = {
               format = "{icon}";
@@ -397,10 +396,6 @@ in {
           };
         };
       };
-    };
-
-    localModules = {
-      inhibridge.enable = true;
     };
 
     services = {
