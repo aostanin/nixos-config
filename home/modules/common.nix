@@ -21,6 +21,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules = {
+      ai.enable = lib.mkDefault true;
       git.enable = lib.mkDefault true;
       neovim.enable = lib.mkDefault true;
       ssh.enable = lib.mkDefault true;
@@ -38,7 +39,6 @@ in {
           bat
           btop
           cksfv
-          unstable.claude-code
           ctop
           fd
           gdu
