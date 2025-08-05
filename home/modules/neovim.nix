@@ -602,7 +602,11 @@ in {
             };
           };
           servers = {
+            basedpyright.enable = true;
+            bashls.enable = true;
             elmls.enable = true;
+            gopls.enable = true;
+            marksman.enable = true;
             nixd.enable = true;
             openscad_lsp.enable = true;
             rust_analyzer = {
@@ -610,6 +614,7 @@ in {
               installCargo = true;
               installRustc = true;
             };
+            vtsls.enable = true;
           };
         };
 
