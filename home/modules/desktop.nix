@@ -17,6 +17,7 @@ in {
       android.enable = lib.mkDefault true;
       chromium.enable = lib.mkDefault true;
       electronics.enable = lib.mkDefault true;
+      emacs.enable = lib.mkDefault true;
       firefox.enable = lib.mkDefault true;
       foot.enable = lib.mkDefault true;
       gnupg.enable = lib.mkDefault true;

@@ -2,11 +2,13 @@
   imports = [
     ./3dprinting.nix
     ./ai.nix
+    ./alacritty.nix
     ./android.nix
     ./chromium.nix
     ./common.nix
     ./desktop.nix
     ./electronics.nix
+    ./emacs
     ./firefox.nix
     ./fish.nix
     ./foot.nix

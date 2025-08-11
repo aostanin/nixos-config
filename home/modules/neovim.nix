@@ -89,7 +89,7 @@ in {
         }
         {
           key = "<leader>e";
-          action = "<cmd>Neotree toggle<CR>";
+          action = "<cmd>Neotree focus<CR>";
         }
 
         # Buffers
@@ -171,48 +171,6 @@ in {
           options.desc = "Split horizontally";
         }
 
-        # Navigation
-        {
-          key = "<C-h>";
-          action = "<C-w>h";
-          options.desc = "Move to left window";
-        }
-        {
-          key = "<C-l>";
-          action = "<C-w>l";
-          options.desc = "Move to right window";
-        }
-        {
-          key = "<C-j>";
-          action = "<C-w>j";
-          options.desc = "Move to window below";
-        }
-        {
-          key = "<C-k>";
-          action = "<C-w>k";
-          options.desc = "Move to window above";
-        }
-        {
-          key = "<C-Left>";
-          action = "<C-w>h";
-          options.desc = "Move to left window";
-        }
-        {
-          key = "<C-Right>";
-          action = "<C-w>l";
-          options.desc = "Move to right window";
-        }
-        {
-          key = "<C-Down>";
-          action = "<C-w>j";
-          options.desc = "Move to window below";
-        }
-        {
-          key = "<C-Up>";
-          action = "<C-w>k";
-          options.desc = "Move to window above";
-        }
-
         # Terminal
         {
           key = "<Esc><Esc>";
@@ -221,49 +179,25 @@ in {
           options.desc = "Exit terminal";
         }
         {
-          key = "<C-h>";
+          key = "<C-w>h";
           action = "<C-\\><C-n><C-w>h";
           mode = "t";
           options.desc = "Move to left window";
         }
         {
-          key = "<C-l>";
+          key = "<C-w>l";
           action = "<C-\\><C-n><C-w>l";
           mode = "t";
           options.desc = "Move to right window";
         }
         {
-          key = "<C-j>";
+          key = "<C-w>j";
           action = "<C-\\><C-n><C-w>j";
           mode = "t";
           options.desc = "Move to window below";
         }
         {
-          key = "<C-k>";
-          action = "<C-\\><C-n><C-w>k";
-          mode = "t";
-          options.desc = "Move to window above";
-        }
-        {
-          key = "<C-Left>";
-          action = "<C-\\><C-n><C-w>h";
-          mode = "t";
-          options.desc = "Move to left window";
-        }
-        {
-          key = "<C-Right>";
-          action = "<C-\\><C-n><C-w>l";
-          mode = "t";
-          options.desc = "Move to right window";
-        }
-        {
-          key = "<C-Down>";
-          action = "<C-\\><C-n><C-w>j";
-          mode = "t";
-          options.desc = "Move to window below";
-        }
-        {
-          key = "<C-Up>";
+          key = "<C-w>k";
           action = "<C-\\><C-n><C-w>k";
           mode = "t";
           options.desc = "Move to window above";
@@ -523,8 +457,9 @@ in {
               go = ["gofmt"];
               javascript = ["biome" "biome-organize-imports"];
               javascriptreact = ["biome" "biome-organize-imports"];
+              lisp = ["emacs_elisp"];
               markdown = ["prettier"];
-              nix = ["alejandra"];
+              nix = ["alejandra" "injected"];
               python = ["black"];
               rust = ["rustfmt"];
               sh = ["shfmt"];
@@ -550,6 +485,13 @@ in {
               shfmt = {
                 command = lib.getExe pkgs.shfmt;
                 prepend_args = ["-i" "2" "-ci" "-bn"];
+              };
+              emacs_elisp = {
+                command = "sh";
+                args = [
+                  "-c"
+                  "tmpfile=$(mktemp); cat > \"$tmpfile\"; ${lib.getExe pkgs.emacs-nox} -Q --batch --eval \"(let ((inhibit-message t) (message-log-max nil) (indent-tabs-mode nil)) (with-temp-buffer (insert-file-contents \\\"$tmpfile\\\") (emacs-lisp-mode) (indent-region (point-min) (point-max)) (princ (buffer-substring-no-properties (point-min) (point-max)))))\"; rm -f \"$tmpfile\""
+                ];
               };
             };
           };
@@ -689,6 +631,16 @@ in {
             "<leader>fr" = "lsp_references";
             "<leader>fs" = "lsp_document_symbols";
             "<leader>fS" = "lsp_workspace_symbols";
+          };
+          settings = {
+            defaults = {
+              file_ignore_patterns = [".git/"];
+            };
+            pickers = {
+              find_files = {
+                hidden = true;
+              };
+            };
           };
         };
 

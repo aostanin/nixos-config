@@ -198,5 +198,20 @@ in {
     ];
   };
 
+  sops.secrets."gitwatch/ssh_keys/org".owner = "container";
+  services.gitwatch.org = {
+    enable = true;
+    path = "${config.localModules.containers.storage.default}/syncthing/sync/${secrets.user.username}/org";
+    remote = "ssh://git@${lib.head (config.lib.containers.mkHosts "git")}:2222/${secrets.user.username}/org.git";
+    user = "container";
+  };
+  systemd.services.gitwatch-org.environment = {
+    GIT_AUTHOR_NAME = secrets.user.fullName;
+    GIT_AUTHOR_EMAIL = secrets.user.emailAddress;
+    GIT_COMMITTER_NAME = secrets.user.fullName;
+    GIT_COMMITTER_EMAIL = secrets.user.emailAddress;
+    GIT_SSH_COMMAND = "ssh -i ${config.sops.secrets."gitwatch/ssh_keys/org".path} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null";
+  };
+
   virtualisation.libvirtd.enable = true;
 }
