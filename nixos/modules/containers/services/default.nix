@@ -49,6 +49,7 @@
     ./searxng.nix
     ./sonarr.nix
     ./stable-diffusion.nix
+    ./stalwart.nix
     ./syncthing.nix
     ./tasmoadmin.nix
     ./tdarr.nix
