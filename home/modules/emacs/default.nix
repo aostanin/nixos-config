@@ -196,14 +196,6 @@ in {
                     (lambda ()
                       (org-roam-dailies-goto-today)
                       (current-buffer)))
-              (setq org-agenda-files
-                (directory-files-recursively org-directory "\\.org$"))
-              (setq org-agenda-file-tags
-                '(("archives/" . (:archive))
-                  ("areas/" . (:area))
-                  ("logs/" . (:log))
-                  ("projects/" . (:project))
-                  ("resources/" . (:resource))))
               (setq org-capture-templates
                       '(("l" "Log entry" entry
                        (file+headline
@@ -224,7 +216,10 @@ in {
                 (lambda ()
                   (add-hook 'before-save-hook
                             (lambda () (org-update-statistics-cookies 'all))
-                            nil 'local)))
+                            nil 'local)
+                  (add-hook 'before-save-hook
+                    'org-babel-execute-buffer
+                    nil 'local)))
               (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
               ;; TODO: Check these config options
               (setq org-startup-indented t)
@@ -246,16 +241,39 @@ in {
                  (python . t)))
               (evil-define-key 'normal 'global
                 (kbd "<leader>oa") 'org-agenda
-                (kbd "<leader>oc") 'org-capture
+                (kbd "<leader>oc") 'org-capture)
+              (evil-define-key 'normal org-mode-map
                 (kbd "<leader>od") 'org-deadline
                 (kbd "<leader>ol") 'org-insert-link
                 (kbd "<leader>oo") 'org-open-at-point
+                (kbd "<leader>oq") 'org-set-tags-command
                 (kbd "<leader>os") 'org-schedule
-                (kbd "<leader>ot") 'org-todo)
+                (kbd "<leader>ot") 'org-todo
+                (kbd "<leader>ow") 'org-refile
+                (kbd "<leader>o.") 'org-time-stamp
+                (kbd "<leader>o!") 'org-time-stamp-inactive)
             (evil-define-key 'normal org-capture-mode-map
               (kbd "<localleader>c") 'org-capture-finalize
               (kbd "<localleader>k") 'org-capture-kill
               (kbd "<localleader>r") 'org-capture-refile))
+
+            (use-package org-agenda
+              :after org
+              :custom
+              (org-agenda-files (list (concat org-directory "/inbox.org")
+                        (concat org-directory "/areas/")
+                        (concat org-directory "/logs/")
+                        (concat org-directory "/projects/")))
+              (org-refile-targets '((org-agenda-files :maxlevel . 3)))
+              (org-icalendar-combined-agenda-file (concat org-directory "/calendar.ics"))
+              (org-agenda-file-tags
+                '(("archives/" . (:archive))
+                  ("areas/" . (:area))
+                  ("logs/" . (:log))
+                  ("projects/" . (:project))
+                  ("resources/" . (:resource))))
+              :config
+              (define-key org-agenda-mode-map "q" 'org-agenda-exit))
 
             (use-package org-roam
               :after org

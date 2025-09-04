@@ -144,7 +144,7 @@ in {
             "${modifier}+underscore" = "split v";
             "${modifier}+a" = "focus parent";
             "${modifier}+x" = "[urgent=latest] focus";
-            "${modifier}+e" = lib.mkIf config.localModules.emacs.enable "exec swaymsg '[app_id=emacs] focus' || emacsclient -c";
+            "${modifier}+Ctrl+e" = lib.mkIf config.localModules.emacs.enable "exec swaymsg '[app_id=emacs] focus' || emacsclient -c";
             "--whole-window ${modifier}+button4" = "workspace prev";
             "--whole-window ${modifier}+button5" = "workspace next";
             "Print" = "exec ${lib.getExe screenshot}";

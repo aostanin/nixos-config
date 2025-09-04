@@ -4,5 +4,8 @@
   lib,
   ...
 }: {
-  localModules.common.enable = true;
+  localModules = {
+    common.enable = true;
+    gnupg.enable = true;
+  };
 }

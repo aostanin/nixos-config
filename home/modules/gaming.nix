@@ -13,7 +13,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       # Tools
-      bottles
+      (bottles.override {removeWarningPopup = true;})
       gamescope
       mangohud
       pegasus-frontend

@@ -44,6 +44,7 @@ in {
           gdu
           gitui
           gping
+          htop
           jq
           just
           lazygit
@@ -57,7 +58,6 @@ in {
           pv
           python3
           rainfrog
-          rclone
           ripgrep
           sshfs
           stress
@@ -69,6 +69,7 @@ in {
           httm
           personal-scripts
           powertop
+          rclone
           s-tui
           wol
         ]
