@@ -26,6 +26,14 @@
     # FIXME: When cloudflared is enabled, all network traffic breaks when Starlink is disconnected
     # cloudflared.enable = true;
 
+    tailscale = {
+      isServer = true;
+      extraFlags = [
+        "--advertise-exit-node"
+        "--advertise-routes=10.0.50.0/24"
+      ];
+    };
+
     traefik.enable = true;
   };
 

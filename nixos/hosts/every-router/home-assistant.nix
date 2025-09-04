@@ -132,7 +132,7 @@
       ef_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "rabits";
         domain = "ef_ble";
-        version = "0.17.0-a.2";
+        version = "0.4.16";
 
         dependencies = with pkgs.home-assistant.python.pkgs; [
           ecdsa
@@ -142,12 +142,10 @@
         ];
 
         src = pkgs.fetchFromGitHub {
-          # TODO: Switch to release once EcoFlow Alternator Charger support is merged
-          # inherit owner;
-          owner = "GnoX";
+          inherit owner;
           repo = "ha-ef-ble";
           tag = "v${version}";
-          hash = "sha256-c9xiRjy3QMHwyFRurIUH576LOoKLv3xFPSIuMTVEiUU=";
+          hash = "sha256-MBduzlWQkJR2xB4ZTWBUsoKfvCpkB1pm86hgGI8LOL8=";
         };
       };
     in [
@@ -209,6 +207,8 @@
         };
       };
     in [
+      # TODO: This is fixed in unstable
+      # ref: https://github.com/NixOS/nixpkgs/pull/422982
       starlink-grpc
       # FIXME: Why are these two needed? Should be propogated?
       python3Packages.grpcio

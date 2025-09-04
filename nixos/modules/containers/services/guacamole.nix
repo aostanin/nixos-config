@@ -16,7 +16,7 @@ in {
     };
 
     sops.templates."${name}-db.env".content = ''
-      POSTGRES_PASSWORD=${config.sops.placeholder."containers/guacamole/postgres_password"}
+      POSTGRESQL_PASSWORD=${config.sops.placeholder."containers/guacamole/postgres_password"}
     '';
 
     localModules.containers.containers.${name} = {
@@ -26,10 +26,10 @@ in {
       raw.environment = {
         GUACD_HOSTNAME = "host.containers.internal";
         GUACD_PORT = "4822";
-        POSTGRES_HOSTNAME = "${name}-db";
-        POSTGRES_PORT = "5432";
-        POSTGRES_DATABASE = "guacamole_db";
-        POSTGRES_USER = "postgres";
+        POSTGRESQL_HOSTNAME = "${name}-db";
+        POSTGRESQL_PORT = "5432";
+        POSTGRESQL_DATABASE = "guacamole_db";
+        POSTGRESQL_USERNAME = "postgres";
       };
       raw.environmentFiles = [config.sops.templates."${name}-db.env".path];
       proxy = {

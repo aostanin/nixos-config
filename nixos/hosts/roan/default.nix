@@ -106,6 +106,7 @@ in {
         scrutiny.enable = true;
         searxng.enable = true;
         syncthing.enable = true;
+        stalwart.enable = true;
         tasmoadmin.enable = true;
         unifi.enable = true;
         vaultwarden.enable = true;
@@ -212,6 +213,8 @@ in {
     GIT_COMMITTER_EMAIL = secrets.user.emailAddress;
     GIT_SSH_COMMAND = "ssh -i ${config.sops.secrets."gitwatch/ssh_keys/org".path} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null";
   };
+
+  users.users.${secrets.user.username}.linger = true;
 
   virtualisation.libvirtd.enable = true;
 }
