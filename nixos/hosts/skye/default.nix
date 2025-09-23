@@ -65,6 +65,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    iw
     linux-wifi-hotspot
   ];
 
@@ -121,7 +122,7 @@
     partOf = ["graphical.target"];
     after = ["graphical.target"];
     serviceConfig.Type = "oneshot";
-    script = "echo 0 > /sys/class/leds/platform::micmute/brightness";
+    script = "echo 0 >/sys/class/leds/platform::micmute/brightness";
   };
 
   services.udev.extraRules = ''

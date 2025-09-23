@@ -14,15 +14,16 @@ in {
     sops.secrets."networkmanager/wifi_psks" = {};
 
     networking = {
-      hostName = "skye";
-      hostId = "e9fbbf71";
       networkmanager = {
         enable = true;
+        wifi.backend = "iwd";
         ensureProfiles = {
           profiles = secrets.networkmanager.profiles;
           environmentFiles = [config.sops.secrets."networkmanager/wifi_psks".path];
         };
       };
+
+      wireless.iwd.settings.General.Country = "JP";
     };
   };
 }

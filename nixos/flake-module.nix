@@ -10,7 +10,7 @@
   ...
 }: {
   flake = let
-    inherit (inputs) nixpkgs nixpkgs-unstable sops-nix nvidia-patch disko impermanence;
+    inherit (inputs) nixpkgs nixpkgs-unstable sops-nix nvidia-patch disko impermanence wolly;
     inherit (nixpkgs) lib;
     mkNixosSystem = {
       hostname,
@@ -53,6 +53,7 @@
             nvidia-patch.nixosModules.nvidia-patch
             disko.nixosModules.disko
             impermanence.nixosModules.impermanence
+            wolly.nixosModules.default
             (./hosts + "/${hostname}")
           ]
           ++ additionalModules;
