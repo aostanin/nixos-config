@@ -12,8 +12,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets."pikvm/password" = {};
-
     programs.ssh = {
       enable = true;
       matchBlocks = {
@@ -25,45 +23,9 @@ in {
           user = "git";
         };
 
-        elena = let
-          wake = let
-            inherit (secrets.pikvm) baseUrl username;
-            passwordFile = config.sops.secrets."pikvm/password".path;
-          in
-            # TODO: Make module
-            pkgs.writeShellScript "wake-elena" ''
-              ssh_available()
-              {
-                nc -zw3 elena 22 > /dev/null 2>&1
-              }
-
-              is_on()
-              {
-                curl -s -k -u "${username}:$(cat ${passwordFile})" "${baseUrl}/api/gpio" | \
-                  ${lib.getExe pkgs.jq} -e '.result.state.inputs.atx1_power_led.state == true'
-              }
-
-              toggle_power()
-              {
-                curl -X POST -s -k -o /dev/null -u "${username}:$(cat ${passwordFile})" "${baseUrl}/api/gpio/pulse?channel=atx1_power_button"
-              }
-
-              wait_on()
-              {
-                until ssh_available; do sleep 1; done
-              }
-
-              if ssh_available; then
-                exit 0
-              fi
-
-              if ! is_on; then
-                toggle_power
-                wait_on
-              fi
-            '';
-        in {
-          match = "host elena exec \"${wake} %h\"";
+        elena = {
+          hostname = "roan";
+          port = 2223;
         };
 
         pikvm.user = "root";

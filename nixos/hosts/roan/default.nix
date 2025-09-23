@@ -185,6 +185,24 @@ in {
       coreOffset = -40;
       gpuOffset = -30;
     };
+
+    wolly = {
+      enable = true;
+      upstream = [
+        {
+          address = secrets.network.home.hosts.elena.address;
+          mac = secrets.network.nics.elena.integrated;
+          brd = "10.0.0.255";
+        }
+      ];
+      forward = [
+        {
+          # SSH
+          from = "0.0.0.0:2223";
+          to = "${secrets.network.home.hosts.elena.address}:22";
+        }
+      ];
+    };
   };
 
   services.traefik.dynamicConfigOptions = {
