@@ -570,6 +570,8 @@ in {
           };
         };
 
+        neogit.enable = true;
+
         neorg = {
           enable = false;
           settings = {

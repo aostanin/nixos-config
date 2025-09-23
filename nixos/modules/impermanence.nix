@@ -16,7 +16,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    boot.initrd.postDeviceCommands = lib.mkAfter ''
+    boot.initrd.postResumeCommands = lib.mkAfter ''
       zfs rollback -r ${cfg.rootDatasetBlankSnapshot}
     '';
 

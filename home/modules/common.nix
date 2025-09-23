@@ -62,6 +62,7 @@ in {
           sshfs
           stress
           tig
+          tio
           tmuxp
         ]
         ++ lib.optionals (!pkgs.stdenv.isDarwin) [

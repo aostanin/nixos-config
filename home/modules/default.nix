@@ -9,6 +9,7 @@
     ./desktop.nix
     ./electronics.nix
     ./emacs
+    ./email.nix
     ./firefox.nix
     ./fish.nix
     ./foot.nix
