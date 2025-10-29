@@ -78,7 +78,7 @@ in {
           ffmpeg
           github-cli
           gpsbabel
-          ollama
+          unstable.ollama
           tealdeer
           tokei
           tuir

@@ -18,7 +18,7 @@
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  disko.devices.disk.main.device = "/dev/disk/by-id/ata-INTEL_SSDSC2BA400G3_BTTV2473033X400HGN";
+  disko.devices.disk.main.device = "/dev/disk/by-id/ata-TS512GMTS430S_F880900268";
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }

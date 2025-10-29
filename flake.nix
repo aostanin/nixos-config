@@ -19,7 +19,6 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nvidia-patch.url = "github:arcnmx/nvidia-patch.nix";
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";

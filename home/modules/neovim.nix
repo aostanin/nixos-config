@@ -336,6 +336,9 @@ in {
         -- Allow line-breaks on Asian characters
         vim.opt.formatoptions = vim.opt.formatoptions + { 'm' }
 
+        -- Refresh files
+        vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, { command = "checktime" })
+
         -- Support nfo files
         vim.api.nvim_create_autocmd({ "BufReadPre" }, {
           pattern = "*.nfo",
@@ -515,7 +518,7 @@ in {
         guess-indent.enable = true;
 
         image = {
-          enable = true;
+          enable = false;
           settings = {
             # TODO: Switch to a term that supports kitty image protocol?
             backend = "ueberzug";

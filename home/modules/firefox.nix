@@ -46,6 +46,7 @@
           pkgs.nur.repos.rycee.firefox-addons."10ten-ja-reader"
           auto-tab-discard
           bitwarden
+          cookies-txt
           keepa
           libredirect
           multi-account-containers

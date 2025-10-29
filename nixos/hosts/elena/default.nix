@@ -41,7 +41,6 @@
       requestEncryptionCredentials = false;
     };
     tmp.useTmpfs = true;
-    kernelPackages = pkgs.linuxPackages_6_12;
     kernelParams = [
       "zfs.l2arc_noprefetch=0"
       "zfs.l2arc_write_max=536870912"
@@ -247,7 +246,6 @@
   };
 
   hardware.nvidia = {
-    patch.enable = true;
     modesetting.enable = true;
     # TODO: Open has issues with VFIO
     # ref: https://www.reddit.com/r/VFIO/comments/xt5cdm/dmesg_shows_thousands_of_these_errors_ioremap/

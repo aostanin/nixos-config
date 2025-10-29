@@ -120,19 +120,19 @@
       bms_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "patman15";
         domain = "bms_ble";
-        version = "1.18.0";
+        version = "1.21.0";
 
         src = pkgs.fetchFromGitHub {
           owner = "patman15";
           repo = "BMS_BLE-HA";
           tag = version;
-          hash = "sha256-6nOi18cNT/kzx2VID3gHAONoeK0vgMqOQQPV06eCi+g=";
+          hash = "sha256-+8HGdQotqjpYSldRiN1uUTVJUzTRR73xO/i18gWOeuc=";
         };
       };
       ef_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "rabits";
         domain = "ef_ble";
-        version = "0.4.16";
+        version = "0.5.2";
 
         dependencies = with pkgs.home-assistant.python.pkgs; [
           ecdsa
@@ -145,7 +145,7 @@
           inherit owner;
           repo = "ha-ef-ble";
           tag = "v${version}";
-          hash = "sha256-MBduzlWQkJR2xB4ZTWBUsoKfvCpkB1pm86hgGI8LOL8=";
+          hash = "sha256-6CvyHVakgtA2q5rRmtY42Svm+2Jov470Vj+WIE7ybAM=";
         };
       };
     in [

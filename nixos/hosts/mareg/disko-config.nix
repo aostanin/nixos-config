@@ -38,7 +38,6 @@
         rootFsOptions = {
           canmount = "off";
           mountpoint = "none";
-          sync = "disabled";
           atime = "off";
           compression = "zstd";
           normalization = "formD";
@@ -54,7 +53,10 @@
         datasets = {
           local = {
             type = "zfs_fs";
-            options.canmount = "off";
+            options = {
+              canmount = "off";
+              sync = "disabled";
+            };
           };
           "local/root" = {
             type = "zfs_fs";
@@ -65,37 +67,47 @@
             type = "zfs_fs";
             mountpoint = "/nix";
           };
-          "local/containers" = {
-            type = "zfs_fs";
-            mountpoint = "/persist/var/lib/containers";
-          };
 
-          system = {
+          persist = {
             type = "zfs_fs";
             options.canmount = "off";
           };
-          "system/persist" = {
+          "persist/safe" = {
             type = "zfs_fs";
-            mountpoint = "/persist";
+            mountpoint = "/persist/safe";
+            options = {
+              "com.sun:auto-snapshot" = "true";
+              "com.sun:auto-snapshot:frequent" = "true";
+              "com.sun:auto-snapshot:hourly" = "true";
+              "com.sun:auto-snapshot:daily" = "true";
+              "com.sun:auto-snapshot:weekly" = "true";
+              "com.sun:auto-snapshot:monthly" = "false";
+            };
           };
-          "system/images" = {
+          "persist/cache" = {
             type = "zfs_fs";
-            mountpoint = "/persist/var/lib/libvirt/images";
-            options.recordsize = "64K";
+            mountpoint = "/persist/cache";
+            options = {
+              sync = "disabled";
+              "com.sun:auto-snapshot" = "true";
+              "com.sun:auto-snapshot:frequent" = "false";
+              "com.sun:auto-snapshot:hourly" = "false";
+              "com.sun:auto-snapshot:daily" = "true";
+              "com.sun:auto-snapshot:weekly" = "false";
+              "com.sun:auto-snapshot:monthly" = "false";
+            };
           };
-          "system/appdata" = {
-            type = "zfs_fs";
-            mountpoint = "/persist/storage/appdata";
-          };
-
-          user = {
-            type = "zfs_fs";
-            options.canmount = "off";
-          };
-          "user/home" = {
+          "persist/home" = {
             type = "zfs_fs";
             mountpoint = "/home";
-            postCreateHook = "zfs snapshot rpool/user/home@blank";
+            options = {
+              "com.sun:auto-snapshot" = "true";
+              "com.sun:auto-snapshot:frequent" = "true";
+              "com.sun:auto-snapshot:hourly" = "true";
+              "com.sun:auto-snapshot:daily" = "true";
+              "com.sun:auto-snapshot:weekly" = "true";
+              "com.sun:auto-snapshot:monthly" = "false";
+            };
           };
         };
       };

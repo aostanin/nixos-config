@@ -22,7 +22,6 @@
       efi.canTouchEfiVariables = true;
     };
     tmp.useTmpfs = true;
-    kernelPackages = pkgs.linuxPackages_6_12;
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
@@ -147,7 +146,10 @@
       powerKey = config.services.logind.lidSwitch;
     };
 
-    ollama.enable = true;
+    ollama = {
+      enable = true;
+      package = pkgs.unstable.ollama;
+    };
 
     tlp = {
       enable = true;

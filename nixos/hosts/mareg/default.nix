@@ -45,7 +45,7 @@
       enable = true;
       paths = [
         "/home"
-        "/persist"
+        "/persist/safe"
       ];
     };
 
@@ -54,9 +54,9 @@
     containers = {
       enable = true;
       storage = {
-        default = "/storage/appdata/containers/storage";
-        bulk = "/storage/appdata/containers/bulk";
-        temp = "/storage/appdata/temp";
+        default = "/persist/safe/appdata/containers/data";
+        bulk = "/persist/safe/appdata/containers/bulk";
+        temp = "/persist/cache/appdata/containers/temp";
       };
       services = {
         ollama.enable = true;
@@ -106,6 +106,4 @@
       };
     };
   };
-
-  virtualisation.libvirtd.enable = true;
 }
