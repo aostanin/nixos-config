@@ -54,7 +54,7 @@ in {
           miniserve
           mqttui
           nix-tree
-          (p7zip.override {enableUnfree = true;})
+          (p7zip.override {enableUnfree = !cfg.minimal;})
           pv
           python3
           rainfrog

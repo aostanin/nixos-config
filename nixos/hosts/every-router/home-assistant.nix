@@ -147,6 +147,12 @@
           tag = "v${version}";
           hash = "sha256-6CvyHVakgtA2q5rRmtY42Svm+2Jov470Vj+WIE7ybAM=";
         };
+
+        postPatch = ''
+          # 10 attempts often isn't enough when the Delta 3 Plus wakes from standby
+          substituteInPlace custom_components/ef_ble/eflib/connection.py \
+            --replace-fail "MAX_CONNECTION_ATTEMPTS = 10" "MAX_CONNECTION_ATTEMPTS = 100"
+        '';
       };
     in [
       bms_ble

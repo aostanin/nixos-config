@@ -25,6 +25,7 @@
     kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
+      "thinkpad_acpi.fan_control=1"
       "zfs.zfs_arc_max=8589934592"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];

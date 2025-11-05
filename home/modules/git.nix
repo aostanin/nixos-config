@@ -78,6 +78,12 @@ in {
         # SyncThing
         ".stfolder"
         ".stignore"
+
+        # Claude
+        ".claude"
+
+        # Nix
+        "result"
       ];
     };
   };
