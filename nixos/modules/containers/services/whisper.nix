@@ -30,7 +30,14 @@ in {
       raw.image = "docker.io/rhasspy/wyoming-whisper:latest";
       raw.ports = ["${toString cfg.port}:10300"];
       volumes.data.destination = "/data";
-      raw.cmd = ["--model" cfg.model "--language" cfg.language];
+      raw.cmd = [
+        "--data-dir"
+        "/data"
+        "--model"
+        cfg.model
+        "--language"
+        cfg.language
+      ];
     };
   };
 }

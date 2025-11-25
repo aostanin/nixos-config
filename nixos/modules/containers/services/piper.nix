@@ -25,7 +25,12 @@ in {
       raw.image = "docker.io/rhasspy/wyoming-piper:latest";
       raw.ports = ["${toString cfg.port}:10200"];
       volumes.data.destination = "/data";
-      raw.cmd = ["--voice" cfg.voice];
+      raw.cmd = [
+        "--data-dir"
+        "/data"
+        "--voice"
+        cfg.voice
+      ];
     };
   };
 }
