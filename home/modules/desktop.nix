@@ -17,7 +17,6 @@ in {
       android.enable = lib.mkDefault true;
       chromium.enable = lib.mkDefault true;
       electronics.enable = lib.mkDefault true;
-      emacs.enable = lib.mkDefault true;
       firefox.enable = lib.mkDefault true;
       foot.enable = lib.mkDefault true;
       gnupg.enable = lib.mkDefault true;
@@ -43,7 +42,6 @@ in {
           jellyfin-media-player
           krita
           libreoffice
-          logseq
           moonlight-qt
           sparrow
           steam
@@ -56,7 +54,6 @@ in {
           })
           thunderbird
           virt-manager
-          unstable.windsurf
           wineWowPackages.stable
           wl-clipboard
           zathura
@@ -65,7 +62,6 @@ in {
           discord
           element-desktop
           slack
-          zoom-us
         ]
         ++ (with pkgs.kdePackages; [
           # Plasma

@@ -352,6 +352,13 @@ in {
         vim.opt.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
         require('claudecode').setup({
+          terminal = {
+            split_width_percentage = 0.5,
+          },
+          diff_opts = {
+            keep_terminal_focus = true,
+          },
+
           -- Keymaps don't seem to work, so disable and set manually
           keymaps = {
             toggle = {
@@ -484,7 +491,7 @@ in {
               gofmt.command = lib.getExe' pkgs.go "gofmt";
               pg_format.command = lib.getExe pkgs.pgformatter;
               prettier.command = lib.getExe pkgs.nodePackages.prettier;
-              rustfmt.command = lib.getExe pkgs.rustPackages.rustfmt;
+              rustfmt.command = lib.getExe pkgs.unstable.rustPackages.rustfmt;
               shfmt = {
                 command = lib.getExe pkgs.shfmt;
                 prepend_args = ["-i" "2" "-ci" "-bn"];
@@ -623,6 +630,8 @@ in {
         };
 
         render-markdown.enable = true;
+
+        snacks.enable = true;
 
         telescope = {
           enable = true;
