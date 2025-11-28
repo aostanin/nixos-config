@@ -224,9 +224,8 @@ in {
         assigns = {
           "2" = [
             {class = "^discord$";}
-            {class = "^Element$";}
-            {class = "^SchildiChat$";}
-            {class = "^Slack$";}
+            {app_id = "^Element$";}
+            {app_id = "^Slack$";}
             {app_id = "^thunderbird$";}
             {
               title = "^LINE$";
