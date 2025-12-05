@@ -95,7 +95,7 @@
   };
 
   services = {
-    logind.lidSwitch = "ignore";
+    logind.settings.Login.HandleLidSwitch = "ignore";
 
     tlp = {
       enable = true;

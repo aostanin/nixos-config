@@ -7,10 +7,6 @@
 }: let
   cfg = config.localModules.easytier;
 in {
-  imports = [
-    "${inputs.nixpkgs-unstable}/nixos/modules/services/networking/easytier.nix"
-  ];
-
   options.localModules.easytier = {
     enable = lib.mkEnableOption "easytier";
   };

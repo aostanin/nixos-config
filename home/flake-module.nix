@@ -29,7 +29,7 @@
             home = {
               inherit (secrets.user) username;
               homeDirectory = homeDirectory;
-              stateVersion = "25.05";
+              stateVersion = "25.11";
             };
 
             systemd.user.startServices = "sd-switch";
@@ -40,8 +40,8 @@
             };
           }
           ./hosts/${hostname}
-          inputs.sops-nix.homeManagerModules.sops
-          inputs.nixvim.homeManagerModules.nixvim
+          inputs.sops-nix.homeModules.sops
+          inputs.nixvim.homeModules.nixvim
         ];
         extraSpecialArgs = {
           inherit inputs nixpkgsConfig secrets sopsFiles;

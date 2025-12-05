@@ -39,7 +39,7 @@ in {
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       roboto
     ];
 
@@ -119,7 +119,6 @@ in {
 
     services.greetd = {
       enable = true;
-      vt = 7;
       settings = {
         default_session = let
           startSway = pkgs.writeScriptBin "start-sway" ''
@@ -128,7 +127,7 @@ in {
           '';
         in {
           command = ''
-            ${lib.getExe pkgs.greetd.tuigreet} \
+            ${lib.getExe pkgs.tuigreet} \
               --time \
               --asterisks \
               --remember \
@@ -200,6 +199,8 @@ in {
         enable = true;
         enable32Bit = true; # Needed for Steam
       };
+
+      opengl.enable = true;
 
       printers.ensurePrinters = [
         {

@@ -26,6 +26,7 @@ in {
       qt.enable = lib.mkDefault true;
       sway.enable = lib.mkDefault true;
       syncthing.enable = lib.mkDefault true;
+      video.enable = lib.mkDefault true;
       vscode.enable = lib.mkDefault true;
     };
 
@@ -34,7 +35,7 @@ in {
         [
           # GUI
           audacity
-          bitwarden
+          bitwarden-desktop
           feishin
           filezilla
           gimp
@@ -78,6 +79,7 @@ in {
       mpv = {
         enable = true;
         package = pkgs.mpv-unwrapped.override {ffmpeg = pkgs.ffmpeg.override {withV4l2 = true;};};
+        config.hwdec = "auto";
       };
     };
 

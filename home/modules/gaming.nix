@@ -23,7 +23,7 @@ in {
       dolphin-emu
       retroarch # TODO: Add cores?
       rpcs3
-      ryujinx
+      ryubing
     ];
   };
 }

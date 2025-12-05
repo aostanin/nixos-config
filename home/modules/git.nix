@@ -19,9 +19,11 @@ in {
     programs.git = {
       enable = true;
       lfs.enable = true;
-      userName = secrets.user.fullName;
-      userEmail = secrets.user.emailAddress;
-      extraConfig = {
+      settings = {
+        user = {
+          name = secrets.user.fullName;
+          email = secrets.user.emailAddress;
+        };
         init = {
           defaultBranch = "main";
         };
@@ -34,19 +36,19 @@ in {
         url = {
           "ssh://git@github.com/".insteadOf = "https://github.com/";
         };
-      };
-      aliases = {
-        a = "add";
-        br = "branch";
-        c = "commit";
-        cm = "commit -m";
-        co = "checkout";
-        cob = "checkout -b";
-        d = "diff";
-        f = "fetch";
-        pl = "pull";
-        po = "push origin";
-        s = "status -s";
+        alias = {
+          a = "add";
+          br = "branch";
+          c = "commit";
+          cm = "commit -m";
+          co = "checkout";
+          cob = "checkout -b";
+          d = "diff";
+          f = "fetch";
+          pl = "pull";
+          po = "push origin";
+          s = "status -s";
+        };
       };
       ignores = [
         # Compiled source

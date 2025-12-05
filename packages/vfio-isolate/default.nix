@@ -4,10 +4,14 @@
   fetchFromGitHub,
   click,
   psutil,
+  setuptools,
 }:
 buildPythonPackage rec {
   pname = "vfio-isolate";
   version = "0.5.1";
+
+  pyproject = true;
+  build-system = [ setuptools ];
 
   src = fetchFromGitHub {
     owner = "spheenik";

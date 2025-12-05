@@ -5,12 +5,9 @@
   ...
 }: let
   cfg = config.localModules.sway;
-  rofiPkg = pkgs.rofi-wayland.override {
+  rofiPkg = pkgs.rofi.override {
     plugins = [
-      # Workaround for https://github.com/NixOS/nixpkgs/issues/298539
-      (pkgs.rofi-calc.override {
-        rofi-unwrapped = pkgs.rofi-wayland-unwrapped;
-      })
+      pkgs.rofi-calc
     ];
   };
   rofimojiPkg = pkgs.rofimoji;

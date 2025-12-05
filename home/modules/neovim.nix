@@ -574,9 +574,9 @@ in {
 
         neo-tree = {
           enable = true;
-          filesystem = {
-            filteredItems.visible = true;
-            followCurrentFile.enabled = true;
+          settings.filesystem = {
+            filtered_items.visible = true;
+            follow_current_file.enabled = true;
           };
         };
 

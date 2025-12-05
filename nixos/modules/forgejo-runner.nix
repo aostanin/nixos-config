@@ -15,10 +15,10 @@ in {
     sops.secrets."forgejo/runner_token" = {};
 
     services.gitea-actions-runner = {
-      package = pkgs.forgejo-actions-runner;
+      package = pkgs.forgejo-runner;
       instances.default = let
         arch =
-          if pkgs.system == "aarch64-linux"
+          if pkgs.stdenv.hostPlatform.system == "aarch64-linux"
           then "-arm64"
           else "";
       in {

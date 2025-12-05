@@ -21,12 +21,12 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules = {
-      ai.enable = lib.mkDefault true;
+      ai.enable = lib.mkDefault (!cfg.minimal);
       git.enable = lib.mkDefault true;
-      neovim.enable = lib.mkDefault true;
+      neovim.enable = lib.mkDefault (!cfg.minimal);
       ssh.enable = lib.mkDefault true;
       tmux.enable = lib.mkDefault true;
-      zellij.enable = lib.mkDefault true;
+      zellij.enable = lib.mkDefault (!cfg.minimal);
       zsh.enable = lib.mkDefault true;
     };
 
@@ -81,7 +81,6 @@ in {
           unstable.ollama
           tealdeer
           tokei
-          tuir
           yt-dlp
         ]
         ++ lib.optionals (!cfg.minimal && pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
@@ -116,7 +115,7 @@ in {
       starship.enable = true;
 
       yazi = {
-        enable = true;
+        enable = !cfg.minimal;
         enableZshIntegration = true;
       };
 

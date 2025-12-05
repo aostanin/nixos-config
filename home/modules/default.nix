@@ -28,6 +28,7 @@
     ./syncthing.nix
     ./tmux.nix
     ./trayscale.nix
+    ./video.nix
     ./vscode.nix
     ./zellij.nix
     ./zsh.nix
