@@ -36,6 +36,18 @@
     hostId = "e9fbbf71";
     firewall = {
       enable = true;
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
       interfaces.tailscale0 = {
         allowedTCPPorts = [
           22 # SSH
@@ -43,22 +55,10 @@
           443 # HTTPS
           22000 # Syncthing
         ];
-        allowedTCPPortRanges = [
-          {
-            from = 1714;
-            to = 1764;
-          } # KDE Connect
-        ];
         allowedUDPPorts = [
           5353 # Avahi
           22000 # Syncthing
           21027 # Syncthing
-        ];
-        allowedUDPPortRanges = [
-          {
-            from = 1714;
-            to = 1764;
-          } # KDE Connect
         ];
       };
     };
