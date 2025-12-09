@@ -6,7 +6,6 @@
     ./containers
     ./coredns.nix
     ./desktop.nix
-    ./easytier.nix
     ./forgejo-runner.nix
     ./home-server.nix
     ./impermanence.nix
