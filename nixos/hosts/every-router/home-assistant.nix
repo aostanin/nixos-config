@@ -117,22 +117,49 @@
       "switchbot"
     ];
     customComponents = let
+      aiobmsble = pkgs.home-assistant.python.pkgs.buildPythonPackage rec {
+        pname = "aiobmsble";
+        version = "0.12.1";
+
+        pyproject = true;
+
+        nativeBuildInputs = with pkgs.home-assistant.python.pkgs; [
+          setuptools-scm
+        ];
+
+        propagatedBuildInputs = with pkgs.home-assistant.python.pkgs; [
+          bleak
+          bleak-retry-connector
+        ];
+
+        src = pkgs.fetchFromGitHub {
+          owner = "patman15";
+          repo = pname;
+          tag = version;
+          hash = "sha256-EaIJPBWKI9KZl7wcK/piZjAcywbgkrztKO0xuXbhh7A=";
+        };
+      };
+
       bms_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "patman15";
         domain = "bms_ble";
-        version = "1.21.0";
+        version = "2.2.0";
+
+        dependencies = [
+          aiobmsble
+        ];
 
         src = pkgs.fetchFromGitHub {
           owner = "patman15";
           repo = "BMS_BLE-HA";
           tag = version;
-          hash = "sha256-+8HGdQotqjpYSldRiN1uUTVJUzTRR73xO/i18gWOeuc=";
+          hash = "sha256-qSff6sfDszdx56U0OdkCHWz4ndCGTTHS01lH8qwJYBI=";
         };
       };
       ef_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "rabits";
         domain = "ef_ble";
-        version = "0.5.2";
+        version = "0.5.5";
 
         dependencies = with pkgs.home-assistant.python.pkgs; [
           ecdsa
@@ -145,7 +172,7 @@
           inherit owner;
           repo = "ha-ef-ble";
           tag = "v${version}";
-          hash = "sha256-6CvyHVakgtA2q5rRmtY42Svm+2Jov470Vj+WIE7ybAM=";
+          hash = "sha256-474ov1RA7/D3tkvSjxvCeAxG26Gd72vgS87ao86b19s=";
         };
 
         postPatch = ''
@@ -158,64 +185,8 @@
       bms_ble
       ef_ble
     ];
-    extraPackages = python3Packages: let
-      yagrc = python3Packages.buildPythonPackage rec {
-        pname = "yagrc";
-        version = "1.1.2";
-
-        pyproject = true;
-
-        nativeBuildInputs = with python3Packages; [
-          setuptools-scm
-        ];
-
-        propagatedBuildInputs = with python3Packages; [
-          grpcio
-          grpcio-reflection
-          protobuf
-        ];
-
-        doCheck = false;
-
-        src = pkgs.fetchFromGitHub {
-          owner = "sparky8512";
-          repo = pname;
-          rev = "v${version}";
-          hash = "sha256-nqUzDJfLsI8n8UjfCuOXRG6T8ibdN6fSGPPxm5RJhQk=";
-        };
-      };
-      starlink-grpc = python3Packages.buildPythonPackage rec {
-        pname = "starlink-grpc";
-        version = "1.2.3";
-
-        pyproject = true;
-
-        nativeBuildInputs = with python3Packages; [
-          setuptools-scm
-        ];
-
-        propagatedBuildInputs = with python3Packages; [
-          grpcio
-          protobuf
-          typing-extensions
-          yagrc
-        ];
-
-        postPatch = ''
-          cd packaging
-        '';
-
-        src = pkgs.fetchFromGitHub {
-          owner = "sparky8512";
-          repo = "starlink-grpc-tools";
-          rev = "v${version}";
-          hash = "sha256-TXj8cU5abVIA81vEylYgZCIAUk31BppwRdHMl9kOEPQ=";
-        };
-      };
-    in [
-      # TODO: This is fixed in unstable
-      # ref: https://github.com/NixOS/nixpkgs/pull/422982
-      starlink-grpc
+    extraPackages = python3Packages: [
+      python3Packages.starlink-grpc-core
       # FIXME: Why are these two needed? Should be propogated?
       python3Packages.grpcio
       python3Packages.crc
