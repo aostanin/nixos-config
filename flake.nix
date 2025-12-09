@@ -38,6 +38,7 @@
     };
     nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
     wolly.url = "github:threadexio/wolly";
+    terranix.url = "github:terranix/terranix";
   };
 
   outputs = inputs @ {
@@ -99,6 +100,7 @@
         (importApply ./nixos/flake-module.nix args)
         (importApply ./darwin/flake-module.nix args)
         (importApply ./home/flake-module.nix args)
+        (importApply ./terranix/flake-module.nix {})
       ];
       systems = ["x86_64-linux" "aarch64-linux"];
       perSystem = {
