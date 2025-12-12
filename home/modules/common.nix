@@ -42,7 +42,6 @@ in {
           ctop
           fd
           gdu
-          gitui
           gping
           htop
           jq
@@ -58,21 +57,22 @@ in {
           pv
           python3
           rainfrog
+          rclone
           ripgrep
           sshfs
           stress
           tig
           tio
           tmuxp
+          tree
+          wol
         ]
         ++ lib.optionals (!pkgs.stdenv.isDarwin) [
           dhex
           httm
           personal-scripts
           powertop
-          rclone
           s-tui
-          wol
         ]
         ++ lib.optionals (!cfg.minimal) [
           ffmpeg
@@ -84,7 +84,6 @@ in {
           yt-dlp
         ]
         ++ lib.optionals (!cfg.minimal && pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
-          beets # broken on aarch64
           steam-run
         ];
 

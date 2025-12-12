@@ -11,7 +11,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    programs.tmux = {
+    programs.tmux = rec {
       enable = true;
       aggressiveResize = true;
       baseIndex = 1;
@@ -19,6 +19,7 @@ in {
       escapeTime = 0;
       extraConfig = ''
         set -g allow-passthrough on
+        bind-key C-${shortcut} last-window
       '';
       keyMode = "vi";
       mouse = true;

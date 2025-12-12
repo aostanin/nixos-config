@@ -13,19 +13,20 @@
 
 ## Hosts
 
-| Host         | Description            |
-| ------------ | ---------------------- |
-| elena        | Home Desktop           |
-| every-router | BananaPi R3 Mini       |
-| mac-vm       | macOS VM on elena      |
-| mareg        | ThinkPad T440p         |
-| octopi       | Raspberry Pi 3         |
-| roan         | ThinkPad X250          |
-| skye         | ThinkPad X13 Gen 4 AMD |
-| tio          | Raspberry Pi 4 4 GB    |
-| vps-oci1     | Oracle Cloud AMD Micro |
-| vps-oci2     | Oracle Cloud AMD Micro |
-| vps-oci-arm1 | Oracle Cloud Ampere    |
+| Host                | Description            |
+| ------------------- | ---------------------- |
+| andreis-macbook-pro | MacBook Pro M4 Pro     |
+| elena               | Home Desktop           |
+| every-router        | BananaPi R3 Mini       |
+| mac-vm              | macOS VM on elena      |
+| mareg               | ThinkPad T440p         |
+| octopi              | Raspberry Pi 3         |
+| roan                | ThinkPad X250          |
+| skye                | ThinkPad X13 Gen 4 AMD |
+| tio                 | Raspberry Pi 4 4 GB    |
+| vps-oci1            | Oracle Cloud AMD Micro |
+| vps-oci2            | Oracle Cloud AMD Micro |
+| vps-oci-arm1        | Oracle Cloud Ampere    |
 
 ### Adding a new host
 

@@ -144,10 +144,7 @@ in {
     };
 
     systemd.tmpfiles.rules = let
-      homeDirectory =
-        if pkgs.stdenv.isDarwin
-        then "/Users/${secrets.user.username}"
-        else "/home/${secrets.user.username}";
+      homeDirectory = "/home/${secrets.user.username}";
     in [
       # Workaround for https://github.com/Mic92/sops-nix/issues/235#issuecomment-1272535889
       "d ${homeDirectory}/.ssh 0700 ${secrets.user.username} ${config.users.users.${secrets.user.username}.group} - -"

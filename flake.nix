@@ -17,6 +17,15 @@
       url = "github:LnL7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     flake-parts.url = "github:hercules-ci/flake-parts";
     sops-nix = {
@@ -57,6 +66,7 @@
       terranix = ./secrets/sops/terranix.enc.yaml;
     };
     hosts = {
+      andreis-macbook-pro = {system = "aarch64-darwin";};
       elena = {system = "x86_64-linux";};
       every-router = {
         system = "aarch64-linux";

@@ -22,7 +22,7 @@ in {
           TERM = "xterm-256color";
         };
         font = {
-          size = 10.0;
+          size = 12.0;
           normal = {
             family = "Hack Nerd Font";
           };

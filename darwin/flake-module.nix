@@ -10,7 +10,7 @@
   ...
 }: {
   flake = let
-    inherit (inputs) nixpkgs nix-darwin;
+    inherit (inputs) nixpkgs nix-darwin sops-nix nix-homebrew homebrew-core homebrew-cask;
     inherit (nixpkgs) lib;
     mkDarwinSystem = {
       hostname,
@@ -22,8 +22,15 @@
           inherit inputs nixpkgsConfig secrets sopsFiles;
         };
         modules = [
+          ./modules
+          sops-nix.darwinModules.sops
+          nix-homebrew.darwinModules.nix-homebrew
           {
             system.stateVersion = 6;
+            sops = {
+              defaultSopsFile = sopsFiles.default;
+              age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+            };
           }
           (./hosts + "/${hostname}")
         ];

@@ -7,6 +7,8 @@
     ./chromium.nix
     ./common.nix
     ./desktop.nix
+    ./desktop-darwin.nix
+    ./desktop-linux.nix
     ./electronics.nix
     ./emacs
     ./email.nix

@@ -31,6 +31,10 @@
     gaming.enable = true;
   };
 
+  home.packages = with pkgs; [
+    beets
+  ];
+
   xdg.configFile."looking-glass/client.ini".text = lib.generators.toINI {} {
     app = {
       shmFile = "/dev/kvmfr0";
