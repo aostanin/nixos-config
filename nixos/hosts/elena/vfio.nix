@@ -28,6 +28,7 @@
       postAttachCommands = ''
         # Disable LED
         ${setGpuLedColor "000000"}
+        systemctl restart nvidia-container-toolkit-cdi-generator.service
         systemctl start $(cat /tmp/nvidia-services)
         rm /tmp/nvidia-services
       '';
@@ -42,6 +43,7 @@ in {
   boot = {
     kernelParams = [
       "vfio-pci.ids=${lib.concatStringsSep "," vfioPciIds}"
+      "pci=realloc=off" # Prevent PCI BAR reallocation - fixes ReBAR + VFIO conflict
     ];
   };
 
