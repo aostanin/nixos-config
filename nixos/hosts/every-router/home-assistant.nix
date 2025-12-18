@@ -3,11 +3,8 @@
 
   services.home-assistant = {
     enable = true;
-    # Starlink stats are broken in versions below 2025.6
-    package = pkgs.unstable.home-assistant.overrideAttrs (oldAttrs: {
-      # Fails under QEMU
-      doInstallCheck = false;
-    });
+    # TODO: Downgrade to stable
+    package = pkgs.unstable.home-assistant;
     config = {
       http = {
         use_x_forwarded_for = true;
@@ -105,6 +102,15 @@
             value_template = "{{ value | multiply(0.001) | round(1) }}";
             scan_interval = 60;
             device_class = "temperature";
+            state_class = "measurement";
+          };
+        }
+        {
+          sensor = {
+            name = "Modem Signal Quality";
+            command = "${pkgs.modemmanager}/bin/mmcli -m 0 -J | ${pkgs.jq}/bin/jq -r '.modem.generic.\"signal-quality\".value'";
+            unit_of_measurement = "%";
+            scan_interval = 60;
             state_class = "measurement";
           };
         }
