@@ -37,5 +37,11 @@ in {
       nerd-fonts.hack
       noto-fonts
     ];
+
+    services = {
+      openssh.enable = true;
+
+      tailscale.enable = true;
+    };
   };
 }

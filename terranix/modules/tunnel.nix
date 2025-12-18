@@ -27,22 +27,18 @@ in {
 
   config = {
     resource = lib.mkMerge (lib.mapAttrsToList (tunnelName: tunnelConfig: {
-        random_password."${tunnelName}_tunnel_secret" = {
-          length = 64;
-        };
-
-        cloudflare_tunnel."${tunnelName}" = {
+        cloudflare_zero_trust_tunnel_cloudflared."${tunnelName}" = {
           account_id = tunnelConfig.accountId;
           name = tunnelName;
-          secret = "\${base64sha256(random_password.${tunnelName}_tunnel_secret.result)}";
+          config_src = "cloudflare";
         };
 
-        cloudflare_tunnel_config."${tunnelName}" = {
-          tunnel_id = config.resource.cloudflare_tunnel."${tunnelName}" "id";
+        cloudflare_zero_trust_tunnel_cloudflared_config."${tunnelName}" = {
+          tunnel_id = config.resource.cloudflare_zero_trust_tunnel_cloudflared."${tunnelName}" "id";
           account_id = tunnelConfig.accountId;
           config = {
             origin_request.no_tls_verify = true;
-            ingress_rule = [
+            ingress = [
               {
                 inherit (tunnelConfig) service;
               }
@@ -52,11 +48,19 @@ in {
       })
       tunnels);
 
+    data.cloudflare_zero_trust_tunnel_cloudflared_token = lib.mkMerge (lib.mapAttrsToList (tunnelName: tunnelConfig: {
+        "${tunnelName}" = {
+          account_id = tunnelConfig.accountId;
+          tunnel_id = config.resource.cloudflare_zero_trust_tunnel_cloudflared."${tunnelName}" "id";
+        };
+      })
+      tunnels);
+
     output = lib.mkMerge (lib.mapAttrsToList (tunnelName: tunnelConfig: {
-        "tunnel_id_${tunnelName}".value = config.resource.cloudflare_tunnel."${tunnelName}" "id";
+        "tunnel_id_${tunnelName}".value = config.resource.cloudflare_zero_trust_tunnel_cloudflared."${tunnelName}" "id";
 
         "tunnel_token_${tunnelName}" = {
-          value = config.resource.cloudflare_tunnel."${tunnelName}" "tunnel_token";
+          value = config.data.cloudflare_zero_trust_tunnel_cloudflared_token."${tunnelName}" "token";
           sensitive = true;
         };
       })

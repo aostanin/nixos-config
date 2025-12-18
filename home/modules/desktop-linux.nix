@@ -41,6 +41,7 @@ in {
           gimp
           gparted
           jellyfin-media-player
+          kooha
           krita
           libreoffice
           moonlight-qt

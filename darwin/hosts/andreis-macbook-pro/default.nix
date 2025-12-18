@@ -1,8 +1,7 @@
 {pkgs, ...}: {
   localModules = {
+    aerospace.enable = true;
     common.enable = true;
-
-    yabai.enable = true;
   };
 
   environment.systemPackages = [

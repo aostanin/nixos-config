@@ -14,6 +14,9 @@ in {
     home.packages = with pkgs; [
       unstable.claude-code
       unstable.gemini-cli
+      unstable.goose-cli
+      unstable.opencode
+      unstable.qwen-code
     ];
   };
 }

@@ -11,13 +11,12 @@
     lib.tfRef "local.tailscale_devices.${name}.${attribute}";
 in {
   terraform.required_providers = {
-    # Workaround for https://github.com/NixOS/nixpkgs/issues/283015#issuecomment-1904909598
-    cloudflare.source = "registry.terraform.io/cloudflare/cloudflare";
-    local.source = "registry.terraform.io/hashicorp/local";
-    null.source = "registry.terraform.io/hashicorp/null";
-    random.source = "registry.terraform.io/hashicorp/random";
-    sops.source = "registry.terraform.io/carlpett/sops";
-    tailscale.source = "registry.terraform.io/tailscale/tailscale";
+    cloudflare.source = "cloudflare/cloudflare";
+    local.source = "local";
+    null.source = "null";
+    random.source = "random";
+    sops.source = "carlpett/sops";
+    tailscale.source = "tailscale/tailscale";
   };
 
   data.sops_file.secrets.source_file = toString ../secrets/sops/secrets.enc.yaml;
@@ -25,30 +24,30 @@ in {
   provider.cloudflare.api_token = "\${data.sops_file.secrets.data[\"cloudflare.api_token\"]}";
   provider.tailscale.api_key = "\${data.sops_file.secrets.data[\"tailscale.api_key\"]}";
 
-  resource.cloudflare_record = let
+  resource.cloudflare_dns_record = let
     servers = lib.filterAttrs (n: v: v.tunnelId != null) secrets.servers;
   in
     lib.mkMerge ([
         (lib.mapAttrs' (server: config:
           lib.attrsets.nameValuePair "${server}-cf" {
-            allow_overwrite = true;
             zone_id = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
             type = "CNAME";
             name = "${server}-cf";
-            value = "${config.tunnelId}.cfargotunnel.com";
+            content = "${config.tunnelId}.cfargotunnel.com";
             proxied = true;
+            ttl = 1; # Auto TTL when proxied
           })
         servers)
       ]
       ++ builtins.attrValues (builtins.mapAttrs (server: config: (builtins.listToAttrs (builtins.map (subdomain: {
           name = builtins.replaceStrings ["."] ["_"] subdomain;
           value = {
-            allow_overwrite = true;
             zone_id = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
             type = "CNAME";
             name = subdomain;
-            value = "${server}-cf.${domain}";
+            content = "${server}-cf.${domain}";
             proxied = true;
+            ttl = 1; # Auto TTL when proxied
           };
         })
         # TODO: Only public

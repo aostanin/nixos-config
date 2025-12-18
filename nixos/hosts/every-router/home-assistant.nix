@@ -19,6 +19,7 @@
       };
       bluetooth = {};
       config = {};
+      energy = {};
       history = {};
       image_upload = {};
       logbook = {};
@@ -185,6 +186,7 @@
       bms_ble
       ef_ble
     ];
+
     extraPackages = python3Packages: [
       python3Packages.starlink-grpc-core
       # FIXME: Why are these two needed? Should be propogated?

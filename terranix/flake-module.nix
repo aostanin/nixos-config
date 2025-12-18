@@ -30,7 +30,7 @@
       program = toString (pkgs.writers.writeBash "terraform" ''
         if [[ -e config.tf.json ]]; then rm -f config.tf.json; fi
         ln -sf ${terraformConfiguration} config.tf.json
-        ${lib.getExe terraform} init
+        ${lib.getExe terraform} init --upgrade
         ${lib.getExe terraform} "$@"
       '');
     };
