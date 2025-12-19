@@ -14,18 +14,18 @@ creation_rules:
   - path_regex: secrets/sops/[^/]+\.(yaml|json|env|ini)$
     key_groups:
       - age:
-        - *user_aostanin
-        - *host_andreis-macbook-pro
-        - *host_elena
-        - *host_every-router
-        - *host_mareg
-        - *host_octopi
-        - *host_roan
-        - *host_skye
-        - *host_vps-oci1
-        - *host_vps-oci2
-        - *host_vps-oci-arm1
+          - *user_aostanin
+          - *host_andreis-macbook-pro
+          - *host_elena
+          - *host_every-router
+          - *host_mareg
+          - *host_octopi
+          - *host_roan
+          - *host_skye
+          - *host_vps-oci1
+          - *host_vps-oci2
+          - *host_vps-oci-arm1
   - path_regex: secrets/sops/bootstrap/.*$
     key_groups:
       - age:
-        - *user_aostanin
+          - *user_aostanin

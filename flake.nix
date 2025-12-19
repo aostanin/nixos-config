@@ -48,6 +48,10 @@
     nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
     wolly.url = "github:threadexio/wolly";
     terranix.url = "github:terranix/terranix";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -111,8 +115,9 @@
         (importApply ./darwin/flake-module.nix args)
         (importApply ./home/flake-module.nix args)
         (importApply ./terranix/flake-module.nix {})
+        inputs.treefmt-nix.flakeModule
       ];
-      systems = ["x86_64-linux" "aarch64-linux"];
+      systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
       perSystem = {
         config,
         self',
@@ -172,7 +177,29 @@
           };
         };
 
-        formatter = pkgs.alejandra;
+        treefmt = {
+          projectRootFile = "flake.nix";
+          programs = {
+            # Nix
+            alejandra.enable = true;
+
+            # Markdown, YAML, JSON
+            prettier = {
+              enable = true;
+              includes = ["*.md" "*.yaml" "*.yml" "*.json"];
+              excludes = ["secrets/sops/*.enc.yaml"];
+            };
+
+            # Shell scripts
+            shfmt = {
+              enable = true;
+              indent_size = 2;
+            };
+          };
+          # -ci: indent switch cases
+          # -bn: binary ops like && and | may start a line
+          settings.formatter.shfmt.options = lib.mkAfter ["-ci" "-bn"];
+        };
       };
       flake = {
         deploy.nodes = let

@@ -11,7 +11,7 @@ buildPythonPackage rec {
   version = "0.5.1";
 
   pyproject = true;
-  build-system = [ setuptools ];
+  build-system = [setuptools];
 
   src = fetchFromGitHub {
     owner = "spheenik";

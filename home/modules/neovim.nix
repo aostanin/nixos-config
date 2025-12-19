@@ -69,6 +69,7 @@ in {
         showtabline = 2; # Always show
 
         # Various options
+        autoread = true; # Auto-refresh files
         hidden = true; # Allow unsaved changes in abandoned buffers
         backup = false; # Don't write ~ files all over
         swapfile = false; # Don't write .swp files
@@ -332,6 +333,21 @@ in {
       ];
 
       extraConfigLua = ''
+        -- OpenCode keybindings
+        vim.keymap.set({ "n", "x" }, "<C-a>", function() require("opencode").ask("", { submit = true }) end, { desc = "Ask opencode" })
+        vim.keymap.set({ "n", "x" }, "<C-x>", function() require("opencode").select() end, { desc = "Execute opencode action…" })
+        vim.keymap.set({ "n", "t" }, "<C-.>", function() require("opencode").toggle() end, { desc = "Toggle opencode" })
+
+        vim.keymap.set({ "n", "x" }, "go",  function() return require("opencode").operator("") end, { expr = true, desc = "Add range to opencode" })
+        vim.keymap.set("n", "goo", function() return require("opencode").operator("") .. "_" end, { expr = true, desc = "Add line to opencode" })
+
+        vim.keymap.set("n", "<S-C-u>", function() require("opencode").command("session.half.page.up") end, { desc = "opencode half page up" })
+        vim.keymap.set("n", "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
+
+        -- Remap + and - for increment/decrement (overriding the C-a/C-x functions above)
+        vim.keymap.set("n", "+", "<C-a>", { desc = "Increment", noremap = true })
+        vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement", noremap = true })
+
         -- Japanese specific
         -- Allow line-breaks on Asian characters
         vim.opt.formatoptions = vim.opt.formatoptions + { 'm' }
@@ -491,7 +507,7 @@ in {
               gofmt.command = lib.getExe' pkgs.go "gofmt";
               pg_format.command = lib.getExe pkgs.pgformatter;
               prettier.command = lib.getExe pkgs.nodePackages.prettier;
-              rustfmt.command = lib.getExe pkgs.unstable.rustPackages.rustfmt;
+              rustfmt.command = lib.getExe pkgs.rustPackages.rustfmt;
               shfmt = {
                 command = lib.getExe pkgs.shfmt;
                 prepend_args = ["-i" "2" "-ci" "-bn"];
@@ -621,17 +637,30 @@ in {
           };
         };
 
-        orgmode = {
+        opencode = {
           enable = true;
+          package = pkgs.unstable.vimPlugins.opencode-nvim.overrideAttrs (old: {
+            runtimeDeps = old.runtimeDeps ++ [pkgs.lsof];
+          });
           settings = {
-            org_agenda_files = "~/Sync/org/**/*";
-            org_default_notes_file = "~/Sync/org/notes.org";
+            # port = 24817;
+            provider = {
+              enabled = "snacks";
+              cmd = lib.getExe pkgs.unstable.opencode;
+            };
           };
         };
 
         render-markdown.enable = true;
 
-        snacks.enable = true;
+        snacks = {
+          enable = true;
+          settings = {
+            input.enable = true;
+            picker.enable = true;
+            terminal.enable = true;
+          };
+        };
 
         telescope = {
           enable = true;
