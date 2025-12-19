@@ -608,6 +608,14 @@ in {
                 backend = "tmux";
                 enabled = true;
               };
+              tools = {
+                claude = {
+                  cmd = [ (lib.getExe pkgs.unstable.claude-code) ];
+                };
+                opencode = {
+                  cmd = [ (lib.getExe pkgs.unstable.opencode) ];
+                };
+              };
             };
           };
         };
