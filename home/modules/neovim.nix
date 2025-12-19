@@ -252,57 +252,65 @@ in {
           };
         }
 
-        # Claude Code
+        # Sidekick
         {
           key = "<leader>a";
           action = "";
-          options.desc = "AI/Claude Code";
+          options.desc = "AI/Sidekick";
         }
         {
-          key = "<leader>ac";
-          action = "<cmd>ClaudeCode<CR>";
-          options.desc = "Toggle Claude";
-        }
-        {
-          key = "<leader>af";
-          action = "<cmd>ClaudeCodeFocus<CR>";
-          options.desc = "Focus Claude";
-        }
-        {
-          key = "<leader>ar";
-          action = "<cmd>ClaudeCode --resume<CR>";
-          options.desc = "Resume Claude";
-        }
-        {
-          key = "<leader>aC";
-          action = "<cmd>ClaudeCode --continue<CR>";
-          options.desc = "Continue Claude";
-        }
-        {
-          key = "<leader>am";
-          action = "<cmd>ClaudeCodeSelectModel<CR>";
-          options.desc = "Select Claude model";
-        }
-        {
-          key = "<leader>ab";
-          action = "<cmd>ClaudeCodeAdd %<CR>";
-          options.desc = "Add current buffer";
-        }
-        {
-          mode = "v";
-          key = "<leader>as";
-          action = "<cmd>ClaudeCodeSend<CR>";
-          options.desc = "Send to Claude";
+          key = "<C-.>";
+          action.__raw = ''function() require("sidekick.cli").toggle() end'';
+          mode = ["n" "t" "i" "x"];
+          options.desc = "Sidekick Toggle";
         }
         {
           key = "<leader>aa";
-          action = "<cmd>ClaudeCodeDiffAccept<CR>";
-          options.desc = "Accept diff";
+          action.__raw = ''function() require("sidekick.cli").toggle() end'';
+          options.desc = "Sidekick Toggle CLI";
+        }
+        {
+          key = "<leader>as";
+          action.__raw = ''function() require("sidekick.cli").select() end'';
+          options.desc = "Select CLI";
         }
         {
           key = "<leader>ad";
-          action = "<cmd>ClaudeCodeDiffDeny<CR>";
-          options.desc = "Deny diff";
+          action.__raw = ''function() require("sidekick.cli").close() end'';
+          options.desc = "Detach CLI Session";
+        }
+        {
+          key = "<leader>at";
+          action.__raw = ''function() require("sidekick.cli").send({ msg = "{this}" }) end'';
+          mode = ["n" "x"];
+          options.desc = "Send This";
+        }
+        {
+          key = "<leader>af";
+          action.__raw = ''function() require("sidekick.cli").send({ msg = "{file}" }) end'';
+          options.desc = "Send File";
+        }
+        {
+          key = "<leader>av";
+          action.__raw = ''function() require("sidekick.cli").send({ msg = "{selection}" }) end'';
+          mode = ["x"];
+          options.desc = "Send Visual Selection";
+        }
+        {
+          key = "<leader>ap";
+          action.__raw = ''function() require("sidekick.cli").prompt() end'';
+          mode = ["n" "x"];
+          options.desc = "Sidekick Select Prompt";
+        }
+        {
+          key = "<leader>ac";
+          action.__raw = ''function() require("sidekick.cli").toggle({ name = "claude", focus = true }) end'';
+          options.desc = "Sidekick Toggle Claude";
+        }
+        {
+          key = "<leader>ao";
+          action.__raw = ''function() require("sidekick.cli").toggle({ name = "opencode", focus = true }) end'';
+          options.desc = "Sidekick Toggle OpenCode";
         }
 
         # Keep visual selection after indent
@@ -333,21 +341,6 @@ in {
       ];
 
       extraConfigLua = ''
-        -- OpenCode keybindings
-        vim.keymap.set({ "n", "x" }, "<C-a>", function() require("opencode").ask("", { submit = true }) end, { desc = "Ask opencode" })
-        vim.keymap.set({ "n", "x" }, "<C-x>", function() require("opencode").select() end, { desc = "Execute opencode action…" })
-        vim.keymap.set({ "n", "t" }, "<C-.>", function() require("opencode").toggle() end, { desc = "Toggle opencode" })
-
-        vim.keymap.set({ "n", "x" }, "go",  function() return require("opencode").operator("") end, { expr = true, desc = "Add range to opencode" })
-        vim.keymap.set("n", "goo", function() return require("opencode").operator("") .. "_" end, { expr = true, desc = "Add line to opencode" })
-
-        vim.keymap.set("n", "<S-C-u>", function() require("opencode").command("session.half.page.up") end, { desc = "opencode half page up" })
-        vim.keymap.set("n", "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
-
-        -- Remap + and - for increment/decrement (overriding the C-a/C-x functions above)
-        vim.keymap.set("n", "+", "<C-a>", { desc = "Increment", noremap = true })
-        vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement", noremap = true })
-
         -- Japanese specific
         -- Allow line-breaks on Asian characters
         vim.opt.formatoptions = vim.opt.formatoptions + { 'm' }
@@ -366,51 +359,6 @@ in {
 
         -- For auto-session
         vim.opt.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-
-        require('claudecode').setup({
-          terminal = {
-            split_width_percentage = 0.5,
-          },
-          diff_opts = {
-            keep_terminal_focus = true,
-          },
-
-          -- Keymaps don't seem to work, so disable and set manually
-          keymaps = {
-            toggle = {
-              normal = false,
-              terminal = false,
-              variants = {
-                continue = false,
-                verbose = false,
-              },
-            },
-            window_navigation = false,
-            scrolling = false,
-          },
-        })
-
-        -- Auto-unlist claude-code buffer
-        vim.api.nvim_create_autocmd("TermOpen", {
-          pattern = "*",
-          callback = function()
-            local buf_name = vim.api.nvim_buf_get_name(0)
-            if string.find(buf_name, "claude-") then
-              vim.bo.buflisted = false
-            end
-          end,
-        })
-
-        -- Filetype-specific keybinding for ClaudeCodeTreeAdd
-        vim.api.nvim_create_autocmd("FileType", {
-          pattern = { "NvimTree", "neo-tree", "oil" },
-          callback = function()
-            vim.keymap.set("n", "<leader>as", "<cmd>ClaudeCodeTreeAdd<cr>", {
-              buffer = true,
-              desc = "Add file",
-            })
-          end,
-        })
       '';
 
       env = {
@@ -424,11 +372,11 @@ in {
         gnuplot
         mermaid-cli
         plantuml
+        # For sidekick CLI process detection
+        lsof
       ];
 
       extraPlugins = [
-        # ref: https://github.com/nix-community/nixvim/issues/3500
-        pkgs.unstable.vimPlugins.claudecode-nvim
       ];
 
       plugins = {
@@ -439,6 +387,19 @@ in {
         blink-cmp = {
           enable = true;
           settings = {
+            keymap = {
+              "<Tab>" = [
+                "snippet_forward"
+                {
+                  __raw = ''
+                    function()
+                      return require("sidekick").nes_jump_or_apply()
+                    end
+                  '';
+                }
+                "fallback"
+              ];
+            };
             sources = {
               default = [
                 "copilot"
@@ -456,7 +417,7 @@ in {
                   max_completions = 3;
                   max_attempts = 4;
                   kind_name = "Copilot";
-                  kind_icon = " ";
+                  kind_icon = " ";
                   kind_hl = false;
                   debounce = 200;
                   auto_refresh = {
@@ -637,21 +598,19 @@ in {
           };
         };
 
-        opencode = {
+        render-markdown.enable = true;
+
+        sidekick = {
           enable = true;
-          package = pkgs.unstable.vimPlugins.opencode-nvim.overrideAttrs (old: {
-            runtimeDeps = old.runtimeDeps ++ [pkgs.lsof];
-          });
           settings = {
-            # port = 24817;
-            provider = {
-              enabled = "snacks";
-              cmd = lib.getExe pkgs.unstable.opencode;
+            cli = {
+              mux = {
+                backend = "tmux";
+                enabled = true;
+              };
             };
           };
         };
-
-        render-markdown.enable = true;
 
         snacks = {
           enable = true;
