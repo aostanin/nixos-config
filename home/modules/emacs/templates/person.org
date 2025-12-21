@@ -1,9 +1,0 @@
-#+title: ${title}
-
-* ${title}
-:PROPERTIES:
-:ADDRESS:
-:BIRTHDAY:
-:EMAIL:
-:PHONE:
-:END:

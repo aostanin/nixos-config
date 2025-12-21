@@ -444,7 +444,6 @@ in {
               go = ["gofmt"];
               javascript = ["biome" "biome-organize-imports"];
               javascriptreact = ["biome" "biome-organize-imports"];
-              lisp = ["emacs_elisp"];
               markdown = ["prettier"];
               nix = ["alejandra" "injected"];
               python = ["black"];
@@ -472,13 +471,6 @@ in {
               shfmt = {
                 command = lib.getExe pkgs.shfmt;
                 prepend_args = ["-i" "2" "-ci" "-bn"];
-              };
-              emacs_elisp = {
-                command = "sh";
-                args = [
-                  "-c"
-                  "tmpfile=$(mktemp); cat > \"$tmpfile\"; ${lib.getExe pkgs.emacs-nox} -Q --batch --eval \"(let ((inhibit-message t) (message-log-max nil) (indent-tabs-mode nil)) (with-temp-buffer (insert-file-contents \\\"$tmpfile\\\") (emacs-lisp-mode) (indent-region (point-min) (point-max)) (princ (buffer-substring-no-properties (point-min) (point-max)))))\"; rm -f \"$tmpfile\""
-                ];
               };
             };
           };
