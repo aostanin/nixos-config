@@ -38,6 +38,14 @@ in {
       noto-fonts
     ];
 
+    environment.variables = {
+      LANG = "en_US.UTF-8";
+      LC_TIME = "en_IE.UTF-8";
+      LC_MEASUREMENT = "en_IE.UTF-8";
+      LC_MONETARY = "ja_JP.UTF-8";
+      LC_PAPER = "ja_JP.UTF-8";
+    };
+
     services = {
       openssh.enable = true;
 

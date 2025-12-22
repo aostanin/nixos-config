@@ -62,7 +62,7 @@ in {
       extraLocaleSettings = {
         LC_TIME = "en_IE.UTF-8";
         LC_MEASUREMENT = "en_IE.UTF-8";
-        LC_MONETRY = "ja_JP.UTF-8";
+        LC_MONETARY = "ja_JP.UTF-8";
         LC_PAPER = "ja_JP.UTF-8";
       };
     };
