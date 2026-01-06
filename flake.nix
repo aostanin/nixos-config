@@ -48,6 +48,10 @@
     nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
     wolly.url = "github:threadexio/wolly";
     terranix.url = "github:terranix/terranix";
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";

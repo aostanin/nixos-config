@@ -602,10 +602,10 @@ in {
               };
               tools = {
                 claude = {
-                  cmd = [ (lib.getExe pkgs.unstable.claude-code) ];
+                  cmd = [(lib.getExe pkgs.unstable.claude-code)];
                 };
                 opencode = {
-                  cmd = [ (lib.getExe pkgs.unstable.opencode) ];
+                  cmd = [(lib.getExe pkgs.unstable.opencode)];
                 };
               };
             };

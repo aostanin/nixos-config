@@ -64,6 +64,9 @@ in {
           discord
           element-desktop
           slack
+
+          # AI
+          inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop
         ]
         ++ (with pkgs.kdePackages; [
           # Plasma

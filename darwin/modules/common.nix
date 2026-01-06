@@ -51,5 +51,97 @@ in {
 
       tailscale.enable = true;
     };
+
+    system.defaults = {
+      ActivityMonitor.IconType = 6; # CPU History
+
+      NSGlobalDomain = {
+        AppleInterfaceStyle = "Dark";
+        ApplePressAndHoldEnabled = false;
+        AppleShowAllExtensions = true;
+        AppleShowScrollBars = "WhenScrolling";
+        NSAutomaticCapitalizationEnabled = false;
+        NSAutomaticInlinePredictionEnabled = false;
+        NSAutomaticDashSubstitutionEnabled = false;
+        NSAutomaticPeriodSubstitutionEnabled = false;
+        NSAutomaticQuoteSubstitutionEnabled = false;
+        NSAutomaticSpellingCorrectionEnabled = false;
+        NSDocumentSaveNewDocumentsToCloud = false;
+        "com.apple.keyboard.fnState" = true; # F-keys behave as standard function keys
+        AppleMeasurementUnits = "Centimeters";
+        AppleMetricUnits = 1;
+        AppleTemperatureUnit = "Celsius";
+        AppleICUForce24HourTime = true;
+      };
+
+      WindowManager.EnableStandardClickToShowDesktop = false;
+
+      menuExtraClock = {
+        Show24Hour = true;
+        ShowAMPM = false;
+        ShowDayOfMonth = true;
+        ShowDayOfWeek = true;
+        ShowDate = 0; # When space allows
+        ShowSeconds = false;
+      };
+
+      controlcenter = {
+        BatteryShowPercentage = true;
+        Sound = true;
+        Bluetooth = true;
+        AirDrop = false;
+        Display = true;
+        FocusModes = false;
+        NowPlaying = false;
+      };
+
+      dock = {
+        autohide = true;
+        mru-spaces = false;
+        orientation = "left";
+        show-recents = false;
+        static-only = true;
+      };
+
+      finder = {
+        AppleShowAllFiles = true;
+        ShowStatusBar = true;
+        ShowPathbar = false;
+        FXDefaultSearchScope = "SCcf"; # Current folder
+        FXPreferredViewStyle = "Nlsv"; # List view
+        AppleShowAllExtensions = true;
+        CreateDesktop = false;
+        ShowExternalHardDrivesOnDesktop = false;
+        ShowHardDrivesOnDesktop = false;
+        ShowMountedServersOnDesktop = false;
+        ShowRemovableMediaOnDesktop = false;
+        _FXShowPosixPathInTitle = true;
+        _FXSortFoldersFirst = true;
+        FXEnableExtensionChangeWarning = false;
+        NewWindowTarget = "Home";
+      };
+
+      hitoolbox.AppleFnUsageType = "Do Nothing";
+
+      screencapture = {
+        disable-shadow = true;
+        target = "clipboard";
+      };
+
+      spaces.spans-displays = true;
+
+      trackpad = {
+        TrackpadRightClick = true;
+        TrackpadFourFingerPinchGesture = 0;
+        TrackpadFourFingerVertSwipeGesture = 0;
+        TrackpadThreeFingerHorizSwipeGesture = 0;
+        TrackpadThreeFingerVertSwipeGesture = 0;
+      };
+
+      universalaccess = {
+        reduceMotion = true;
+        reduceTransparency = true;
+      };
+    };
   };
 }

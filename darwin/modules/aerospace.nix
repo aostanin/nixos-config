@@ -14,28 +14,52 @@ in {
       enable = true;
       settings = {
         gaps = {
-          inner.horizontal = 1;
-          inner.vertical = 1;
-          outer.left = 0;
-          outer.right = 0;
-          outer.top = 0;
-          outer.bottom = 0;
+          inner.horizontal = 3;
+          inner.vertical = 3;
+          outer.left = 3;
+          outer.right = 3;
+          outer.top = 3;
+          outer.bottom = 3;
+        };
+
+        enable-normalization-flatten-containers = false;
+        enable-normalization-opposite-orientation-for-nested-containers = false;
+
+        workspace-to-monitor-force-assignment = {
+          "1" = ["lg" "built-in"];
+          "2" = ["dell" "built-in"];
+          "3" = ["built-in"];
+          "4" = ["lg" "built-in"];
+          "5" = ["dell" "built-in"];
+          "6" = ["built-in"];
+          "7" = ["lg" "built-in"];
+          "8" = ["lg" "built-in"];
+          "9" = ["lg" "built-in"];
         };
 
         mode.main.binding = let
-          modifier = "alt";
+          # cmd is mapped to cmd-ctrl-alt through Karabiner-
+          modifier = "cmd-ctrl-alt";
         in {
           # Focus
           "${modifier}-h" = "focus left";
           "${modifier}-j" = "focus down";
           "${modifier}-k" = "focus up";
           "${modifier}-l" = "focus right";
+          "${modifier}-left" = "focus left";
+          "${modifier}-down" = "focus down";
+          "${modifier}-up" = "focus up";
+          "${modifier}-right" = "focus right";
 
           # Move
           "${modifier}-shift-h" = "move left";
           "${modifier}-shift-j" = "move down";
           "${modifier}-shift-k" = "move up";
           "${modifier}-shift-l" = "move right";
+          "${modifier}-shift-left" = "move left";
+          "${modifier}-shift-down" = "move down";
+          "${modifier}-shift-up" = "move up";
+          "${modifier}-shift-right" = "move right";
 
           # Workspaces
           "${modifier}-1" = "workspace 1";
@@ -63,17 +87,21 @@ in {
           "${modifier}-f" = "fullscreen";
           "${modifier}-shift-space" = "layout floating tiling";
           "${modifier}-e" = "layout tiles horizontal vertical";
-          "${modifier}-s" = "layout accordion horizontal vertical";
+          "${modifier}-s" = "layout accordion vertical";
+          "${modifier}-w" = "layout accordion horizontal";
 
-          # Join
-          "${modifier}-v" = "join-with right";
-          "${modifier}-b" = "join-with down";
+          # Split
+          "${modifier}-b" = "split horizontal";
+          "${modifier}-v" = "split vertical";
 
           # Terminal
           "${modifier}-enter" = "exec-and-forget open -na Alacritty";
 
           # Resize mode
           "${modifier}-r" = "mode resize";
+
+          # Actions
+          "${modifier}-shift-q" = "close";
         };
 
         mode.resize.binding = {
@@ -81,10 +109,23 @@ in {
           j = "resize height +50";
           k = "resize height -50";
           l = "resize width +50";
+          left = "resize width -50";
+          down = "resize height +50";
+          up = "resize height -50";
+          right = "resize width +50";
           esc = "mode main";
           enter = "mode main";
         };
       };
+    };
+
+    services.jankyborders = {
+      enable = true;
+      width = 3.0;
+      hidpi = true;
+      active_color = "0xff689d6a";
+      inactive_color = "";
+      order = "above";
     };
   };
 }

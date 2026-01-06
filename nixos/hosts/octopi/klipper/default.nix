@@ -127,7 +127,6 @@ in {
         control_pin = "PB0";
         x_offset = -31.8;
         y_offset = -40.5;
-        z_offset = 3.605;
         speed = 35;
         samples = 3;
         samples_result = "median";

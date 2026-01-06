@@ -298,6 +298,11 @@
         writable = "false";
         comment = "media";
       };
+      personal = {
+        path = "/storage/personal";
+        writable = "false";
+        comment = "personal";
+      };
     };
   };
 }

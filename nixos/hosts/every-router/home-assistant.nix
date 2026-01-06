@@ -1,4 +1,28 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  aiobmsble = python3Packages:
+    python3Packages.buildPythonPackage rec {
+      pname = "aiobmsble";
+      version = "0.12.1";
+
+      pyproject = true;
+
+      nativeBuildInputs = with python3Packages; [
+        setuptools-scm
+      ];
+
+      propagatedBuildInputs = with python3Packages; [
+        bleak
+        bleak-retry-connector
+      ];
+
+      src = pkgs.fetchFromGitHub {
+        owner = "patman15";
+        repo = pname;
+        tag = version;
+        hash = "sha256-EaIJPBWKI9KZl7wcK/piZjAcywbgkrztKO0xuXbhh7A=";
+      };
+    };
+in {
   hardware.bluetooth.enable = true;
 
   services.home-assistant = {
@@ -122,38 +146,16 @@
       "esphome"
       "starlink"
       "switchbot"
+      "victron_ble"
     ];
     customComponents = let
-      aiobmsble = pkgs.home-assistant.python.pkgs.buildPythonPackage rec {
-        pname = "aiobmsble";
-        version = "0.12.1";
-
-        pyproject = true;
-
-        nativeBuildInputs = with pkgs.home-assistant.python.pkgs; [
-          setuptools-scm
-        ];
-
-        propagatedBuildInputs = with pkgs.home-assistant.python.pkgs; [
-          bleak
-          bleak-retry-connector
-        ];
-
-        src = pkgs.fetchFromGitHub {
-          owner = "patman15";
-          repo = pname;
-          tag = version;
-          hash = "sha256-EaIJPBWKI9KZl7wcK/piZjAcywbgkrztKO0xuXbhh7A=";
-        };
-      };
-
       bms_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "patman15";
         domain = "bms_ble";
         version = "2.2.0";
 
         dependencies = [
-          aiobmsble
+          (aiobmsble pkgs.home-assistant.python.pkgs)
         ];
 
         src = pkgs.fetchFromGitHub {
@@ -193,11 +195,61 @@
       ef_ble
     ];
 
-    extraPackages = python3Packages: [
-      python3Packages.starlink-grpc-core
-      # FIXME: Why are these two needed? Should be propogated?
-      python3Packages.grpcio
-      python3Packages.crc
-    ];
+    extraPackages = python3Packages: let
+      victron-ble = python3Packages.buildPythonPackage rec {
+        pname = "victron-ble";
+        version = "0.9.2";
+
+        pyproject = true;
+
+        nativeBuildInputs = with python3Packages; [
+          setuptools-scm
+        ];
+
+        dependencies = with python3Packages; [
+          bleak
+          click
+          pycryptodome
+        ];
+
+        src = pkgs.fetchFromGitHub {
+          owner = "keshavdv";
+          repo = pname;
+          tag = "v${version}";
+          hash = "sha256-qb9T/it6vk9kGlPCwzJguGosVD/o+ilyFcGR9JZSylE=";
+        };
+      };
+      victron-ble-ha-parser = python3Packages.buildPythonPackage rec {
+        pname = "victron-ble-ha-parser";
+        version = "0.4.9";
+
+        pyproject = true;
+
+        nativeBuildInputs = with python3Packages; [
+          setuptools-scm
+        ];
+
+        dependencies = with python3Packages; [
+          bluetooth-sensor-state-data
+          victron-ble
+        ];
+
+        src = pkgs.fetchFromGitHub {
+          owner = "rajlaud";
+          repo = pname;
+          tag = "v${version}";
+          hash = "sha256-gqhUMdHSWTovtUOBAZOE6l2FwqyY4UTCdFI6UkXh5LU=";
+        };
+      };
+    in
+      with python3Packages; [
+        # FIXME: Why are these two needed? Should be propogated?
+        victron-ble-ha-parser
+        starlink-grpc-core
+        grpcio
+        crc
+        ecdsa
+        (aiobmsble python3Packages)
+      ];
   };
 }

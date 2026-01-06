@@ -17,11 +17,13 @@ in {
     };
 
     home.packages = with pkgs; [
-      karabiner-elements
       scroll-reverser
-      slack
       thunderbird
       utm
+
+      # Chat
+      element-desktop
+      slack
     ];
   };
 }

@@ -200,8 +200,6 @@ in {
         enable32Bit = true; # Needed for Steam
       };
 
-      opengl.enable = true;
-
       printers.ensurePrinters = [
         {
           name = "Brother_HL-2270DW_series";

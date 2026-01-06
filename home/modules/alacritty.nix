@@ -56,6 +56,190 @@ in {
             white = "#ebdbb2";
           };
         };
+        keyboard.bindings = [
+          {
+            key = "C";
+            mods = "Control|Shift";
+            action = "Copy";
+          }
+          {
+            key = "V";
+            mods = "Control|Shift";
+            action = "Paste";
+          }
+          {
+            key = "F";
+            mods = "Control|Shift";
+            action = "SearchForward";
+          }
+          {
+            key = "B";
+            mods = "Control|Shift";
+            action = "SearchBackward";
+          }
+
+          # Unbind all Command bindings
+          {
+            key = "0";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "1";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "2";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "3";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "4";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "5";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "6";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "7";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "8";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "9";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "+";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "-";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "=";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "[";
+            mods = "Command|Shift";
+            action = "None";
+          }
+          {
+            key = "]";
+            mods = "Command|Shift";
+            action = "None";
+          }
+          {
+            key = "B";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "C";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "F";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "F";
+            mods = "Command|Control";
+            action = "None";
+          }
+          {
+            key = "H";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "H";
+            mods = "Command|Alt";
+            action = "None";
+          }
+          {
+            key = "K";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "M";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "N";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "NumpadAdd";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "NumpadSubtract";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "Q";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "T";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "Tab";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "Tab";
+            mods = "Command|Shift";
+            action = "None";
+          }
+          {
+            key = "V";
+            mods = "Command";
+            action = "None";
+          }
+          {
+            key = "W";
+            mods = "Command";
+            action = "None";
+          }
+        ];
       };
     };
   };

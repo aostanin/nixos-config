@@ -184,9 +184,6 @@
               }
               // lib.mapAttrs' (n: v: lib.nameValuePair v.address n) secrets.network.tailscale.hosts;
           };
-          recv = {
-            placeholder.encryption = "inherit";
-          };
           root_fs = "tank/backup/hosts/zfs";
         }
         {
@@ -199,9 +196,6 @@
             clients = {
               "127.0.0.1" = "elena";
             };
-          };
-          recv = {
-            placeholder.encryption = "inherit";
           };
           root_fs = "external/backup/hosts/zfs";
         }

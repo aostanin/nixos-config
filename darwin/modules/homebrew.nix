@@ -30,6 +30,7 @@ in {
     homebrew = {
       enable = true;
       casks = [
+        "claude"
       ];
       masApps = {
         Xcode = 497799835;
