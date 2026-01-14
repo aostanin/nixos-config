@@ -14,6 +14,7 @@ in {
     localModules = {
       alacritty.enable = lib.mkDefault true;
       firefox.enable = lib.mkDefault true;
+      syncthing.enable = lib.mkDefault true;
     };
 
     home.packages = with pkgs; [
