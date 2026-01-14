@@ -92,6 +92,7 @@ in {
         };
         forgejo.enable = true;
         guacamole.enable = true;
+        karakeep.enable = true;
         mealie.enable = true;
         miniflux.enable = true;
         netbootxyz.enable = true;

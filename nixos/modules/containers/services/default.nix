@@ -23,6 +23,7 @@
     ./jellyfin.nix
     ./jellyseerr.nix
     ./jobcan.nix
+    ./karakeep.nix
     ./komga.nix
     ./librespeed.nix
     ./lidarr.nix
