@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   # Don't let systemd-networkd manage WWAN interfaces
   systemd.network.networks.wwan = {
     matchConfig.Name = "ww*";
@@ -35,4 +35,9 @@
     enable = true;
     wantedBy = ["multi-user.target" "network.target"];
   };
+
+  # Restart ModemManager when WWAN interface appears
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="net", KERNEL=="ww*", DRIVERS=="qmi_wwan", RUN+="${pkgs.systemd}/bin/systemctl restart ModemManager"
+  '';
 }
