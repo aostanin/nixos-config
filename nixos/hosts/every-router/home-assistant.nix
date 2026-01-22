@@ -22,6 +22,36 @@
         hash = "sha256-EaIJPBWKI9KZl7wcK/piZjAcywbgkrztKO0xuXbhh7A=";
       };
     };
+  victron-ble = python3Packages:
+    python3Packages.buildPythonPackage rec {
+      pname = "victron-ble";
+      version = "0.9.3";
+
+      pyproject = true;
+
+      nativeBuildInputs = with python3Packages; [
+        setuptools-scm
+      ];
+
+      dependencies = with python3Packages; [
+        bleak
+        click
+        pycryptodome
+      ];
+
+      src = pkgs.fetchFromGitHub {
+        owner = "keshavdv";
+        repo = pname;
+        # To fix https://github.com/keshavdv/victron-ble/issues/20
+        rev = "c721522bee77fdf3b2cf304d5b9afc46e39bffe4";
+        hash = "sha256-IV3W71N8c5ESY3XdpOeITOQ+a3jk36/3ZbIcU5rq788=";
+      };
+
+      # VERSION file in repo not updated
+      postPatch = ''
+        echo "${version}" >victron_ble/VERSION
+      '';
+    };
 in {
   hardware.bluetooth.enable = true;
 
@@ -53,58 +83,6 @@ in {
       automation = "!include automations.yaml";
       script = "!include scripts.yaml";
       scene = "!include scenes.yaml";
-
-      template = [
-        {
-          sensor = [
-            {
-              name = "Battery Bank";
-              unit_of_measurement = "%";
-              state = ''
-                {% set battery1 = states('sensor.l_12100bnna60_b00077_battery') | float %}
-                {% set battery2 = states('sensor.l_12100bnna60_b00067_battery') | float %}
-                {{ ((battery1 + battery2) / 2) | round(1) }}
-              '';
-              availability = ''
-                {{ is_number(states('sensor.l_12100bnna60_b00077_battery')) and
-                   is_number(states('sensor.l_12100bnna60_b00067_battery')) }}
-              '';
-              device_class = "battery";
-              state_class = "measurement";
-            }
-            {
-              name = "Battery Bank Stored Energy";
-              unit_of_measurement = "Wh";
-              state = ''
-                {% set energy1 = states('sensor.l_12100bnna60_b00077_stored_energy') | float %}
-                {% set energy2 = states('sensor.l_12100bnna60_b00067_stored_energy') | float %}
-                {{ (energy1 + energy2) | round(1) }}
-              '';
-              availability = ''
-                {{ is_number(states('sensor.l_12100bnna60_b00077_stored_energy')) and
-                   is_number(states('sensor.l_12100bnna60_b00067_stored_energy')) }}
-              '';
-              device_class = "energy_storage";
-              state_class = "measurement";
-            }
-            {
-              name = "Battery Bank Power";
-              unit_of_measurement = "W";
-              state = ''
-                {% set power1 = states('sensor.l_12100bnna60_b00077_power') | float %}
-                {% set power2 = states('sensor.l_12100bnna60_b00067_power') | float %}
-                {{ (power1 + power2) | round(1) }}
-              '';
-              availability = ''
-                {{ is_number(states('sensor.l_12100bnna60_b00077_power')) and
-                   is_number(states('sensor.l_12100bnna60_b00067_power')) }}
-              '';
-              device_class = "power";
-              state_class = "measurement";
-            }
-          ];
-        }
-      ];
 
       command_line = [
         {
@@ -146,7 +124,6 @@ in {
       "esphome"
       "starlink"
       "switchbot"
-      "victron_ble"
     ];
     customComponents = let
       bms_ble = pkgs.buildHomeAssistantComponent rec {
@@ -190,61 +167,34 @@ in {
             --replace-fail "MAX_CONNECTION_ATTEMPTS = 10" "MAX_CONNECTION_ATTEMPTS = 100"
         '';
       };
-    in [
-      bms_ble
-      ef_ble
-    ];
+      victron_hacs = pkgs.buildHomeAssistantComponent rec {
+        owner = "keshavdv";
+        domain = "victron_ble";
+        version = "0.1.2";
 
-    extraPackages = python3Packages: let
-      victron-ble = python3Packages.buildPythonPackage rec {
-        pname = "victron-ble";
-        version = "0.9.2";
-
-        pyproject = true;
-
-        nativeBuildInputs = with python3Packages; [
-          setuptools-scm
-        ];
-
-        dependencies = with python3Packages; [
-          bleak
-          click
-          pycryptodome
+        dependencies = with pkgs.home-assistant.python.pkgs; [
+          (victron-ble pkgs.home-assistant.python.pkgs)
+          bluetooth-sensor-state-data
         ];
 
         src = pkgs.fetchFromGitHub {
           owner = "keshavdv";
-          repo = pname;
-          tag = "v${version}";
-          hash = "sha256-qb9T/it6vk9kGlPCwzJguGosVD/o+ilyFcGR9JZSylE=";
+          repo = "victron-hacs";
+          rev = "4bd629e7abe412df8ad495e5421af4fae97e2b15";
+          hash = "sha256-GgNnDWlVYnFhiiCCWYsS4uuOxjdCZtgeKVpGJ0TkxqE=";
         };
       };
-      victron-ble-ha-parser = python3Packages.buildPythonPackage rec {
-        pname = "victron-ble-ha-parser";
-        version = "0.4.9";
+    in [
+      bms_ble
+      ef_ble
+      victron_hacs
+    ];
 
-        pyproject = true;
-
-        nativeBuildInputs = with python3Packages; [
-          setuptools-scm
-        ];
-
-        dependencies = with python3Packages; [
-          bluetooth-sensor-state-data
-          victron-ble
-        ];
-
-        src = pkgs.fetchFromGitHub {
-          owner = "rajlaud";
-          repo = pname;
-          tag = "v${version}";
-          hash = "sha256-gqhUMdHSWTovtUOBAZOE6l2FwqyY4UTCdFI6UkXh5LU=";
-        };
-      };
-    in
+    extraPackages = python3Packages:
       with python3Packages; [
-        # FIXME: Why are these two needed? Should be propogated?
-        victron-ble-ha-parser
+        (victron-ble python3Packages)
+        bluetooth-sensor-state-data
+        # FIXME: Why are these needed? Should be propogated?
         starlink-grpc-core
         grpcio
         crc
