@@ -17,6 +17,14 @@ in {
       syncthing.enable = lib.mkDefault true;
     };
 
+    # Workaround for Ctrl+/ triggering system alert sound in Alacritty and other apps
+    # ref: https://github.com/alacritty/alacritty/issues/3014#issuecomment-1659329460
+    home.file."Library/KeyBindings/DefaultKeyBinding.dict".text = ''
+      {
+          "^/" = "noop:";
+      }
+    '';
+
     home.packages = with pkgs; [
       scroll-reverser
       thunderbird

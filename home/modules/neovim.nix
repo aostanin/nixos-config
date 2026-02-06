@@ -235,6 +235,25 @@ in {
         # Comments
         {
           mode = "n";
+          key = "<C-/>";
+          action = "gcc";
+          options = {
+            remap = true;
+            desc = "Toggle comment";
+          };
+        }
+        {
+          mode = "v";
+          key = "<C-/>";
+          action = "gc";
+          options = {
+            remap = true;
+            desc = "Toggle comment";
+          };
+        }
+        # tmux sends <C-_> on <C-/>
+        {
+          mode = "n";
           key = "<C-_>";
           action = "gcc";
           options = {
