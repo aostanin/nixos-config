@@ -48,11 +48,6 @@ in {
 
     services = {
       openssh.enable = true;
-
-      tailscale = {
-        enable = true;
-        overrideLocalDns = true;
-      };
     };
 
     system.defaults = {

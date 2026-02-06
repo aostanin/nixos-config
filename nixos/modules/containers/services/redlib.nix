@@ -23,6 +23,7 @@ in {
         REDLIB_DEFAULT_SHOW_NSFW = "on";
         REDLIB_DEFAULT_USE_HLS = "on";
         REDLIB_DEFAULT_DISABLE_VISIT_REDDIT_CONFIRMATION = "on";
+        REDLIB_DEFAULT_REMOVE_DEFAULT_FEEDS = "on";
         REDLIB_DEFAULT_SUBSCRIPTIONS = builtins.concatStringsSep "+" cfg.subscriptions;
       };
       proxy = {

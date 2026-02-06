@@ -1,8 +1,7 @@
 {
   config,
   lib,
-  pkgs,
-  secrets,
+  utils,
   ...
 }: let
   cfg = config.localModules.backup;
@@ -19,6 +18,16 @@ in {
       type = with lib.types; listOf path;
       default = [];
       description = "Which paths to exclude.";
+    };
+
+    timerConfig = lib.mkOption {
+      type = lib.types.nullOr (lib.types.attrsOf utils.systemdUtils.unitOptions.unitOption);
+      default = {
+        OnCalendar = "18:30";
+        Persistent = true;
+        RandomizedDelaySec = "30m";
+      };
+      description = "Timer configuration for the backup service. Set to null to disable the timer.";
     };
   };
 
@@ -47,11 +56,7 @@ in {
         "--keep-weekly 5"
         "--keep-monthly 12"
       ];
-      timerConfig = {
-        OnCalendar = "18:30";
-        Persistent = true;
-        RandomizedDelaySec = "30m";
-      };
+      timerConfig = cfg.timerConfig;
     };
   };
 }

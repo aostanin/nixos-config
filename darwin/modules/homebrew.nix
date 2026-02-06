@@ -30,14 +30,15 @@ in {
     homebrew = {
       enable = true;
       brews = [
-        "blackhole-2ch"
       ];
       casks = [
+        "blackhole-2ch"
         "caffeine"
         "claude"
         "middleclick"
         "insta360-studio"
         "sol"
+        "tailscale-app"
       ];
       masApps = {
         Xcode = 497799835;

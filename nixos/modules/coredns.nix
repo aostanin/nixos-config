@@ -103,6 +103,7 @@ in {
     # TailScale address is not available on boot
     # ref: https://github.com/tailscale/tailscale/issues/11504
     systemd.services.coredns = {
+      # TODO: Tailscale wait: https://github.com/tailscale/tailscale/pull/18574
       preStart = ''
         until ${lib.getExe' pkgs.iproute2 "ip"} -4 -json addr show tailscale0 | ${lib.getExe pkgs.jq} -e '. != []'; do
           sleep 1

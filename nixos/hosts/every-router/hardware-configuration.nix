@@ -27,5 +27,10 @@
       fsType = "btrfs";
       options = ["compress=zstd" "subvol=/@home"];
     };
+    "/btr_pool" = {
+      device = btrfsDevice;
+      fsType = "btrfs";
+      options = ["subvolid=5" "noatime"];
+    };
   };
 }
