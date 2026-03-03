@@ -30,7 +30,14 @@ in {
           "nixos${arch}:host"
           "ubuntu-latest${arch}:docker://catthehacker/ubuntu:act-latest"
           "ubuntu-22.04${arch}:docker://catthehacker/ubuntu:act-22.04"
+          "ubuntu-24.04${arch}:docker://catthehacker/ubuntu:act-24.04"
         ];
+        settings = {
+          container.docker_host =
+            if config.virtualisation.podman.enable
+            then "unix:///run/podman/podman.sock"
+            else "unix:///run/docker.sock";
+        };
       };
     };
   };
