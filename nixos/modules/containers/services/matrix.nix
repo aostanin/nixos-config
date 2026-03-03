@@ -40,6 +40,12 @@ in {
       default = true;
       description = "Enable the WhatsApp bridge.";
     };
+
+    enableLineBridge = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable the LINE Messenger bridge.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -153,6 +159,21 @@ in {
       raw.dependsOn = ["synapse"];
       volumes.data = {
         name = "synapse/mautrix-whatsapp";
+        parent = name;
+        destination = "/data";
+      };
+    };
+
+    localModules.containers.containers.matrix-line-messenger = lib.mkIf cfg.enableLineBridge {
+      raw.image = "${secrets.forgejo.registry}/${secrets.forgejo.username}/matrix-line-messenger:latest";
+      raw.login = {
+        inherit (secrets.forgejo) registry username;
+        passwordFile = config.sops.secrets."forgejo/registry_token".path;
+      };
+      networks = [name];
+      raw.dependsOn = ["synapse"];
+      volumes.data = {
+        name = "synapse/matrix-line-messenger";
         parent = name;
         destination = "/data";
       };
