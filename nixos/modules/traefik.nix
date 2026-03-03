@@ -81,6 +81,10 @@ in {
           };
           websecure = {
             address = ":443";
+            transport.respondingTimeouts = {
+              readTimeout = "600s";
+              idleTimeout = "600s";
+            };
             http.tls = {
               certResolver = "default";
               domains = [
