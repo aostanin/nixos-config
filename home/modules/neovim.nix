@@ -327,6 +327,11 @@ in {
           options.desc = "Sidekick Toggle Claude";
         }
         {
+          key = "<leader>ag";
+          action.__raw = ''function() require("sidekick.cli").toggle({ name = "gemini", focus = true }) end'';
+          options.desc = "Sidekick Toggle Gemini";
+        }
+        {
           key = "<leader>ao";
           action.__raw = ''function() require("sidekick.cli").toggle({ name = "opencode", focus = true }) end'';
           options.desc = "Sidekick Toggle OpenCode";
@@ -622,6 +627,9 @@ in {
               tools = {
                 claude = {
                   cmd = [(lib.getExe pkgs.unstable.claude-code)];
+                };
+                gemini = {
+                  cmd = [(lib.getExe pkgs.unstable.gemini-cli)];
                 };
                 opencode = {
                   cmd = [(lib.getExe pkgs.unstable.opencode)];

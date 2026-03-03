@@ -13,6 +13,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       unstable.claude-code
+      unstable.gemini-cli
       unstable.opencode
     ];
   };
