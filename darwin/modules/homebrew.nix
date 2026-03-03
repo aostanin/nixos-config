@@ -32,9 +32,9 @@ in {
       brews = [
       ];
       casks = [
-        "blackhole-2ch"
         "caffeine"
         "claude"
+        "element"
         "middleclick"
         "insta360-studio"
         "sol"

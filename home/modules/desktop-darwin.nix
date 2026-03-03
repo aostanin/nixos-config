@@ -31,7 +31,6 @@ in {
       utm
 
       # Chat
-      element-desktop
       slack
     ];
   };
