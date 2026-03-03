@@ -187,6 +187,8 @@
         # USB
         USB_EXCLUDE_AUDIO = 0;
         USB_EXCLUDE_PRINTER = 0;
+        RUNTIME_PM_DENYLIST = "c6:00.4";
+        USB_DENYLIST = "05e3:0608 1e91:de4b"; # OWC Thunderbolt Dock
       };
     };
   };
