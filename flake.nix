@@ -134,12 +134,7 @@
             deploy-rs.packages.${system}.default
             git-crypt
             sops
-            ssh-to-age
           ];
-
-          shellHook = ''
-            export SOPS_AGE_KEY=$(${lib.getExe pkgs.ssh-to-age} -i ~/.ssh/id_ed25519 -private-key)
-          '';
         };
 
         checks = pkgs.lib.attrsets.mergeAttrsList [

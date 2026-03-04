@@ -1,5 +1,5 @@
 keys:
-  - &user_aostanin age1964nq35gd700zn2xehuj9fqel6rwv00u8e3cvpqzs8egrwtuk4gsx3hdf0
+  - &user_aostanin ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBKi5mFDoyYSeNmjBZk2pU7BAmA3tUyCxV0Ix7/pWzyq
   - &host_andreis-macbook-pro age1lyem9m8eym36zs99cdu3sakvxqq0vqe6vcev6vwmk48lt70s8srqc747pr
   - &host_elena age1x36w0cpmrlahjmuwfd6wpc8vzt4rkw9dwcu6ktpft6fgw2l0h5kq9hpgv3
   - &host_every-router age1l6qax0endg0x9zfk33wpeyn3zhkezwkfhznc40vcpnkeclu0wesqekyl8g
