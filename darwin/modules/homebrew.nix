@@ -29,10 +29,15 @@ in {
 
     homebrew = {
       enable = true;
+      onActivation.cleanup = "zap";
       brews = [
       ];
       casks = [
         "caffeine"
+        {
+          name = "chromium";
+          args.no_quarantine = true;
+        }
         "claude"
         "element"
         "middleclick"

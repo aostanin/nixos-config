@@ -16,6 +16,7 @@ in {
       package = pkgs.chromium;
       extensions = [
         {id = "nngceckbapebfimnlniiiahkandclblb";} # Bitwarden
+        {id = "bjfgambnhccakkhmkepdoekmckoijdlc";} # Browser MCP
         {id = "ophjlpahpchlmihnnnihgmmeilfjmjjc";} # LINE
         {id = "jipdnfibhldikgcjhfnomkfpcebammhp";} # rikaikun
         {id = "dbepggeogbaibhgnhhndojpepiihcmeb";} # Vimium
