@@ -26,6 +26,7 @@ in {
     '';
 
     home.packages = with pkgs; [
+      alt-tab-macos
       scroll-reverser
       thunderbird
       utm
