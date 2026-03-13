@@ -382,7 +382,7 @@ in {
         })
 
         -- For auto-session
-        vim.opt.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+        vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
       '';
 
       env = {
@@ -668,6 +668,9 @@ in {
             pickers = {
               find_files = {
                 hidden = true;
+              };
+              live_grep = {
+                additional_args = ["--hidden"];
               };
             };
           };

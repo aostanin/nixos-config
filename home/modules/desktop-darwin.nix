@@ -27,6 +27,8 @@ in {
 
     home.packages = with pkgs; [
       alt-tab-macos
+      flameshot
+      ice-bar
       scroll-reverser
       thunderbird
       utm
@@ -34,5 +36,25 @@ in {
       # Chat
       slack
     ];
+
+    # TODO: Switch to services.flameshot once it's in stable home-manager
+    # ref: https://github.com/nix-community/home-manager/pull/8730
+    launchd.agents.flameshot = {
+      enable = true;
+      config = {
+        ProgramArguments = [(lib.getExe pkgs.flameshot)];
+        KeepAlive = {
+          Crashed = true;
+          SuccessfulExit = false;
+        };
+        ProcessType = "Interactive";
+        RunAtLoad = true;
+      };
+    };
+
+    services.ollama = {
+      enable = true;
+      package = pkgs.unstable.ollama;
+    };
   };
 }

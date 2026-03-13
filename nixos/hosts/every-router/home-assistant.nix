@@ -55,6 +55,16 @@
 in {
   hardware.bluetooth.enable = true;
 
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.freedesktop.systemd1.manage-units" &&
+          action.lookup("unit") == "restic-backups-remote.service" &&
+          subject.user == "hass") {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
   services.home-assistant = {
     enable = true;
     # TODO: Downgrade to stable
@@ -116,7 +126,18 @@ in {
             state_class = "measurement";
           };
         }
+        {
+          sensor = {
+            name = "Last Restic Backup";
+            command = "cat /var/lib/restic-last-backup 2>/dev/null || echo unknown";
+            scan_interval = 60;
+            device_class = "timestamp";
+          };
+        }
       ];
+      shell_command = {
+        restic_backup = "/run/current-system/sw/bin/systemctl start restic-backups-remote.service";
+      };
     };
     extraComponents = [
       "backup"
