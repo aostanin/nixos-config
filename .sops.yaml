@@ -10,6 +10,7 @@ keys:
   - &host_vps-oci1 age1zj65k3rjkhwnlh577zcvdxq9cf94z5l5yaqj0lush9m9z70z85tqjs0clj
   - &host_vps-oci2 age1zkmucm6pnskzuddmtw7ve4kx3rw2amjtta2ew4zwlt54ysh3q3fscrgfmx
   - &host_vps-oci-arm1 age1mj4zy3krjlzk5vf3gzrqdnyheztjzcyemulvc646l3lkl6nunckss980dw
+  - &host_macnix age12t7j9hsrvd0zlc5v0jqln34gls8gsc40vx2s9u774mhscw8qkglqhpcejj
 creation_rules:
   - path_regex: secrets/sops/[^/]+\.(yaml|json|env|ini)$
     key_groups:
@@ -25,6 +26,7 @@ creation_rules:
           - *host_vps-oci1
           - *host_vps-oci2
           - *host_vps-oci-arm1
+          - *host_macnix
   - path_regex: secrets/sops/bootstrap/.*$
     key_groups:
       - age:

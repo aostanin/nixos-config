@@ -88,6 +88,7 @@
       octopi = {system = "aarch64-linux";};
       roan = {system = "x86_64-linux";};
       skye = {system = "x86_64-linux";};
+      macnix = {system = "aarch64-linux";};
       tio = {system = "aarch64-linux";};
       vps-oci1 = {system = "x86_64-linux";};
       vps-oci2 = {system = "x86_64-linux";};

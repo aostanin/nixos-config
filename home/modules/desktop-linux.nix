@@ -46,7 +46,6 @@ in {
           libreoffice
           moonlight-qt
           sparrow
-          steam
           (xfce.thunar.override {
             thunarPlugins = with xfce; [
               thunar-archive-plugin
@@ -56,17 +55,20 @@ in {
           })
           thunderbird
           virt-manager
-          wineWowPackages.stable
           wl-clipboard
           zathura
 
           # Chat
-          discord
           element-desktop
-          slack
 
           # AI
           inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop
+        ]
+        ++ lib.optionals stdenv.isx86_64 [
+          steam
+          wineWowPackages.stable
+          discord
+          slack
         ]
         ++ (with pkgs.kdePackages; [
           # Plasma

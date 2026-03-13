@@ -16,7 +16,10 @@ in {
       ephemeral = true;
       config = {
         virtualisation = {
-          darwin-builder.memorySize = 8 * 1024;
+          darwin-builder = {
+            memorySize = 8 * 1024;
+            diskSize = 100 * 1024;
+          };
           cores = 4;
         };
       };

@@ -197,7 +197,7 @@ in {
 
       graphics = {
         enable = true;
-        enable32Bit = true; # Needed for Steam
+        enable32Bit = lib.mkIf pkgs.stdenv.isx86_64 true; # Needed for Steam
       };
 
       printers.ensurePrinters = [

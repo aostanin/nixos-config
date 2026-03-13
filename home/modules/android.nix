@@ -11,10 +11,13 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      androidStudioPackages.beta
-      pidcat
-      scrcpy
-    ];
+    home.packages = with pkgs;
+      [
+        pidcat
+        scrcpy
+      ]
+      ++ lib.optionals stdenv.isx86_64 [
+        androidStudioPackages.beta
+      ];
   };
 }
