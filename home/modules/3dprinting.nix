@@ -13,13 +13,13 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs;
       [
-        blender
-        freecad
         meshlab
         openscad
       ]
-      ++ lib.optionals stdenv.isx86_64 [
+      ++ lib.optionals stdenv.isLinux [
+        blender
         cura-appimage
+        freecad
         # OrcaSlicer crashes with a network printer, so use the AppImage
         # ref: https://github.com/NixOS/nixpkgs/issues/348751
         orca-slicer-appimage
