@@ -385,7 +385,7 @@ in {
         vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
       '';
 
-      env = {
+      env = lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
         # For diagram mmdc
         PUPPETEER_EXECUTABLE_PATH = lib.getExe pkgs.firefox;
       };

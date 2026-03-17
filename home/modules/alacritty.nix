@@ -78,6 +78,13 @@ in {
             action = "SearchBackward";
           }
 
+          # Ctrl+/ doesn't send C-_ on macOS, fix it
+          {
+            key = "/";
+            mods = "Control";
+            chars = "\\u001f";
+          }
+
           # Unbind all Command bindings
           {
             key = "0";
