@@ -40,6 +40,7 @@ in {
           btop
           cksfv
           ctop
+          unstable.devenv
           fd
           gdu
           gping
