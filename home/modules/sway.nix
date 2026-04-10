@@ -421,7 +421,7 @@ in {
       };
 
       swayidle = {
-        enable = true;
+        enable = lib.mkDefault true;
         timeouts = [
           {
             timeout = 300;

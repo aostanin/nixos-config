@@ -1,8 +1,10 @@
 {
   pkgs,
+  lib,
   inputs,
   ...
 }: {
+  services.swayidle.enable = false;
   wayland.windowManager.sway.extraSessionCommands = ''
     # VirtIO GPU reports cursor bitmaps/coordinates incorrectly under UTM,
     # causing an upside-down cursor offset by the notch height. Force software

@@ -31,8 +31,12 @@
     };
   };
 
+  # Wait for udev to settle before starting ModemManager, otherwise it may
+  # capture the pre-rename interface name (wwan0) before udev renames it
+  # (e.g. to wwu1i4), causing connection attempts to fail.
   systemd.services.ModemManager = {
     enable = true;
     wantedBy = ["multi-user.target" "network.target"];
+    serviceConfig.ExecStartPre = ["${pkgs.systemd}/bin/udevadm settle --timeout=30"];
   };
 }

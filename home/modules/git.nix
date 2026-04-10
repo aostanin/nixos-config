@@ -81,9 +81,6 @@ in {
         ".stfolder"
         ".stignore"
 
-        # Claude
-        ".claude"
-
         # Nix
         "result"
       ];
