@@ -18,6 +18,7 @@
     ./git.nix
     ./gnupg.nix
     ./gtk.nix
+    ./hammerspoon.nix
     ./inhibridge.nix
     ./mpd.nix
     ./neovim.nix

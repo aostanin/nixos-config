@@ -40,6 +40,7 @@ in {
         }
         "claude"
         "element"
+        "hammerspoon"
         "middleclick"
         "insta360-studio"
         "sol"
