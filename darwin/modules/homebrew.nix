@@ -30,6 +30,7 @@ in {
     homebrew = {
       enable = true;
       onActivation.cleanup = "zap";
+      taps = builtins.attrNames config.nix-homebrew.taps;
       brews = [
       ];
       casks = [
