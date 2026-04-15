@@ -20,6 +20,7 @@
     ./gtk.nix
     ./hammerspoon.nix
     ./inhibridge.nix
+    ./karabiner-elements.nix
     ./mpd.nix
     ./neovim.nix
     ./obs-studio.nix

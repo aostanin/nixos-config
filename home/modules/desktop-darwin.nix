@@ -16,6 +16,7 @@ in {
       alacritty.enable = lib.mkDefault true;
       firefox.enable = lib.mkDefault true;
       hammerspoon.enable = lib.mkDefault true;
+      karabiner-elements.enable = lib.mkDefault true;
       syncthing.enable = lib.mkDefault true;
     };
 
