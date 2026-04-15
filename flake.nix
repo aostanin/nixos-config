@@ -100,14 +100,11 @@
       overlays = [
         nur.overlays.default
         self.overlays.packages
+        self.overlays.workarounds
         (final: prev: {
           unstable = import nixpkgs-unstable {
             inherit config system;
           };
-          hwi = prev.hwi.overrideAttrs (old: {
-            # Blockstream Jade needs cbor2
-            propagatedBuildInputs = old.propagatedBuildInputs ++ [prev.python3Packages.cbor2];
-          });
         })
       ];
     };
@@ -241,7 +238,10 @@
           })
         hosts);
 
-        overlays.packages = final: prev: import ./packages {pkgs = prev;};
+        overlays = {
+          packages = final: prev: import ./packages {pkgs = prev;};
+          workarounds = import ./overlays/workarounds.nix;
+        };
       };
     };
 }
