@@ -3,6 +3,7 @@
   pkgs,
   config,
   nixpkgsConfig,
+  localLib,
   ...
 }: let
   cfg = config.localModules.common;
@@ -34,17 +35,19 @@ in {
     xdg.configFile."nixpkgs/config.nix".source = nixpkgsConfig;
 
     home = {
-      packages = with pkgs;
+      packages = localLib.filterAvailable (with pkgs;
         [
           bat
           btop
           cksfv
           ctop
+          dhex
           unstable.devenv
           fd
           gdu
           gping
           htop
+          httm
           jq
           just
           lazygit
@@ -55,11 +58,14 @@ in {
           mqttui
           nix-tree
           (p7zip.override {enableUnfree = !cfg.minimal;})
+          personal-scripts
+          powertop
           pv
           python3
           rainfrog
           rclone
           ripgrep
+          s-tui
           sshfs
           stress
           tig
@@ -68,25 +74,16 @@ in {
           tree
           wol
         ]
-        ++ lib.optionals (!pkgs.stdenv.isDarwin) [
-          dhex
-          httm
-          personal-scripts
-          powertop
-          s-tui
-        ]
         ++ lib.optionals (!cfg.minimal) [
           ffmpeg
           github-cli
           gpsbabel
           unstable.ollama
+          steam-run
           tealdeer
           tokei
           yt-dlp
-        ]
-        ++ lib.optionals (!cfg.minimal && pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
-          steam-run
-        ];
+        ]);
 
       sessionVariables = {
         MANPAGER = "sh -c 'col -bx | ${lib.getExe pkgs.bat} -l man -p'";

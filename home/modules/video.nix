@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  localLib,
   ...
 }: let
   cfg = config.localModules.video;
@@ -11,13 +12,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs;
-      [
-        handbrake
-        kdePackages.kdenlive
-      ]
-      ++ lib.optionals (stdenv.isx86_64 || stdenv.isDarwin) [
-        losslesscut-bin
-      ];
+    home.packages = localLib.filterAvailable (with pkgs; [
+      handbrake
+      kdePackages.kdenlive
+      losslesscut-bin
+    ]);
   };
 }

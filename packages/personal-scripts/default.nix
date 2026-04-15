@@ -13,6 +13,8 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [makeWrapper];
 
+  meta.platforms = lib.platforms.linux;
+
   installPhase = with pkgs; ''
     mkdir -p $out
     cp -r bin $out

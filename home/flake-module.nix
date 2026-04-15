@@ -45,6 +45,7 @@
         ];
         extraSpecialArgs = {
           inherit inputs nixpkgsConfig secrets sopsFiles;
+          localLib = import ../lib/meta.nix {inherit lib pkgs;};
         };
       };
   in {

@@ -3,6 +3,7 @@
   pkgs,
   config,
   inputs,
+  localLib,
   ...
 }: let
   cfg = config.localModules.desktop-linux;
@@ -31,7 +32,7 @@ in {
     };
 
     home = {
-      packages = with pkgs;
+      packages = localLib.filterAvailable (with pkgs;
         [
           # GUI
           audacity
@@ -55,22 +56,19 @@ in {
           })
           thunderbird
           virt-manager
+          wineWowPackages.stable
           wl-clipboard
           zathura
 
           # Chat
+          discord
           element-desktop
+          slack
 
           # AI
           inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop
         ]
-        ++ lib.optionals stdenv.isx86_64 [
-          steam
-          wineWowPackages.stable
-          discord
-          slack
-        ]
-        ++ (with pkgs.kdePackages; [
+        ++ (with kdePackages; [
           # Plasma
           ark
           gwenview
@@ -78,7 +76,7 @@ in {
           krdc
           okular
           spectacle
-        ]);
+        ]));
     };
 
     programs = {

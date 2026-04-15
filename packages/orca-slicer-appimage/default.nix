@@ -1,6 +1,7 @@
 {
   appimageTools,
   fetchurl,
+  lib,
   webkitgtk_4_1,
 }: let
   pname = "orca-slicer-appimage";
@@ -16,6 +17,7 @@
   };
 in
   appimageTools.wrapType2 {
+    meta.platforms = lib.platforms.linux;
     inherit pname version src;
 
     extraPkgs = pkgs: [

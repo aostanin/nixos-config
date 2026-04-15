@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  localLib,
   ...
 }: let
   cfg = config.localModules.android;
@@ -11,13 +12,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs;
-      [
-        pidcat
-        scrcpy
-      ]
-      ++ lib.optionals stdenv.isx86_64 [
-        androidStudioPackages.beta
-      ];
+    home.packages = localLib.filterAvailable (with pkgs; [
+      androidStudioPackages.beta
+      pidcat
+      scrcpy
+    ]);
   };
 }

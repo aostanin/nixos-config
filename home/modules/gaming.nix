@@ -17,6 +17,7 @@ in {
       gamescope
       mangohud
       pegasus-frontend
+      steam
 
       # Emulators
       cemu
