@@ -83,6 +83,9 @@ in {
 
         # Nix
         "result"
+
+        # Claude Code
+        ".claude/settings.local.json"
       ];
     };
   };
