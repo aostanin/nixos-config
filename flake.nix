@@ -26,6 +26,10 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+    homebrew-kdeconnect = {
+      url = "github:imshuhao/homebrew-kdeconnect";
+      flake = false;
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     flake-parts.url = "github:hercules-ci/flake-parts";
     sops-nix = {

@@ -21,6 +21,7 @@ in {
       taps = {
         "homebrew/homebrew-core" = inputs.homebrew-core;
         "homebrew/homebrew-cask" = inputs.homebrew-cask;
+        "imshuhao/homebrew-kdeconnect" = inputs.homebrew-kdeconnect;
       };
       extraEnv = {
         HOMEBREW_NO_ANALYTICS = "1";
@@ -42,6 +43,7 @@ in {
         "claude"
         "element"
         "hammerspoon"
+        "kdeconnect"
         "middleclick"
         "insta360-studio"
         "sol"
