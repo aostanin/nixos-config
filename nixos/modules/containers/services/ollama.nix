@@ -13,6 +13,12 @@ in {
       type = lib.types.bool;
       default = config.localModules.podman.enableNvidia;
     };
+
+    contextLength = lib.mkOption {
+      type = lib.types.int;
+      default = 64000;
+      description = "Context window size for Ollama (OLLAMA_CONTEXT_LENGTH).";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -20,6 +26,9 @@ in {
       raw.image = "docker.io/ollama/ollama:latest";
       networks = ["ollama"];
       raw.ports = ["11434:11434"];
+      raw.environment = {
+        OLLAMA_CONTEXT_LENGTH = toString cfg.contextLength;
+      };
       volumes = {
         data.destination = "/root/.ollama";
         models = {
