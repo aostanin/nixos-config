@@ -28,8 +28,14 @@
         "/storage/appdata"
         "/var/lib/nixos"
         "/var/lib/tailscale"
+        "/var/lib/phoenixd"
         "/var/lib/traefik"
       ];
+    };
+
+    phoenixd = {
+      enable = true;
+      package = pkgs.unstable.phoenixd;
     };
 
     common = {
@@ -45,6 +51,7 @@
         temp = "/storage/appdata/temp";
       };
       services = {
+        lnbits.enable = true;
       };
     };
   };

@@ -14,6 +14,7 @@
     ./networkmanager.nix
     ./nix-ld.nix
     ./nvtop.nix
+    ./phoenixd.nix
     ./pikvm.nix
     ./podman.nix
     ./redir.nix

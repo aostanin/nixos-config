@@ -27,6 +27,7 @@
     ./komga.nix
     ./librespeed.nix
     ./lidarr.nix
+    ./lnbits.nix
     ./matrix.nix
     ./mealie.nix
     ./meshcentral.nix
