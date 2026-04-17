@@ -17,7 +17,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules.containers.containers.${name} = {
-      raw.image = "quay.io/redlib/redlib:latest";
+      raw.image = "ghcr.io/silvenga/redlib:latest";
       raw.environment = {
         REDLIB_DEFAULT_THEME = "doomone";
         REDLIB_DEFAULT_SHOW_NSFW = "on";
