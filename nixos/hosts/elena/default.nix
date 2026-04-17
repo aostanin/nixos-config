@@ -69,9 +69,7 @@
         uid = 1000;
         gid = 100;
       in {
-        comfyui.enable = true;
         open-webui.enable = true;
-        stable-diffusion.enable = true;
 
         meshcentral.enable = true;
 

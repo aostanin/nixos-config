@@ -86,10 +86,6 @@ in {
         archivebox.enable = true;
         authelia.enable = true;
         changedetection.enable = true;
-        dawarich = {
-          enable = true;
-          enablePhoton = false;
-        };
         forgejo.enable = true;
         guacamole.enable = true;
         karakeep.enable = true;
@@ -107,9 +103,6 @@ in {
         tasmoadmin.enable = true;
         unifi.enable = true;
         vaultwarden.enable = true;
-
-        grafana.enable = true;
-        influxdb.enable = true;
 
         # Home automation
         frigate = {
