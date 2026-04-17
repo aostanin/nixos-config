@@ -29,6 +29,11 @@
       "zfs.zfs_arc_max=8589934592"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
+    # Blacklist NFC driver to prevent nxp-nci_i2c interrupt storm.
+    # Possibly a regression from 6.12.75: the commit below removed IRQF_TRIGGER_RISING,
+    # deferring to ACPI which declares Level/ActiveHigh for this device (NXP1001).
+    # https://github.com/torvalds/linux/commit/57be33f85e369ce9f69f61eaa34734e0d3bd47a7
+    blacklistedKernelModules = ["nxp_nci_i2c"];
   };
 
   networking = {
