@@ -10,7 +10,6 @@
     ./desktop-darwin.nix
     ./desktop-linux.nix
     ./electronics.nix
-    ./email.nix
     ./firefox.nix
     ./fish.nix
     ./foot.nix
@@ -31,6 +30,7 @@
     ./syncthing.nix
     ./tmux.nix
     ./trayscale.nix
+    ./vdirsyncer.nix
     ./video.nix
     ./vscode.nix
     ./zellij.nix
