@@ -106,7 +106,7 @@ in {
       kernelModules = ["br_netfilter"];
     };
 
-    hardware.enableRedistributableFirmware = true;
+    hardware.enableRedistributableFirmware = lib.mkDefault true;
 
     zramSwap.enable = lib.mkDefault true;
 

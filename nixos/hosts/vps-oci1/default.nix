@@ -7,6 +7,8 @@
     ./hardware-configuration.nix
   ];
 
+  hardware.enableRedistributableFirmware = false;
+
   boot = {
     kernelParams = [
       "console=ttyS0,115200"

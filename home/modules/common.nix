@@ -42,7 +42,6 @@ in {
           cksfv
           ctop
           dhex
-          unstable.devenv
           fd
           gdu
           gping
@@ -74,6 +73,7 @@ in {
           wol
         ]
         ++ lib.optionals (!cfg.minimal) [
+          unstable.devenv
           ffmpeg
           github-cli
           gpsbabel
