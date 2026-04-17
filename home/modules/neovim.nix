@@ -385,22 +385,9 @@ in {
         vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
       '';
 
-      env = lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
-        # For diagram mmdc
-        PUPPETEER_EXECUTABLE_PATH = lib.getExe pkgs.firefox;
-      };
-
       extraPackages = with pkgs; [
-        # For diagram
-        d2
-        gnuplot
-        mermaid-cli
-        plantuml
         # For sidekick CLI process detection
         lsof
-      ];
-
-      extraPlugins = [
       ];
 
       plugins = {
@@ -508,28 +495,12 @@ in {
           };
         };
 
-        diagram.enable = true;
-
         gitsigns = {
           enable = true;
           settings.current_line_blame = true;
         };
 
         guess-indent.enable = true;
-
-        image = {
-          enable = false;
-          settings = {
-            # TODO: Switch to a term that supports kitty image protocol?
-            backend = "ueberzug";
-            integrations = {
-              markdown = {
-                only_render_image_at_cursor = true;
-                only_render_image_at_cursor_mode = "popup";
-              };
-            };
-          };
-        };
 
         lsp = {
           enable = true;

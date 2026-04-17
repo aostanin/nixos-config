@@ -58,7 +58,6 @@ in {
           mqttui
           nix-tree
           (p7zip.override {enableUnfree = !cfg.minimal;})
-          personal-scripts
           powertop
           pv
           python3
@@ -79,6 +78,7 @@ in {
           github-cli
           gpsbabel
           unstable.ollama
+          personal-scripts
           steam-run
           tealdeer
           tokei
