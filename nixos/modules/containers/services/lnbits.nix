@@ -21,6 +21,7 @@ in {
       proxy = {
         enable = true;
         port = 5000;
+        default.enable = true;
       };
     };
   };

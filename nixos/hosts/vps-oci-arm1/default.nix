@@ -41,8 +41,8 @@
         temp = "/persist/storage/appdata/temp";
       };
       services = {
+        caddy.enable = true;
         matrix.enable = true;
-        nginx.enable = true;
       };
     };
 

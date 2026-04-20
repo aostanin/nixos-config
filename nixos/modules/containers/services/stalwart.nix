@@ -34,6 +34,7 @@ in {
       proxy = {
         enable = true;
         port = 8080;
+        default.enable = true;
       };
     };
   };

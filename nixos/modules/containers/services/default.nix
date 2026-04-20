@@ -35,6 +35,7 @@
     ./mosquitto.nix
     ./navidrome.nix
     ./netbootxyz.nix
+    ./caddy.nix
     ./nginx.nix
     ./nzbget.nix
     ./ollama.nix
