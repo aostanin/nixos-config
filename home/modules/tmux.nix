@@ -17,8 +17,11 @@ in {
       baseIndex = 1;
       clock24 = true;
       escapeTime = 0;
+      focusEvents = true;
       extraConfig = ''
         set -g allow-passthrough on
+        set -s extended-keys on
+        set -as terminal-features 'xterm*:extkeys'
         bind-key C-${shortcut} last-window
       '';
       keyMode = "vi";
