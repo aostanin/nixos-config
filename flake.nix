@@ -53,7 +53,7 @@
     wolly.url = "github:threadexio/wolly";
     terranix.url = "github:terranix/terranix";
     claude-desktop = {
-      url = "github:k3d3/claude-desktop-linux-flake";
+      url = "github:aaddrick/claude-desktop-debian";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     llm-agents.url = "github:numtide/llm-agents.nix";
