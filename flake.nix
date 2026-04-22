@@ -56,6 +56,7 @@
       url = "github:k3d3/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    llm-agents.url = "github:numtide/llm-agents.nix";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -105,6 +106,7 @@
         nur.overlays.default
         self.overlays.packages
         self.overlays.workarounds
+        inputs.llm-agents.overlays.shared-nixpkgs
         (final: prev: {
           unstable = import nixpkgs-unstable {
             inherit config system;

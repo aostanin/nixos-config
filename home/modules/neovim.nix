@@ -597,13 +597,13 @@ in {
               };
               tools = {
                 claude = {
-                  cmd = [(lib.getExe pkgs.unstable.claude-code)];
+                  cmd = [(lib.getExe pkgs.llm-agents.claude-code)];
                 };
                 gemini = {
-                  cmd = [(lib.getExe pkgs.unstable.gemini-cli)];
+                  cmd = [(lib.getExe pkgs.llm-agents.gemini-cli)];
                 };
                 opencode = {
-                  cmd = [(lib.getExe pkgs.unstable.opencode)];
+                  cmd = [(lib.getExe pkgs.llm-agents.opencode)];
                 };
               };
             };

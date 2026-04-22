@@ -11,10 +11,11 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      unstable.claude-code
-      unstable.gemini-cli
-      unstable.opencode
+    home.packages = with pkgs.llm-agents; [
+      # Agents
+      claude-code
+      gemini-cli
+      opencode
     ];
   };
 }
