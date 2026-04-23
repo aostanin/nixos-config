@@ -1,4 +1,0 @@
-#!/bin/sh
-
-scp ~/Downloads/*.torrent elena:/storage/appdata/docker/ssd/qbittorrent/watch
-rm ~/Downloads/*.torrent

@@ -78,10 +78,12 @@ in {
           github-cli
           gpsbabel
           unstable.ollama
-          personal-scripts
           steam-run
           tealdeer
           tokei
+          (pkgs.writeShellScriptBin "torrent-dl" ''
+            scp ~/Downloads/*.torrent elena:/storage/appdata/docker/ssd/qbittorrent/watch && rm ~/Downloads/*.torrent
+          '')
           yt-dlp
         ]);
 
