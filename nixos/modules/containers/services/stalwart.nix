@@ -12,7 +12,10 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules.containers.containers.${name} = {
-      raw.image = "docker.io/stalwartlabs/stalwart:latest";
+      # TODO: Migrate to v0.16+. It changed volume paths (/opt/stalwart →
+      # /etc/stalwart + /var/lib/stalwart) and dropped TOML config. Pinning to
+      # v0.15 until data/config are migrated.
+      raw.image = "docker.io/stalwartlabs/stalwart:v0.15";
       raw.ports = [
         #"443:443" # HTTPS
         #"8080:8080" # HTTP Admin/API
