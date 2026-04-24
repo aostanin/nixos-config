@@ -16,6 +16,9 @@ in {
       claude-code
       gemini-cli
       opencode
+
+      # Tools
+      agent-browser
     ];
   };
 }
