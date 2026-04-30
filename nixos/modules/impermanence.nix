@@ -39,9 +39,8 @@ in {
           "/var/lib/libvirt"
           "/var/lib/libvirt/images"
         ]
-        ++ (lib.mapAttrsToList (n: v: {
-          directory = "/var/lib/private/gitea-runner/${n}";
-        }) (lib.filterAttrs (n: v: v.enable) config.services.gitea-actions-runner.instances));
+        ++ lib.optional (lib.any (v: v.enable) (lib.attrValues config.services.gitea-actions-runner.instances))
+          "/var/lib/private/gitea-runner";
       files = [
         "/etc/adjtime"
         "/etc/machine-id"
