@@ -106,7 +106,7 @@
         nur.overlays.default
         self.overlays.packages
         self.overlays.workarounds
-        inputs.llm-agents.overlays.shared-nixpkgs
+        inputs.llm-agents.overlays.default
         (final: prev: {
           unstable = import nixpkgs-unstable {
             inherit config system;

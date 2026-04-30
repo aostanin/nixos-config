@@ -67,7 +67,6 @@ in {
 
   services.home-assistant = {
     enable = true;
-    # TODO: Downgrade to stable
     package = pkgs.unstable.home-assistant;
     config = {
       http = {
@@ -143,6 +142,7 @@ in {
       "backup"
       "default_config"
       "esphome"
+      "infrared"
       "starlink"
       "switchbot"
     ];

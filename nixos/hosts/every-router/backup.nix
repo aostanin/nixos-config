@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   systemd.tmpfiles.rules = [
     "d /btr_pool/_snapshots 0755 root root"
   ];
@@ -31,4 +31,6 @@
       timerConfig = null;
     };
   };
+
+  systemd.services.restic-backups-remote.serviceConfig.ExecStartPost = "${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/date -Iseconds > /var/lib/restic-last-backup'";
 }

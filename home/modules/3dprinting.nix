@@ -17,7 +17,7 @@ in {
       cura-appimage
       freecad
       meshlab
-      openscad
+      openscad-unstable
       # OrcaSlicer crashes with a network printer, so use the AppImage
       # ref: https://github.com/NixOS/nixpkgs/issues/348751
       orca-slicer-appimage

@@ -58,6 +58,7 @@ in {
           virt-manager
           wineWowPackages.stable
           wl-clipboard
+          xournalpp
           zathura
 
           # Chat
