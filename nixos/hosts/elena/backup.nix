@@ -17,6 +17,16 @@
     groups.backup = {};
   };
 
+  localModules.backup = {
+    enable = true;
+    prune = true;
+    paths = [
+      "/var/lib/nixos"
+      "/var/lib/tailscale"
+      "/var/lib/traefik"
+    ];
+  };
+
   sops.secrets."user/ssh_key" = {};
 
   services.zrepl = {

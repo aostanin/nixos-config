@@ -29,6 +29,12 @@ in {
       };
       description = "Timer configuration for the backup service. Set to null to disable the timer.";
     };
+
+    prune = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to run restic forget/prune after backup. Should be enabled on only one host per repository.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -50,7 +56,7 @@ in {
         "--retry-lock=2h"
         "--exclude-caches"
       ];
-      pruneOpts = [
+      pruneOpts = lib.optionals cfg.prune [
         "--retry-lock=2h"
         "--keep-daily 7"
         "--keep-weekly 5"
