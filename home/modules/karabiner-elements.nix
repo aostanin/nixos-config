@@ -135,7 +135,7 @@ in {
           {
             conditions = [
               {
-                bundle_identifiers = ["^org\\.alacritty$" "^com.utmapp.UTM$"];
+                bundle_identifiers = ["^org\\.alacritty$" "^com\\.mitchellh\\.ghostty$" "^com\\.apple\\.Terminal$" "^com\\.utmapp\\.UTM$"];
                 type = "frontmost_application_unless";
               }
             ];

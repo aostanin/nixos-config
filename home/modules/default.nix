@@ -14,6 +14,7 @@
     ./fish.nix
     ./foot.nix
     ./gaming.nix
+    ./ghostty.nix
     ./git.nix
     ./gnupg.nix
     ./gtk.nix
