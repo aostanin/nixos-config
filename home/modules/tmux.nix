@@ -23,11 +23,23 @@ in {
         set -s extended-keys on
         set -as terminal-features 'xterm*:extkeys'
         bind-key C-${shortcut} last-window
+
+        set -g @thumbs-command 'printf %s {} | ${
+          if pkgs.stdenv.isDarwin
+          then "pbcopy"
+          else "wl-copy"
+        }'
+        set -g @thumbs-upcase-command '${
+          if pkgs.stdenv.isDarwin
+          then "open"
+          else "xdg-open"
+        } {}'
       '';
       keyMode = "vi";
       mouse = true;
       plugins = with pkgs.tmuxPlugins; [
         pain-control
+        tmux-thumbs
       ];
       shortcut = "a";
       terminal = "screen-256color";
