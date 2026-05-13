@@ -14,7 +14,6 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = localLib.filterAvailable (with pkgs; [
       androidStudioPackages.beta
-      pidcat
       scrcpy
     ]);
   };

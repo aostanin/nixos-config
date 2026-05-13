@@ -13,6 +13,7 @@ in {
   config = lib.mkIf cfg.enable {
     localModules = {
       "3dprinting".enable = lib.mkDefault true;
+      android.enable = lib.mkDefault true;
       firefox.enable = lib.mkDefault true;
       ghostty.enable = lib.mkDefault true;
       hammerspoon.enable = lib.mkDefault true;
