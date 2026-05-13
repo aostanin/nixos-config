@@ -95,6 +95,7 @@ in {
 
   resource.tailscale_acl.acl = {
     acl = builtins.toJSON {
+      randomizeClientPort = true;
       tagOwners = {
         "tag:server" = ["autogroup:admin"];
         "tag:managed" = ["autogroup:admin"];

@@ -19,7 +19,7 @@
         p.tailscale_tailscale
       ]);
       terraformConfiguration = inputs.terranix.lib.terranixConfiguration {
-        inherit system;
+        inherit system pkgs;
         modules = [
           ./modules
           ./config.nix
