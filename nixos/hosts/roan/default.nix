@@ -41,7 +41,8 @@ in {
     localCommands = ''
       # Avoid hang when traffic is high
       # ref: https://forums.servethehome.com/index.php?threads/fix-intel-i219-v-detected-hardware-unit-hang.36700/#post-339318
-      ${lib.getExe pkgs.ethtool} -K ${interface} tso off gso off
+      ${lib.getExe pkgs.ethtool} -K ${interface} tso off gso off gro off
+      ${lib.getExe pkgs.ethtool} --set-eee ${interface} eee off
     '';
   };
 
