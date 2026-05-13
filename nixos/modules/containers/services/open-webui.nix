@@ -17,7 +17,6 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules.containers.services = {
-      ollama.enable = true;
       openedai-speech.enable = lib.mkDefault true;
     };
 
@@ -31,10 +30,7 @@ in {
 
     localModules.containers.containers.${name} = {
       raw.image = "ghcr.io/open-webui/open-webui:cuda";
-      networks = ["ollama"];
-      raw.dependsOn = ["ollama"];
       raw.environment = {
-        OLLAMA_BASE_URL = "http://ollama:11434";
         ENABLE_SIGNUP = "false";
       };
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
