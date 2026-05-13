@@ -20,8 +20,12 @@ in {
       focusEvents = true;
       extraConfig = ''
         set -g allow-passthrough on
+        set -g set-clipboard on
         set -s extended-keys on
         set -as terminal-features 'xterm*:extkeys'
+        set -as terminal-features 'xterm*:hyperlinks'
+        set -as terminal-features 'xterm*:usstyle'
+        set -as terminal-features 'xterm*:sync'
         bind-key C-${shortcut} last-window
 
         set -g @thumbs-command 'printf %s {} | ${
@@ -42,7 +46,7 @@ in {
         tmux-thumbs
       ];
       shortcut = "a";
-      terminal = "screen-256color";
+      terminal = "tmux-256color";
       tmuxp.enable = true;
     };
   };
