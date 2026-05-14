@@ -30,6 +30,7 @@ in {
 
     localModules.containers.containers.${name} = {
       raw.image = "ghcr.io/open-webui/open-webui:cuda";
+      networks = ["ai"];
       raw.environment = {
         ENABLE_SIGNUP = "false";
       };

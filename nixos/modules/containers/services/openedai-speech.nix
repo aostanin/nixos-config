@@ -18,7 +18,7 @@ in {
   config = lib.mkIf cfg.enable {
     localModules.containers.containers.${name} = {
       raw.image = "ghcr.io/matatonic/openedai-speech:latest";
-      networks = ["ollama"];
+      networks = ["ai"];
       volumes = {
         config.destination = "/app/config";
         voices.destination = "/app/voices";

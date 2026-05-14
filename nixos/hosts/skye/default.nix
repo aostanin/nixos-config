@@ -154,11 +154,6 @@
       HandlePowerKey = mode;
     };
 
-    ollama = {
-      enable = true;
-      package = pkgs.unstable.ollama;
-    };
-
     tlp = {
       enable = true;
       settings = {

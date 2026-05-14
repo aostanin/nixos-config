@@ -59,7 +59,6 @@
         temp = "/persist/cache/appdata/containers/temp";
       };
       services = {
-        ollama.enable = true;
         whoami.enable = true;
       };
     };

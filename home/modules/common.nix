@@ -77,7 +77,6 @@ in {
           ffmpeg
           github-cli
           gpsbabel
-          unstable.ollama
           steam-run
           tealdeer
           tokei
