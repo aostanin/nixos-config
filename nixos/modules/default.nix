@@ -10,6 +10,7 @@
     ./home-server.nix
     ./impermanence.nix
     ./intel-amt.nix
+    ./llama-cpp.nix
     ./msmtp.nix
     ./networkmanager.nix
     ./nix-ld.nix

@@ -26,6 +26,7 @@
           sops-nix.darwinModules.sops
           nix-homebrew.darwinModules.nix-homebrew
           {
+            nixpkgs = mkPkgs system;
             system.stateVersion = 6;
             sops = {
               defaultSopsFile = sopsFiles.default;

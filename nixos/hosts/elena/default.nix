@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
     ./backup.nix
     ./backup-external.nix
+    ./llama-cpp.nix
     ./vfio.nix
     ./power-management.nix
     ./autosuspend.nix
@@ -231,7 +232,7 @@
   };
 
   services = {
-    logind.powerKey = "suspend";
+    logind.settings.Login.HandlePowerKey = "suspend";
 
     sunshine = {
       enable = true;

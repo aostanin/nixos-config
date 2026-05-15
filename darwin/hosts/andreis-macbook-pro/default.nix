@@ -1,4 +1,8 @@
 {pkgs, ...}: {
+  imports = [
+    ./llama-cpp.nix
+  ];
+
   localModules = {
     aerospace.enable = true;
     common.enable = true;

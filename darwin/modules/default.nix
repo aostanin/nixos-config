@@ -5,5 +5,6 @@
     ./homebrew.nix
     ./karabiner-elements.nix
     ./linux-builder.nix
+    ./llama-cpp.nix
   ];
 }

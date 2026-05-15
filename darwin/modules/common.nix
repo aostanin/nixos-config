@@ -3,6 +3,7 @@
   pkgs,
   lib,
   secrets,
+  inputs,
   ...
 }: let
   cfg = config.localModules.common;
@@ -18,6 +19,11 @@ in {
 
     nix = {
       enable = true;
+      registry = with inputs; {
+        nixpkgs.flake = nixpkgs;
+        nixpkgs-unstable.flake = nixpkgs-unstable;
+        nixos-config.flake = self;
+      };
       settings = {
         experimental-features = ["nix-command" "flakes"];
         trusted-users = [
