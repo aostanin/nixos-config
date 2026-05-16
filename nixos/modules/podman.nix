@@ -37,7 +37,8 @@ in {
         enable = true;
         flags = [
           "--all"
-          "--filter \"until=168h\""
+          "--filter"
+          "until=168h"
         ];
       };
     };
