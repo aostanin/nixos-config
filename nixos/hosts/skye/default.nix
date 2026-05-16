@@ -10,6 +10,7 @@
     "${inputs.nixos-hardware}/lenovo/thinkpad/t14/amd/gen4"
     ./hardware-configuration.nix
     ./backup.nix
+    ./libvirt
     ./wwan
   ];
 

@@ -1,10 +1,10 @@
 {lib, ...}: {
   type = "kvm";
   name = "macOS";
-  uuid = "50c27bc0-8e60-41ec-ae7e-412193f4809a";
+  uuid = "69020471-f271-4769-824f-adcb0fa9a675";
 
   memory = {
-    count = 32;
+    count = 8;
     unit = "GiB";
   };
   vcpu = {
@@ -19,7 +19,7 @@
         vcpu = i;
         cpuset = toString (i + 2);
       })
-      8;
+      7;
     emulatorpin.cpuset = "0-1";
     iothreadpin = {
       iothread = 1;
@@ -34,11 +34,11 @@
     loader = {
       readonly = true;
       type = "pflash";
-      path = "/var/lib/libvirt/images/vmpool/macOS/OVMF_CODE.fd";
+      path = "/var/lib/libvirt/images/rpool/macOS/OVMF_CODE.fd";
     };
     nvram = {
       format = "raw";
-      path = "/var/lib/libvirt/images/vmpool/macOS/OVMF_VARS-1920x1080.fd";
+      path = "/var/lib/libvirt/images/rpool/macOS/OVMF_VARS-1920x1080.fd";
     };
   };
 
@@ -48,7 +48,13 @@
   };
 
   cpu = {
-    mode = "host-passthrough";
+    mode = "custom";
+    match = "exact";
+    check = "none";
+    model = {
+      fallback = "forbid";
+      name = "qemu64";
+    };
     topology = {
       sockets = 1;
       cores = 4;
@@ -86,12 +92,12 @@
           type = "qcow2";
           cache = "writeback";
         };
-        source.file = "/var/lib/libvirt/images/vmpool/macOS/OpenCore/OpenCore.qcow2";
+        source.file = "/var/lib/libvirt/images/rpool/macOS/OpenCore/OpenCore.qcow2";
         target = {
           dev = "sda";
           bus = "sata";
         };
-        boot.order = 1;
+        boot = {order = 1;};
       }
       {
         type = "file";
@@ -100,9 +106,8 @@
           name = "qemu";
           type = "raw";
           cache = "writeback";
-          iothread = 1;
         };
-        source.file = "/var/lib/libvirt/images/vmpool/macOS/mac_hdd_ng.img";
+        source.file = "/var/lib/libvirt/images/rpool/macOS/mac_hdd_ng.img";
         target = {
           dev = "vdb";
           bus = "virtio";
@@ -134,7 +139,7 @@
 
     interface = {
       type = "network";
-      mac.address = "52:54:00:e6:85:40";
+      mac.address = "52:54:00:ab:5e:47";
       source.network = "default";
       model.type = "vmxnet3";
     };
@@ -174,5 +179,7 @@
     {value = "isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc";}
     {value = "-smbios";}
     {value = "type=2";}
+    {value = "-cpu";}
+    {value = "Haswell-noTSX,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check";}
   ];
 }

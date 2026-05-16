@@ -754,11 +754,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778891861,
-        "narHash": "sha256-TdEF8KA722mFlTQcXwAj+RNUhpWxF76YZnKxhikyz1g=",
+        "lastModified": 1778902914,
+        "narHash": "sha256-tIvw9glNauN/CASr7K5Sr9Xd7vvfsMd4HVzqrGin/IE=",
         "owner": "aostanin",
         "repo": "NixVirt",
-        "rev": "a40c1a2822cddc2d930c7b8a5cbfb5daca6f882e",
+        "rev": "7ff9bad8ef32e8da4cbf6edcbf656fd317a2bb3b",
         "type": "github"
       },
       "original": {
