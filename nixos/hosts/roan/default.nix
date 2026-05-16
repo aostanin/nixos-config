@@ -13,6 +13,7 @@ in {
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
+    ./libvirt
   ];
 
   boot = {
