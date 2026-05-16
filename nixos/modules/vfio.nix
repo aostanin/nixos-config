@@ -332,6 +332,10 @@
         #!${pkgs.stdenv.shell}
         set -e
 
+        ${lib.optionalString (cfg.gpuHostUnits != []) ''
+          # Blocks until the gpu-host.target units are stopped.
+          systemctl start gpu-vm.target
+        ''}
         ${gpu.preDetachCommands}
 
         systemctl stop nvidia-persistenced.service
@@ -386,6 +390,10 @@
         systemctl start nvidia-persistenced.service
 
         ${gpu.postAttachCommands}
+
+        ${lib.optionalString (cfg.gpuHostUnits != []) ''
+          systemctl start gpu-host.target || true
+        ''}
       ''
       else throw "Unsupported gpu driver ${gpu.driver}"
     );
@@ -438,6 +446,16 @@ in {
       default = {};
       description = ''
         The virtual machines.
+      '';
+    };
+
+    gpuHostUnits = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [];
+      example = ["llama-cpp.service" "podman-open-webui.service"];
+      description = ''
+        Host units bound to gpu-host.target: stopped while a passthrough VM
+        owns the GPU, restarted when it is released.
       '';
     };
   };
@@ -517,6 +535,28 @@ in {
         lib.concatStringsSep "\n"
         (lib.mapAttrsToList (gpuName: gpu: gpu.powerManagementCommands) cfg.gpus);
     }
+
+    (lib.mkIf (cfg.gpuHostUnits != []) {
+      # gpu-host.target and gpu-vm.target are mutually exclusive; the units
+      # follow gpu-host.target. After= makes the yield synchronous.
+      systemd.targets.gpu-host = {
+        description = "Host owns the passthrough GPU";
+        conflicts = ["gpu-vm.target"];
+        wantedBy = ["multi-user.target"];
+      };
+      systemd.targets.gpu-vm = {
+        description = "A passthrough VM owns the GPU";
+        conflicts = ["gpu-host.target"];
+        after = ["gpu-host.target"];
+      };
+      systemd.services = lib.genAttrs
+        (map (lib.removeSuffix ".service") cfg.gpuHostUnits)
+        (_: {
+          partOf = ["gpu-host.target"];
+          wantedBy = ["gpu-host.target"];
+          after = ["gpu-host.target"];
+        });
+    })
 
     (lib.mkIf cfg.lookingGlass.enable {
       environment.systemPackages = [lookingGlassClient];
