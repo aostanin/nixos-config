@@ -86,11 +86,6 @@ in {
         guestCpus = ["0-1" "2-15"];
       };
     in {
-      playground = {
-        gpu = "nvidiaRTX2070Super";
-        enableHibernation = true;
-        isolate = isolate14Thread;
-      };
       win10-play = {
         gpu = "nvidiaRTX2070Super";
         enableHibernation = true;

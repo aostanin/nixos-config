@@ -62,7 +62,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvirt = {
-      url = "github:AshleyYakeley/NixVirt";
+      # Fork: adds <cpu><maxphysaddr>, disk/controller <driver> iothread/queues.
+      # Track upstream once these are merged (PR from add-iothread-maxphysaddr).
+      url = "github:aostanin/NixVirt/add-iothread-maxphysaddr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     llama-cpp-turboquant = {

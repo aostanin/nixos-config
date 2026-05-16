@@ -14,6 +14,7 @@
     ./backup-external.nix
     ./llama-cpp.nix
     ./vfio.nix
+    ./libvirt
     ./power-management.nix
     ./autosuspend.nix
   ];
