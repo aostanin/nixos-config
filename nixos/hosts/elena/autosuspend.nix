@@ -13,7 +13,7 @@
   };
 
   services.autosuspend = {
-    enable = true;
+    enable = false;
     settings = {
       interval = 30;
       idle_time = 30 * 60;
