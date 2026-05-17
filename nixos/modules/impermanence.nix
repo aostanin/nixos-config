@@ -40,7 +40,7 @@ in {
           "/var/lib/libvirt/images"
         ]
         ++ lib.optional (lib.any (v: v.enable) (lib.attrValues config.services.gitea-actions-runner.instances))
-          "/var/lib/private/gitea-runner";
+        "/var/lib/private/gitea-runner";
       files = [
         "/etc/adjtime"
         "/etc/machine-id"

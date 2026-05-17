@@ -549,7 +549,8 @@ in {
         conflicts = ["gpu-host.target"];
         after = ["gpu-host.target"];
       };
-      systemd.services = lib.genAttrs
+      systemd.services =
+        lib.genAttrs
         (map (lib.removeSuffix ".service") cfg.gpuHostUnits)
         (_: {
           partOf = ["gpu-host.target"];
