@@ -23,6 +23,7 @@ in {
   config = lib.mkIf cfg.enable {
     localModules = {
       ai.enable = lib.mkDefault (!cfg.minimal);
+      forgejo.enable = lib.mkDefault (!cfg.minimal);
       git.enable = lib.mkDefault true;
       neovim.enable = lib.mkDefault (!cfg.minimal);
       ssh.enable = lib.mkDefault true;

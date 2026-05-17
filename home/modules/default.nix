@@ -13,6 +13,7 @@
     ./firefox.nix
     ./fish.nix
     ./foot.nix
+    ./forgejo.nix
     ./gaming.nix
     ./ghostty.nix
     ./git.nix
