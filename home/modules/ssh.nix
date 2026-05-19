@@ -23,13 +23,6 @@ in {
           port = 2222;
           user = "git";
         };
-
-        elena = {
-          hostname = "roan";
-          port = 2223;
-        };
-
-        pikvm.user = "root";
       };
     };
 

@@ -5,6 +5,7 @@ keys:
   - &host_every-router age1l6qax0endg0x9zfk33wpeyn3zhkezwkfhznc40vcpnkeclu0wesqekyl8g
   - &host_mareg age16eggdxzrl9mjhw32cms2hcgukwsxahfsxeuwwtyex0e4e0k0r5pqe6yl3d
   - &host_octopi age1thlnl7fdkprt3aj22enhy95cx4l8cf08gymyz5fe3jmfzn5c99nsfq5axn
+  - &host_pikvm age1x8t8k0j25l8af8n2p56uuh4ky7m9ddmu9ynytmzqj0evl7wvxpps5dvzdf
   - &host_roan age1a5ef43c7dq3dc6fsu8ph5ltnsrqt4eluw3343y0jtandp30wz3wq3ymv47
   - &host_skye age12qv0y9fa3sxadszjrwkm6njul5eryqcenp8krv2j5qhar9qwkgksq5ya7g
   - &host_vps-oci1 age1zj65k3rjkhwnlh577zcvdxq9cf94z5l5yaqj0lush9m9z70z85tqjs0clj
@@ -21,6 +22,7 @@ creation_rules:
           - *host_every-router
           - *host_mareg
           - *host_octopi
+          - *host_pikvm
           - *host_roan
           - *host_skye
           - *host_vps-oci1
