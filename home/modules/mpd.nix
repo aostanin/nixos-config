@@ -15,7 +15,6 @@ in {
     programs.ncmpcpp = {
       enable = true;
       settings = {
-        mpd_host = "tio";
         user_interface = "alternative";
       };
     };
