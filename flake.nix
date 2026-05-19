@@ -51,7 +51,6 @@
     };
     nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
     kvmd.url = "github:aostanin/kvmd.nix";
-    wolly.url = "github:threadexio/wolly";
     terranix.url = "github:terranix/terranix";
     claude-desktop = {
       url = "github:aaddrick/claude-desktop-debian";
