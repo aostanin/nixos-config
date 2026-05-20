@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -12,11 +13,16 @@
     "/dev/disk/by-id/ata-WDC_WD120EMFZ-11A6JA0_9RG1G3RC"
   ];
 in {
-  boot.kernelParams = [
-    "pcie_aspm.policy=powersupersave"
-    "snd_hda_intel.power_save=1"
-    "nmi_watchdog=0" # Match PowerTOP
-  ];
+  boot = {
+    kernelParams = [
+      "pcie_aspm.policy=powersupersave"
+      "snd_hda_intel.power_save=1"
+      "nmi_watchdog=0" # Match PowerTOP
+    ];
+    # For hardware monitoring
+    extraModulePackages = [config.boot.kernelPackages.nct6687d];
+    kernelModules = ["nct6687"];
+  };
 
   powerManagement = {
     # One WD drive has read/write errors with anything other than max_performance
