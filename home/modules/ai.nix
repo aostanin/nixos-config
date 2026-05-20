@@ -16,9 +16,12 @@ in {
       claude-code
       gemini-cli
       opencode
+      pi
 
       # Tools
       agent-browser
+      hunk
+      rtk
     ];
   };
 }

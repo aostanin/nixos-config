@@ -53,6 +53,7 @@ in {
           lazygit
           lftp
           lsix
+          lsof
           minicom
           miniserve
           mqttui
@@ -74,6 +75,7 @@ in {
           wol
         ]
         ++ lib.optionals (!cfg.minimal) [
+          caligula
           unstable.devenv
           ffmpeg
           github-cli

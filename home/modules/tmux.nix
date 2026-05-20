@@ -22,6 +22,7 @@ in {
         set -g allow-passthrough on
         set -g set-clipboard on
         set -s extended-keys on
+        set -g extended-keys-format csi-u
         set -as terminal-features 'xterm*:extkeys'
         set -as terminal-features 'xterm*:hyperlinks'
         set -as terminal-features 'xterm*:usstyle'
