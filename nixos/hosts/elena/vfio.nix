@@ -32,9 +32,12 @@
   vfioPciIds = usbControllerIds;
 in {
   boot = {
-    kernelParams = [
+    kernelParams = lib.mkAfter [
       "vfio-pci.ids=${lib.concatStringsSep "," vfioPciIds}"
       "pci=realloc=off" # Prevent PCI BAR reallocation - fixes ReBAR + VFIO conflict
+      # DRM fbdev supports prevents unbinding the nvidia driver
+      # NOTE: We need lib.mkAfter here as the NixOS NVIDIA module enables it
+      "nvidia-drm.fbdev=0"
     ];
   };
 
