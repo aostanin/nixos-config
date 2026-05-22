@@ -24,6 +24,10 @@ in {
         metadata.destination = "/metadata";
       };
       raw.volumes = cfg.volumes;
+      healthcheck = {
+        cmd = "wget --no-verbose --tries=1 --spider http://localhost:80/healthcheck";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
       };

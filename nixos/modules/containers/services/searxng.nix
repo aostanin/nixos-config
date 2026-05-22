@@ -14,6 +14,10 @@ in {
     localModules.containers.containers.${name} = {
       raw.image = "docker.io/searxng/searxng:latest";
       volumes.data.destination = "/etc/searxng";
+      healthcheck = {
+        cmd = "wget -q --spider http://localhost:8080/healthz";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         names = ["searx"];

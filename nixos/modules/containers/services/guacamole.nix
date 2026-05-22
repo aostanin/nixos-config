@@ -56,6 +56,11 @@ in {
         POSTGRES_DB = "guacamole_db";
       };
       raw.environmentFiles = [config.sops.templates."${name}-db.env".path];
+      healthcheck = {
+        cmd = "pg_isready -U postgres";
+        interval = "10s";
+        startPeriod = "30s";
+      };
       volumes.db = {
         parent = name;
         destination = "/var/lib/postgresql/data";

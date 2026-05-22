@@ -40,6 +40,10 @@ in {
           group = toString cfg.gid;
         };
       };
+      healthcheck = {
+        cmd = "curl -f http://localhost:3000/";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         port = 3000;

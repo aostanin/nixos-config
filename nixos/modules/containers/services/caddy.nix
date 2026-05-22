@@ -48,6 +48,10 @@ in {
       raw.volumes = [
         "${caddyfile}:/etc/caddy/Caddyfile:ro"
       ];
+      healthcheck = {
+        cmd = "curl -f http://localhost:2019/config/";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         hosts = [domain];

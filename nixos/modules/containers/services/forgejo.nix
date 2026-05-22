@@ -38,6 +38,10 @@ in {
         user = toString cfg.uid;
         group = toString cfg.gid;
       };
+      healthcheck = {
+        cmd = "wget --quiet --tries=1 --spider http://localhost:3000/api/healthz";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         names = [name "git"];

@@ -95,11 +95,10 @@ in {
         "${src}/config/sql:/config/sql"
         "${src}/docker/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh"
       ];
-      raw.extraOptions = [
-        "--health-cmd"
-        "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
-        "--health-start-period=30s"
-      ];
+      healthcheck = {
+        cmd = "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB";
+        startPeriod = "30s";
+      };
     };
   };
 }

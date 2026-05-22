@@ -89,6 +89,10 @@ in {
           sha256 = "sha256-ZMEUBC2Y4J1+4tHfsMxqzTO/P1ef3aB81OAhEs+Tdc4=";
         };
       in ["${sharedSecretAuthenticator}/shared_secret_authenticator.py:/usr/local/lib/python3.13/site-packages/shared_secret_authenticator.py:ro"];
+      healthcheck = {
+        cmd = "curl -fSs http://localhost:8008/health";
+        startPeriod = "60s";
+      };
       proxy = {
         enable = true;
         names = ["matrix"];
@@ -101,6 +105,11 @@ in {
       raw.image = "docker.io/library/postgres:16-alpine";
       networks = [name];
       raw.environmentFiles = [config.sops.templates."synapse-db.env".path];
+      healthcheck = {
+        cmd = "pg_isready -U postgres";
+        interval = "10s";
+        startPeriod = "30s";
+      };
       volumes.db = {
         parent = name;
         destination = "/var/lib/postgresql/data";

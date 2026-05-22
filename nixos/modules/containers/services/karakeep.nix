@@ -74,6 +74,10 @@ in {
         MEILI_NO_ANALYTICS = "true";
       };
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
+      healthcheck = {
+        cmd = "curl -f http://localhost:7700/health";
+        startPeriod = "30s";
+      };
       volumes.data = {
         parent = name;
         destination = "/meili_data";

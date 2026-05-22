@@ -40,6 +40,10 @@ in {
         group = toString cfg.gid;
       };
       raw.volumes = cfg.volumes;
+      healthcheck = {
+        cmd = "curl -f http://localhost:6767/api/system/ping";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
       };

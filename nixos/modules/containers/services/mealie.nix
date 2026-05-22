@@ -36,6 +36,10 @@ in {
         user = toString cfg.uid;
         group = toString cfg.gid;
       };
+      healthcheck = {
+        cmd = "curl -f http://localhost:9000/api/app/about";
+        startPeriod = "30s";
+      };
       proxy.enable = true;
     };
   };

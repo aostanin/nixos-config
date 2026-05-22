@@ -45,6 +45,10 @@ in {
           group = toString cfg.gid;
         };
       };
+      healthcheck = {
+        cmd = "curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         port = 8384;

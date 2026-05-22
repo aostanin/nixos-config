@@ -45,6 +45,10 @@ in {
         user = toString cfg.uid;
         group = toString cfg.gid;
       };
+      healthcheck = {
+        cmd = "curl -f http://localhost:8080/alive";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         names = ["bitwarden"];

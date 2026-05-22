@@ -36,6 +36,10 @@ in {
         group = toString cfg.gid;
       };
       raw.volumes = cfg.volumes;
+      healthcheck = {
+        cmd = "curl -f http://localhost:25600/actuator/health";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         port = 25600;

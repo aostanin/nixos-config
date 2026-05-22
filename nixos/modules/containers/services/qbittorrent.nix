@@ -61,6 +61,11 @@ in {
       };
       raw.volumes = cfg.volumes;
       raw.extraOptions = lib.optional cfg.enableVpn "--network=container:vpn";
+      stopTimeout = 60;
+      healthcheck = {
+        cmd = "curl -f http://127.0.0.1:8113/";
+        startPeriod = "60s";
+      };
       proxy = lib.mkIf (!cfg.enableVpn) {
         enable = true;
         port = 8113;

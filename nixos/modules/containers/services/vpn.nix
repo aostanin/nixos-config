@@ -46,9 +46,15 @@ in {
         TS_HOSTNAME = "container-${config.networking.hostName}";
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_USERSPACE = "false"; # Needed to use exit node
+        TS_ENABLE_HEALTH_CHECK = "true";
+        TS_LOCAL_ADDR_PORT = "127.0.0.1:9002";
       };
       volumes.data.destination = lib.mkIf (!cfg.ephemeral) "/var/lib/tailscale";
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
+      healthcheck = {
+        cmd = "wget -q --tries=1 --spider http://127.0.0.1:9002/healthz";
+        startPeriod = "30s";
+      };
       raw.extraOptions = [
         "--device=/dev/net/tun"
         "--cap-add=NET_ADMIN"

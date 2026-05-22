@@ -37,6 +37,10 @@ in {
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
       volumes.data.destination = "/app/backend/data";
       raw.extraOptions = lib.mkIf cfg.enableNvidia ["--device=nvidia.com/gpu=all"];
+      healthcheck = {
+        cmd = "curl -f http://localhost:8080/health";
+        startPeriod = "60s";
+      };
       proxy = {
         enable = true;
         names = ["ai"];

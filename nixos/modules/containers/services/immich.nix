@@ -67,6 +67,10 @@ in {
       };
       raw.volumes = cfg.volumes;
       raw.extraOptions = lib.map (d: "--device=${d}") cfg.devices;
+      healthcheck = {
+        cmd = "immich-healthcheck";
+        startPeriod = "60s";
+      };
       proxy = {
         enable = true;
         port = 2283;
@@ -87,6 +91,11 @@ in {
     localModules.containers.containers."${name}-redis" = {
       raw.image = "docker.io/redis:6.2-alpine";
       networks = [name];
+      healthcheck = {
+        cmd = "redis-cli ping";
+        interval = "10s";
+        startPeriod = "30s";
+      };
     };
 
     localModules.containers.containers."${name}-db" = {
@@ -98,6 +107,11 @@ in {
         POSTGRES_INITDB_ARGS = "--data-checksums";
       };
       raw.environmentFiles = [config.sops.templates."${name}-db.env".path];
+      healthcheck = {
+        cmd = "pg_isready -U postgres";
+        interval = "10s";
+        startPeriod = "30s";
+      };
       volumes.db = {
         parent = name;
         destination = "/var/lib/postgresql/data";

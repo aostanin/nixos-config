@@ -36,11 +36,10 @@ in {
         "CREATE_ADMIN" = "1";
       };
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
-      raw.extraOptions = [
-        "--health-cmd"
-        "/usr/bin/miniflux -healthcheck auto"
-        "--health-start-period=30s"
-      ];
+      healthcheck = {
+        cmd = "/usr/bin/miniflux -healthcheck auto";
+        startPeriod = "30s";
+      };
       proxy.enable = true;
     };
 
@@ -56,12 +55,11 @@ in {
         parent = name;
         destination = "/var/lib/postgresql/data";
       };
-      raw.extraOptions = [
-        "--health-cmd"
-        "pg_isready -U miniflux"
-        "--health-interval=10s"
-        "--health-start-period=30s"
-      ];
+      healthcheck = {
+        cmd = "pg_isready -U miniflux";
+        interval = "10s";
+        startPeriod = "30s";
+      };
     };
   };
 }

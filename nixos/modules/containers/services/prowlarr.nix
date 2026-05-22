@@ -33,6 +33,10 @@ in {
         user = toString cfg.uid;
         group = toString cfg.gid;
       };
+      healthcheck = {
+        cmd = "curl -f http://localhost:9696/ping";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
       };

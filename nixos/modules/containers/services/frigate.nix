@@ -51,6 +51,10 @@ in {
           "--mount=type=tmpfs,target=/tmp/cache,tmpfs-size=1000000000"
         ]
         ++ lib.map (d: "--device=${d}") cfg.devices;
+      healthcheck = {
+        cmd = "curl -f http://localhost:5000/api/version";
+        startPeriod = "60s";
+      };
       proxy = {
         enable = true;
         port = 8971;

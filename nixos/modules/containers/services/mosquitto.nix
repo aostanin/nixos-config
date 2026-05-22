@@ -18,6 +18,10 @@ in {
       autoupdate = false;
       raw.ports = ["1883:1883"];
       volumes.data.destination = "/mosquitto/data";
+      healthcheck = {
+        cmd = "mosquitto_pub -h localhost -t healthcheck -m ping";
+        startPeriod = "30s";
+      };
       raw.volumes = let
         configFile = pkgs.writeTextFile {
           name = "mosquitto.conf";

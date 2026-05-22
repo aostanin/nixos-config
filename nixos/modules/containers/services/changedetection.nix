@@ -56,6 +56,10 @@ in {
         DEFAULT_BLOCK_ADS = "false";
         DEFAULT_STEALTH = "true";
       };
+      healthcheck = {
+        cmd = "curl -f http://localhost:3000/pressure";
+        startPeriod = "30s";
+      };
     };
   };
 }

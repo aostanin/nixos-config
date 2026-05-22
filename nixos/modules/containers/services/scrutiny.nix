@@ -17,6 +17,10 @@ in {
         config.destination = "/opt/scrutiny/config";
         influxdb.destination = "/opt/scrutiny/influxdb";
       };
+      healthcheck = {
+        cmd = "curl -f http://localhost:8080/api/health";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         port = 8080;

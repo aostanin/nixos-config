@@ -26,6 +26,10 @@ in {
       };
       volumes.data.destination = "/data";
       raw.volumes = cfg.volumes;
+      healthcheck = {
+        cmd = "wget -qO- http://localhost:4533/ping";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         port = 4533;

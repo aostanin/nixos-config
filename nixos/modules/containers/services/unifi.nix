@@ -66,6 +66,10 @@ in {
         user = toString cfg.uid;
         group = toString cfg.gid;
       };
+      healthcheck = {
+        cmd = "curl -fk https://localhost:8443/status";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         port = 8443;
@@ -75,6 +79,11 @@ in {
 
     localModules.containers.containers."${name}-db" = {
       raw.image = "docker.io/library/mongo:7";
+      healthcheck = {
+        cmd = "mongosh --port 27017 --quiet --eval \"db.adminCommand('ping').ok\"";
+        interval = "10s";
+        startPeriod = "30s";
+      };
       networks = [name];
       raw.environment = {
         MONGO_INITDB_ROOT_USERNAME = "root";

@@ -146,6 +146,43 @@
       };
     });
 
+  healthcheckSubmodule = lib.types.submodule {
+    options = {
+      cmd = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = ''
+          Health check command, run via shell inside the container.
+          `null` disables the health check.
+        '';
+      };
+
+      interval = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = "Time between health checks, e.g. \"30s\".";
+      };
+
+      timeout = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = "Maximum time a single check may run, e.g. \"5s\".";
+      };
+
+      retries = lib.mkOption {
+        type = with lib.types; nullOr int;
+        default = null;
+        description = "Consecutive failures needed to mark unhealthy.";
+      };
+
+      startPeriod = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = "Grace period before failures count, e.g. \"30s\".";
+      };
+    };
+  };
+
   containerModule =
     lib.types.submodule
     (args @ {name, ...}: {
@@ -154,6 +191,22 @@
           type = lib.types.bool;
           default = true;
           description = "Update the container with podman auto-update.";
+        };
+
+        healthcheck = lib.mkOption {
+          type = healthcheckSubmodule;
+          default = {};
+          description = "Container health check settings.";
+        };
+
+        stopTimeout = lib.mkOption {
+          type = with lib.types; nullOr int;
+          default = null;
+          description = ''
+            Seconds to wait for a clean stop before podman sends SIGKILL
+            (`--stop-timeout`). `null` uses podman's default of 10s. Must stay
+            below the unit's `TimeoutStopSec` (120s).
+          '';
         };
 
         proxy = lib.mkOption {
@@ -200,6 +253,15 @@ in {
       ++ lib.optional (
         (lib.filter (p: p.enable) (lib.attrValues opts.proxies)) != []
       ) "proxy";
+
+    mkHealthOptions = hc:
+      lib.optionals (hc.cmd != null) (
+        ["--health-cmd" hc.cmd]
+        ++ lib.optionals (hc.interval != null) ["--health-interval" hc.interval]
+        ++ lib.optionals (hc.timeout != null) ["--health-timeout" hc.timeout]
+        ++ lib.optionals (hc.retries != null) ["--health-retries" (toString hc.retries)]
+        ++ lib.optionals (hc.startPeriod != null) ["--health-start-period" hc.startPeriod]
+      );
   in
     lib.mkIf config.localModules.containers.enable {
       lib.containers = {
@@ -224,7 +286,11 @@ in {
                     )
                     opts.volumes;
                   labels = lib.optionalAttrs opts.autoupdate {"io.containers.autoupdate" = "registry";};
-                  extraOptions = map (n: "--network=${n}") (mkNetworks opts);
+                  extraOptions =
+                    map (n: "--network=${n}") (mkNetworks opts)
+                    ++ mkHealthOptions opts.healthcheck
+                    ++ lib.optional (opts.stopTimeout != null) "--stop-timeout=${toString opts.stopTimeout}";
+                  podman.sdnotify = lib.mkIf (opts.healthcheck.cmd != null) (lib.mkDefault "healthy");
                 }
               ]
               ++ (lib.mapAttrsToList (name: proxy: let

@@ -18,6 +18,11 @@ in {
         LNBITS_EXTENSIONS_PATH = "/app/data/extensions";
       };
       volumes.data.destination = "/app/data";
+      stopTimeout = 60;
+      healthcheck = {
+        cmd = "curl -f http://localhost:5000/api/v1/health";
+        startPeriod = "30s";
+      };
       proxy = {
         enable = true;
         port = 5000;

@@ -89,6 +89,11 @@ in {
     localModules.containers.containers."${name}-redis" = {
       raw.image = "docker.io/redis:7.0-alpine";
       networks = [name];
+      healthcheck = {
+        cmd = "redis-cli ping";
+        interval = "10s";
+        startPeriod = "30s";
+      };
       volumes.shared = {
         parent = name;
         destination = "/var/shared/redis";
@@ -103,6 +108,11 @@ in {
         POSTGRES_DB = name;
       };
       raw.environmentFiles = [config.sops.templates."${name}-db.env".path];
+      healthcheck = {
+        cmd = "pg_isready -U postgres";
+        interval = "10s";
+        startPeriod = "30s";
+      };
       volumes = {
         db = {
           parent = name;

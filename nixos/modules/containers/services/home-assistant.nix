@@ -24,6 +24,7 @@ in {
         "--privileged"
         "--network=host"
       ];
+      stopTimeout = 60;
     };
 
     services.traefik.dynamicConfigOptions = let
