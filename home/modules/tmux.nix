@@ -58,18 +58,9 @@ in {
           '';
         }
         {
-          plugin = tmux-thumbs;
+          plugin = fingers;
           extraConfig = ''
-            set -g @thumbs-command 'printf %s {} | ${
-              if pkgs.stdenv.isDarwin
-              then "pbcopy"
-              else "wl-copy"
-            }'
-            set -g @thumbs-upcase-command '${
-              if pkgs.stdenv.isDarwin
-              then "open"
-              else "xdg-open"
-            } {}'
+            set -g @fingers-key O
           '';
         }
         mode-indicator
