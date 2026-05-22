@@ -72,6 +72,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
       inputs.flake-parts.follows = "flake-parts";
     };
+    maki.url = "github:tontinton/maki";
   };
 
   outputs = inputs @ {

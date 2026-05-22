@@ -31,6 +31,9 @@ in {
         set -as terminal-features 'xterm*:sync'
         set -g renumber-windows on
 
+        set -g set-titles on
+        set -g set-titles-string "#h: #S / #W"
+
         bind-key C-a last-window
         bind-key a send-prefix
 
