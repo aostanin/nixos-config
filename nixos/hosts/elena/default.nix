@@ -250,7 +250,8 @@
     # TODO: Open has issues with VFIO
     # ref: https://www.reddit.com/r/VFIO/comments/xt5cdm/dmesg_shows_thousands_of_these_errors_ioremap/
     open = false;
-    powerManagement.finegrained = true;
+    # FIXME: Workaround for nvidia-gpu 0000:01:00.3: Unable to change power state from D3hot to D0, device inaccessible
+    powerManagement.finegrained = false;
     prime = {
       offload = {
         enable = true;
