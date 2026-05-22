@@ -27,8 +27,8 @@ in {
       git.enable = lib.mkDefault true;
       neovim.enable = lib.mkDefault (!cfg.minimal);
       ssh.enable = lib.mkDefault true;
+      television.enable = lib.mkDefault (!cfg.minimal);
       tmux.enable = lib.mkDefault true;
-      zellij.enable = lib.mkDefault (!cfg.minimal);
       zsh.enable = lib.mkDefault true;
     };
 
@@ -105,6 +105,14 @@ in {
       direnv = {
         enable = true;
         nix-direnv.enable = true;
+      };
+
+      fzf = {
+        enable = true;
+        fileWidgetCommand = "fd --type f";
+        fileWidgetOptions = ["--preview 'bat --color=always {}'"];
+        changeDirWidgetCommand = "fd --type d";
+        changeDirWidgetOptions = ["--preview 'lsd --tree --depth 2 --color=always {}'"];
       };
 
       lsd = {

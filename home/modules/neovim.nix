@@ -534,7 +534,47 @@ in {
           };
         };
 
-        lualine.enable = true;
+        lualine = {
+          enable = true;
+          settings.sections = {
+            lualine_c = [
+              "filename"
+              {
+                __unkeyed-1.__raw = ''function() return vim.fn.nr2char(0xf544) .. " " end'';
+                color.__raw = ''
+                  function()
+                    local status = require("sidekick.status").get()
+                    if status then
+                      return status.kind == "Error" and "DiagnosticError"
+                        or status.busy and "DiagnosticWarn"
+                        or "Special"
+                    end
+                  end
+                '';
+                cond.__raw = ''
+                  function()
+                    return require("sidekick.status").get() ~= nil
+                  end
+                '';
+              }
+            ];
+            lualine_x = [
+              "encoding"
+              {
+                __unkeyed-1.__raw = ''
+                  function()
+                    local status = require("sidekick.status").cli()
+                    return vim.fn.nr2char(0xf120) .. " " .. (#status > 1 and #status or "")
+                  end
+                '';
+                cond.__raw = ''function() return #require("sidekick.status").cli() > 0 end'';
+                color.__raw = ''function() return "Special" end'';
+              }
+              "fileformat"
+              "filetype"
+            ];
+          };
+        };
 
         neo-tree = {
           enable = true;
@@ -545,45 +585,6 @@ in {
         };
 
         neogit.enable = true;
-
-        neorg = {
-          enable = false;
-          settings = {
-            load = {
-              "core.concealer" = {
-                config = {
-                  icon_preset = "varied";
-                };
-              };
-              "core.defaults" = {
-                __empty = null;
-              };
-              "core.dirman" = {
-                config = {
-                  workspaces = {
-                    notes = "~/Sync/norg";
-                  };
-                };
-              };
-              "core.journal" = {
-                config = {
-                  strategy = "flat";
-                };
-              };
-            };
-          };
-          telescopeIntegration.enable = true;
-        };
-
-        oil = {
-          enable = false;
-          settings = {
-            default_file_explorer = true;
-            view_options = {
-              show_hidden = true;
-            };
-          };
-        };
 
         render-markdown.enable = true;
 
@@ -604,6 +605,9 @@ in {
                 };
                 opencode = {
                   cmd = [(lib.getExe pkgs.llm-agents.opencode)];
+                };
+                pi = {
+                  cmd = [(lib.getExe pkgs.llm-agents.pi)];
                 };
               };
             };

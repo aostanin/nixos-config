@@ -30,6 +30,7 @@
     ./ssh.nix
     ./sway.nix
     ./syncthing.nix
+    ./television.nix
     ./tmux.nix
     ./trayscale.nix
     ./vdirsyncer.nix

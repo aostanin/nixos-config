@@ -11,13 +11,15 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    programs.tmux = rec {
+    programs.tmux = {
       enable = true;
       aggressiveResize = true;
       baseIndex = 1;
       clock24 = true;
       escapeTime = 0;
       focusEvents = true;
+      historyLimit = 50000;
+      sensibleOnTop = true;
       extraConfig = ''
         set -g allow-passthrough on
         set -g set-clipboard on
@@ -27,28 +29,69 @@ in {
         set -as terminal-features 'xterm*:hyperlinks'
         set -as terminal-features 'xterm*:usstyle'
         set -as terminal-features 'xterm*:sync'
-        bind-key C-${shortcut} last-window
+        set -g renumber-windows on
 
-        set -g @thumbs-command 'printf %s {} | ${
-          if pkgs.stdenv.isDarwin
-          then "pbcopy"
-          else "wl-copy"
-        }'
-        set -g @thumbs-upcase-command '${
-          if pkgs.stdenv.isDarwin
-          then "open"
-          else "xdg-open"
-        } {}'
+        bind-key C-a last-window
+        bind-key a send-prefix
+
+        bind-key b break-pane -d
+        bind-key J choose-window "join-pane -h -s '%%'"
       '';
       keyMode = "vi";
       mouse = true;
       plugins = with pkgs.tmuxPlugins; [
+        {
+          plugin = gruvbox;
+          extraConfig = ''
+            set -g @tmux-gruvbox 'dark'
+            set -g @tmux-gruvbox-right-status-z '#h #{tmux_mode_indicator}'
+          '';
+        }
         pain-control
-        tmux-thumbs
+        {
+          plugin = tmux-floax;
+          extraConfig = ''
+            set -g @floax-width '80%'
+            set -g @floax-height '80%'
+            set -g @floax-change-path 'true'
+            set -g @floax-border-color 'green'
+          '';
+        }
+        {
+          plugin = tmux-thumbs;
+          extraConfig = ''
+            set -g @thumbs-command 'printf %s {} | ${
+              if pkgs.stdenv.isDarwin
+              then "pbcopy"
+              else "wl-copy"
+            }'
+            set -g @thumbs-upcase-command '${
+              if pkgs.stdenv.isDarwin
+              then "open"
+              else "xdg-open"
+            } {}'
+          '';
+        }
+        mode-indicator
       ];
       shortcut = "a";
       terminal = "tmux-256color";
       tmuxp.enable = true;
     };
+
+    programs.fzf.tmux.enableShellIntegration = true;
+
+    programs.sesh = {
+      enable = true;
+      settings = {
+        dir_length = 2;
+        blacklist = ["scratch"];
+        default_session = {
+          startup_command = " [ -f .smug.yml ] && smug start -f .smug.yml -i && tmux kill-window -t ${toString config.programs.tmux.baseIndex} || clear";
+        };
+      };
+    };
+
+    programs.smug.enable = true;
   };
 }

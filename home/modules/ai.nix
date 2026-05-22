@@ -14,14 +14,15 @@ in {
     home.packages = with pkgs.llm-agents; [
       # Agents
       claude-code
-      gemini-cli
       opencode
       pi
 
       # Tools
       agent-browser
       hunk
+      nono
       rtk
+      tuicr
     ];
   };
 }

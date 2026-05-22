@@ -86,6 +86,9 @@ in {
 
         # Claude Code
         ".claude/settings.local.json"
+
+        # Smug project layouts
+        ".smug.yml"
       ];
     };
   };
