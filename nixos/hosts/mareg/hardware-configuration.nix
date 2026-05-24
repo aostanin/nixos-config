@@ -18,7 +18,9 @@
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  disko.devices.disk.main.device = "/dev/disk/by-id/ata-TS512GMTS430S_F880900268";
+  disko.devices.disk.transcend.device = "/dev/disk/by-id/ata-TS512GMTS430S_F880900268";
+  disko.devices.disk.mx300a.device = "/dev/disk/by-id/ata-Crucial_CT525MX300SSD1_164914EE8985";
+  disko.devices.disk.mx300b.device = "/dev/disk/by-id/ata-Crucial_CT525MX300SSD1_1652152C0A06";
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }

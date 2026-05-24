@@ -1,26 +1,11 @@
 {
   disko.devices = {
     disk = {
-      main = {
+      transcend = {
         type = "disk";
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              size = "512M";
-              type = "EF00";
-              content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/boot";
-              };
-            };
-            swap = {
-              size = "16G";
-              content = {
-                type = "swap";
-              };
-            };
             rpool = {
               size = "100%";
               content = {
@@ -31,10 +16,71 @@
           };
         };
       };
+      mx300a = {
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              size = "512M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot1";
+              };
+            };
+            rpool = {
+              size = "477G";
+              content = {
+                type = "zfs";
+                pool = "rpool";
+              };
+            };
+            swap = {
+              size = "100%";
+              content = {
+                type = "swap";
+              };
+            };
+          };
+        };
+      };
+      mx300b = {
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              size = "512M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot2";
+              };
+            };
+            rpool = {
+              size = "477G";
+              content = {
+                type = "zfs";
+                pool = "rpool";
+              };
+            };
+            swap = {
+              size = "100%";
+              content = {
+                type = "swap";
+              };
+            };
+          };
+        };
+      };
     };
     zpool = {
       rpool = {
         type = "zpool";
+        mode = "raidz1";
         rootFsOptions = {
           canmount = "off";
           mountpoint = "none";

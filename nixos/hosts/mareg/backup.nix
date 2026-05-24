@@ -11,8 +11,7 @@
           name = "snap-frequent";
           type = "snap";
           filesystems = {
-            "rpool/system<" = true;
-            "rpool/user<" = true;
+            "rpool/persist<" = true;
           };
           snapshotting = {
             type = "periodic";

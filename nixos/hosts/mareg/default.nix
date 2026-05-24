@@ -15,11 +15,25 @@
 
   boot = {
     loader = {
-      systemd-boot = {
+      grub = {
         enable = true;
+        efiSupport = true;
+        efiInstallAsRemovable = true;
+        zfsSupport = true;
         configurationLimit = 10;
+        mirroredBoots = [
+          {
+            devices = ["nodev"];
+            path = "/boot1";
+            efiSysMountPoint = "/boot1";
+          }
+          {
+            devices = ["nodev"];
+            path = "/boot2";
+            efiSysMountPoint = "/boot2";
+          }
+        ];
       };
-      efi.canTouchEfiVariables = true;
     };
     tmp.useTmpfs = true;
     kernelParams = [

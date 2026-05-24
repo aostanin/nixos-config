@@ -48,7 +48,11 @@
 
     forgejo-runner.enable = true;
 
-    impermanence.enable = true;
+    impermanence = {
+      enable = true;
+      safeRoot = "/persist";
+      cacheRoot = "/persist";
+    };
   };
 
   # TailScale incorrectly detects resolved DNS mode and fails to set up MagicDNS.
