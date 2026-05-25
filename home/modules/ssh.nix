@@ -18,7 +18,7 @@ in {
         "*".extraOptions.StrictHostKeyChecking = "no";
 
         "git.${secrets.domain}" = {
-          hostname = "roan";
+          hostname = "roan.${secrets.terranix.tailscale.tailnetName}";
           port = 2222;
           user = "git";
         };
