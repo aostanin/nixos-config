@@ -119,6 +119,8 @@ in {
     };
 
     services = {
+      eternal-terminal.enable = true;
+
       openssh = {
         enable = true;
         settings = {
@@ -133,7 +135,6 @@ in {
         binfmt = true;
       };
 
-      mosh.enable = true;
       zsh.enable = true;
     };
 

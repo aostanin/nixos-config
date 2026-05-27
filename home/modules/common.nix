@@ -38,6 +38,7 @@ in {
     home = {
       packages = localLib.filterAvailable (with pkgs;
         [
+          aria2
           bat
           btop
           cksfv
@@ -90,6 +91,7 @@ in {
         ]);
 
       sessionVariables = {
+        DO_NOT_TRACK = "1";
         MANPAGER = "sh -c 'col -bx | ${lib.getExe pkgs.bat} -l man -p'";
         MANROFFOPT = "-c";
         NIXPKGS_ALLOW_UNFREE = "1";

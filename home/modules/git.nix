@@ -86,6 +86,8 @@ in {
 
         # Claude Code
         ".claude/settings.local.json"
+        ".claude/worktrees"
+        ".playwright-mcp"
 
         # Smug project layouts
         ".smug.yml"
