@@ -35,6 +35,7 @@ in {
       ipaexfont
       joypixels
       kochi-substitute
+      nanum # Fix for OrcaSlicer ref: https://github.com/OrcaSlicer/OrcaSlicer/issues/11641#issuecomment-3910413909
       nerd-fonts.hack
       noto-fonts
       noto-fonts-cjk-sans
