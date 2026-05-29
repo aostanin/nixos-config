@@ -38,7 +38,7 @@ in {
         bind-key a send-prefix
 
         bind-key b break-pane -d
-        bind-key J choose-window "join-pane -h -s '%%'"
+        bind-key B choose-window "join-pane -h -s '%%'"
       '';
       keyMode = "vi";
       mouse = true;
