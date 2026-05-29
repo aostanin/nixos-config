@@ -64,6 +64,7 @@ in {
           plugin = fingers;
           extraConfig = ''
             set -g @fingers-key O
+            set -g @fingers-jump-key I
           '';
         }
         mode-indicator
