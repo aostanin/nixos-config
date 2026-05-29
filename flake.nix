@@ -154,7 +154,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             deploy-rs.packages.${system}.default
-            git-crypt
+            git-agecrypt
             sops
           ];
         };

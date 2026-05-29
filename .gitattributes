@@ -1,2 +1,2 @@
-/secrets/** filter=git-crypt diff=git-crypt
+/secrets/** filter=git-agecrypt diff=git-agecrypt
 /secrets/sops/** !filter !diff

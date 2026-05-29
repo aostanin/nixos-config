@@ -13,7 +13,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      git-crypt
+      git-agecrypt
     ];
 
     programs.git = {

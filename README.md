@@ -2,14 +2,14 @@
 
 ## Contents
 
-| Path        | Usage                       |
-| ----------- | --------------------------- |
-| `/darwin`   | nix-darwin Configurations   |
-| `/home`     | Home Manager Configurations |
-| `/nixos`    | NixOS Configurations        |
-| `/packages` | Packaged applications       |
-| `/secrets`  | git-crypt and SOPS secrets  |
-| `/terranix` | Terraform Configuration     |
+| Path        | Usage                         |
+| ----------- | ----------------------------- |
+| `/darwin`   | nix-darwin Configurations     |
+| `/home`     | Home Manager Configurations   |
+| `/nixos`    | NixOS Configurations          |
+| `/packages` | Packaged applications         |
+| `/secrets`  | git-agecrypt and SOPS secrets |
+| `/terranix` | Terraform Configuration       |
 
 ## Hosts
 
