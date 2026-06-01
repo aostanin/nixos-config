@@ -67,7 +67,7 @@ in {
 
   services.home-assistant = {
     enable = true;
-    package = pkgs.unstable.home-assistant;
+    package = pkgs.home-assistant;
     config = {
       http = {
         use_x_forwarded_for = true;

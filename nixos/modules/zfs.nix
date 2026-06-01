@@ -21,7 +21,7 @@ in {
       supportedFilesystems = ["zfs"];
       zfs = {
         forceImportRoot = !cfg.allowHibernation;
-        allowHibernation = cfg.allowHibernation;
+        unsafeAllowHibernation = cfg.allowHibernation;
       };
     };
 

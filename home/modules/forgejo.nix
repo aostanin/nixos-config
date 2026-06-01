@@ -17,8 +17,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      pkgs.unstable.forgejo-cli
-      pkgs.unstable.tea
+      pkgs.forgejo-cli
+      pkgs.tea
     ];
 
     sops.secrets."forgejo/token" = {};

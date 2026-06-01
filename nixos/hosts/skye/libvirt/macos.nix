@@ -30,7 +30,7 @@
   os = {
     type = "hvm";
     arch = "x86_64";
-    machine = "pc-q35-4.2";
+    machine = "pc-q35-5.0";
     loader = {
       readonly = true;
       type = "pflash";

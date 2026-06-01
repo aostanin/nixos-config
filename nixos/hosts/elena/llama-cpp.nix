@@ -6,7 +6,7 @@
 }: {
   services.llama-cpp = {
     enable = true;
-    package = (pkgs.unstable.pkgsForCudaArch.sm_75.extend inputs.llama-cpp-turboquant.overlays.default).llama-cpp.overrideAttrs (old: {
+    package = (pkgs.pkgsForCudaArch.sm_75.extend inputs.llama-cpp-turboquant.overlays.default).llama-cpp.overrideAttrs (old: {
       cmakeFlags =
         (old.cmakeFlags or [])
         ++ [

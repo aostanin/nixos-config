@@ -35,10 +35,7 @@
       ];
     };
 
-    phoenixd = {
-      enable = true;
-      package = pkgs.unstable.phoenixd;
-    };
+    phoenixd.enable = true;
 
     common = {
       enable = true;

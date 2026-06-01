@@ -125,13 +125,6 @@
         '';
       };
 
-      powerManagementCommands = lib.mkOption {
-        type = lib.types.str;
-        default = "";
-        description = ''
-          Commands to run to put the card in a low power state.
-        '';
-      };
     };
   };
 
@@ -527,13 +520,10 @@ in {
           lib.concatStringsSep "\n"
           (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuAttachScript gpu))) cfg.gpus);
       };
-      services.displayManager.preStart =
+      services.displayManager.generic.preStart =
         lib.concatStringsSep "\n"
         (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuDetachScript gpu))) cfg.gpus);
 
-      powerManagement.powerUpCommands =
-        lib.concatStringsSep "\n"
-        (lib.mapAttrsToList (gpuName: gpu: gpu.powerManagementCommands) cfg.gpus);
     }
 
     (lib.mkIf (cfg.gpuHostUnits != []) {

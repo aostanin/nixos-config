@@ -42,19 +42,6 @@ in {
       slack
     ];
 
-    # TODO: Switch to services.flameshot once it's in stable home-manager
-    # ref: https://github.com/nix-community/home-manager/pull/8730
-    launchd.agents.flameshot = {
-      enable = true;
-      config = {
-        ProgramArguments = [(lib.getExe pkgs.flameshot)];
-        KeepAlive = {
-          Crashed = true;
-          SuccessfulExit = false;
-        };
-        ProcessType = "Interactive";
-        RunAtLoad = true;
-      };
-    };
+    services.flameshot.enable = true;
   };
 }

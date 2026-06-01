@@ -77,7 +77,7 @@ in {
         ]
         ++ lib.optionals (!cfg.minimal) [
           caligula
-          unstable.devenv
+          devenv
           ffmpeg
           github-cli
           gpsbabel

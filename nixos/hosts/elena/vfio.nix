@@ -12,16 +12,11 @@
       driver = "nvidia";
       pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
       busId = "01:00.0";
-      powerManagementCommands = ''
-        # Lowers idle from ~13 W to ~6 W. Otherwise the GPU continues displaying the last image.
-        ${lib.getExe' pkgs.linuxPackages.nvidia_x11.bin "nvidia-smi"} --gpu-reset
-      '';
       preDetachCommands = ''
         ${setGpuLedColor "FF4444"} || true
       '';
       postAttachCommands = ''
         ${setGpuLedColor "000000"} || true
-        systemctl restart nvidia-container-toolkit-cdi-generator.service || true
       '';
     };
   };
@@ -53,6 +48,7 @@ in {
     gpus = gpus;
     gpuHostUnits = [
       "llama-cpp.service"
+      "nvidia-container-toolkit-cdi-generator.service"
       "podman-open-webui.service"
       "podman-openedai-speech.service"
     ];

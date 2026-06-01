@@ -18,7 +18,7 @@ in {
   options.localModules.llamaCpp = {
     enable = lib.mkEnableOption "llama-cpp llama-server";
 
-    package = lib.mkPackageOption pkgs ["unstable" "llama-cpp"] {};
+    package = lib.mkPackageOption pkgs ["llama-cpp"] {};
 
     host = lib.mkOption {
       type = lib.types.str;

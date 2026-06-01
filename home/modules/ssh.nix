@@ -14,13 +14,13 @@ in {
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
-        "*".extraOptions.StrictHostKeyChecking = "no";
+      settings = {
+        "*".StrictHostKeyChecking = "no";
 
         "git.${secrets.domain}" = {
-          hostname = "roan.${secrets.terranix.tailscale.tailnetName}";
-          port = 2222;
-          user = "git";
+          HostName = "roan.${secrets.terranix.tailscale.tailnetName}";
+          Port = 2222;
+          User = "git";
         };
       };
     };

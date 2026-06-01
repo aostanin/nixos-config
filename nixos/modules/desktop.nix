@@ -45,6 +45,7 @@ in {
     ];
 
     environment.systemPackages = with pkgs; [
+      android-tools
       kdePackages.kde-gtk-config
       spice-gtk # Fix for USB redirection in virt-manager
     ];
@@ -88,7 +89,7 @@ in {
             SUBSYSTEMS=="usb", ATTRS{idVendor}=="0925", ATTRS{idProduct}=="3881", GROUP="users", MODE="0660"
 
             # LEOMO TYPE-S
-            ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", GROUP="adbusers", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
+            ATTR{idVendor}=="0489", ATTR{idProduct}=="c026", SYMLINK+="android_adb", MODE="0660", TAG+="uaccess", SYMLINK+="android", SYMLINK+="android%n"
 
             # Blockstream Jade
             ATTRS{idProduct}=="55d4", ATTRS{idVendor}=="1a86", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on", GROUP="plugdev", MODE="0660", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="jade%n"
@@ -219,8 +220,6 @@ in {
     };
 
     programs = {
-      adb.enable = true;
-
       dconf.enable = true;
     };
 

@@ -13,7 +13,6 @@ in {
   config = lib.mkIf cfg.enable {
     programs.television = {
       enable = true;
-      package = pkgs.unstable.television;
       enableZshIntegration = false;
     };
 

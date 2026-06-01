@@ -160,7 +160,6 @@ in {
         ${secrets.user.username} = {
           isNormalUser = true;
           extraGroups = [
-            "adbusers"
             "cdrom"
             "dialout"
             "disk"

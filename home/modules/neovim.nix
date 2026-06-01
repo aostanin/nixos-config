@@ -472,7 +472,7 @@ in {
               elm_format.command = lib.getExe pkgs.elmPackages.elm-format;
               gofmt.command = lib.getExe' pkgs.go "gofmt";
               pg_format.command = lib.getExe pkgs.pgformatter;
-              prettier.command = lib.getExe pkgs.nodePackages.prettier;
+              prettier.command = lib.getExe pkgs.prettier;
               rustfmt.command = lib.getExe pkgs.rustPackages.rustfmt;
               shfmt = {
                 command = lib.getExe pkgs.shfmt;

@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   localModules.llamaCpp = {
     enable = true;
-    package = pkgs.unstable.llama-cpp;
     host = "0.0.0.0";
     port = 8085;
     extraFlags = [
