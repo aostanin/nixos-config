@@ -4,6 +4,13 @@
 }: rec {
   filterAvailable = builtins.filter (packageAvailable pkgs.stdenv.hostPlatform);
 
+  brokenOn = cond: pkg:
+    pkg.overrideAttrs (old: {
+      meta = (old.meta or {}) // {broken = (old.meta.broken or false) || cond;};
+    });
+
+  brokenOnDarwin = brokenOn pkgs.stdenv.hostPlatform.isDarwin;
+
   packageAvailable = platform: pkg: let
     name = builtins.tryEval (pkg.name or pkg.pname or "unknown");
     pkgName =

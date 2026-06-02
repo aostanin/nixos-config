@@ -73,7 +73,7 @@ in {
           tio
           tmuxp
           tree
-          wol
+          (localLib.brokenOnDarwin wol)
         ]
         ++ lib.optionals (!cfg.minimal) [
           caligula

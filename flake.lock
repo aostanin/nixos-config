@@ -583,11 +583,11 @@
         "nixpkgs": "nixpkgs_7"
       },
       "locked": {
-        "lastModified": 1751065792,
-        "narHash": "sha256-Xm9QBnbp9rd7E0dm2pPbxvb+/Mst2VHKaa0PeJps2v0=",
+        "lastModified": 1780361469,
+        "narHash": "sha256-zGM3NXN5Ql9M/XGDYfWVl5msafFp+2QZFh3MElnlTQw=",
         "owner": "aostanin",
         "repo": "nixos-sbc",
-        "rev": "77968969eb33ec95b553589c4de745aae439efa5",
+        "rev": "9cddab200697da105f21841da409a1880e2655d6",
         "type": "github"
       },
       "original": {

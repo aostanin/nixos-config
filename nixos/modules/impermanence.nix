@@ -78,9 +78,18 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    boot.initrd.postResumeCommands = lib.mkAfter ''
-      zfs rollback -r ${cfg.rootDatasetBlankSnapshot}
-    '';
+    boot.initrd.systemd.services.rollback = let
+      pool = lib.head (lib.splitString "/" cfg.rootDatasetBlankSnapshot);
+    in {
+      description = "Rollback ZFS root to blank snapshot";
+      wantedBy = ["initrd.target"];
+      requires = ["zfs-import-${pool}.service"];
+      after = ["zfs-import-${pool}.service"];
+      before = ["sysroot.mount"];
+      unitConfig.DefaultDependencies = false;
+      serviceConfig.Type = "oneshot";
+      script = "zfs rollback -r ${cfg.rootDatasetBlankSnapshot}";
+    };
 
     fileSystems =
       {${cfg.safeRoot}.neededForBoot = true;}

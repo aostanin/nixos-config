@@ -16,11 +16,18 @@
   };
 
   # Set up fan
-  boot.initrd.preDeviceCommands = ''
-    echo 50000 > /sys/class/thermal/thermal_zone0/trip_point_2_temp
-    echo 40000 > /sys/class/thermal/thermal_zone0/trip_point_3_temp
-    echo 30000 > /sys/class/thermal/thermal_zone0/trip_point_4_temp
-  '';
+  boot.initrd.systemd.services.fan-thermal-trips = {
+    description = "Set fan thermal trip points";
+    wantedBy = ["initrd.target"];
+    before = ["sysroot.mount"];
+    unitConfig.DefaultDependencies = false;
+    serviceConfig.Type = "oneshot";
+    script = ''
+      echo 50000 >/sys/class/thermal/thermal_zone0/trip_point_2_temp
+      echo 40000 >/sys/class/thermal/thermal_zone0/trip_point_3_temp
+      echo 30000 >/sys/class/thermal/thermal_zone0/trip_point_4_temp
+    '';
+  };
 
   # Increase mid fan speed
   hardware.deviceTree.overlays = [

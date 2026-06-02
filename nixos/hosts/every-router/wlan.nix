@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   secrets,
   ...
@@ -11,6 +12,8 @@
   environment.systemPackages = with pkgs; [
     iw
   ];
+
+  networking.wireless.enable = lib.mkForce false;
 
   services.hostapd = {
     enable = true;
