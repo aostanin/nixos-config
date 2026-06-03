@@ -95,7 +95,7 @@ in {
           "${modifier}-v" = "split vertical";
 
           # Terminal
-          "${modifier}-enter" = "exec-and-forget open -na Ghostty";
+          "${modifier}-enter" = "exec-and-forget open -na Alacritty";
 
           # Resize mode
           "${modifier}-r" = "mode resize";
