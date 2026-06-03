@@ -37,6 +37,7 @@ in {
           # GUI
           audacity
           bitwarden-desktop
+          cosmic-files
           feishin
           filezilla
           gimp
@@ -47,13 +48,6 @@ in {
           libreoffice
           moonlight-qt
           sparrow
-          (xfce.thunar.override {
-            thunarPlugins = with xfce; [
-              thunar-archive-plugin
-              thunar-volman
-              tumbler
-            ];
-          })
           thunderbird
           virt-manager
           wl-clipboard
