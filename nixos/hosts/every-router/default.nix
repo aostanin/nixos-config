@@ -52,6 +52,11 @@
   # introduced in 26.05 as the eventual replacement and may not hit this).
   boot.initrd.systemd.enable = false;
 
+  # Fix unreliable USB device detection
+  boot.initrd.preDeviceCommands = ''
+    echo 544 >/sys/class/gpio/export
+  '';
+
   localModules = {
     common = {
       enable = true;

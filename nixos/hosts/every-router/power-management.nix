@@ -15,21 +15,8 @@
     "vm.dirty_writeback_centisecs" = 1500;
   };
 
-  # Set up fan
-  boot.initrd.systemd.services.fan-thermal-trips = {
-    description = "Set fan thermal trip points";
-    wantedBy = ["initrd.target"];
-    before = ["sysroot.mount"];
-    unitConfig.DefaultDependencies = false;
-    serviceConfig.Type = "oneshot";
-    script = ''
-      echo 50000 >/sys/class/thermal/thermal_zone0/trip_point_2_temp
-      echo 40000 >/sys/class/thermal/thermal_zone0/trip_point_3_temp
-      echo 30000 >/sys/class/thermal/thermal_zone0/trip_point_4_temp
-    '';
-  };
-
-  # Increase mid fan speed
+  # Increase mid fan speed and lower the cpu-thermal trip points so the
+  # pwm-fan kicks in earlier than the DTS defaults (60/85/115 °C).
   hardware.deviceTree.overlays = [
     {
       name = "bpi-r3-mini-fan-pwm";
@@ -44,6 +31,27 @@
                 target-path = "/pwm-fan";
                 __overlay__ {
                     cooling-levels = <255 40 0>;
+                };
+            };
+
+            fragment@1 {
+                target-path = "/thermal-zones/cpu-thermal/trips/active-high";
+                __overlay__ {
+                    temperature = <50000>;
+                };
+            };
+
+            fragment@2 {
+                target-path = "/thermal-zones/cpu-thermal/trips/active-med";
+                __overlay__ {
+                    temperature = <40000>;
+                };
+            };
+
+            fragment@3 {
+                target-path = "/thermal-zones/cpu-thermal/trips/active-low";
+                __overlay__ {
+                    temperature = <30000>;
                 };
             };
         };
