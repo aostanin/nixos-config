@@ -175,6 +175,11 @@
           ];
         };
         jellyseerr.enable = true;
+
+        neko = {
+          enable = true;
+          devices = ["/dev/dri/renderD128"];
+        };
       };
     };
 

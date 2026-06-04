@@ -27,6 +27,7 @@
     ./komga.nix
     ./librespeed.nix
     ./lidarr.nix
+    ./litellm.nix
     ./lnbits.nix
     ./matrix.nix
     ./mealie.nix
@@ -34,6 +35,7 @@
     ./miniflux.nix
     ./mosquitto.nix
     ./navidrome.nix
+    ./neko.nix
     ./netbootxyz.nix
     ./caddy.nix
     ./nginx.nix
