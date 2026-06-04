@@ -25,7 +25,7 @@ in {
     programs.claude-code = {
       enable = true;
       package = pkgs.llm-agents.claude-code;
-      mcpServers = config.programs.mcp;
+      mcpServers = config.programs.mcp.servers;
       settings = {
         effortLevel = "xhigh";
         permissions.defaultMode = "auto";
