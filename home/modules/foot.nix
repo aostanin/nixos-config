@@ -21,7 +21,7 @@ in {
           term = "xterm-256color";
           font = "Hack Nerd Font:size=10";
         };
-        colors = {
+        colors-dark = {
           alpha = 0.95;
           background = "282828";
           foreground = "ebdbb2";
