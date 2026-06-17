@@ -42,10 +42,13 @@ in {
         }
         "claude"
         "element"
+        "firefox"
+        "garmin-express"
         "hammerspoon"
         "kdeconnect"
         "middleclick"
         "insta360-studio"
+        "openmtp"
         "sol"
         "tailscale-app"
       ];

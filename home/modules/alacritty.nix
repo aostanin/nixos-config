@@ -85,6 +85,13 @@ in {
             chars = "\\u001f";
           }
 
+          # Shift+Enter sends ESC+CR so Claude Code inserts a newline
+          {
+            key = "Return";
+            mods = "Shift";
+            chars = "\\u001b\\r";
+          }
+
           # Unbind all Command bindings
           {
             key = "0";
