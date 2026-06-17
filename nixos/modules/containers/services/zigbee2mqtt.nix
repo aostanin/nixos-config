@@ -26,5 +26,13 @@ in {
         port = 8080;
       };
     };
+
+    # The dongle sits behind a flaky dock USB hub that occasionally drops off
+    # the bus for a few seconds. Retry indefinitely at a calm pace so a brief
+    # disconnect self-heals instead of tripping the start-limit and wedging.
+    systemd.services."podman-${name}" = {
+      startLimitIntervalSec = 0;
+      serviceConfig.RestartSec = lib.mkForce "15s";
+    };
   };
 }
