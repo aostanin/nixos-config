@@ -180,6 +180,22 @@
           enable = true;
           devices = ["/dev/dri/renderD128"];
         };
+
+        martin.enable = true;
+        valhalla = {
+          enable = true;
+          pbfs = [
+            "/storage/appdata/openstreetmap/regional/japan.osm.pbf"
+            "/storage/appdata/openstreetmap/regional/kyrgyzstan.osm.pbf"
+          ];
+          forceRebuild = false;
+          buildElevation = true;
+        };
+        overpass.enable = true;
+        open-meteo = {
+          enable = true;
+          models = ["jma_msm"];
+        };
       };
     };
 

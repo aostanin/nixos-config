@@ -29,6 +29,7 @@
     ./lidarr.nix
     ./litellm.nix
     ./lnbits.nix
+    ./martin.nix
     ./matrix.nix
     ./mealie.nix
     ./meshcentral.nix
@@ -44,6 +45,8 @@
     ./open-webui.nix
     ./openedai-speech.nix
     ./openwakeword.nix
+    ./open-meteo.nix
+    ./overpass.nix
     ./photon.nix
     ./piper.nix
     ./prowlarr.nix
@@ -61,6 +64,7 @@
     ./unifi.nix
     ./uptime-kuma.nix
     ./valetudopng.nix
+    ./valhalla.nix
     ./vaultwarden.nix
     ./vpn.nix
     ./webtop.nix
