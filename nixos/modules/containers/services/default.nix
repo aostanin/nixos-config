@@ -13,6 +13,7 @@
     ./forgejo.nix
     ./frigate.nix
     ./grafana.nix
+    ./grist.nix
     ./guacamole.nix
     ./hauk.nix
     ./home-assistant.nix

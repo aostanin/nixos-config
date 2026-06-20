@@ -75,6 +75,8 @@
 
         meshcentral.enable = true;
 
+        grist.enable = true;
+
         immich = {
           enable = true;
           uploadLocation = "/storage/personal/photos/sync/immich";
