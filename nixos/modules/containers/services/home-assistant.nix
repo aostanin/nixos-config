@@ -27,19 +27,10 @@ in {
       stopTimeout = 60;
     };
 
-    services.traefik.dynamicConfigOptions = let
-      hostRules =
-        lib.concatStringsSep " || " (map (host: "Host(`${host}`)")
-          (config.lib.containers.mkHosts "home"));
-    in {
-      http.routers.${name} = {
-        rule = hostRules;
-        entrypoints = "websecure";
-        service = name;
-      };
-      http.services.${name}.loadbalancer.servers = [
-        {url = "http://127.0.0.1:8123";}
-      ];
+    localModules.ingress.home = {
+      port = 8123;
+      default.enable = true;
+      trusted.enable = false;
     };
   };
 }

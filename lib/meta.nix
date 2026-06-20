@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  ...
 }: rec {
   filterAvailable = builtins.filter (packageAvailable pkgs.stdenv.hostPlatform);
 

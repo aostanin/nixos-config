@@ -91,23 +91,8 @@ in {
 
     localModules.containers.services.vpn.enable = lib.mkIf cfg.enableVpn true;
 
-    services.traefik.dynamicConfigOptions = let
-      hostRules =
-        lib.concatStringsSep " || " (map (host: "Host(`${host}`)")
-          (config.lib.containers.mkHosts name));
-      trustedClientRules =
-        lib.concatStringsSep " || " (map (host: "ClientIP(`${host}`)")
-          config.lib.containers.trustedClientIps);
-    in
-      lib.mkIf cfg.enableVpn {
-        http.routers.${name} = {
-          rule = "(${trustedClientRules}) && (${hostRules})";
-          entrypoints = "websecure";
-          service = name;
-        };
-        http.services.${name}.loadbalancer.servers = [
-          {url = "http://${config.localModules.containers.services.vpn.hostname}:8113";}
-        ];
-      };
+    localModules.ingress.${name} = lib.mkIf cfg.enableVpn {
+      backendUrl = "http://${config.localModules.containers.services.vpn.hostname}:8113";
+    };
   };
 }

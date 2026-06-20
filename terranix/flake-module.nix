@@ -20,6 +20,11 @@
       ]);
       terraformConfiguration = inputs.terranix.lib.terranixConfiguration {
         inherit system pkgs;
+        extraArgs = {
+          inherit self;
+          localLib = import ../lib {inherit lib pkgs;};
+          secrets = import ../secrets;
+        };
         modules = [
           ./modules
           ./config.nix

@@ -16,11 +16,16 @@
       hostname,
       system,
       additionalModules ? [],
-    }:
+    }: let
+      localLib = import ../lib {
+        inherit lib;
+        pkgs = mkPkgs system;
+      };
+    in
       lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs nixpkgsConfig secrets sopsFiles;
+          inherit inputs nixpkgsConfig secrets sopsFiles localLib self;
         };
         modules =
           [

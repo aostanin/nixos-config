@@ -54,6 +54,17 @@
         };
         uptime-kuma.enable = true;
       };
+      # TODO: Set hosts in each container module
+      containers.adguardhome.proxies = {
+        adguard.hosts = config.lib.containers.mkHosts {
+          name = "adguard";
+          unqualified = false;
+        };
+        adguardhome-admin.hosts = config.lib.containers.mkHosts {
+          name = "adguardhome-admin";
+          unqualified = false;
+        };
+      };
     };
 
     coredns = {

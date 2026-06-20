@@ -194,16 +194,11 @@ in {
     };
   };
 
-  services.traefik.dynamicConfigOptions = {
-    # TODO: Temporary forward to every-router
-    http.routers.home-assistant-every = {
-      rule = "Host(`every.${config.localModules.containers.domain}`)";
-      entrypoints = "websecure";
-      service = "home-assistant-every";
-    };
-    http.services.home-assistant-every.loadbalancer.servers = [
-      {url = "https://every-router:443";}
-    ];
+  # TODO: Temporary forward to every-router
+  localModules.ingress.every = {
+    backendUrl = "https://every-router:443";
+    default.enable = true;
+    trusted.enable = false;
   };
 
   users.users.${secrets.user.username}.linger = true;

@@ -11,7 +11,10 @@
     enable = true;
     # On Darwin, Firefox is installed via the homebrew cask; let home-manager
     # manage profiles/settings only.
-    package = if pkgs.stdenv.isDarwin then null else pkgs.firefox;
+    package =
+      if pkgs.stdenv.isDarwin
+      then null
+      else pkgs.firefox;
     profiles = {
       ${secrets.user.username} = {
         id = 0;

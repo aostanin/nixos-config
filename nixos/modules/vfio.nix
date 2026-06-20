@@ -124,7 +124,6 @@
           Commands to run after attaching the card.
         '';
       };
-
     };
   };
 
@@ -523,7 +522,6 @@ in {
       services.displayManager.generic.preStart =
         lib.concatStringsSep "\n"
         (lib.mapAttrsToList (gpuName: gpu: (lib.getExe (gpuDetachScript gpu))) cfg.gpus);
-
     }
 
     (lib.mkIf (cfg.gpuHostUnits != []) {

@@ -3,6 +3,8 @@
   pkgs,
   lib,
   secrets,
+  localLib,
+  self,
   ...
 }: let
   cfg = config.localModules.coredns;
@@ -44,19 +46,20 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.coredns = let
+      dnsNames = localLib.dnsNamesByHost cfg.domain self.nixosConfigurations;
       machinesLan = lib.concatStringsSep "\n" (
         lib.mapAttrsToList (n: v: "${secrets.network.home.hosts.${n}.address} ${n}.lan")
         secrets.network.home.hosts
       );
       hostsTailscale = lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (n: v:
-          secrets.network.tailscale.hosts.${n}.address + " " + (lib.concatStringsSep " " (builtins.map (n: "${n}.${cfg.domain}") v.subdomains)))
-        (lib.filterAttrs (n: v: builtins.hasAttr n secrets.network.tailscale.hosts) secrets.terranix.servers)
+        lib.mapAttrsToList (n: fqdns:
+          secrets.network.tailscale.hosts.${n}.address + " " + (lib.concatStringsSep " " fqdns))
+        (lib.filterAttrs (n: v: builtins.hasAttr n secrets.network.tailscale.hosts) dnsNames)
       );
       hostsLan = lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (n: v:
-          secrets.network.home.hosts.${n}.address + " " + (lib.concatStringsSep " " (builtins.map (n: "${n}.${cfg.domain}") v.subdomains)))
-        (lib.filterAttrs (n: v: builtins.hasAttr n secrets.network.home.hosts) secrets.terranix.servers)
+        lib.mapAttrsToList (n: fqdns:
+          secrets.network.home.hosts.${n}.address + " " + (lib.concatStringsSep " " fqdns))
+        (lib.filterAttrs (n: v: builtins.hasAttr n secrets.network.home.hosts) dnsNames)
       );
     in {
       enable = true;

@@ -2,10 +2,13 @@
   config,
   lib,
   pkgs,
+  self,
+  localLib,
+  secrets,
   ...
 }: let
-  inherit (import ../secrets) domain;
-  secrets = import ../secrets/terranix;
+  domain = secrets.domain;
+  ingressDnsNames = localLib.dnsNamesByHost domain self.nixosConfigurations;
 
   tailscaleDevice = name: attribute:
     lib.tfRef "local.tailscale_devices.${name}.${attribute}";
@@ -25,7 +28,7 @@ in {
   provider.tailscale.api_key = "\${data.sops_file.secrets.data[\"tailscale.api_key\"]}";
 
   resource.cloudflare_dns_record = let
-    servers = lib.filterAttrs (n: v: v.tunnelId != null) secrets.servers;
+    servers = lib.filterAttrs (n: v: v.tunnelId != null) secrets.terranix.servers;
   in
     lib.mkMerge ([
         (lib.mapAttrs' (server: config:
@@ -39,19 +42,23 @@ in {
           })
         servers)
       ]
-      ++ builtins.attrValues (builtins.mapAttrs (server: config: (builtins.listToAttrs (builtins.map (subdomain: {
-          name = builtins.replaceStrings ["."] ["_"] subdomain;
+      ++ builtins.attrValues (builtins.mapAttrs (server: _: (builtins.listToAttrs (builtins.map (fqdn: let
+          recordName =
+            if fqdn == domain
+            then fqdn
+            else lib.removeSuffix ".${domain}" fqdn;
+        in {
+          name = builtins.replaceStrings ["."] ["_"] recordName;
           value = {
             zone_id = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
             type = "CNAME";
-            name = subdomain;
+            name = recordName;
             content = "${server}-cf.${domain}";
             proxied = true;
             ttl = 1; # Auto TTL when proxied
           };
         })
-        # TODO: Only public
-        config.subdomains)))
+        (ingressDnsNames.${server} or []))))
       servers));
 
   resource.tailscale_tailnet_key.nixos_auth_key = {
@@ -82,7 +89,7 @@ in {
 
   data.tailscale_devices.devices = {};
 
-  locals.tailscale_tailnet_suffix = ".${secrets.tailscale.tailnetName}";
+  locals.tailscale_tailnet_suffix = ".${secrets.terranix.tailscale.tailnetName}";
   locals.tailscale_devices = ''    ''${{
     for device in data.tailscale_devices.devices.devices :
       trimsuffix(device.name, local.tailscale_tailnet_suffix) => {
@@ -121,7 +128,7 @@ in {
         lib.mapAttrsToList (n: v: {
           target = [(tailscaleDevice n "address")];
           attr = ["mullvad"];
-        }) (lib.filterAttrs (n: v: v.enableMullvad) secrets.tailscale.devices)
+        }) (lib.filterAttrs (n: v: v.enableMullvad) secrets.terranix.tailscale.devices)
         ++ [
           {
             target = ["tag:mullvad"];
@@ -149,7 +156,7 @@ in {
       device_id = tailscaleDevice n "id";
       key_expiry_disabled = true;
     })
-    secrets.tailscale.devices;
+    secrets.terranix.tailscale.devices;
 
   resource.tailscale_device_tags =
     lib.mapAttrs (n: v: {
@@ -157,7 +164,7 @@ in {
       device_id = tailscaleDevice n "id";
       tags = lib.optional v.isServer "tag:server";
     })
-    secrets.tailscale.devices;
+    secrets.terranix.tailscale.devices;
 
   resource.tailscale_device_subnet_routes =
     lib.mapAttrs (n: v: {
@@ -165,7 +172,7 @@ in {
       device_id = tailscaleDevice n "id";
       routes = v.routes;
     })
-    secrets.tailscale.devices;
+    secrets.terranix.tailscale.devices;
 
   tunnels = let
     accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";

@@ -9,6 +9,7 @@
     ./forgejo-runner.nix
     ./home-server.nix
     ./impermanence.nix
+    ./ingress.nix
     ./intel-amt.nix
     ./msmtp.nix
     ./networkmanager.nix

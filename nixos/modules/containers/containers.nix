@@ -1,24 +1,25 @@
 {
   lib,
   config,
+  localLib,
   ...
 }: let
   cfg = config.localModules.containers.containers;
 
-  mkHosts = name: let
-    host = config.localModules.containers.host;
-    domain = config.localModules.containers.domain;
-  in [
-    "${name}.${domain}"
-    "${name}.${host}.lan.${domain}"
-    "${name}.${host}.ts.${domain}"
-  ];
+  inherit (localLib) trustedClientIps;
 
-  trustedClientIps = [
-    "100.64.0.0/10" # TailScale
-    "10.88.0.0/15" # Podman networks
-    "10.0.0.0/24" # LAN
-  ];
+  # Accepts a name string or an attrset (e.g. {name; unqualified = false;});
+  # domain and host default from the containers config.
+  mkHosts = arg:
+    localLib.mkHosts ({
+        domain = config.localModules.containers.domain;
+        host = config.localModules.containers.host;
+      }
+      // (
+        if builtins.isAttrs arg
+        then arg
+        else {name = arg;}
+      ));
 
   mkProxyTypeSubmodule = enableByDefault:
     lib.types.submodule {
@@ -56,7 +57,13 @@
 
         hosts = lib.mkOption {
           type = with lib.types; listOf str;
-          default = lib.flatten (map (n: mkHosts n) args.config.names);
+          default = lib.flatten (map (n:
+            localLib.mkHosts {
+              name = n;
+              domain = config.localModules.containers.domain;
+              host = config.localModules.containers.host;
+            })
+          args.config.names);
           description = "Hosts under which this service is available.";
         };
 
@@ -267,6 +274,22 @@ in {
       lib.containers = {
         inherit mkHosts trustedClientIps;
       };
+
+      localModules.ingress = lib.mkMerge (lib.flatten (lib.mapAttrsToList (
+          containerName: opts:
+            lib.mapAttrsToList (
+              proxyName: proxy:
+                lib.optionalAttrs proxy.enable {
+                  ${proxyName} = {
+                    host = config.localModules.containers.host;
+                    hosts = proxy.hosts;
+                    container = containerName;
+                  };
+                }
+            )
+            opts.proxies
+        )
+        cfg));
 
       localModules.containers.networks =
         lib.listToAttrs (map (n: lib.nameValuePair n {})
