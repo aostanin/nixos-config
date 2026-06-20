@@ -45,10 +45,7 @@
       url = "github:NixOS/nixos-artwork";
       flake = false;
     };
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-26.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixvim.url = "github:nix-community/nixvim/nixos-26.05";
     nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
     kvmd.url = "github:aostanin/kvmd.nix";
     terranix.url = "github:terranix/terranix";
@@ -72,7 +69,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
       inputs.flake-parts.follows = "flake-parts";
     };
-    maki.url = "github:tontinton/maki";
   };
 
   outputs = inputs @ {

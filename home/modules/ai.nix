@@ -2,7 +2,7 @@
   pkgs,
   config,
   lib,
-  inputs,
+  localLib,
   ...
 }: let
   cfg = config.localModules."ai";
@@ -42,18 +42,14 @@ in {
       };
     };
 
-    home.packages = with pkgs.llm-agents; [
-      # Agents
-      inputs.maki.packages.${pkgs.stdenv.hostPlatform.system}.default
-      opencode
-      pi
+    home.packages = with pkgs.llm-agents;
+      localLib.filterAvailable [
+        # Agents
+        opencode
+        pi
 
-      # Tools
-      agent-browser
-      hunk
-      nono
-      rtk
-      tuicr
-    ];
+        # Tools
+        (localLib.brokenOnDarwin agent-browser)
+      ];
   };
 }

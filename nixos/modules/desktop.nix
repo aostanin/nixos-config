@@ -82,6 +82,8 @@ in {
       udev = {
         extraRules =
           ''
+            SUBSYSTEM=="usb", ENV{ID_DEBUG_APPLIANCE}=="android", GROUP="users", MODE="0660"
+
             # MiniPro
             SUBSYSTEMS=="usb", ATTRS{idVendor}=="04d8", ATTRS{idProduct}=="e11c", GROUP="users", MODE="0660"
 

@@ -30,6 +30,7 @@ in {
         PGID = toString cfg.gid;
         PLAYWRIGHT_DRIVER_URL = "ws://${name}-playwright-chrome:3000/?stealth=1&--disable-web-security=true";
         HIDE_REFERER = "true";
+        LLM_TIMEOUT = "600";
       };
       volumes.data = {
         destination = "/datastore";

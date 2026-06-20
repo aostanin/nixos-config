@@ -20,7 +20,6 @@ in {
 
     upstreamDns = lib.mkOption {
       type = lib.types.str;
-      default = secrets.domain;
       description = ''
         DNS server to forward requests to.
       '';
