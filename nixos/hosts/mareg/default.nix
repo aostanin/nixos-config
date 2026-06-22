@@ -11,6 +11,7 @@
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
+    ./router
   ];
 
   boot = {
@@ -52,6 +53,12 @@
     hostId = "393740af";
   };
 
+  router = {
+    enable = true;
+    interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.mareg.integrated}";
+    macAddress = secrets.network.home.hosts.mareg.macAddress;
+  };
+
   powerManagement.powertop.enable = true;
 
   localModules = {
@@ -77,17 +84,6 @@
       };
     };
 
-    home-server = {
-      enable = true;
-      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.mareg.integrated}";
-      address = secrets.network.home.hosts.mareg.address;
-      macAddress = secrets.network.home.hosts.mareg.macAddress;
-      iotNetwork = {
-        enable = true;
-        address = secrets.network.iot.hosts.mareg.address;
-      };
-    };
-
     impermanence.enable = true;
 
     intelAmt.enable = true;
@@ -100,7 +96,7 @@
       isServer = true;
       extraFlags = [
         "--advertise-exit-node"
-        "--advertise-routes=10.0.40.0/24"
+        "--advertise-routes=${secrets.network.networks.iot.prefix}.0/24"
       ];
     };
 

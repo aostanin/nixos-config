@@ -20,6 +20,7 @@ in {
         ++ (lib.optional config.services.coredns.enable "coredns.service");
       wants = ["network.target" "network-online.target"];
       wantedBy = ["multi-user.target"];
+      startLimitIntervalSec = 0;
       serviceConfig = {
         LoadCredential = [
           "token:${config.sops.secrets."cloudflare/tunnels/${config.networking.hostName}/tunnel_token".path}"
@@ -30,6 +31,7 @@ in {
         User = "cloudflared";
         Group = "cloudflared";
         Restart = "on-failure";
+        RestartSec = "15s";
       };
       script = "${lib.getExe pkgs.cloudflared} tunnel --no-autoupdate run --token $(cat $TOKEN_FILE)";
     };
