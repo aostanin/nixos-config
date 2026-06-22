@@ -17,6 +17,21 @@
 
   sops.secrets."pikvm/htpasswd".owner = "kvmd";
 
+  services.kvmd.nginx = {
+    https = false;
+    openFirewall = false;
+  };
+  services.nginx.virtualHosts.${config.services.kvmd.hostName}.listen = [
+    {
+      addr = "127.0.0.1";
+      port = 8080;
+    }
+  ];
+  localModules.ingress.pikvm = {
+    port = 8080;
+    default.enable = true;
+  };
+
   services.kvmd = {
     enable = true;
     janus.enable = true;

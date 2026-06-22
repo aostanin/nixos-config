@@ -73,7 +73,6 @@
       in {
         open-webui.enable = true;
 
-        meshcentral.enable = true;
 
         grist.enable = true;
 

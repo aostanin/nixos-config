@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
     ./kvmd.nix
+    ./meshcentral.nix
   ];
 
   networking = {
@@ -10,12 +11,16 @@
   };
 
   localModules = {
+    traefik.enable = true;
+    cloudflared.enable = true;
+
     backup = {
       enable = true;
       paths = [
         "/var/lib/kvmd"
         "/var/lib/nixos"
         "/var/lib/tailscale"
+        "/var/lib/meshcentral"
       ];
     };
 
