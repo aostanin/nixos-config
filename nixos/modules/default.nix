@@ -24,6 +24,7 @@
     ./traefik.nix
     ./vfio.nix
     ./virtwold.nix
+    ./watchdog.nix
     ./zfs.nix
   ];
 }
