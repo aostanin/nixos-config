@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   secrets,
   ...
 }: let
@@ -92,6 +93,23 @@ in {
     };
 
     virtualisation.oci-containers.backend = "podman";
+
+    # A full-ruleset nftables reload flushes the inet netavark table, dropping
+    # netavark's hostport-DNAT rules (published ports then only work until the
+    # next container restart). Re-add them whenever nftables (re)starts OR its
+    # ruleset changes (a deploy reloads — not restarts — nftables, so partOf
+    # alone misses it; restartTriggers covers the reload-on-change case).
+    systemd.services.podman-network-reload = lib.mkIf config.networking.nftables.enable {
+      after = ["nftables.service" "podman.service"];
+      partOf = ["nftables.service"];
+      wantedBy = ["multi-user.target"];
+      restartTriggers = [config.networking.nftables.ruleset];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${lib.getExe pkgs.podman} network reload --all";
+      };
+    };
 
     users.users.container = lib.mkIf cfg.createUser {
       isSystemUser = true;

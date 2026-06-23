@@ -145,7 +145,7 @@ in {
 
   resource.tailscale_dns_nameservers.nameservers = {
     nameservers = [
-      (tailscaleDevice "roan" "address")
+      (tailscaleDevice "mareg" "address")
       (tailscaleDevice "vps-oci2" "address")
     ];
   };
@@ -182,6 +182,7 @@ in {
     elena.accountId = accountId;
     every-router.accountId = accountId;
     mareg.accountId = accountId;
+    pikvm.accountId = accountId;
     roan.accountId = accountId;
     vps-oci1.accountId = accountId;
     vps-oci2.accountId = accountId;
@@ -195,9 +196,10 @@ in {
         auth_key_ephemeral = config.output.tailscale_auth_key_ephemeral.value;
       };
       cloudflare.tunnels = {
-        elena.tunnel_token = config.output.tunnel_token_mareg.value;
+        elena.tunnel_token = config.output.tunnel_token_elena.value;
         every-router.tunnel_token = config.output.tunnel_token_every-router.value;
         mareg.tunnel_token = config.output.tunnel_token_mareg.value;
+        pikvm.tunnel_token = config.output.tunnel_token_pikvm.value;
         roan.tunnel_token = config.output.tunnel_token_roan.value;
         vps-oci2.tunnel_token = config.output.tunnel_token_vps-oci2.value;
         vps-oci1.tunnel_token = config.output.tunnel_token_vps-oci1.value;

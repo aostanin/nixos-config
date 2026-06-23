@@ -42,6 +42,15 @@ in {
         Additional interfaces, besides tailscale0 and lo, to listen on.
       '';
     };
+
+    lanDnsServer = lib.mkOption {
+      type = lib.types.str;
+      default = "10.0.0.1";
+      description = ''
+        Where to forward the .lan zone (the router's DHCP-aware DNS). Co-located
+        with coredns on the router, point this at dnsmasq's alternate port.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -74,7 +83,7 @@ in {
           rewrite name regex (.*\.)?(.*)\.ts\.${lib.escapeRegex cfg.domain} {2}.${secrets.terranix.tailscale.tailnetName} answer auto
           rewrite name regex (.*\.)?(.*)\.lan\.${lib.escapeRegex cfg.domain} {2}.lan answer auto
           forward ${secrets.terranix.tailscale.tailnetName} 100.100.100.100
-          forward lan 10.0.0.1
+          forward lan ${cfg.lanDnsServer}
           forward . ${cfg.upstreamDns}
           errors
           cache
@@ -94,7 +103,7 @@ in {
           rewrite name regex (.*\.)?(.*)\.ts\.${lib.escapeRegex cfg.domain} {2}.${secrets.terranix.tailscale.tailnetName} answer auto
           rewrite name regex (.*\.)?(.*)\.lan\.${lib.escapeRegex cfg.domain} {2}.lan answer auto
           forward ${secrets.terranix.tailscale.tailnetName} 100.100.100.100
-          forward lan 10.0.0.1
+          forward lan ${cfg.lanDnsServer}
           forward . ${cfg.upstreamDns}
           errors
           cache

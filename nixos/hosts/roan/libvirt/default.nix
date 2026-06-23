@@ -12,6 +12,7 @@ in {
       domains = [
         {
           definition = domain.writeXML (import ./OpenWRT.nix args);
+          active = false;
           restart = false;
         }
       ];

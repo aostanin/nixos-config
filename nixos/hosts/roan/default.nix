@@ -64,13 +64,6 @@ in {
 
     common.enable = true;
 
-    coredns = {
-      enable = true;
-      upstreamDns = "127.0.0.1:5300";
-      enableLan = true;
-      additionalBindInterfaces = ["br0"];
-    };
-
     containers = {
       enable = true;
       storage = {
@@ -78,57 +71,7 @@ in {
         bulk = "/storage/appdata/docker/bulk";
         temp = "/storage/appdata/temp";
       };
-      services = {
-        adguardhome = {
-          enable = true;
-          dnsListenAddress = "127.0.0.1";
-          dnsPort = 5300;
-        };
-        adguardhome-sync.enable = true;
-        archivebox.enable = true;
-        authelia.enable = true;
-        changedetection.enable = true;
-        forgejo.enable = true;
-        guacamole.enable = true;
-        karakeep.enable = true;
-        mealie.enable = true;
-        miniflux.enable = true;
-        netbootxyz.enable = true;
-        redlib = {
-          inherit (secrets.redlib) subscriptions;
-          enable = true;
-        };
-        scrutiny.enable = true;
-        searxng.enable = true;
-        syncthing.enable = true;
-        stalwart.enable = true;
-        tasmoadmin.enable = true;
-        unifi.enable = true;
-        vaultwarden.enable = true;
-
-        # Home automation
-        frigate = {
-          enable = true;
-          devices = [
-            "/dev/bus/usb"
-            "/dev/dri/renderD128"
-          ];
-        };
-        home-assistant.enable = true;
-        ir-mqtt-bridge.enable = true;
-        mosquitto.enable = true;
-        valetudopng.enable = true;
-        zigbee2mqtt = {
-          enable = true;
-          adapterPath = "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_5c9c4df6b1c9eb118d7d8b4f1d69213e-if00-port0";
-        };
-
-        # Voice assistant
-        # TODO: Move to elena?
-        piper.enable = true;
-        whisper.enable = true;
-        openwakeword.enable = true;
-      };
+      services = {};
     };
 
     home-server = {

@@ -8,13 +8,13 @@
   wan = config.router.wanInterface;
   inherit (secrets.network.networks) lan guest iot;
   adguard = lib.head secrets.network.home.nameserversAdguard;
-  mqttBroker = secrets.network.iot.hosts.roan.address;
 
-  # tailscale0 carries decrypted tailnet traffic (incl. SSH into this host);
-  # the drop-policy input chain must accept it or Tailscale is locked out.
+  # The drop-policy input chain must accept these: tailscale0 (else SSH over the
+  # tailnet locks out) and podman* (else containers can't reach aardvark DNS /
+  # host.containers.internal on their bridge gateway).
   inputAccept =
     lib.concatStringsSep ", " (map (i: ''"${i}"'')
-      ["lo" "br-lan" "vlan20" "vlan40" "tailscale0"]);
+      ["lo" "br-lan" "vlan20" "vlan40" "tailscale0" "podman*"]);
 
   iotDevices = secrets.network.iot.devices;
   # DHCP reservations (devices with an address) + the WAN egress allowlist
@@ -73,12 +73,19 @@ in {
             # hosts (e.g. IoT/LAN devices that don't run tailscale).
             iifname "tailscale0" oifname { "br-lan", "vlan20", "vlan40" } accept
 
-            # MQTT broker forward (paired with the nat-prerouting DNAT);
-            # interim until the broker moves off roan.
-            iifname "vlan40" ip daddr ${mqttBroker} tcp dport 1883 accept
-
             # LAN and guest reach the internet unrestricted.
             iifname { "br-lan", "vlan20" } oifname { "${wan}", "ds-wan" } accept
+
+            # Containers reach the internet AND internal hosts (MQTT broker,
+            # frigate cameras on iot, syncthing peers over tailscale, LAN).
+            iifname "podman*" accept
+
+            # Published container ports reachable from LAN, IoT, tailscale, and
+            # other containers (IoT -> MQTT broker, LAN -> netbootxyz TFTP,
+            # tailnet -> forgejo SSH 2222): netavark DNATs the inbound to the
+            # container bridge. Scoped by ingress iface so guest (vlan20) and
+            # the WAN can't reach them.
+            iifname { "br-lan", "vlan40", "tailscale0", "podman*" } ct status dnat oifname "podman*" accept
 
             # IoT egress allowlist, then deny the rest (no IoT->LAN/guest at all).
             iifname "vlan40" oifname { "${wan}", "ds-wan" } ether saddr { ${iotWanAllow} } accept
@@ -89,23 +96,14 @@ in {
         }
 
         table ip nat {
-          chain prerouting {
-            type nat hook prerouting priority -100;
-            policy accept;
-
-            # MQTT: IoT devices use the gateway as their broker; DNAT to
-            # mosquitto on roan until the broker moves to mareg.
-            iifname "vlan40" ip daddr ${iot.prefix}.1 tcp dport 1883 dnat to ${mqttBroker}
-          }
-
           chain postrouting {
             type nat hook postrouting priority 100;
             policy accept;
 
             oifname { "${wan}", "ds-wan" } masquerade
-            # Hairpin: source-NAT the forwarded MQTT so roan replies via us
-            # (else it answers the client directly from the wrong address).
-            oifname "vlan40" ip saddr ${iot.prefix}.0/24 ip daddr ${mqttBroker} tcp dport 1883 masquerade
+            # Containers reaching tailscale peers need SNAT (the tailnet has no
+            # route back to the podman subnet).
+            oifname "tailscale0" ip saddr 10.88.0.0/15 masquerade
           }
         }
       '';
@@ -149,21 +147,16 @@ in {
         # bind-dynamic: bind sockets as the bridge/VLAN interfaces appear
         # instead of failing if networkd hasn't brought them up yet.
         bind-dynamic = true;
-        domain-needed = true;
-        bogus-priv = true;
-        localise-queries = true;
+        # DNS on an alternate port: coredns owns :53 and forwards the .lan zone
+        # here for the DHCP-aware hostnames. dnsmasq does no upstream resolution.
+        # 5354, not 5353 (mDNS), to avoid clashing with home-assistant zeroconf.
+        port = 5354;
         local = "/lan/";
         domain = "lan";
         expand-hosts = true;
+        no-resolv = true;
         dhcp-authoritative = true;
         enable-ra = true;
-        no-resolv = true;
-        server = [
-          "1.1.1.1"
-          "1.0.0.1"
-          "8.8.8.8"
-          "8.8.4.4"
-        ];
         dhcp-range = [
           "set:lan,${lan.prefix}.100,${lan.prefix}.249,12h"
           "set:guest,${guest.prefix}.100,${guest.prefix}.249,12h"
@@ -175,7 +168,7 @@ in {
           # dual-stack clients use the router for DNS and bypass AdGuard's
           # split-horizon + filtering.
           "option6:dns-server"
-          # LAN DNS = AdGuard on roan (interim; moves with services later).
+          # LAN DNS = coredns -> AdGuard on this router.
           "tag:lan,3,${lan.prefix}.1"
           "tag:lan,6,${adguard}"
           "tag:lan,42,${lan.prefix}.1"
