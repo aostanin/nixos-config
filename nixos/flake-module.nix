@@ -10,7 +10,7 @@
   ...
 }: {
   flake = let
-    inherit (inputs) nixpkgs nixpkgs-unstable sops-nix disko impermanence;
+    inherit (inputs) nixpkgs nixpkgs-unstable sops-nix disko disko-zfs impermanence;
     inherit (nixpkgs) lib;
     mkNixosSystem = {
       hostname,
@@ -56,6 +56,7 @@
             }
             sops-nix.nixosModules.sops
             disko.nixosModules.disko
+            disko-zfs.nixosModules.default
             impermanence.nixosModules.impermanence
             (./hosts + "/${hostname}")
           ]

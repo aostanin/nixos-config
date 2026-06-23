@@ -15,4 +15,6 @@
   boot.initrd.kernelModules = ["nvme"];
 
   disko.devices.disk.main.device = "/dev/disk/by-id/scsi-36045da7ba2ca4edc8f71bd98b69bb1cf";
+
+  disko.zfs.enable = true;
 }

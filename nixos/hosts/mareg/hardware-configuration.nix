@@ -22,5 +22,7 @@
   disko.devices.disk.mx300a.device = "/dev/disk/by-id/ata-Crucial_CT525MX300SSD1_164914EE8985";
   disko.devices.disk.mx300b.device = "/dev/disk/by-id/ata-Crucial_CT525MX300SSD1_1652152C0A06";
 
+  disko.zfs.enable = true;
+
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }

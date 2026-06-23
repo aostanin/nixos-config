@@ -40,6 +40,12 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko-zfs = {
+      url = "github:numtide/disko-zfs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.disko.follows = "disko";
+      inputs.flake-parts.follows = "flake-parts";
+    };
     impermanence.url = "github:nix-community/impermanence";
     nixos-artwork = {
       url = "github:NixOS/nixos-artwork";

@@ -5,6 +5,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
+    ./backup.nix
   ];
 
   hardware.enableRedistributableFirmware = false;
@@ -24,7 +25,7 @@
       enable = true;
       paths = [
         "/home"
-        "/persist"
+        "/persist/safe"
       ];
     };
 
@@ -36,9 +37,9 @@
     containers = {
       enable = true;
       storage = {
-        default = "/persist/storage/appdata/docker/ssd";
-        bulk = "/persist/storage/appdata/docker/bulk";
-        temp = "/persist/storage/appdata/temp";
+        default = "/persist/safe/appdata/containers/data";
+        bulk = "/persist/safe/appdata/containers/bulk";
+        temp = "/persist/cache/appdata/containers/temp";
       };
       services = {
         caddy.enable = true;
@@ -48,11 +49,7 @@
 
     forgejo-runner.enable = true;
 
-    impermanence = {
-      enable = true;
-      safeRoot = "/persist";
-      cacheRoot = "/persist";
-    };
+    impermanence.enable = true;
   };
 
   # TailScale incorrectly detects resolved DNS mode and fails to set up MagicDNS.

@@ -89,7 +89,7 @@
           normalization = "formD";
           dnodesize = "auto";
           xattr = "sa";
-          acltype = "posixacl";
+          acltype = "posix";
         };
         options = {
           ashift = "12";
@@ -107,11 +107,13 @@
           "local/root" = {
             type = "zfs_fs";
             mountpoint = "/";
+            options.mountpoint = "/";
             postCreateHook = "zfs snapshot rpool/local/root@blank";
           };
           "local/nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
+            options.mountpoint = "/nix";
           };
 
           persist = {
@@ -121,39 +123,19 @@
           "persist/safe" = {
             type = "zfs_fs";
             mountpoint = "/persist/safe";
-            options = {
-              "com.sun:auto-snapshot" = "true";
-              "com.sun:auto-snapshot:frequent" = "true";
-              "com.sun:auto-snapshot:hourly" = "true";
-              "com.sun:auto-snapshot:daily" = "true";
-              "com.sun:auto-snapshot:weekly" = "true";
-              "com.sun:auto-snapshot:monthly" = "false";
-            };
+            options.mountpoint = "/persist/safe";
           };
           "persist/cache" = {
             type = "zfs_fs";
             mountpoint = "/persist/cache";
             options = {
+              mountpoint = "/persist/cache";
               sync = "disabled";
-              "com.sun:auto-snapshot" = "true";
-              "com.sun:auto-snapshot:frequent" = "false";
-              "com.sun:auto-snapshot:hourly" = "false";
-              "com.sun:auto-snapshot:daily" = "true";
-              "com.sun:auto-snapshot:weekly" = "false";
-              "com.sun:auto-snapshot:monthly" = "false";
             };
           };
           "persist/home" = {
             type = "zfs_fs";
-            mountpoint = "/home";
-            options = {
-              "com.sun:auto-snapshot" = "true";
-              "com.sun:auto-snapshot:frequent" = "true";
-              "com.sun:auto-snapshot:hourly" = "true";
-              "com.sun:auto-snapshot:daily" = "true";
-              "com.sun:auto-snapshot:weekly" = "true";
-              "com.sun:auto-snapshot:monthly" = "false";
-            };
+            options.mountpoint = "/home";
           };
         };
       };

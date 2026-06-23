@@ -32,13 +32,12 @@
         rootFsOptions = {
           canmount = "off";
           mountpoint = "none";
-          sync = "disabled";
           atime = "off";
           compression = "zstd";
           normalization = "formD";
           dnodesize = "auto";
           xattr = "sa";
-          acltype = "posixacl";
+          acltype = "posix";
         };
         options = {
           ashift = "12";
@@ -48,48 +47,43 @@
         datasets = {
           local = {
             type = "zfs_fs";
-            options.canmount = "off";
+            options = {
+              canmount = "off";
+              sync = "disabled";
+            };
           };
           "local/root" = {
             type = "zfs_fs";
             mountpoint = "/";
+            options.mountpoint = "/";
             postCreateHook = "zfs snapshot rpool/local/root@blank";
           };
           "local/nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
-          };
-          "local/containers" = {
-            type = "zfs_fs";
-            mountpoint = "/persist/var/lib/containers";
+            options.mountpoint = "/nix";
           };
 
-          system = {
+          persist = {
             type = "zfs_fs";
             options.canmount = "off";
           };
-          "system/persist" = {
+          "persist/safe" = {
             type = "zfs_fs";
-            mountpoint = "/persist";
+            mountpoint = "/persist/safe";
+            options.mountpoint = "/persist/safe";
           };
-          "system/images" = {
+          "persist/cache" = {
             type = "zfs_fs";
-            mountpoint = "/persist/var/lib/libvirt/images";
-            options.recordsize = "64K";
+            mountpoint = "/persist/cache";
+            options = {
+              mountpoint = "/persist/cache";
+              sync = "disabled";
+            };
           };
-          "system/appdata" = {
+          "persist/home" = {
             type = "zfs_fs";
-            mountpoint = "/persist/storage/appdata";
-          };
-
-          user = {
-            type = "zfs_fs";
-            options.canmount = "off";
-          };
-          "user/home" = {
-            type = "zfs_fs";
-            mountpoint = "/home";
-            postCreateHook = "zfs snapshot rpool/user/home@blank";
+            options.mountpoint = "/home";
           };
         };
       };
