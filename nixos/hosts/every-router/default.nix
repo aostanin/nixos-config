@@ -78,15 +78,4 @@
   };
 
   # TODO: Change default gateway based on if Starlink is actually connected
-
-  services.traefik.dynamicConfigOptions = {
-    http.routers.home-assistant = {
-      rule = "Host(`every.${config.localModules.containers.domain}`)";
-      entrypoints = "websecure";
-      service = "home-assistant";
-    };
-    http.services.home-assistant.loadbalancer.servers = [
-      {url = "http://127.0.0.1:8123";}
-    ];
-  };
 }

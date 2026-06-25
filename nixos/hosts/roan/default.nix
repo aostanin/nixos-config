@@ -124,13 +124,6 @@ in {
     };
   };
 
-  # TODO: Temporary forward to every-router
-  localModules.ingress.every = {
-    backendUrl = "https://every-router:443";
-    default.enable = true;
-    trusted.enable = false;
-  };
-
   users.users.${secrets.user.username}.linger = true;
 
   virtualisation.libvirtd.enable = true;

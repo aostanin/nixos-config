@@ -55,6 +55,8 @@
 in {
   hardware.bluetooth.enable = true;
 
+  localModules.ingress.every.port = 8123;
+
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
       if (action.id == "org.freedesktop.systemd1.manage-units" &&
@@ -153,7 +155,7 @@ in {
         version = "2.2.0";
 
         dependencies = [
-          (aiobmsble pkgs.home-assistant.python.pkgs)
+          (aiobmsble pkgs.home-assistant.python3Packages)
         ];
 
         src = pkgs.fetchFromGitHub {
@@ -168,7 +170,7 @@ in {
         domain = "ef_ble";
         version = "0.5.5";
 
-        dependencies = with pkgs.home-assistant.python.pkgs; [
+        dependencies = with pkgs.home-assistant.python3Packages; [
           ecdsa
           crc
           pycryptodome
@@ -193,8 +195,8 @@ in {
         domain = "victron_ble";
         version = "0.1.2";
 
-        dependencies = with pkgs.home-assistant.python.pkgs; [
-          (victron-ble pkgs.home-assistant.python.pkgs)
+        dependencies = with pkgs.home-assistant.python3Packages; [
+          (victron-ble pkgs.home-assistant.python3Packages)
           bluetooth-sensor-state-data
         ];
 
