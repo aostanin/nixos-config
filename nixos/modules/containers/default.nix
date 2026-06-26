@@ -94,6 +94,10 @@ in {
 
     virtualisation.oci-containers.backend = "podman";
 
+    # Trust the podman bridges so containers can reach host services (e.g. the
+    # homeserver via its tailnet IP) through an enabled host firewall.
+    networking.firewall.trustedInterfaces = ["podman+"];
+
     # A full-ruleset nftables reload flushes the inet netavark table, dropping
     # netavark's hostport-DNAT rules (published ports then only work until the
     # next container restart). Re-add them whenever nftables (re)starts OR its
