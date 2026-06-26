@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }: let
@@ -12,7 +13,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules.containers.containers.${name} = {
-      raw.image = "ghcr.io/analogj/scrutiny:master-omnibus";
+      raw.image = "ghcr.io/analogj/scrutiny:v${pkgs.scrutiny-collector.version}-omnibus";
       volumes = {
         config.destination = "/opt/scrutiny/config";
         influxdb.destination = "/opt/scrutiny/influxdb";
