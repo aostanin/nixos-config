@@ -80,16 +80,32 @@ in {
           ]
           ++ lib.optional config.virtualisation.docker.enable "/var/lib/docker"
           ++ lib.optional config.virtualisation.podman.enable "/var/lib/containers"
+          ++ lib.optional config.services.dnsmasq.enable "/var/lib/dnsmasq"
+          ++ lib.optional config.services.chrony.enable "/var/lib/chrony"
+          ++ lib.optional config.services.adguardhome.enable "/var/lib/private/AdGuardHome"
           ++ lib.optional (lib.any (v: v.enable) (lib.attrValues config.services.gitea-actions-runner.instances))
-          "/var/lib/private/gitea-runner";
+          "/var/lib/private/gitea-runner"
+          ++ map (n: "/var/cache/restic-backups-${n}") (lib.attrNames config.services.restic.backups);
         files = [
           "/etc/adjtime"
         ];
       };
     };
 
-    systemd.tmpfiles.rules = [
-      "d /var/lib/private 0700 root root - -"
-    ];
+    # systemd DynamicUser StateDirectory needs /var/lib/private at 0700, but
+    # impermanence creates the bind-mount parent by copying the persistent
+    # source's mode (default 0755) — impermanence#254. For every persist root
+    # (from any module) that holds a /var/lib/private/* entry, pin its source to
+    # 0700 so that mode propagates to the mount-point parent on activation.
+    systemd.tmpfiles.rules = lib.unique (lib.concatLists (lib.mapAttrsToList (
+        root: persist:
+          lib.optionals
+          (lib.any (d: lib.hasPrefix "/var/lib/private/" (if builtins.isString d then d else d.directory)) persist.directories)
+          [
+            "d /var/lib/private 0700 root root - -"
+            "d ${root}/var/lib/private 0700 root root - -"
+          ]
+      )
+      config.environment.persistence));
   };
 }

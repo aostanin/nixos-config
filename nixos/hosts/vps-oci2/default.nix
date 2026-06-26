@@ -20,6 +20,10 @@
   networking = {
     hostName = "vps-oci2";
     interfaces.ens3.useDHCP = true;
+    firewall = {
+      enable = true;
+      trustedInterfaces = ["tailscale0"];
+    };
   };
 
   localModules = {
@@ -47,25 +51,11 @@
         temp = "/storage/appdata/temp";
       };
       services = {
-        adguardhome = {
-          enable = true;
-          dnsListenAddress = "127.0.0.1";
-          dnsPort = 5300;
-        };
         uptime-kuma.enable = true;
       };
-      # TODO: Set hosts in each container module
-      containers.adguardhome.proxies = {
-        adguard.hosts = config.lib.containers.mkHosts {
-          name = "adguard";
-          unqualified = false;
-        };
-        adguardhome-admin.hosts = config.lib.containers.mkHosts {
-          name = "adguardhome-admin";
-          unqualified = false;
-        };
-      };
     };
+
+    adguardhome.enable = true;
 
     coredns = {
       enable = true;

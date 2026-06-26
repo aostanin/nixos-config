@@ -4,14 +4,16 @@
   ...
 }: {
   imports = [
-    ./network.nix
-    ./router.nix
+    ./dns.nix
     ./dslite.nix
+    ./keepalived.nix
     ./lan-prefix.nix
+    ./network.nix
     ./ntp.nix
+    ./router.nix
   ];
 
-  options.router = {
+  options.localModules.home-router = {
     enable = lib.mkEnableOption "native home router";
 
     interface = lib.mkOption {
@@ -33,11 +35,11 @@
     };
   };
 
-  config = lib.mkIf config.router.enable {
+  config = lib.mkIf config.localModules.home-router.enable {
     assertions = [
       {
         assertion = !config.localModules.home-server.enable;
-        message = "router.enable and localModules.home-server both drive systemd-networkd; enable only one.";
+        message = "localModules.home-router.enable and localModules.home-server both drive systemd-networkd; enable only one.";
       }
     ];
   };

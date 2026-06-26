@@ -1,5 +1,6 @@
 {
   imports = [
+    ./adguardhome.nix
     ./backup.nix
     ./cloudflared.nix
     ./common.nix
@@ -7,6 +8,7 @@
     ./coredns.nix
     ./desktop.nix
     ./forgejo-runner.nix
+    ./home-router
     ./home-server.nix
     ./impermanence.nix
     ./ingress.nix

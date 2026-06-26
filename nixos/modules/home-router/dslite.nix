@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  wan = config.router.wanInterface;
+  wan = config.localModules.home-router.wanInterface;
 in {
-  options.router.dslite = {
+  options.localModules.home-router.dslite = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -19,7 +19,7 @@ in {
     };
   };
 
-  config = lib.mkIf (config.router.enable && config.router.dslite.enable) {
+  config = lib.mkIf (config.localModules.home-router.enable && config.localModules.home-router.dslite.enable) {
     systemd.services.dslite-tunnel = {
       description = "DS-Lite (transix) ip6tnl tunnel to AFTR";
       after = ["network-online.target"];
@@ -36,7 +36,7 @@ in {
       script = ''
         set -eu
         WAN=${wan}
-        AFTR=${config.router.dslite.aftr}
+        AFTR=${config.localModules.home-router.dslite.aftr}
         LOCAL6=""
         for _ in $(seq 1 15); do
           LOCAL6=$(ip -6 -o addr show dev "$WAN" scope global -temporary 2>/dev/null \

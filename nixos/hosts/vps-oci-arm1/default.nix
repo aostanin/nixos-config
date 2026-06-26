@@ -18,6 +18,10 @@
     hostName = "vps-oci-arm1";
     hostId = "1da26099";
     interfaces.enp0s6.useDHCP = true;
+    firewall = {
+      enable = true;
+      trustedInterfaces = ["tailscale0"];
+    };
   };
 
   localModules = {

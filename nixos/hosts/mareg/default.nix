@@ -11,7 +11,6 @@
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
-    ./router
   ];
 
   boot = {
@@ -53,12 +52,6 @@
     hostId = "393740af";
   };
 
-  router = {
-    enable = true;
-    interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.mareg.integrated}";
-    macAddress = secrets.network.home.hosts.mareg.macAddress;
-  };
-
   powerManagement.powertop.enable = true;
 
   localModules = {
@@ -72,12 +65,15 @@
 
     common.enable = true;
 
-    coredns = {
+    home-router = {
       enable = true;
-      upstreamDns = "127.0.0.1:5300";
-      enableLan = true;
-      additionalBindInterfaces = ["br-lan"];
-      lanDnsServer = "10.0.0.1:5354";
+      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.mareg.integrated}";
+      macAddress = secrets.network.home.hosts.mareg.macAddress;
+    };
+
+    ingress.adguard = {
+      port = 3000;
+      default.enable = true;
     };
 
     containers = {
@@ -88,12 +84,6 @@
         temp = "/persist/cache/appdata/containers/temp";
       };
       services = {
-        adguardhome = {
-          enable = true;
-          dnsListenAddress = "127.0.0.1";
-          dnsPort = 5300;
-        };
-        adguardhome-sync.enable = true;
         archivebox.enable = true;
         authelia.enable = true;
         changedetection.enable = true;

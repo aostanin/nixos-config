@@ -1,7 +1,5 @@
 {
   imports = [
-    ./adguardhome.nix
-    ./adguardhome-sync.nix
     ./archivebox.nix
     ./audiobookshelf.nix
     ./authelia.nix

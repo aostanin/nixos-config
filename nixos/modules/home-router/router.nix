@@ -5,7 +5,7 @@
   secrets,
   ...
 }: let
-  wan = config.router.wanInterface;
+  wan = config.localModules.home-router.wanInterface;
   inherit (secrets.network.networks) lan guest iot;
   adguard = lib.head secrets.network.home.nameserversAdguard;
 
@@ -27,7 +27,7 @@
     lib.concatStringsSep ", "
     (lib.attrNames (lib.filterAttrs (_: d: d.allowWan or false) iotDevices));
 in {
-  config = lib.mkIf config.router.enable {
+  config = lib.mkIf config.localModules.home-router.enable {
     # The hand-written ruleset is authoritative; the default NixOS firewall
     # would add a second drop-policy input base chain that silently drops
     # DHCP/relay traffic before dnsmasq.
@@ -54,7 +54,7 @@ in {
             iifname "${wan}" udp dport 546 ip6 saddr fc00::/6 accept
             iifname "${wan}" udp dport 41641 accept
             # DS-Lite decap: only the AFTR legitimately sends us IPv4-in-IPv6.
-            iifname "${wan}" ip6 saddr ${config.router.dslite.aftr} ip6 nexthdr 4 accept
+            iifname "${wan}" ip6 saddr ${config.localModules.home-router.dslite.aftr} ip6 nexthdr 4 accept
             iifname "${wan}" icmp type echo-request accept
             iifname "${wan}" icmpv6 type { echo-request, echo-reply, destination-unreachable, packet-too-big, time-exceeded } accept
           }
@@ -172,11 +172,13 @@ in {
           "tag:lan,3,${lan.prefix}.1"
           "tag:lan,6,${adguard}"
           "tag:lan,42,${lan.prefix}.1"
+          # guest/iot DNS = the gateway (coredns 'untrusted' view forwards them
+          # to public upstreams; no internal names, no split-horizon).
           "tag:guest,3,${guest.prefix}.1"
-          "tag:guest,6,1.1.1.1"
+          "tag:guest,6,${guest.prefix}.1"
           "tag:guest,42,${guest.prefix}.1"
           "tag:iot,3,${iot.prefix}.1"
-          "tag:iot,6,1.1.1.1"
+          "tag:iot,6,${iot.prefix}.1"
           "tag:iot,42,${iot.prefix}.1"
         ];
         dhcp-host = iotReservations;

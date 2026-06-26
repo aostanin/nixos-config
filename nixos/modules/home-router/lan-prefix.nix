@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  wan = config.router.wanInterface;
+  wan = config.localModules.home-router.wanInterface;
 in {
-  config = lib.mkIf config.router.enable {
+  config = lib.mkIf config.localModules.home-router.enable {
     # Mirror the WAN's current /64 onto br-lan as <prefix>::1/64 so dnsmasq can
     # RA it to the LAN (no plain-Linux daemon relays a non-PD on-link /64).
     # Idempotent + timer = survives a /64 rotation, no hardcoded prefix.

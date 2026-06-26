@@ -6,7 +6,7 @@
 }: {
   # Serve NTP to the LAN (DHCP option 42 points clients here). chrony answers
   # only the LAN subnets; the WAN input chain drops udp/123 anyway.
-  config = lib.mkIf config.router.enable {
+  config = lib.mkIf config.localModules.home-router.enable {
     services.chrony = {
       enable = true;
       extraConfig =

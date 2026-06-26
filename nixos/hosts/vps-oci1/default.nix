@@ -20,6 +20,10 @@
   networking = {
     hostName = "vps-oci1";
     interfaces.ens3.useDHCP = true;
+    firewall = {
+      enable = true;
+      trustedInterfaces = ["tailscale0"];
+    };
   };
 
   localModules = {
