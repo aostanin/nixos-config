@@ -11,6 +11,7 @@
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
+    ./litellm.nix
   ];
 
   boot = {

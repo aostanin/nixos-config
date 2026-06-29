@@ -100,7 +100,13 @@ in {
     systemd.tmpfiles.rules = lib.unique (lib.concatLists (lib.mapAttrsToList (
         root: persist:
           lib.optionals
-          (lib.any (d: lib.hasPrefix "/var/lib/private/" (if builtins.isString d then d else d.directory)) persist.directories)
+          (lib.any (d:
+            lib.hasPrefix "/var/lib/private/" (
+              if builtins.isString d
+              then d
+              else d.directory
+            ))
+          persist.directories)
           [
             "d /var/lib/private 0700 root root - -"
             "d ${root}/var/lib/private 0700 root root - -"

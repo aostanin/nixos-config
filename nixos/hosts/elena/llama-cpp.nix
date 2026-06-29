@@ -18,7 +18,7 @@
           (lib.cmakeBool "GGML_AVX_VNNI" true)
         ];
     });
-    host = "0.0.0.0";
+    host = "127.0.0.1";
     port = 8085;
     extraFlags = [
       "--models-max"
@@ -107,4 +107,6 @@
       };
     };
   };
+
+  localModules.ingress.llama-cpp.port = 8085;
 }

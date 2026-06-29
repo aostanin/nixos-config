@@ -67,9 +67,15 @@ in {
       enable = true;
       vrrpInstances.lan = {
         interface = lan.interface;
-        state = if cfg.isMaster then "MASTER" else "BACKUP";
+        state =
+          if cfg.isMaster
+          then "MASTER"
+          else "BACKUP";
         virtualRouterId = 51;
-        priority = if cfg.isMaster then 200 else 100;
+        priority =
+          if cfg.isMaster
+          then 200
+          else 100;
         virtualIps = [
           {
             addr = "${lan.prefix}.1/24";
