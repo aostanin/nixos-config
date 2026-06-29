@@ -37,6 +37,7 @@
     ./navidrome.nix
     ./neko.nix
     ./netbootxyz.nix
+    ./nextcloud.nix
     ./caddy.nix
     ./nginx.nix
     ./nzbget.nix

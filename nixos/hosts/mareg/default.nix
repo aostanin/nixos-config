@@ -37,6 +37,7 @@
       };
     };
     tmp.useTmpfs = true;
+    blacklistedKernelModules = ["nouveau"];
     kernelParams = [
       "intel_iommu=on"
       "iommu=pt"
@@ -94,6 +95,7 @@
         mealie.enable = true;
         miniflux.enable = true;
         netbootxyz.enable = true;
+        nextcloud.enable = true;
         redlib = {
           inherit (secrets.redlib) subscriptions;
           enable = true;
