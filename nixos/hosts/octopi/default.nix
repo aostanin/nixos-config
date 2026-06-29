@@ -15,6 +15,10 @@
   };
 
   localModules = {
+    traefik.enable = true;
+
+    ingress.fluidd.port = 8081;
+
     common = {
       enable = true;
       minimal = true;
@@ -37,13 +41,11 @@
       settings = {
         authorization = {
           force_logins = false;
-          cors_domains = [
-            "http://octopi"
-          ];
           trusted_clients = [
-            "127.0.0.0/8"
-            "::1/128"
+            "0.0.0.0/0"
+            "::/0"
           ];
+          cors_domains = ["*"];
         };
         octoprint_compat = {};
       };
@@ -51,7 +53,15 @@
 
     fluidd = {
       enable = true;
-      nginx.locations."/webcam/".proxyPass = "http://127.0.0.1:8080/";
+      nginx = {
+        listen = [
+          {
+            addr = "127.0.0.1";
+            port = 8081;
+          }
+        ];
+        locations."/webcam/".proxyPass = "http://127.0.0.1:8080/";
+      };
     };
 
     nginx.clientMaxBodySize = "100M";
