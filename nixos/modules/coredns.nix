@@ -97,12 +97,14 @@ in {
       dom = lib.escapeRegex cfg.domain;
       bindLine = "bind ${lib.concatStringsSep " " cfg.bindInterfaces}";
 
-      # localhost rides with whichever identity this host serves (LAN if it's a
-      # LAN host, else tailscale).
+      # localhost rides this host's identity (LAN if a LAN host, else tailscale).
+      # Must match ::1 too — bind/glibc query the v6 loopback, which else fell
+      # through to the public catch-all (Cloudflare tunnel IP).
+      loopback = "incidr(client_ip(), '127.0.0.0/8') || incidr(client_ip(), '::1/128')";
       tsExpr =
         "incidr(client_ip(), '100.64.0.0/10')"
-        + lib.optionalString (!cfg.enableLan) " || incidr(client_ip(), '127.0.0.0/8')";
-      lanExpr = "incidr(client_ip(), '${lan.prefix}.0/24') || incidr(client_ip(), '127.0.0.0/8')";
+        + lib.optionalString (!cfg.enableLan) " || ${loopback}";
+      lanExpr = "incidr(client_ip(), '${lan.prefix}.0/24') || ${loopback}";
       untrustedExpr =
         lib.concatMapStringsSep " || "
         (s: "incidr(client_ip(), '${s}')")
