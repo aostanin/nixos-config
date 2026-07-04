@@ -102,7 +102,6 @@
         };
         scrutiny.enable = true;
         searxng.enable = true;
-        stalwart.enable = true;
         syncthing.enable = true;
         tasmoadmin.enable = true;
         unifi.enable = true;
