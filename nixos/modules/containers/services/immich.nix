@@ -99,7 +99,7 @@ in {
     };
 
     localModules.containers.containers."${name}-db" = {
-      raw.image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0";
+      raw.image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0";
       networks = [name];
       raw.environment = {
         POSTGRES_USER = "postgres";
@@ -107,6 +107,7 @@ in {
         POSTGRES_INITDB_ARGS = "--data-checksums";
       };
       raw.environmentFiles = [config.sops.templates."${name}-db.env".path];
+      raw.extraOptions = ["--shm-size=128m"];
       healthcheck = {
         cmd = "pg_isready -U postgres";
         interval = "10s";
@@ -116,7 +117,6 @@ in {
         parent = name;
         destination = "/var/lib/postgresql/data";
       };
-      raw.cmd = ["postgres" "-c" "shared_preload_libraries=vectors.so" "-c" "search_path=\"$$user\", public, vectors" "-c" "logging_collector=on" "-c" "max_wal_size=2GB" "-c" "shared_buffers=512MB" "-c" "wal_compression=on"];
     };
   };
 }
