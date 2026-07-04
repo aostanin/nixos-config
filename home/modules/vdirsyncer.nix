@@ -16,9 +16,9 @@ in {
     sops.secrets = {
       "google/client_id" = {};
       "google/client_secret" = {};
-      "stalwart/url" = {};
-      "stalwart/username" = {};
-      "stalwart/password" = {};
+      "nextcloud/url" = {};
+      "nextcloud/username" = {};
+      "nextcloud/password" = {};
       "vdirsyncer/home_email" = {};
       "vdirsyncer/work_email" = {};
       "vdirsyncer/home_calendar_uuid" = {};
@@ -59,13 +59,13 @@ in {
 
       [pair calendar_home]
       a = "calendar_home_remote"
-      b = "calendar_stalwart_remote"
+      b = "calendar_nextcloud_remote"
       collections = [["${config.sops.placeholder."vdirsyncer/home_email"}", "${config.sops.placeholder."vdirsyncer/home_email"}", "${config.sops.placeholder."vdirsyncer/home_calendar_uuid"}"]]
       conflict_resolution = "a wins"
 
       [pair calendar_work]
       a = "calendar_work_remote"
-      b = "calendar_stalwart_remote"
+      b = "calendar_nextcloud_remote"
       collections = [["${config.sops.placeholder."vdirsyncer/work_email"}", "${config.sops.placeholder."vdirsyncer/work_email"}", "${config.sops.placeholder."vdirsyncer/work_calendar_uuid"}"]]
       conflict_resolution = "a wins"
 
@@ -81,10 +81,10 @@ in {
       token_file = "${config.xdg.stateHome}/vdirsyncer/token-work"
       type = "google_calendar"
 
-      [storage calendar_stalwart_remote]
-      url.fetch = ["command", "${cat}", "${config.sops.secrets."stalwart/url".path}"]
-      username.fetch = ["command", "${cat}", "${config.sops.secrets."stalwart/username".path}"]
-      password.fetch = ["command", "${cat}", "${config.sops.secrets."stalwart/password".path}"]
+      [storage calendar_nextcloud_remote]
+      url.fetch = ["command", "${cat}", "${config.sops.secrets."nextcloud/url".path}"]
+      username.fetch = ["command", "${cat}", "${config.sops.secrets."nextcloud/username".path}"]
+      password.fetch = ["command", "${cat}", "${config.sops.secrets."nextcloud/password".path}"]
       type = "caldav"
     '';
 

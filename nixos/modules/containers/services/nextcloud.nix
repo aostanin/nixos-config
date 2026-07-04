@@ -63,6 +63,14 @@ in {
       };
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
       raw.volumes = ["${installApps}:/docker-entrypoint-hooks.d/post-installation/install-apps.sh:ro"];
+      raw.labels = {
+        # Nextcloud's Apache emits http:// for .well-known/{cal,card}dav behind a
+        # TLS-terminating proxy; redirect these at Traefik instead (docs-recommended).
+        "traefik.http.middlewares.${name}-wellknown.redirectregex.permanent" = "true";
+        "traefik.http.middlewares.${name}-wellknown.redirectregex.regex" = "https://(.*)/.well-known/(?:card|cal)dav";
+        "traefik.http.middlewares.${name}-wellknown.redirectregex.replacement" = "https://\${1}/remote.php/dav";
+        "traefik.http.routers.${name}-trusted.middlewares" = "${name}-wellknown";
+      };
       volumes.html.destination = "/var/www/html";
       proxy = {
         enable = true;
