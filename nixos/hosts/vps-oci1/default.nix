@@ -2,7 +2,9 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  ntfyPort = 2586;
+in {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -41,6 +43,12 @@
 
     phoenixd.enable = true;
 
+    ingress.ntfy = {
+      port = ntfyPort;
+      default.enable = false;
+      trusted.enable = true;
+    };
+
     common = {
       enable = true;
       minimal = true;
@@ -56,6 +64,15 @@
       services = {
         lnbits.enable = true;
       };
+    };
+  };
+
+  services.ntfy-sh = {
+    enable = true;
+    settings = {
+      base-url = "https://ntfy.${config.localModules.traefik.domain}";
+      listen-http = "127.0.0.1:${toString ntfyPort}";
+      behind-proxy = true;
     };
   };
 
