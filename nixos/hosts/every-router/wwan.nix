@@ -1,4 +1,67 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: let
+  # A connected-but-dead bearer only recovers on a full modem reset, not an NM reconnect.
+  wwanWatchdog = pkgs.writeShellScript "wwan-watchdog" ''
+    set -u
+    PATH=${lib.makeBinPath [pkgs.modemmanager pkgs.networkmanager pkgs.iputils pkgs.coreutils pkgs.gnugrep]}
+
+    # Nothing to recover unless NM has WWAN up (skips a removed SIM or down modem).
+    [ "$(nmcli -t -g GENERAL.STATE connection show povo 2>/dev/null)" = activated ] || exit 0
+
+    wwan_iface() {
+      local i
+      i="$(nmcli -t -g GENERAL.IP-IFACE connection show povo 2>/dev/null | head -n1)"
+      [ -n "$i" ] || i="$(ls /sys/class/net 2>/dev/null | grep -m1 '^ww')"
+      printf '%s' "$i"
+    }
+
+    probe_ok() {
+      # Bind to the WWAN iface so we test it, not a lower-metric default (Starlink).
+      local iface bind
+      iface="$(wwan_iface)"
+      bind=""
+      [ -n "$iface" ] && bind="-I $iface"
+      ping $bind -c1 -W3 1.1.1.1 >/dev/null 2>&1 && return 0
+      ping $bind -c1 -W3 8.8.8.8 >/dev/null 2>&1 && return 0
+      return 1
+    }
+
+    # Require sustained failure so a transient blip can't trigger a reset.
+    for _ in $(seq 1 6); do
+      probe_ok && exit 0
+      sleep 10
+    done
+
+    echo "wwan-watchdog: sustained connectivity loss on '$(wwan_iface)'; resetting modem" >&2
+    mmcli -m any --reset 2>&1 || true
+
+    sleep 60
+    if probe_ok; then
+      echo "wwan-watchdog: connectivity restored after modem reset" >&2
+    else
+      echo "wwan-watchdog: still no connectivity after modem reset; manual attention needed" >&2
+    fi
+  '';
+in {
+  systemd.services.wwan-watchdog = {
+    description = "Probe the WWAN data path and reset a zombie modem";
+    after = ["ModemManager.service" "NetworkManager.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = wwanWatchdog;
+    };
+  };
+  systemd.timers.wwan-watchdog = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnBootSec = "3min";
+      OnUnitActiveSec = "3min";
+    };
+  };
+
   # Don't let systemd-networkd manage WWAN interfaces
   systemd.network.networks.wwan = {
     matchConfig.Name = "ww*";
