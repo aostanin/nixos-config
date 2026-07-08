@@ -31,16 +31,20 @@ in {
         "relative_humidity_2m"
         "precipitation"
         "cloud_cover"
-        "wind_speed_10m"
-        "wind_direction_10m"
+        # Wind is stored as u/v components; the API derives wind_speed_10m /
+        # wind_direction_10m from them (the *_speed/*_direction names aren't
+        # storable and silently download nothing).
+        "wind_u_component_10m"
+        "wind_v_component_10m"
         "wind_gusts_10m"
         "shortwave_radiation"
       ];
       description = ''
-        Raw model variables to download. open-meteo derives the rest at query
-        time (apparent_temperature from temp/humidity/wind/radiation,
-        weather_code from precipitation/cloud_cover). precipitation_probability
-        is ensemble-only and stays null on deterministic models.
+        Raw model variables to download; the API derives the rest at query time
+        (wind_speed/direction from u/v, apparent_temperature from
+        temp/humidity/wind/radiation). Availability is per-model — the sync
+        silently skips a variable a model doesn't publish (e.g. dwd_icon has no
+        shortwave_radiation/snowfall, so weather_code stays null for it).
       '';
     };
 
@@ -48,6 +52,16 @@ in {
       type = lib.types.str;
       default = "30min";
       description = "How often to re-run the data sync (systemd OnUnitActiveSec).";
+    };
+
+    pruneKeepDays = lib.mkOption {
+      type = lib.types.int;
+      default = 14;
+      description = ''
+        Delete synced `chunk_*.om` data older than this many days (daily timer),
+        bounding disk growth from global models. Keep comfortably above sync's
+        7-day past window so current data isn't removed. 0 disables pruning.
+      '';
     };
   };
 
@@ -89,6 +103,23 @@ in {
         # (a sync failing mid-activation would otherwise roll back the deploy).
         OnActiveSec = "5min";
         OnUnitActiveSec = cfg.syncInterval;
+      };
+    };
+
+    systemd.services."${name}-prune" = lib.mkIf (cfg.pruneKeepDays > 0) {
+      description = "Prune old open-meteo chunk data";
+      serviceConfig = {
+        Type = "oneshot";
+        # Only time-series chunks; leaves each model's static/ (meta.json, HSURF).
+        ExecStart = "${pkgs.findutils}/bin/find ${dataDir} -type f -name chunk_*.om -mtime +${toString cfg.pruneKeepDays} -delete";
+      };
+    };
+
+    systemd.timers."${name}-prune" = lib.mkIf (cfg.pruneKeepDays > 0) {
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "daily";
+        Persistent = true;
       };
     };
   };
