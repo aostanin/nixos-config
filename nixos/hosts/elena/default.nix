@@ -200,7 +200,7 @@
         overpass.enable = true;
         open-meteo = {
           enable = true;
-          models = ["jma_msm"];
+          models = ["jma_msm" "dwd_icon"];
         };
       };
     };
