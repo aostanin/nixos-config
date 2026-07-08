@@ -16,9 +16,7 @@ in {
     enable = true;
     models = [
       (mkLlamaCppModel "qwen3.6-35b-a3b" "unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_M")
-      (mkLlamaCppModel "qwen3.6-27b" "unsloth/Qwen3.6-27B-GGUF:Q4_K_M")
-      (mkLlamaCppModel "qwen3.5-9b" "unsloth/Qwen3.5-9B-GGUF:Q4_K_XL")
-      (mkLlamaCppModel "gemma-4-26b-a4b" "unsloth/gemma-4-26B-A4B-it-GGUF:Q4_K_XL")
+      (mkLlamaCppModel "qwen3.6-27b" "unsloth/Qwen3.6-27B-GGUF:Q4_K_XL")
       (mkLlamaCppModel "gemma-4-e4b" gemmaE4b)
       (mkLlamaCppModel "ha-assist" gemmaE4b)
     ];
