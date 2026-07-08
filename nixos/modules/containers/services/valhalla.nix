@@ -66,6 +66,8 @@ in {
       volumes.data = {
         destination = "/custom_files";
         storageType = "bulk";
+        user = "59999";
+        group = "59999";
       };
       raw.volumes = map (p: "${p}:/custom_files/${baseNameOf p}:ro") cfg.pbfs;
       proxy = {
