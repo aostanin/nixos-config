@@ -125,9 +125,15 @@
         };
 
         # Voice assistant
-        piper.enable = true;
-        whisper.enable = true;
         openwakeword.enable = true;
+        wyoming-openai = {
+          enable = true;
+          openaiUrl = "https://litellm.${secrets.domain}/v1";
+          sttModels = ["whisper"];
+          ttsModels = ["kokoro"];
+          ttsVoices = ["af_heart" "bf_isabella" "jf_alpha"];
+          languages = ["en" "ja"];
+        };
       };
     };
 

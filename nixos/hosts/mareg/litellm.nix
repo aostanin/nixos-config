@@ -1,5 +1,6 @@
 {secrets, ...}: let
   llamaCppApiBase = "https://llama-cpp.${secrets.domain}/v1";
+  speachesApiBase = "https://speaches.${secrets.domain}/v1";
 
   mkLlamaCppModel = model_name: llamaModel: {
     inherit model_name;
@@ -19,6 +20,24 @@ in {
       (mkLlamaCppModel "qwen3.6-27b" "unsloth/Qwen3.6-27B-GGUF:Q4_K_XL")
       (mkLlamaCppModel "gemma-4-e4b" gemmaE4b)
       (mkLlamaCppModel "ha-assist" gemmaE4b)
+      {
+        model_name = "whisper";
+        litellm_params = {
+          model = "openai/Systran/faster-whisper-medium";
+          api_base = speachesApiBase;
+          api_key = "none";
+        };
+        model_info.mode = "audio_transcription";
+      }
+      {
+        model_name = "kokoro";
+        litellm_params = {
+          # fp16 ONNX is ~20% faster than fp32 on CPU (int8 is slower here).
+          model = "openai/speaches-ai/Kokoro-82M-v1.0-ONNX-fp16";
+          api_base = speachesApiBase;
+          api_key = "none";
+        };
+      }
     ];
   };
 }

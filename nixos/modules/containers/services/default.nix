@@ -56,6 +56,7 @@
     ./scrutiny.nix
     ./searxng.nix
     ./sonarr.nix
+    ./speaches.nix
     ./stable-diffusion.nix
     ./stalwart.nix
     ./syncthing.nix
@@ -70,6 +71,7 @@
     ./webtop.nix
     ./whisper.nix
     ./whoami.nix
+    ./wyoming-openai.nix
     ./xbvr.nix
     ./zigbee2mqtt.nix
     ./zwift-offline.nix
