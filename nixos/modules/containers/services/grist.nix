@@ -24,7 +24,11 @@ in {
         GRIST_SERVE_SAME_ORIGIN = "true";
       };
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
-      volumes.persist.destination = "/persist";
+      volumes.persist = {
+        destination = "/persist";
+        user = "1001";
+        group = "1001";
+      };
       healthcheck = {
         cmd = "curl -f http://localhost:8484/status";
         startPeriod = "30s";
