@@ -15,7 +15,7 @@ in {
     home.packages = localLib.filterAvailable (with pkgs; [
       (localLib.brokenOnDarwin blender)
       cura-appimage
-      f3d
+      (localLib.brokenOnDarwin f3d)
       freecad
       meshlab
       (localLib.brokenOnDarwin openscad-unstable)
