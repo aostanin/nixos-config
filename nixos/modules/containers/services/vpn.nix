@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   sopsFiles,
   ...
@@ -11,6 +12,25 @@
     if cfg.ephemeral
     then "tailscale/auth_key_ephemeral"
     else "tailscale/auth_key";
+
+  # Boot pins the exit node by IP (resolves without a netmap; a stale/rotated IP
+  # blackholes egress rather than leaking). Once the node is healthy the netmap
+  # is loaded, so re-pin by hostname — that resolves to a node ID, which
+  # tailscale follows across IP rotations. Retry: `set` reports "no node found in
+  # netmap" until the peer streams in.
+  setExitNode = pkgs.writeShellScript "vpn-set-exit-node" ''
+    host="$(cat ${config.sops.secrets."containers/vpn/exit_node_hostname".path})"
+    for i in $(seq 1 10); do
+      if ${pkgs.podman}/bin/podman exec ${name} tailscale set --exit-node="$host"; then
+        echo "vpn: exit node pinned to $host"
+        exit 0
+      fi
+      echo "vpn: netmap not ready for $host, retry $i/10"
+      sleep 2
+    done
+    echo "vpn: WARNING failed to pin exit node $host; egress stays blackholed at the boot IP" >&2
+    exit 0
+  '';
 in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
@@ -32,7 +52,10 @@ in {
     sops.secrets = {
       ${authKey}.sopsFile = sopsFiles.terranix;
       "containers/vpn/exit_node" = {};
+      "containers/vpn/exit_node_hostname" = {};
     };
+
+    systemd.services."podman-${name}".serviceConfig.ExecStartPost = ["${setExitNode}"];
 
     sops.templates."${name}.env".content = ''
       TS_AUTHKEY=${config.sops.placeholder.${authKey}}
