@@ -1,0 +1,28 @@
+name: build-and-cache
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Builds every nixosConfiguration's system toplevel and pushes the closures to
+# the self-hosted Attic cache (attic.<domain>, cache "aostanin").
+# x86_64 hosts run on elena's host runner, aarch64 on vps-oci-arm1's.
+# Requires a repo/org secret ATTIC_TOKEN (an Attic push token, see DEPLOY notes).
+
+jobs:
+  x86_64-linux:
+    runs-on: nixos
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash .forgejo/build-and-push.sh x86_64-linux
+        env:
+          ATTIC_TOKEN: ${{ secrets.ATTIC_TOKEN }}
+
+  aarch64-linux:
+    runs-on: nixos-arm64
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash .forgejo/build-and-push.sh aarch64-linux
+        env:
+          ATTIC_TOKEN: ${{ secrets.ATTIC_TOKEN }}

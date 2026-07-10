@@ -32,6 +32,8 @@ in {
         GITEA__SERVER__DOMAIN = "${name}.${domain}";
         GITEA__SERVER__SSH_DOMAIN = "git.${domain}";
         GITEA__SERVER__ROOT_URL = "https://${GITEA__SERVER__DOMAIN}/";
+        # Default 3h fails CI kernel builds
+        GITEA__ACTIONS__ENDLESS_TASK_TIMEOUT = "12h";
       };
       volumes.data = {
         destination = "/data";
