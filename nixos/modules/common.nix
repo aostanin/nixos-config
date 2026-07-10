@@ -79,11 +79,13 @@ in {
         sandbox = "relaxed";
         trusted-users = [secrets.user.username];
         extra-substituters = [
+          "https://attic.${secrets.domain}/aostanin"
           "https://aostanin.cachix.org"
           "https://nix-community.cachix.org"
           "https://cache.numtide.com"
         ];
         trusted-public-keys = [
+          "aostanin:fgEC8iofpq+egrQcwJVe9WBIOCIxVOmirjyLpaMhn6U="
           "aostanin.cachix.org-1:loDfTVc4XTxROFAPv3NKNfKzLCKEzAGj8aPKJFbRs5Q="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="

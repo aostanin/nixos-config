@@ -72,6 +72,7 @@
           type = "snap";
           filesystems = {
             "tank/appdata<" = true;
+            "tank/appdata/attic<" = false;
             "tank/backup<" = true;
             "tank/backup/hosts/zfs<" = false;
             "tank/download<" = true;

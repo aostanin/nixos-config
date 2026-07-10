@@ -1,6 +1,7 @@
 {
   imports = [
     ./adguardhome.nix
+    ./attic.nix
     ./backup.nix
     ./cloudflared.nix
     ./common.nix

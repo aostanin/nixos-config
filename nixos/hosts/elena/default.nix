@@ -60,6 +60,11 @@
   localModules = {
     common.enable = true;
 
+    attic = {
+      enable = true;
+      storageDir = "/storage/appdata/attic";
+    };
+
     containers = {
       enable = true;
       storage = {

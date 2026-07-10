@@ -148,6 +148,7 @@
       }: {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
+            attic-client
             deploy-rs.packages.${system}.default
             git-agecrypt
             sops
