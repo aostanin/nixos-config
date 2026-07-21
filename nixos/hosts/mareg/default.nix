@@ -92,17 +92,10 @@
         forgejo.enable = true;
         guacamole.enable = true;
         karakeep.enable = true;
-        mealie.enable = true;
         netbootxyz.enable = true;
         nextcloud.enable = true;
-        redlib = {
-          inherit (secrets.redlib) subscriptions;
-          enable = true;
-        };
         scrutiny.enable = true;
-        searxng.enable = true;
         syncthing.enable = true;
-        tasmoadmin.enable = true;
         unifi.enable = true;
         vaultwarden.enable = true;
 

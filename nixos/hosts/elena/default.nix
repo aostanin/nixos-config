@@ -209,7 +209,14 @@
         };
 
         # Migrated from mareg
+        mealie.enable = true;
         miniflux.enable = true;
+        redlib = {
+          inherit (secrets.redlib) subscriptions;
+          enable = true;
+        };
+        searxng.enable = true;
+        tasmoadmin.enable = true;
       };
     };
 
