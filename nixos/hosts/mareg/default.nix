@@ -86,7 +86,6 @@
       };
       services = {
         authelia.enable = true;
-        unifi.enable = true;
       };
     };
 
