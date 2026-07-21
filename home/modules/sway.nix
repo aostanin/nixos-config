@@ -406,7 +406,7 @@ in {
         };
       };
 
-      clipman.enable = true;
+      cliphist.enable = true;
 
       kdeconnect = {
         enable = true;
