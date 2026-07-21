@@ -207,6 +207,9 @@
           enable = true;
           models = ["jma_msm" "dwd_icon"];
         };
+
+        # Migrated from mareg
+        miniflux.enable = true;
       };
     };
 
