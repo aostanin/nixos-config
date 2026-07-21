@@ -8,7 +8,34 @@
     set -u
     PATH=${lib.makeBinPath [pkgs.modemmanager pkgs.networkmanager pkgs.iputils pkgs.coreutils pkgs.gnugrep]}
 
-    # Nothing to recover unless NM has WWAN up (skips a removed SIM or down modem).
+    # Sysfs USB device (e.g. "2-1") for the Quectel modem, empty if not enumerated.
+    quectel_usb_dev() {
+      local d
+      for d in /sys/bus/usb/devices/*/idVendor; do
+        [ "$(cat "$d" 2>/dev/null)" = 2c7c ] || continue
+        basename "$(dirname "$d")"
+        return 0
+      done
+      return 1
+    }
+
+    # Recovery path A: the QMI control port (cdc-wdm0) can hang, and MM then marks
+    # the modem invalid and drops it entirely. povo deactivates, so the data-path
+    # probe below never runs and mmcli --reset has no modem to act on. The USB
+    # device stays enumerated, so re-enumerate it to reload the modem.
+    if ! mmcli -L 2>/dev/null | grep -q '/Modem/'; then
+      dev="$(quectel_usb_dev)" || exit 0
+      # Confirm it's really gone (not just a transient MM restart) before rebinding.
+      sleep 30
+      mmcli -L 2>/dev/null | grep -q '/Modem/' && exit 0
+      echo "wwan-watchdog: modem dropped but USB $dev present; re-enumerating" >&2
+      echo "$dev" > /sys/bus/usb/drivers/usb/unbind 2>/dev/null || true
+      sleep 3
+      echo "$dev" > /sys/bus/usb/drivers/usb/bind 2>/dev/null || true
+      exit 0
+    fi
+
+    # Nothing further to recover unless NM has WWAN up (skips a removed SIM).
     [ "$(nmcli -t -g GENERAL.STATE connection show povo 2>/dev/null)" = activated ] || exit 0
 
     wwan_iface() {
