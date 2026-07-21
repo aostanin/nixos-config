@@ -84,9 +84,7 @@
         bulk = "/persist/safe/appdata/containers/bulk";
         temp = "/persist/cache/appdata/containers/temp";
       };
-      services = {
-        authelia.enable = true;
-      };
+      services = {};
     };
 
     impermanence.enable = true;

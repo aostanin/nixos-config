@@ -108,7 +108,7 @@ in {
 
         http.middlewares.authelia.forwardAuth = {
           # TODO: Dynamically find the host running authelia
-          address = "http://${secrets.network.tailscale.hosts.mareg.address}:9091/api/authz/forward-auth";
+          address = "http://${secrets.network.tailscale.hosts.elena.address}:9091/api/authz/forward-auth";
           authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name";
           trustForwardHeader = "true";
         };

@@ -211,6 +211,7 @@
 
         # Migrated from mareg
         archivebox.enable = true;
+        authelia.enable = true;
         changedetection.enable = true;
         forgejo.enable = true;
         guacamole.enable = true;
