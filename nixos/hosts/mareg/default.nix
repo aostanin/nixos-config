@@ -86,38 +86,7 @@
       };
       services = {
         authelia.enable = true;
-        forgejo.enable = true;
-        nextcloud.enable = true;
-        syncthing.enable = true;
         unifi.enable = true;
-
-        # Home automation
-        frigate = {
-          enable = true;
-          devices = [
-            "/dev/bus/usb"
-            "/dev/dri/renderD128"
-          ];
-        };
-        home-assistant.enable = true;
-        ir-mqtt-bridge.enable = true;
-        mosquitto.enable = true;
-        valetudopng.enable = true;
-        zigbee2mqtt = {
-          enable = true;
-          adapterPath = "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_5c9c4df6b1c9eb118d7d8b4f1d69213e-if00-port0";
-        };
-
-        # Voice assistant
-        openwakeword.enable = true;
-        wyoming-openai = {
-          enable = true;
-          openaiUrl = "https://litellm.${secrets.domain}/v1";
-          sttModels = ["whisper"];
-          ttsModels = ["kokoro"];
-          ttsVoices = ["af_heart" "bf_isabella" "jf_alpha"];
-          languages = ["en" "ja"];
-        };
       };
     };
 
