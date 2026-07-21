@@ -2,6 +2,8 @@
   config,
   lib,
   secrets,
+  localLib,
+  self,
   ...
 }: let
   cfg = config.localModules.traefik;
@@ -106,9 +108,10 @@ in {
       dynamicConfigOptions = {
         http.middlewares.auth.basicAuth.usersFile = config.sops.secrets."traefik/basic_auth_users".path;
 
-        http.middlewares.authelia.forwardAuth = {
-          # TODO: Dynamically find the host running authelia
-          address = "http://${secrets.network.tailscale.hosts.elena.address}:9091/api/authz/forward-auth";
+        http.middlewares.authelia.forwardAuth = let
+          autheliaHost = localLib.hostRunningService "authelia" self.nixosConfigurations;
+        in {
+          address = "http://${secrets.network.tailscale.hosts.${autheliaHost}.address}:9091/api/authz/forward-auth";
           authResponseHeaders = "Remote-User,Remote-Groups,Remote-Email,Remote-Name";
           trustForwardHeader = "true";
         };
