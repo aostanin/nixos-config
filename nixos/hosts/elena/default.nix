@@ -219,7 +219,12 @@
         netbootxyz.enable = true;
         nextcloud.enable = true;
         scrutiny.enable = true;
-        syncthing.enable = true;
+        syncthing = {
+          enable = true;
+          # The native user syncthing owns 22000/21027.
+          port = 22001;
+          localDiscovery = false;
+        };
         miniflux.enable = true;
 
         # Home automation (migrated from mareg)

@@ -18,17 +18,30 @@ in {
       type = lib.types.int;
       default = config.localModules.containers.gid;
     };
+
+    port = lib.mkOption {
+      type = lib.types.port;
+      default = 22000;
+      description = "Host port for sync transfers (remap when another syncthing runs on the host).";
+    };
+
+    localDiscovery = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Publish the local discovery port (only one instance per host can).";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     localModules.containers.containers.${name} = {
       raw.image = "docker.io/syncthing/syncthing:latest";
-      raw.ports = [
-        "8384" # Web UI
-        "22000:22000/tcp" # TCP file transfers
-        "22000:22000/udp" # QUIC file transfers
-        "21027:21027/udp" # Receive local discovery broadcasts
-      ];
+      raw.ports =
+        [
+          "8384" # Web UI
+          "${toString cfg.port}:22000/tcp" # TCP file transfers
+          "${toString cfg.port}:22000/udp" # QUIC file transfers
+        ]
+        ++ lib.optional cfg.localDiscovery "21027:21027/udp"; # Receive local discovery broadcasts
       raw.environment = {
         PUID = toString cfg.uid;
         PGID = toString cfg.gid;
