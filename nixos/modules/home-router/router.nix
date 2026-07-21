@@ -87,9 +87,6 @@ in {
             # the WAN can't reach them.
             iifname { "br-lan", "vlan40", "tailscale0", "podman*" } ct status dnat oifname "podman*" accept
 
-            # Hairpin for the MQTT DNAT below (broker now lives on elena).
-            iifname "vlan40" oifname "vlan40" ct status dnat tcp dport 1883 accept
-
             # IoT egress allowlist, then deny the rest (no IoT->LAN/guest at all).
             iifname "vlan40" oifname { "${wan}", "ds-wan" } ether saddr { ${iotWanAllow} } accept
             iifname "vlan40" oifname { "${wan}", "ds-wan" } drop
@@ -99,15 +96,6 @@ in {
         }
 
         table ip nat {
-          chain prerouting {
-            type nat hook prerouting priority -100;
-            policy accept;
-
-            # IoT devices reach the MQTT broker at the gateway; forward to the
-            # broker host until the router role itself moves there.
-            iifname "vlan40" ip daddr ${iot.prefix}.1 tcp dport 1883 dnat to ${secrets.network.iot.hosts.elena.address}
-          }
-
           chain postrouting {
             type nat hook postrouting priority 100;
             policy accept;
@@ -116,9 +104,6 @@ in {
             # Containers reaching tailscale peers need SNAT (the tailnet has no
             # route back to the podman subnet).
             oifname "tailscale0" ip saddr 10.88.0.0/15 masquerade
-            # Hairpinned MQTT (see prerouting) needs SNAT so replies return
-            # via the router.
-            oifname "vlan40" ip daddr ${secrets.network.iot.hosts.elena.address} tcp dport 1883 masquerade
           }
         }
       '';

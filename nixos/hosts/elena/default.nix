@@ -277,15 +277,15 @@
 
     forgejo-runner.enable = true;
 
-    home-server = {
+    home-router = {
       enable = true;
-      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.integrated}";
-      address = secrets.network.home.hosts.elena.address;
+      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
       macAddress = secrets.network.home.hosts.elena.macAddress;
-      iotNetwork = {
-        enable = true;
-        address = secrets.network.iot.hosts.elena.address;
-      };
+    };
+
+    ingress.adguard = {
+      port = 3000;
+      default.enable = true;
     };
 
     pikvm = {
@@ -310,11 +310,15 @@
     tailscale = {
       isClient = true;
       isServer = true;
+      extraFlags = [
+        "--advertise-exit-node"
+        "--advertise-routes=${secrets.network.networks.iot.prefix}.0/24"
+      ];
     };
 
     virtwold = {
       enable = true;
-      interfaces = ["br0"];
+      interfaces = ["br-lan"];
     };
 
     zfs.enable = true;

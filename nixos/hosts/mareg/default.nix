@@ -51,6 +51,20 @@
   networking = {
     hostName = "mareg";
     hostId = "393740af";
+
+    # Lean host: static LAN on the integrated NIC (router role lives on elena).
+    useNetworkd = true;
+    useDHCP = false;
+  };
+
+  systemd.network = {
+    enable = true;
+    networks."10-lan" = {
+      matchConfig.Name = "enx*";
+      address = ["${secrets.network.home.hosts.mareg.address}/24"];
+      routes = [{Gateway = secrets.network.home.defaultGateway;}];
+      networkConfig.DNS = [secrets.network.home.nameserver];
+    };
   };
 
   powerManagement.powertop.enable = true;
@@ -66,16 +80,6 @@
 
     common.enable = true;
 
-    home-router = {
-      enable = true;
-      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.mareg.integrated}";
-      macAddress = secrets.network.home.hosts.mareg.macAddress;
-    };
-
-    ingress.adguard = {
-      port = 3000;
-      default.enable = true;
-    };
 
     containers = {
       enable = true;
@@ -97,10 +101,7 @@
 
     tailscale = {
       isServer = true;
-      extraFlags = [
-        "--advertise-exit-node"
-        "--advertise-routes=${secrets.network.networks.iot.prefix}.0/24"
-      ];
+      extraFlags = ["--advertise-exit-node"];
     };
 
     watchdog.enable = true;

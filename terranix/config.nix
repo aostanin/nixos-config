@@ -145,7 +145,7 @@ in {
 
   resource.tailscale_dns_nameservers.nameservers = {
     nameservers = [
-      (tailscaleDevice "mareg" "address")
+      (tailscaleDevice "elena" "address")
       (tailscaleDevice "vps-oci2" "address")
     ];
   };
