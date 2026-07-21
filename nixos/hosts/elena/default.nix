@@ -209,6 +209,9 @@
         };
 
         # Migrated from mareg
+        archivebox.enable = true;
+        changedetection.enable = true;
+        karakeep.enable = true;
         mealie.enable = true;
         miniflux.enable = true;
         redlib = {
@@ -217,6 +220,7 @@
         };
         searxng.enable = true;
         tasmoadmin.enable = true;
+        vaultwarden.enable = true;
       };
     };
 

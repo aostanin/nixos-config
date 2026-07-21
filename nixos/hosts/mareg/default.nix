@@ -86,18 +86,14 @@
         temp = "/persist/cache/appdata/containers/temp";
       };
       services = {
-        archivebox.enable = true;
         authelia.enable = true;
-        changedetection.enable = true;
         forgejo.enable = true;
         guacamole.enable = true;
-        karakeep.enable = true;
         netbootxyz.enable = true;
         nextcloud.enable = true;
         scrutiny.enable = true;
         syncthing.enable = true;
         unifi.enable = true;
-        vaultwarden.enable = true;
 
         # Home automation
         frigate = {
