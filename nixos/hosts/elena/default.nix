@@ -260,11 +260,7 @@
         };
         searxng.enable = true;
         tasmoadmin.enable = true;
-        unifi = {
-          enable = true;
-          # lnd owns host 8080.
-          informPort = 8081;
-        };
+        unifi.enable = true;
         vaultwarden.enable = true;
       };
     };
