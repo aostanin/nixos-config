@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
     ./backup.nix
     ./backup-external.nix
+    ./litellm.nix
     ./llama-cpp.nix
     ./vfio.nix
     ./libvirt
@@ -211,8 +212,11 @@
         # Migrated from mareg
         archivebox.enable = true;
         changedetection.enable = true;
+        guacamole.enable = true;
         karakeep.enable = true;
         mealie.enable = true;
+        netbootxyz.enable = true;
+        scrutiny.enable = true;
         miniflux.enable = true;
         redlib = {
           inherit (secrets.redlib) subscriptions;

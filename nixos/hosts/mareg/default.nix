@@ -11,7 +11,6 @@
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
-    ./litellm.nix
   ];
 
   boot = {
@@ -88,10 +87,7 @@
       services = {
         authelia.enable = true;
         forgejo.enable = true;
-        guacamole.enable = true;
-        netbootxyz.enable = true;
         nextcloud.enable = true;
-        scrutiny.enable = true;
         syncthing.enable = true;
         unifi.enable = true;
 
