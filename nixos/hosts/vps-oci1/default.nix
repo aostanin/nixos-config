@@ -65,10 +65,6 @@ in {
         lnbits.enable = true;
       };
     };
-
-    adguardhome.enable = true;
-
-    traefik.dnsOverTls.enable = true;
   };
 
   services.ntfy-sh = {

@@ -48,15 +48,6 @@ in {
       '';
     };
 
-    lanDnsServer = lib.mkOption {
-      type = lib.types.str;
-      default = "10.0.0.1";
-      description = ''
-        Where to forward the .lan zone (the router's DHCP-aware DNS). Co-located
-        with coredns on the router, point this at dnsmasq's alternate port.
-      '';
-    };
-
     untrustedSubnets = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [];
@@ -78,10 +69,6 @@ in {
   config = lib.mkIf cfg.enable {
     services.coredns = let
       dnsNames = localLib.dnsNamesByHost cfg.domain self.nixosConfigurations;
-      machinesLan = lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (n: v: "${secrets.network.home.hosts.${n}.address} ${n}.lan")
-        secrets.network.home.hosts
-      );
       hostsTailscale = lib.concatStringsSep "\n" (
         lib.mapAttrsToList (n: fqdns:
           secrets.network.tailscale.hosts.${n}.address + " " + (lib.concatStringsSep " " fqdns))
@@ -110,8 +97,8 @@ in {
         (s: "incidr(client_ip(), '${s}')")
         cfg.untrustedSubnets;
 
-      # Trusted view: internal names + split-horizon hosts, then .lan to dnsmasq
-      # and everything else to the filtered upstream.
+      # Trusted view: internal names + split-horizon hosts, everything else to
+      # the filtered upstream.
       internal = name: expr: hosts: ''
         .:53 {
           ${bindLine}
@@ -119,14 +106,11 @@ in {
             expr ${expr}
           }
           hosts {
-            ${machinesLan}
             ${hosts}
             fallthrough
           }
           rewrite name regex (.*\.)?(.*)\.ts\.${dom} {2}.${tailnet} answer auto
-          rewrite name regex (.*\.)?(.*)\.lan\.${dom} {2}.lan answer auto
           forward ${tailnet} 100.100.100.100
-          forward lan ${cfg.lanDnsServer}
           forward . ${cfg.upstreamDns}
           errors
           cache

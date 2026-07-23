@@ -46,9 +46,6 @@
         "3,10.0.50.1" # Default gateway
         "6,10.0.50.1" # DNS server
       ];
-      local = "/lan/";
-      domain = "lan";
-      expand-hosts = true;
       no-resolv = true;
       server = [
         "1.1.1.1"

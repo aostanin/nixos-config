@@ -7,7 +7,7 @@
 
   # FQDNs for a service name. The bare `<name>.<domain>` form is included unless
   # `unqualified = false` (used for secondary instances that must not claim the
-  # bare name); the `.lan`/`.ts` forms are host-scoped and never collide.
+  # bare name); the `.ts` form is host-scoped and never collides.
   mkHosts = {
     domain,
     host,
@@ -16,13 +16,12 @@
   }:
     lib.optional unqualified "${name}.${domain}"
     ++ [
-      "${name}.${host}.lan.${domain}"
       "${name}.${host}.ts.${domain}"
     ];
 
   # An FQDN that needs an explicit DNS record: the apex `<domain>` or a direct
-  # subdomain `<label>.<domain>`. Qualified `.lan`/`.ts` forms are served by
-  # CoreDNS wildcards and excluded.
+  # subdomain `<label>.<domain>`. Qualified `.ts` forms are served by CoreDNS
+  # wildcards and excluded.
   isBareFqdn = domain: fqdn:
     fqdn
     == domain

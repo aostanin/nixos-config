@@ -8,7 +8,6 @@
     ./containers
     ./coredns.nix
     ./desktop.nix
-    ./dot-client.nix
     ./forgejo-runner.nix
     ./home-router
     ./home-server.nix

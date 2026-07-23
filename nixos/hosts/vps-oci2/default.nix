@@ -61,8 +61,6 @@
       enable = true;
       upstreamDns = "127.0.0.1:5300";
     };
-
-    traefik.dnsOverTls.enable = true;
   };
 
   # TailScale incorrectly detects resolved DNS mode and fails to set up MagicDNS.

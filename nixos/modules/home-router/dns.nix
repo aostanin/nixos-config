@@ -23,7 +23,6 @@ in {
         "${guest.prefix}.0/24"
         "${iot.prefix}.0/24"
       ];
-      lanDnsServer = lib.mkDefault "${lan.prefix}.1:5354";
     };
     localModules.adguardhome.enable = lib.mkDefault true;
   };

@@ -30,30 +30,6 @@ in {
   resource.cloudflare_dns_record = let
     servers = lib.filterAttrs (n: v: v.tunnelId != null) secrets.terranix.servers;
     zoneId = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
-
-    # Public DNS-over-TLS endpoint (Android native Private DNS). Wildcard *.dns so
-    # the secret client label never appears in DNS; proxied = false because DoT is
-    # raw TLS and can't traverse Cloudflare's HTTP proxy. Both VPSes for failover.
-    # IPs come from secrets so they stay out of the plaintext config.
-    dotRecords = lib.listToAttrs (lib.concatLists (lib.mapAttrsToList (host: ip: [
-        (lib.nameValuePair "dns-${host}-a" {
-          zone_id = zoneId;
-          type = "A";
-          name = "*.dns";
-          content = ip.ipv4;
-          proxied = false;
-          ttl = 300;
-        })
-        (lib.nameValuePair "dns-${host}-aaaa" {
-          zone_id = zoneId;
-          type = "AAAA";
-          name = "*.dns";
-          content = ip.ipv6;
-          proxied = false;
-          ttl = 300;
-        })
-      ])
-      secrets.dns.endpoints));
   in
     lib.mkMerge ([
         (lib.mapAttrs' (server: config:
@@ -66,7 +42,6 @@ in {
             ttl = 1; # Auto TTL when proxied
           })
         servers)
-        dotRecords
       ]
       ++ builtins.attrValues (builtins.mapAttrs (server: _: (builtins.listToAttrs (builtins.map (fqdn: let
           recordName =
@@ -169,14 +144,34 @@ in {
     magic_dns = true;
   };
 
-  # Split DNS, not global nameservers: only ${domain} queries go to the tailnet
-  # resolvers; everything else uses each device's own DNS (e.g. the phone's native
-  # DoT). Avoids tunnelling all DNS through Tailscale.
-  resource.tailscale_dns_split_nameservers.internal = {
-    domain = domain;
+  # Split DNS: ${domain} -> tailnet resolvers (split-horizon); everything else
+  # falls to the Mullvad default below. Plus an allowlist of affiliate/click
+  # domains that Mullvad adblock blocks -> an unfiltered resolver, porting the old
+  # AdGuard @@ user_rules to Tailscale-DNS clients.
+  resource.tailscale_dns_split_nameservers =
+    {
+      internal = {
+        domain = domain;
+        nameservers = [
+          (tailscaleDevice "elena" "address")
+          (tailscaleDevice "vps-oci2" "address")
+        ];
+      };
+    }
+    // lib.listToAttrs (map (d:
+      lib.nameValuePair
+      "allow_${builtins.replaceStrings ["."] ["_"] d}"
+      {
+        domain = d;
+        nameservers = ["1.1.1.1" "1.0.0.1"];
+      })
+    secrets.dnsAllowlist);
+
+  # Default resolver = Mullvad adblock (Tailscale auto-upgrades to DoH; .3 adblock / .4 base / .9 all).
+  resource.tailscale_dns_nameservers.default = {
     nameservers = [
-      (tailscaleDevice "elena" "address")
-      (tailscaleDevice "vps-oci2" "address")
+      "194.242.2.3"
+      "2a07:e340::3"
     ];
   };
 

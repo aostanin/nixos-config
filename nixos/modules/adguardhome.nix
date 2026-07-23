@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  secrets,
   ...
 }: let
   cfg = config.localModules.adguardhome;
@@ -53,13 +54,7 @@ in {
             url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_33.txt";
           }
         ];
-        user_rules = [
-          "@@||email.strava.com^$important"
-          "@@||ck.jp.ap.valuecommerce.com^$important"
-          "@@||h.accesstrade.net^$important"
-          "@@||is.accesstrade.net^$important"
-          "@@||s.click.aliexpress.com^$important"
-        ];
+        user_rules = map (d: "@@||${d}^\$important") secrets.dnsAllowlist;
       };
     };
   };

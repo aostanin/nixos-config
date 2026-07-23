@@ -147,13 +147,8 @@ in {
         # bind-dynamic: bind sockets as the bridge/VLAN interfaces appear
         # instead of failing if networkd hasn't brought them up yet.
         bind-dynamic = true;
-        # DNS on an alternate port: coredns owns :53 and forwards the .lan zone
-        # here for the DHCP-aware hostnames. dnsmasq does no upstream resolution.
-        # 5354, not 5353 (mDNS), to avoid clashing with home-assistant zeroconf.
-        port = 5354;
-        local = "/lan/";
-        domain = "lan";
-        expand-hosts = true;
+        # DHCP/RA only — DNS disabled (coredns owns :53; no local .lan zone).
+        port = 0;
         no-resolv = true;
         dhcp-authoritative = true;
         enable-ra = true;
