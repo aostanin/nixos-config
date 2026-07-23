@@ -32,11 +32,10 @@
   # The hostname running a given container service, discovered across all
   # hosts. Throws unless exactly one host enables it.
   hostRunningService = service: nixosConfigurations: let
-    hosts =
-      lib.attrNames (lib.filterAttrs (
-          _: node: node.config.localModules.containers.services.${service}.enable or false
-        )
-        nixosConfigurations);
+    hosts = lib.attrNames (lib.filterAttrs (
+        _: node: node.config.localModules.containers.services.${service}.enable or false
+      )
+      nixosConfigurations);
   in
     if lib.length hosts == 1
     then lib.head hosts

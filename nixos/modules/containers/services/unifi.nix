@@ -19,12 +19,6 @@ in {
       type = lib.types.int;
       default = config.localModules.containers.gid;
     };
-
-    informPort = lib.mkOption {
-      type = lib.types.port;
-      default = 8080;
-      description = "Host port for device inform (remap when 8080 is taken on the host).";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -49,7 +43,7 @@ in {
       raw.ports = [
         "3478:3478/udp" # STUN
         "10001:10001/udp" # Device discovery
-        "${toString cfg.informPort}:8080" # Device and controller communication
+        "8080:8080" # Device and controller communication
         "8443:8443" # Controller GUI/API
         # "1900:1900/udp" # Make controller discoverable on L2 network
         # "8843:8843" # HTTPS portal redirection

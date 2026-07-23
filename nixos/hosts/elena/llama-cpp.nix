@@ -73,6 +73,7 @@
       "unsloth/gemma-4-E4B-it-GGUF:Q6_K_XL" = {
         hf-repo = "unsloth/gemma-4-E4B-it-GGUF";
         hf-file = "gemma-4-E4B-it-UD-Q6_K_XL.gguf";
+        load-on-startup = "true"; # ha-assist: preload; router keeps it until another model evicts it (models-max=1)
         cache-type-k = "q8_0";
         cache-type-v = "q8_0";
         ctx-size = "65536";

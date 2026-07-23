@@ -94,6 +94,8 @@
 
     common.enable = true;
 
+    dotClient.enable = true;
+
     desktop = {
       enable = true;
       enableGaming = true;

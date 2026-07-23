@@ -19,7 +19,17 @@ in {
       (mkLlamaCppModel "qwen3.6-35b-a3b" "unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_M")
       (mkLlamaCppModel "qwen3.6-27b" "unsloth/Qwen3.6-27B-GGUF:Q4_K_XL")
       (mkLlamaCppModel "gemma-4-e4b" gemmaE4b)
-      (mkLlamaCppModel "ha-assist" gemmaE4b)
+      {
+        model_name = "ha-assist";
+        litellm_params = {
+          model = "openai/${gemmaE4b}";
+          api_base = llamaCppApiBase;
+          api_key = "none";
+          # Disable the reasoning trace for Assist: it adds latency and can
+          # consume the whole token budget, leaving content empty.
+          extra_body.chat_template_kwargs.enable_thinking = false;
+        };
+      }
       {
         model_name = "whisper";
         litellm_params = {

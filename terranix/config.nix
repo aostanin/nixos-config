@@ -29,11 +29,36 @@ in {
 
   resource.cloudflare_dns_record = let
     servers = lib.filterAttrs (n: v: v.tunnelId != null) secrets.terranix.servers;
+    zoneId = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
+
+    # Public DNS-over-TLS endpoint (Android native Private DNS). Wildcard *.dns so
+    # the secret client label never appears in DNS; proxied = false because DoT is
+    # raw TLS and can't traverse Cloudflare's HTTP proxy. Both VPSes for failover.
+    # IPs come from secrets so they stay out of the plaintext config.
+    dotRecords = lib.listToAttrs (lib.concatLists (lib.mapAttrsToList (host: ip: [
+        (lib.nameValuePair "dns-${host}-a" {
+          zone_id = zoneId;
+          type = "A";
+          name = "*.dns";
+          content = ip.ipv4;
+          proxied = false;
+          ttl = 300;
+        })
+        (lib.nameValuePair "dns-${host}-aaaa" {
+          zone_id = zoneId;
+          type = "AAAA";
+          name = "*.dns";
+          content = ip.ipv6;
+          proxied = false;
+          ttl = 300;
+        })
+      ])
+      secrets.dns.endpoints));
   in
     lib.mkMerge ([
         (lib.mapAttrs' (server: config:
           lib.attrsets.nameValuePair "${server}-cf" {
-            zone_id = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
+            zone_id = zoneId;
             type = "CNAME";
             name = "${server}-cf";
             content = "${config.tunnelId}.cfargotunnel.com";
@@ -41,6 +66,7 @@ in {
             ttl = 1; # Auto TTL when proxied
           })
         servers)
+        dotRecords
       ]
       ++ builtins.attrValues (builtins.mapAttrs (server: _: (builtins.listToAttrs (builtins.map (fqdn: let
           recordName =
@@ -143,7 +169,11 @@ in {
     magic_dns = true;
   };
 
-  resource.tailscale_dns_nameservers.nameservers = {
+  # Split DNS, not global nameservers: only ${domain} queries go to the tailnet
+  # resolvers; everything else uses each device's own DNS (e.g. the phone's native
+  # DoT). Avoids tunnelling all DNS through Tailscale.
+  resource.tailscale_dns_split_nameservers.internal = {
+    domain = domain;
     nameservers = [
       (tailscaleDevice "elena" "address")
       (tailscaleDevice "vps-oci2" "address")

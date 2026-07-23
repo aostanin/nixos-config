@@ -31,10 +31,12 @@ in {
     homebrew = {
       enable = true;
       onActivation.cleanup = "zap";
-      taps = lib.mapAttrsToList (name: _: {
-        inherit name;
-        trusted = true;
-      }) config.nix-homebrew.taps;
+      taps =
+        lib.mapAttrsToList (name: _: {
+          inherit name;
+          trusted = true;
+        })
+        config.nix-homebrew.taps;
       brews = [
       ];
       casks = [

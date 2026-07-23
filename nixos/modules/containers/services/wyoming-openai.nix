@@ -50,6 +50,7 @@ in {
     '';
 
     localModules.containers.containers.${name} = {
+      networks = ["proxy"];
       raw.image = "ghcr.io/roryeckel/wyoming_openai:latest";
       raw.ports = ["${toString cfg.port}:10300"];
       raw.environment = {
