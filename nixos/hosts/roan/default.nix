@@ -5,15 +5,12 @@
   inputs,
   secrets,
   ...
-}: let
-  interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.roan.integrated}";
-in {
+}: {
   imports = [
     "${inputs.nixos-hardware}/lenovo/thinkpad/x250"
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
-    ./libvirt
   ];
 
   boot = {
@@ -39,12 +36,32 @@ in {
   networking = {
     hostName = "roan";
     hostId = "9bc52069";
-    localCommands = ''
-      # Avoid hang when traffic is high
-      # ref: https://forums.servethehome.com/index.php?threads/fix-intel-i219-v-detected-hardware-unit-hang.36700/#post-339318
-      ${lib.getExe pkgs.ethtool} -K ${interface} tso off gso off gro off
-      ${lib.getExe pkgs.ethtool} --set-eee ${interface} eee off
-    '';
+    firewall = {
+      enable = true;
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
+      interfaces.tailscale0 = {
+        allowedTCPPorts = [
+          22 # SSH
+          22000 # Syncthing
+        ];
+        allowedUDPPorts = [
+          5353 # Avahi
+          22000 # Syncthing
+          21027 # Syncthing
+        ];
+      };
+    };
   };
 
   powerManagement.powertop.enable = true;
@@ -54,58 +71,49 @@ in {
       enable = true;
       paths = [
         "/home"
-        "/storage/appdata"
-        "/var/lib/libvirt"
-        "/var/lib/nixos"
-        "/var/lib/tailscale"
-        "/var/lib/traefik"
+        "/persist/safe"
       ];
     };
 
     common.enable = true;
 
-    containers = {
-      enable = true;
-      storage = {
-        default = "/storage/appdata/docker/ssd";
-        bulk = "/storage/appdata/docker/bulk";
-        temp = "/storage/appdata/temp";
-      };
-      services = {};
-    };
+    desktop.enable = true;
 
-    home-server = {
-      enable = true;
-      interface = interface;
-      address = secrets.network.home.hosts.roan.address;
-      macAddress = secrets.network.home.hosts.roan.macAddress;
-      iotNetwork = {
-        enable = true;
-        address = secrets.network.iot.hosts.roan.address;
-      };
-    };
+    impermanence.enable = true;
 
-    intelAmt.enable = true;
+    networkmanager.enable = true;
 
     nvtop.package = pkgs.nvtopPackages.intel;
 
-    scrutinyCollector.enable = true;
+    podman = {
+      enable = true;
+      enableAutoPrune = true;
+    };
 
     tailscale = {
-      isServer = true;
+      isClient = true;
       extraFlags = [
-        "--advertise-exit-node"
-        "--advertise-routes=10.0.40.0/24"
+        "--accept-routes"
+        "--operator=${secrets.user.username}"
       ];
     };
 
-    watchdog.enable = true;
-
-    zfs.enable = true;
+    zfs = {
+      enable = true;
+      allowHibernation = true;
+    };
   };
 
   services = {
-    logind.settings.Login.HandleLidSwitch = "ignore";
+    fwupd.enable = true;
+
+    logind.settings.Login = let
+      mode = "suspend";
+    in {
+      HandleLidSwitch = mode;
+      HandleLidSwitchDocked = mode;
+      HandlePowerKey = mode;
+    };
 
     tlp = {
       enable = true;
@@ -124,7 +132,5 @@ in {
     };
   };
 
-  users.users.${secrets.user.username}.linger = true;
-
-  virtualisation.libvirtd.enable = true;
+  systemd.sleep.settings.Sleep.HibernateDelaySec = "1h";
 }

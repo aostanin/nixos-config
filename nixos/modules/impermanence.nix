@@ -37,7 +37,9 @@ in {
       description = "Rollback ZFS root to blank snapshot";
       wantedBy = ["initrd.target"];
       requires = ["zfs-import-${pool}.service"];
-      after = ["zfs-import-${pool}.service"];
+      # Never roll back while resuming from hibernation (zfs-import isn't ordered
+      # against resume upstream); no-op when there's no resume device.
+      after = ["zfs-import-${pool}.service" "systemd-hibernate-resume.service"];
       before = ["sysroot.mount"];
       unitConfig.DefaultDependencies = false;
       serviceConfig.Type = "oneshot";
@@ -77,7 +79,20 @@ in {
         directories =
           [
             "/var/log"
+            "/var/lib/systemd/backlight"
+            "/var/lib/systemd/coredump"
+            "/var/lib/systemd/rfkill"
+            # Persistent=true timer stamps; without these every boot re-fires missed timers
+            "/var/lib/systemd/timers"
           ]
+          ++ lib.optional config.networking.networkmanager.enable "/var/lib/NetworkManager"
+          ++ lib.optional config.services.upower.enable "/var/lib/upower"
+          ++ lib.optional config.services.greetd.enable {
+            directory = "/var/cache/tuigreet";
+            user = "greeter";
+            group = "greeter";
+            mode = "0755";
+          }
           ++ lib.optional config.virtualisation.docker.enable "/var/lib/docker"
           ++ lib.optional config.virtualisation.podman.enable "/var/lib/containers"
           ++ lib.optional config.services.dnsmasq.enable "/var/lib/dnsmasq"

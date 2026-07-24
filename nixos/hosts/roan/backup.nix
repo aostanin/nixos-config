@@ -7,11 +7,8 @@
           name = "snap-frequent";
           type = "snap";
           filesystems = {
-            "rpool/appdata<" = true;
-            "rpool/home<" = true;
-            "rpool/root<" = true;
-            "rpool/virtualization<" = true;
-            "rpool/virtualization/docker<" = false;
+            "rpool/persist/safe<" = true;
+            "rpool/persist/home<" = true;
           };
           snapshotting = {
             type = "periodic";

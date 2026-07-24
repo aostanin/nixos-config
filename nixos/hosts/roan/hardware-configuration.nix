@@ -8,33 +8,19 @@
   modulesPath,
   ...
 }: {
-  imports = ["${modulesPath}/installer/scan/not-detected.nix"];
+  imports = [
+    "${modulesPath}/installer/scan/not-detected.nix"
+    ./disko-config.nix
+  ];
 
   boot.initrd.availableKernelModules = ["xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"];
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  fileSystems."/" = {
-    device = "rpool/root/nixos";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
+  disko.devices.disk.main.device = "/dev/disk/by-id/ata-Crucial_CT525MX300SSD1_164914EE8985";
 
-  fileSystems."/nix" = {
-    device = "rpool/root/nix";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/boot";
-    fsType = "vfat";
-  };
-
-  swapDevices = [
-    {device = "/dev/disk/by-label/swap";}
-  ];
+  disko.zfs.enable = true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }
