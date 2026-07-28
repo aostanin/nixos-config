@@ -55,12 +55,7 @@
       };
     };
 
-    adguardhome.enable = true;
-
-    coredns = {
-      enable = true;
-      upstreamDns = "127.0.0.1:5300";
-    };
+    coredns.enable = true;
   };
 
   # TailScale incorrectly detects resolved DNS mode and fails to set up MagicDNS.

@@ -283,11 +283,6 @@
       macAddress = secrets.network.home.hosts.elena.macAddress;
     };
 
-    ingress.adguard = {
-      port = 3000;
-      default.enable = true;
-    };
-
     pikvm = {
       enable = true;
       # USB serial prevents PC6 C-State, maxes at PC2

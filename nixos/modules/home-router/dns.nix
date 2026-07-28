@@ -11,7 +11,6 @@ in {
     localModules.coredns = {
       enable = lib.mkDefault true;
       enableLan = lib.mkDefault true;
-      upstreamDns = lib.mkDefault "127.0.0.1:5300";
       bindInterfaces = lib.mkDefault [
         "lo"
         "${lan.prefix}.1"
@@ -24,6 +23,5 @@ in {
         "${iot.prefix}.0/24"
       ];
     };
-    localModules.adguardhome.enable = lib.mkDefault true;
   };
 }

@@ -23,9 +23,26 @@ in {
 
     upstreamDns = lib.mkOption {
       type = lib.types.str;
+      default = "tls://${secrets.filteringDns.ipv4}%${secrets.filteringDns.hostname}";
       description = ''
-        DNS server to forward requests to.
+        Default upstream for the trusted (lan/tailscale) views — DoT to Mullvad
+        adblock (filtered + encrypted), from secrets. Any CoreDNS forward TO syntax.
       '';
+    };
+
+    allowlist = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = secrets.dnsAllowlist;
+      description = ''
+        Domains exempted from filtering — forwarded to allowlistUpstream instead
+        of the filtered upstream. Ports the AdGuard @@ user_rules to the LAN path.
+      '';
+    };
+
+    allowlistUpstream = lib.mkOption {
+      type = lib.types.str;
+      default = "tls://1.1.1.1%cloudflare-dns.com";
+      description = "Unfiltered upstream for allowlist domains.";
     };
 
     enableLan = lib.mkOption {
@@ -84,6 +101,13 @@ in {
       dom = lib.escapeRegex cfg.domain;
       bindLine = "bind ${lib.concatStringsSep " " cfg.bindInterfaces}";
 
+      # Per-domain forwards to an unfiltered upstream, exempting allowlist domains
+      # from the filtered default (more-specific zone wins).
+      allowlistForwards =
+        lib.concatMapStringsSep "\n  "
+        (d: "forward ${d} ${cfg.allowlistUpstream}")
+        cfg.allowlist;
+
       # localhost rides this host's identity (LAN if a LAN host, else tailscale).
       # Must match ::1 too — bind/glibc query the v6 loopback, which else fell
       # through to the public catch-all (Cloudflare tunnel IP).
@@ -111,6 +135,7 @@ in {
           }
           rewrite name regex (.*\.)?(.*)\.ts\.${dom} {2}.${tailnet} answer auto
           forward ${tailnet} 100.100.100.100
+          ${allowlistForwards}
           forward . ${cfg.upstreamDns}
           errors
           cache

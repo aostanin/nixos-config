@@ -167,11 +167,11 @@ in {
       })
     secrets.dnsAllowlist);
 
-  # Default resolver = Mullvad adblock (Tailscale auto-upgrades to DoH; .3 adblock / .4 base / .9 all).
+  # Default resolver = Mullvad adblock (Tailscale auto-upgrades to DoH). From secrets.
   resource.tailscale_dns_nameservers.default = {
     nameservers = [
-      "194.242.2.3"
-      "2a07:e340::3"
+      secrets.filteringDns.ipv4
+      secrets.filteringDns.ipv6
     ];
   };
 
