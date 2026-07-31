@@ -27,7 +27,9 @@ in {
       package = pkgs.llm-agents.claude-code;
       mcpServers = config.programs.mcp.servers;
       settings = {
+        model = "claude-opus-5";
         effortLevel = "xhigh";
+        tui = "fullscreen";
         permissions.defaultMode = "auto";
         skipAutoPermissionPrompt = true;
         agentPushNotifEnabled = true;
@@ -35,9 +37,11 @@ in {
         attribution = {
           commit = "";
           pr = "";
+          sessionUrl = false;
         };
         env = {
           ENABLE_CLAUDEAI_MCP_SERVERS = false;
+          DO_NOT_TRACK = "0";
         };
       };
     };
