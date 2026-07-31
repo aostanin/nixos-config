@@ -72,20 +72,22 @@ in {
     '';
 
     launchd.daemons.llama-cpp = {
+      command = lib.escapeShellArgs (
+        [
+          "${cfg.package}/bin/llama-server"
+          "--host"
+          cfg.host
+          "--port"
+          (toString cfg.port)
+        ]
+        ++ lib.optionals (cfg.model != null) ["-m" (toString cfg.model)]
+        ++ lib.optionals (cfg.modelsDir != null) ["--models-dir" (toString cfg.modelsDir)]
+        ++ lib.optionals (cfg.modelsPreset != null) ["--models-preset" "${modelsPresetFile}"]
+        ++ cfg.extraFlags
+      );
+
       serviceConfig = {
         Label = "org.nixos.llama-cpp";
-        ProgramArguments =
-          [
-            "${cfg.package}/bin/llama-server"
-            "--host"
-            cfg.host
-            "--port"
-            (toString cfg.port)
-          ]
-          ++ lib.optionals (cfg.model != null) ["-m" (toString cfg.model)]
-          ++ lib.optionals (cfg.modelsDir != null) ["--models-dir" (toString cfg.modelsDir)]
-          ++ lib.optionals (cfg.modelsPreset != null) ["--models-preset" "${modelsPresetFile}"]
-          ++ cfg.extraFlags;
         EnvironmentVariables = {
           LLAMA_CACHE = cacheDir;
         };
