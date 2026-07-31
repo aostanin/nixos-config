@@ -102,6 +102,8 @@ in {
       kernel.sysctl = {
         # Enable all SysRq keys
         "kernel.sysrq" = 1;
+        # Let unprivileged processes bind low ports
+        "net.ipv4.ip_unprivileged_port_start" = 0;
         # Don't filter bridge traffic
         # ref: https://wiki.libvirt.org/Net.bridge.bridge-nf-call_and_sysctl.conf.html
         "net.bridge.bridge-nf-call-arptables" = 0;
