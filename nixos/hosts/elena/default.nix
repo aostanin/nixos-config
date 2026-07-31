@@ -193,6 +193,7 @@
           devices = ["/dev/dri/renderD128"];
         };
 
+        domi.enable = true;
         martin.enable = true;
         valhalla = {
           enable = true;

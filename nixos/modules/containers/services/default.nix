@@ -8,6 +8,7 @@
     ./changedetection.nix
     ./comfyui.nix
     ./dawarich.nix
+    ./domi.nix
     ./forgejo.nix
     ./frigate.nix
     ./grafana.nix
