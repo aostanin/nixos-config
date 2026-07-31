@@ -40,7 +40,7 @@
       };
     };
     zfs = {
-      extraPools = ["tank" "vmpool"];
+      extraPools = ["tank"];
       requestEncryptionCredentials = false;
     };
     tmp.useTmpfs = true;

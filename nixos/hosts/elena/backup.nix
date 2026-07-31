@@ -42,9 +42,15 @@
             "rpool/home<" = true;
             "rpool/personal<" = true;
             "rpool/root<" = true;
+            "rpool/root/nix<" = false;
             "rpool/virtualization<" = true;
-            "rpool/virtualization/docker<" = false;
-            "vmpool/virtualization<" = true;
+            # Podman's storage: container overlays and anonymous volumes,
+            # all of it rebuildable — every service's real state is bind-mounted
+            # under /storage/appdata instead. Was excluded as ".../docker" until
+            # the podman migration renamed the dataset, since when hourly
+            # snapshots have been pinning transient build layers (22.5G of them,
+            # and an ENOSPC in CI).
+            "rpool/virtualization/containers<" = false;
           };
           snapshotting = {
             type = "cron";
@@ -116,8 +122,13 @@
             "rpool/root<" = true;
             "rpool/root/nix<" = false;
             "rpool/virtualization<" = true;
-            "rpool/virtualization/docker<" = false;
-            "vmpool/virtualization<" = true;
+            # Podman's storage: container overlays and anonymous volumes,
+            # all of it rebuildable — every service's real state is bind-mounted
+            # under /storage/appdata instead. Was excluded as ".../docker" until
+            # the podman migration renamed the dataset, since when hourly
+            # snapshots have been pinning transient build layers (22.5G of them,
+            # and an ENOSPC in CI).
+            "rpool/virtualization/containers<" = false;
           };
           snapshotting.type = "manual";
           pruning = {

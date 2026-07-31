@@ -43,7 +43,7 @@ in {
             name = "default";
             uuid = "deb4d829-6f23-472b-a6cc-587879a064a2";
             target = {
-              path = "/var/lib/libvirt/images/vmpool/default";
+              path = "/var/lib/libvirt/images/tank/default";
               permissions = {
                 mode.octal = "0755";
                 owner.uid = 0;
@@ -59,7 +59,7 @@ in {
             name = "isos";
             uuid = "7f86cd4e-59d2-475a-b0f9-994bd3c64281";
             target = {
-              path = "/var/lib/libvirt/images/vmpool/isos";
+              path = "/var/lib/libvirt/images/tank/isos";
               permissions = {
                 mode.octal = "0755";
                 owner.uid = 0;

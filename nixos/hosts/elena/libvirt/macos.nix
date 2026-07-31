@@ -34,11 +34,11 @@
     loader = {
       readonly = true;
       type = "pflash";
-      path = "/var/lib/libvirt/images/vmpool/macOS/OVMF_CODE.fd";
+      path = "/var/lib/libvirt/images/tank/macOS/OVMF_CODE.fd";
     };
     nvram = {
       format = "raw";
-      path = "/var/lib/libvirt/images/vmpool/macOS/OVMF_VARS-1920x1080.fd";
+      path = "/var/lib/libvirt/images/tank/macOS/OVMF_VARS-1920x1080.fd";
     };
   };
 
@@ -86,7 +86,7 @@
           type = "qcow2";
           cache = "writeback";
         };
-        source.file = "/var/lib/libvirt/images/vmpool/macOS/OpenCore/OpenCore.qcow2";
+        source.file = "/var/lib/libvirt/images/tank/macOS/OpenCore/OpenCore.qcow2";
         target = {
           dev = "sda";
           bus = "sata";
@@ -102,7 +102,7 @@
           cache = "writeback";
           iothread = 1;
         };
-        source.file = "/var/lib/libvirt/images/vmpool/macOS/mac_hdd_ng.img";
+        source.file = "/var/lib/libvirt/images/tank/macOS/mac_hdd_ng.img";
         target = {
           dev = "vdb";
           bus = "virtio";
