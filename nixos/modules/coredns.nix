@@ -112,8 +112,11 @@ in {
       # Must match ::1 too — bind/glibc query the v6 loopback, which else fell
       # through to the public catch-all (Cloudflare tunnel IP).
       loopback = "incidr(client_ip(), '127.0.0.0/8') || incidr(client_ip(), '::1/128')";
+      # Tailscale's v4 CGNAT range plus its fixed v6 ULA prefix — coredns binds
+      # tailscale0's v6 address too, and a v6-sourced query matched no view, so
+      # it fell through to the public catch-all (Cloudflare tunnel IP).
       tsExpr =
-        "incidr(client_ip(), '100.64.0.0/10')"
+        "incidr(client_ip(), '100.64.0.0/10') || incidr(client_ip(), 'fd7a:115c:a1e0::/48')"
         + lib.optionalString (!cfg.enableLan) " || ${loopback}";
       lanExpr = "incidr(client_ip(), '${lan.prefix}.0/24') || ${loopback}";
       untrustedExpr =
