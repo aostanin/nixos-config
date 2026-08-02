@@ -3,6 +3,7 @@
   config,
   lib,
   localLib,
+  secrets,
   ...
 }: let
   cfg = config.localModules."ai";
@@ -26,6 +27,7 @@ in {
       enable = true;
       package = pkgs.llm-agents.claude-code;
       mcpServers = config.programs.mcp.servers;
+      inherit (secrets.claude-code) rules;
       settings = {
         model = "claude-opus-5";
         effortLevel = "xhigh";
