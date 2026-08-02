@@ -35,6 +35,11 @@
           # Privacy
           "privacy.query_stripping.enabled" = true;
 
+          # ECH sends cloudflare-ech.com as the outer SNI, which internal Traefik
+          # has no cert for — it answers with its self-signed default and Firefox
+          # fails with MOZILLA_PKIX_ERROR_SELF_SIGNED_CERT on split-horizon names.
+          "network.dns.echconfig.enabled" = false;
+
           # Performance
           "layers.acceleration.force-enabled" = true;
           "gfx.webrender.all" = true;
