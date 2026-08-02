@@ -22,7 +22,7 @@
   };
 
   fileSystems."/boot2" = {
-    device = "/dev/disk/by-uuid/3B7B-1CCB";
+    device = "/dev/disk/by-uuid/5A1C-CB4B";
     fsType = "vfat";
     options = ["nofail"];
   };
@@ -45,7 +45,7 @@
       options = ["nofail"];
     }
     {
-      device = "/dev/disk/by-uuid/753cf088-a1cd-4f6e-984c-b34cd3f36f4a";
+      device = "/dev/disk/by-uuid/be604aa1-8ae2-4fad-a0b7-3e1bae2259ae";
       options = ["nofail"];
     }
   ];
