@@ -108,7 +108,7 @@
           name = "qemu";
           type = "raw";
         };
-        source.file = "/var/lib/libvirt/images/rpool/win11/win11.img";
+        source.file = "/var/lib/libvirt/images/win11/win11.img";
         target = {
           dev = "vda";
           bus = "virtio";
@@ -193,6 +193,6 @@
 
   qemu-commandline.arg = [
     {value = "-acpitable";}
-    {value = "file=/var/lib/libvirt/images/rpool/win11/msdm.bin";}
+    {value = "file=/var/lib/libvirt/images/win11/msdm.bin";}
   ];
 }

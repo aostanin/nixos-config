@@ -72,7 +72,7 @@ in {
             name = "isos";
             uuid = "a6c87b95-6e9d-45ba-9bc6-282541b16427";
             target = {
-              path = "/var/lib/libvirt/images/rpool/isos";
+              path = "/var/lib/libvirt/images/isos";
               permissions = {
                 mode.octal = "0755";
                 owner.uid = 1000;
@@ -97,7 +97,7 @@ in {
             name = "win11";
             uuid = "4f4eaef1-11f0-4ad8-87ee-25c84e4bdb95";
             target = {
-              path = "/var/lib/libvirt/images/rpool/win11";
+              path = "/var/lib/libvirt/images/win11";
               permissions = {
                 mode.octal = "0755";
                 owner.uid = 0;

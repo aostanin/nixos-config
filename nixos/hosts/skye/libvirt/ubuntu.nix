@@ -74,7 +74,7 @@
           name = "qemu";
           type = "raw";
         };
-        source.file = "/var/lib/libvirt/images/rpool/ubuntu/ubuntu.img";
+        source.file = "/var/lib/libvirt/images/ubuntu/ubuntu.img";
         target = {
           dev = "vda";
           bus = "virtio";
