@@ -99,6 +99,8 @@
       enableGaming = true;
     };
 
+    impermanence.enable = true;
+
     networkmanager.enable = true;
 
     nvtop.package = pkgs.nvtopPackages.amd;

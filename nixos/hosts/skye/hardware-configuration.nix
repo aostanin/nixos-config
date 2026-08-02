@@ -8,33 +8,19 @@
   modulesPath,
   ...
 }: {
-  imports = ["${modulesPath}/installer/scan/not-detected.nix"];
+  imports = [
+    "${modulesPath}/installer/scan/not-detected.nix"
+    ./disko-config.nix
+  ];
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "thunderbolt"];
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
 
-  fileSystems."/" = {
-    device = "rpool/root/nixos";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
-
-  fileSystems."/nix" = {
-    device = "rpool/root/nix";
-    fsType = "zfs";
-    options = ["zfsutil" "noatime" "X-mount.mkdir"];
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/9B28-A430";
-    fsType = "vfat";
-  };
-
-  swapDevices = [
-    {device = "/dev/disk/by-uuid/b8245504-abdf-44e5-9ed1-ba8c229403c4";}
-  ];
+  # Partition layout, rpool, and fileSystems/swap come from disko-config.nix.
+  disko.devices.disk.main.device = "/dev/disk/by-id/nvme-Sabrent_Rocket_4.0_1TB_03F10701024401204377";
+  disko.zfs.enable = true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }
