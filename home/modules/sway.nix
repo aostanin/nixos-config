@@ -422,6 +422,10 @@ in {
 
       swayidle = {
         enable = lib.mkDefault true;
+        events = {
+          # -f so swaylock daemonizes once locked, releasing swayidle's sleep inhibitor.
+          before-sleep = "${lib.getExe' pkgs.procps "pgrep"} -x swaylock || ${lib.getExe config.programs.swaylock.package} -f";
+        };
         timeouts = [
           {
             timeout = 300;
