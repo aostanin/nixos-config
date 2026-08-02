@@ -137,6 +137,13 @@ in {
             fallthrough
           }
           rewrite name regex (.*\.)?(.*)\.ts\.${dom} {2}.${tailnet} answer auto
+          # These names resolve to the internal Traefik, which can't do ECH. The
+          # hosts plugin falls through on type 65, so the public HTTPS record
+          # (ech=, public_name cloudflare-ech.com) would reach internal clients
+          # and Firefox then fails the handshake against TRAEFIK DEFAULT CERT.
+          template ANY HTTPS ${cfg.domain} {
+            rcode NOERROR
+          }
           forward ${tailnet} 100.100.100.100
           ${allowlistForwards}
           forward . ${cfg.upstreamDns}
