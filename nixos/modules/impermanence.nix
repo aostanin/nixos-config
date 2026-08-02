@@ -60,19 +60,27 @@ in {
           ]
           ++ lib.optional config.hardware.bluetooth.enable "/var/lib/bluetooth"
           ++ lib.optional config.networking.networkmanager.enable "/etc/NetworkManager/system-connections"
+          ++ lib.optional config.networking.wireless.iwd.enable "/var/lib/iwd"
           ++ lib.optional config.services.tailscale.enable "/var/lib/tailscale"
           ++ lib.optional config.services.traefik.enable config.services.traefik.dataDir
           ++ lib.optionals config.virtualisation.libvirtd.enable [
             "/var/lib/libvirt"
             "/var/lib/libvirt/images"
-          ];
-        files = [
-          "/etc/machine-id"
-          "/etc/ssh/ssh_host_ed25519_key"
-          "/etc/ssh/ssh_host_ed25519_key.pub"
-          "/etc/ssh/ssh_host_rsa_key"
-          "/etc/ssh/ssh_host_rsa_key.pub"
-        ];
+          ]
+          ++ lib.optional config.virtualisation.libvirtd.qemu.swtpm.enable "/var/lib/swtpm-localca"
+          ++ lib.optional config.virtualisation.waydroid.enable "/var/lib/waydroid";
+        files =
+          [
+            "/etc/machine-id"
+            "/etc/ssh/ssh_host_ed25519_key"
+            "/etc/ssh/ssh_host_ed25519_key.pub"
+            "/etc/ssh/ssh_host_rsa_key"
+            "/etc/ssh/ssh_host_rsa_key.pub"
+          ]
+          # systemd host key for LoadCredentialEncrypted (e.g. libvirtd's
+          # secrets-encryption-key); lost on rollback → the service fails to
+          # start every boot unless this persists.
+          ++ lib.optional config.virtualisation.libvirtd.enable "/var/lib/systemd/credential.secret";
       };
       ${cfg.cacheRoot} = {
         hideMounts = true;
@@ -87,6 +95,8 @@ in {
           ]
           ++ lib.optional config.networking.networkmanager.enable "/var/lib/NetworkManager"
           ++ lib.optional config.services.upower.enable "/var/lib/upower"
+          ++ lib.optional config.services.printing.enable "/var/lib/cups"
+          ++ lib.optional config.services.fprintd.enable "/var/lib/fprint"
           ++ lib.optional config.services.greetd.enable {
             directory = "/var/cache/tuigreet";
             user = "greeter";

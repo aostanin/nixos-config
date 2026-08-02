@@ -75,16 +75,14 @@
     linux-wifi-hotspot
   ];
 
+  environment.persistence."/persist/safe".directories = ["/storage/appdata"];
+
   localModules = {
     backup = {
       enable = true;
       paths = [
         "/home"
-        # "/storage/appdata"
-        "/var/lib/libvirt"
-        "/var/lib/nixos"
-        "/var/lib/tailscale"
-        "/var/lib/traefik"
+        "/persist/safe"
       ];
       exclude = [
         "/home/*/.local/share/containers"
