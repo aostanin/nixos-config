@@ -9,8 +9,17 @@
   config = lib.mkIf config.localModules.home-router.enable {
     services.chrony = {
       enable = true;
+      # Hosts without a working RTC (pikvm) would otherwise boot with a weeks-old
+      # clock; restore it from the driftfile mtime before the network comes up.
+      extraFlags = ["-s"];
       extraConfig =
-        lib.concatMapStringsSep "\n"
+        ''
+          # IP literals, because DNS forwards over DoT and DoT needs a valid clock:
+          # hostname-only sources deadlock an RTC-less host after every reboot.
+          server 133.243.238.163 iburst
+          server 162.159.200.123 iburst
+        ''
+        + lib.concatMapStringsSep "\n"
         (n: "allow ${n.prefix}.0/24")
         (lib.attrValues secrets.network.networks);
     };
