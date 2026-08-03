@@ -7,6 +7,7 @@
     ./calibre-web.nix
     ./changedetection.nix
     ./comfyui.nix
+    ./daikin-cleaner-mqtt.nix
     ./dawarich.nix
     ./domi.nix
     ./forgejo.nix

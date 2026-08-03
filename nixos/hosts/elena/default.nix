@@ -237,6 +237,7 @@
             "/dev/dri/renderD128"
           ];
         };
+        daikin-cleaner-mqtt.enable = true;
         home-assistant.enable = true;
         ir-mqtt-bridge.enable = true;
         mosquitto.enable = true;
