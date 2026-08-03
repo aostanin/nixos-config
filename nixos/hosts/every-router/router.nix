@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  secrets,
+  ...
+}: {
   networking.nftables = {
     enable = true;
     ruleset = ''
@@ -48,6 +52,8 @@
       ];
       no-resolv = true;
       server = [
+        "/${secrets.domain}/100.100.100.100"
+        "/ts.net/100.100.100.100"
         "1.1.1.1"
         "1.0.0.1"
         "8.8.8.8"
