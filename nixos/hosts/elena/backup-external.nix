@@ -59,6 +59,10 @@
 in {
   sops.secrets."home-assistant/token" = {};
 
+  # The JMS551 bridges wedge under sustained UAS load (bridge stops answering
+  # even SMART, 30s reset loop); u = IGNORE_UAS falls back to BOT
+  boot.kernelParams = ["usb-storage.quirks=152d:0561:u"];
+
   systemd = {
     timers.backup-external = {
       wantedBy = ["timers.target"];
