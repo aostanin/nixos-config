@@ -38,13 +38,15 @@ in {
         "wind_v_component_10m"
         "wind_gusts_10m"
         "shortwave_radiation"
+        "weather_code"
       ];
       description = ''
         Raw model variables to download; the API derives the rest at query time
         (wind_speed/direction from u/v, apparent_temperature from
         temp/humidity/wind/radiation). Availability is per-model — the sync
-        silently skips a variable a model doesn't publish (e.g. dwd_icon has no
-        shortwave_radiation/snowfall, so weather_code stays null for it).
+        silently skips a variable a model doesn't publish, and the API then
+        serves it as null, which is indistinguishable from calm weather. Check a
+        newly added variable came back non-null before relying on it.
       '';
     };
 
