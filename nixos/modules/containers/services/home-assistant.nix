@@ -27,10 +27,6 @@ in {
       stopTimeout = 60;
     };
 
-    localModules.ingress.home = {
-      port = 8123;
-      default.enable = true;
-      trusted.enable = false;
-    };
+    localModules.ingress.home.port = 8123;
   };
 }
