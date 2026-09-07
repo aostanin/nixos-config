@@ -29,6 +29,8 @@
     };
 
     gaming.enable = true;
+
+    vdirsyncer.enable = true;
   };
 
   home.packages = with pkgs; [

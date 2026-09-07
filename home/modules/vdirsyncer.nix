@@ -13,6 +13,9 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    # oama encrypts its token store with GPG.
+    localModules.gnupg.enable = true;
+
     sops.secrets = {
       "google/client_id" = {};
       "google/client_secret" = {};
