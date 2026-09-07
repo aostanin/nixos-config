@@ -33,6 +33,7 @@ in {
       enable = true;
       dockerCompat = true;
       dockerSocket.enable = true;
+      defaultNetwork.settings.dns_enabled = true;
       autoPrune = lib.mkIf cfg.enableAutoPrune {
         enable = true;
         flags = [

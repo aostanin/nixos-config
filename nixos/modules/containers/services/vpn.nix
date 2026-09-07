@@ -62,7 +62,11 @@ in {
       TS_EXTRA_ARGS=--exit-node=${config.sops.placeholder."containers/vpn/exit_node"} --exit-node-allow-lan-access=false --accept-routes=false --advertise-tags=tag:mullvad
     '';
 
+    # aardvark would resolve from the host, taking DNS off the exit node.
+    localModules.containers.networks.${name}.dnsEnabled = false;
+
     localModules.containers.containers.${name} = {
+      networks = [name];
       raw.image = "docker.io/tailscale/tailscale:latest";
       raw.environment = {
         TS_ACCEPT_DNS = "false";

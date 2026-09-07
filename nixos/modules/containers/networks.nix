@@ -15,6 +15,16 @@
           Network driver.
         '';
       };
+
+      dnsEnabled = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = ''
+          Resolve names via aardvark. Disable to leave resolv.conf pointing at
+          the container's own `--dns` servers, so lookups egress from its
+          netns rather than the host's.
+        '';
+      };
     };
   };
 in {
@@ -38,7 +48,7 @@ in {
             "RequiresMountsFor" = "%t/containers";
           };
           wantedBy = ["multi-user.target"];
-          script = "${lib.getExe pkgs.podman} network create --ignore --driver=${opts.driver} ${name}";
+          script = "${lib.getExe pkgs.podman} network create --ignore --driver=${opts.driver} ${lib.optionalString (!opts.dnsEnabled) "--disable-dns "}${name}";
         };
       })
       cfg));
