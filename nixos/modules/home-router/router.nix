@@ -109,6 +109,12 @@ in {
       '';
     };
 
+    services.avahi = {
+      enable = true;
+      nssmdns4 = true;
+      allowInterfaces = ["br-lan"];
+    };
+
     services.resolved.enable = false;
 
     # Proxy NDP the ISP /64 so LAN clients (SLAAC'd from it) are reachable

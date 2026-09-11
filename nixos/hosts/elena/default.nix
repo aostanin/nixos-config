@@ -272,11 +272,6 @@
       };
     };
 
-    desktop = {
-      enable = true;
-      enableGaming = true;
-    };
-
     forgejo-runner.enable = true;
 
     home-router = {
@@ -323,11 +318,6 @@
 
   services = {
     logind.settings.Login.HandlePowerKey = "suspend";
-
-    sunshine = {
-      enable = true;
-      capSysAdmin = true;
-    };
 
     udev.packages = with pkgs; [openrgb];
 
