@@ -9,24 +9,10 @@
 
     desktop.enable = true;
 
-    sway = {
-      primaryOutput = "HDMI-A-1";
-      output = {
-        "*" = {
-          disable = "";
-        };
-        # "DP-1" = {
-        #   enable = "";
-        #   mode = "3440x1440";
-        #   position = "0 0";
-        # };
-        "HDMI-A-1" = {
-          enable = "";
-          mode = "1920x1080";
-          position = "0 0";
-        };
-      };
-    };
+    niri.extraDebug = ''
+      render-drm-device "/dev/dri/by-path/pci-0000:00:02.0-render"
+      ignore-drm-device "/dev/dri/by-path/pci-0000:01:00.0-card"
+    '';
 
     gaming.enable = true;
 
@@ -35,6 +21,21 @@
 
   home.packages = with pkgs; [
     beets
+  ];
+
+  services.kanshi.settings = [
+    {
+      profile.name = "default";
+      profile.outputs = [
+        {
+          criteria = "HDMI-A-1";
+          status = "enable";
+          scale = 1.0;
+          mode = "1920x1080";
+          position = "0,0";
+        }
+      ];
+    }
   ];
 
   xdg.configFile."looking-glass/client.ini".text = lib.generators.toINI {} {

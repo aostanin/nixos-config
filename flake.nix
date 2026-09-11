@@ -52,6 +52,8 @@
       flake = false;
     };
     nixvim.url = "github:nix-community/nixvim/nixos-26.05";
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
+    noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
     nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
     kvmd.url = "github:aostanin/kvmd.nix";
     terranix.url = "github:terranix/terranix";

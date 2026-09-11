@@ -2,6 +2,8 @@
   lib,
   pkgs,
   config,
+  inputs,
+  theme,
   ...
 }: let
   cfg = config.localModules.desktop;
@@ -14,14 +16,6 @@ in {
       type = lib.types.bool;
       description = ''
         Add gaming packages.
-      '';
-    };
-
-    preStartCommands = lib.mkOption {
-      type = lib.types.lines;
-      default = "";
-      description = ''
-        Commands to run before starting the desktop.
       '';
     };
   };
@@ -56,8 +50,6 @@ in {
         nssmdns4 = true;
         openFirewall = true;
       };
-
-      blueman.enable = true;
 
       gnome.gnome-keyring.enable = true;
 
@@ -116,28 +108,31 @@ in {
         ];
       };
 
+      tumbler.enable = true;
+
       udisks2.enable = true;
 
       upower.enable = true;
     };
 
-    services.greetd = {
+    programs.niri = {
+      enable = true;
+      useNautilus = false;
+    };
+
+    programs.noctalia-greeter = {
       enable = true;
       settings = {
-        default_session = let
-          startSway = pkgs.writeScriptBin "start-sway" ''
-            ${cfg.preStartCommands}
-            sway --unsupported-gpu
-          '';
-        in {
-          command = ''
-            ${lib.getExe pkgs.tuigreet} \
-              --time \
-              --asterisks \
-              --remember \
-              --user-menu \
-              --cmd ${lib.getExe startSway}
-          '';
+        session.default = "niri";
+        output.scale = 1.0;
+        appearance = {
+          scheme = "Synced";
+          theme_mode = "dark";
+          palette = theme.palettes.gruvboxDark;
+          wallpaper = {
+            path = theme.wallpaper;
+            fill_mode = "crop";
+          };
         };
       };
     };
@@ -175,19 +170,6 @@ in {
 
     xdg.portal = {
       enable = true;
-      config.sway = {
-        default = ["gtk"];
-        "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-        "org.freedesktop.impl.portal.Screenshot" = "wlr";
-        "org.freedesktop.impl.portal.Inhibit" = "none";
-      };
-      wlr = {
-        enable = true;
-        settings.screencast = {
-          exec_before = "${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} --inhibitor-add xdg-desktop-portal-wlr";
-          exec_after = "${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} --inhibitor-remove xdg-desktop-portal-wlr";
-        };
-      };
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
       ];
@@ -223,9 +205,18 @@ in {
 
     programs = {
       dconf.enable = true;
-    };
 
-    security.pam.services.swaylock = {};
+      thunar = {
+        enable = true;
+        plugins = [
+          pkgs.thunar-archive-plugin
+          pkgs.thunar-volman
+        ];
+      };
+
+      # Thunar keeps its settings in xfconf; without it they do not persist.
+      xfconf.enable = true;
+    };
 
     virtualisation.spiceUSBRedirection.enable = true;
 

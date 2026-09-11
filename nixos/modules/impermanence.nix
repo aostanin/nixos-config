@@ -97,11 +97,11 @@ in {
           ++ lib.optional config.services.upower.enable "/var/lib/upower"
           ++ lib.optional config.services.printing.enable "/var/lib/cups"
           ++ lib.optional config.services.fprintd.enable "/var/lib/fprint"
-          ++ lib.optional config.services.greetd.enable {
-            directory = "/var/cache/tuigreet";
+          ++ lib.optional config.programs.noctalia-greeter.enable {
+            directory = "/var/lib/noctalia-greeter";
             user = "greeter";
             group = "greeter";
-            mode = "0755";
+            mode = "0750";
           }
           ++ lib.optional config.virtualisation.docker.enable "/var/lib/docker"
           ++ lib.optional config.virtualisation.podman.enable "/var/lib/containers"

@@ -58,6 +58,10 @@
     hostId = "fc172604";
   };
 
+  # Pin EGL to mesa: the NVIDIA card is bound to vfio for win10-play, and its
+  # glvnd vendor file would otherwise be a candidate for the compositor.
+  environment.sessionVariables.__EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json";
+
   localModules = {
     common.enable = true;
 
@@ -271,10 +275,6 @@
     desktop = {
       enable = true;
       enableGaming = true;
-      preStartCommands = ''
-        export WLR_DRM_DEVICES=$(readlink -f /dev/dri/by-path/pci-0000:00:02.0-card)
-        export __EGL_VENDOR_LIBRARY_FILENAMES=/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json
-      '';
     };
 
     forgejo-runner.enable = true;

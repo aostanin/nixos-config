@@ -25,10 +25,10 @@ in {
       obs-studio.enable = lib.mkDefault true;
       polkit.enable = lib.mkDefault true;
       qt.enable = lib.mkDefault true;
-      sway.enable = lib.mkDefault true;
       syncthing.enable = lib.mkDefault true;
       video.enable = lib.mkDefault true;
       vscode.enable = lib.mkDefault true;
+      wayland.enable = lib.mkDefault true;
     };
 
     home = {
@@ -37,7 +37,6 @@ in {
           # GUI
           audacity
           bitwarden-desktop
-          cosmic-files
           feishin
           filezilla
           gimp
@@ -81,10 +80,6 @@ in {
       };
     };
 
-    services = {
-      blueman-applet.enable = true;
-
-      mpris-proxy.enable = true;
-    };
+    services.mpris-proxy.enable = true;
   };
 }

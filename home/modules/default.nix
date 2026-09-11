@@ -24,11 +24,12 @@
     ./karabiner-elements.nix
     ./mpd.nix
     ./neovim.nix
+    ./niri.nix
+    ./noctalia.nix
     ./obs-studio.nix
     ./polkit.nix
     ./qt.nix
     ./ssh.nix
-    ./sway.nix
     ./syncthing.nix
     ./television.nix
     ./tmux.nix
@@ -36,6 +37,7 @@
     ./vdirsyncer.nix
     ./video.nix
     ./vscode.nix
+    ./wayland.nix
     ./zellij.nix
     ./zsh.nix
   ];

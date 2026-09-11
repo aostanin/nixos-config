@@ -42,10 +42,12 @@
           ./hosts/${hostname}
           inputs.sops-nix.homeModules.sops
           inputs.nixvim.homeModules.nixvim
+          inputs.noctalia.homeModules.default
         ];
         extraSpecialArgs = {
           inherit inputs nixpkgsConfig secrets sopsFiles;
           localLib = import ../lib {inherit lib pkgs;};
+          theme = import ../theme {inherit inputs pkgs;};
         };
       };
   in {

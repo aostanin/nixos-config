@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  theme,
   ...
 }: let
   cfg = config.localModules.gtk;
@@ -33,15 +34,12 @@ in {
       GTK_THEME = "Adwaita:dark";
     };
 
-    home.pointerCursor = rec {
-      name = "phinger-cursors-dark";
-      package = pkgs.phinger-cursors;
-      size = 24;
+    home.pointerCursor = {
+      inherit (theme.cursor) name package size;
       gtk.enable = true;
-      sway.enable = lib.mkDefault config.wayland.windowManager.sway.enable;
       x11 = {
         enable = true;
-        defaultCursor = name;
+        defaultCursor = theme.cursor.name;
       };
     };
   };

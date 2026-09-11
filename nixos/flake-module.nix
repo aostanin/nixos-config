@@ -21,11 +21,15 @@
         inherit lib;
         pkgs = mkPkgs system;
       };
+      theme = import ../theme {
+        inherit inputs;
+        pkgs = mkPkgs system;
+      };
     in
       lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs nixpkgsConfig secrets sopsFiles localLib self;
+          inherit inputs nixpkgsConfig secrets sopsFiles localLib theme self;
         };
         modules =
           [
@@ -54,6 +58,7 @@
                 age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key" "/persist/etc/ssh/ssh_host_ed25519_key" "/persist/safe/etc/ssh/ssh_host_ed25519_key"];
               };
             }
+            inputs.noctalia-greeter.nixosModules.default
             sops-nix.nixosModules.sops
             disko.nixosModules.disko
             disko-zfs.nixosModules.default
