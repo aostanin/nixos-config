@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  inputs,
   localLib,
   ...
 }: let
@@ -59,7 +58,7 @@ in {
           slack
 
           # AI
-          inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-fhs
+          llm-agents.claude-desktop
         ]
         ++ (with kdePackages; [
           # Plasma

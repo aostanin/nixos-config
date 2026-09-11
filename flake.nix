@@ -57,10 +57,6 @@
     nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
     kvmd.url = "github:aostanin/kvmd.nix";
     terranix.url = "github:terranix/terranix";
-    claude-desktop = {
-      url = "github:aaddrick/claude-desktop-debian";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     llm-agents.url = "github:numtide/llm-agents.nix";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
