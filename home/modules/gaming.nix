@@ -22,6 +22,7 @@ in {
       # Emulators
       cemu
       dolphin-emu
+      eden
       retroarch # TODO: Add cores?
       rpcs3
       ryubing
