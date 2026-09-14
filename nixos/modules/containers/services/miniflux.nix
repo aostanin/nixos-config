@@ -56,7 +56,7 @@ in {
         destination = "/var/lib/postgresql/data";
       };
       healthcheck = {
-        cmd = "pg_isready -U miniflux";
+        cmd = "pg_isready -U postgres -d miniflux";
         interval = "10s";
         startPeriod = "30s";
       };
