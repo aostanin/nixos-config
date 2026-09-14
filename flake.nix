@@ -101,6 +101,8 @@
         additionalModules = [
           inputs.kvmd.nixosModules.kvmd
           inputs.kvmd.nixosModules.v2-hdmi-rpi4
+          inputs.kvmd.inputs.nixos-raspberrypi.lib.inject-overlays
+          {_module.args.nixos-raspberrypi = inputs.kvmd.inputs.nixos-raspberrypi;}
         ];
       };
       roan = {system = "x86_64-linux";};

@@ -2,7 +2,6 @@
   pkgs,
   lib,
   secrets,
-  inputs,
   ...
 }: {
   imports = [
@@ -12,9 +11,6 @@
   ];
 
   networking.hostName = "pikvm";
-
-  # Reuse the RPi kernel kvmd.nix's CI builds and caches
-  boot.kernelPackages = lib.mkForce inputs.kvmd.nixosConfigurations.v2-hdmi-rpi4.config.boot.kernelPackages;
 
   localModules = {
     traefik.enable = true;
