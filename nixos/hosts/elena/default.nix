@@ -83,11 +83,8 @@
       in {
         open-webui.enable = true;
 
-        speaches = {
-          enable = true;
-          # Not enough VRAM
-          enableNvidia = false;
-        };
+        kokoro-fastapi.enable = true;
+        whisper-cpp.enable = true;
 
         grist.enable = true;
 

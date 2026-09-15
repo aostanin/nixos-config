@@ -45,6 +45,7 @@
     ./nzbget.nix
     ./ollama.nix
     ./open-webui.nix
+    ./kokoro-fastapi.nix
     ./openedai-speech.nix
     ./openwakeword.nix
     ./open-meteo.nix
@@ -58,7 +59,7 @@
     ./scrutiny.nix
     ./searxng.nix
     ./sonarr.nix
-    ./speaches.nix
+    ./whisper-cpp.nix
     ./stable-diffusion.nix
     ./stalwart.nix
     ./syncthing.nix

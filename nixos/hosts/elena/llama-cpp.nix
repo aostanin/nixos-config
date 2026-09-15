@@ -42,49 +42,32 @@
         metrics = "true";
       };
 
-      "unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_M" = {
-        hf-repo = "unsloth/Qwen3.6-35B-A3B-MTP-GGUF";
-        hf-file = "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf";
-        cache-type-k = "q8_0";
-        cache-type-v = "q8_0";
-        ctx-size = "65536";
-        n-gpu-layers = "999";
-        n-cpu-moe = "33";
-        spec-type = "draft-mtp";
-        spec-draft-n-max = "2";
-        spec-draft-ngl = "0";
-        temp = "0.6";
-        top-p = "0.95";
-        top-k = "20";
-      };
-
-      "unsloth/Qwen3.6-27B-GGUF:Q4_K_XL" = {
-        hf-repo = "unsloth/Qwen3.6-27B-GGUF";
-        hf-file = "Qwen3.6-27B-UD-Q4_K_XL.gguf";
+      "unsloth/Qwen3.8-27B-GGUF:Q4_K_XL" = {
+        hf-repo = "unsloth/Qwen3.8-27B-GGUF";
+        hf-file = "Qwen3.8-27B-UD-Q4_K_XL.gguf";
         cache-type-k = "q8_0";
         cache-type-v = "q8_0";
         ctx-size = "65536";
         n-gpu-layers = "18";
+        spec-type = "draft-mtp";
+        spec-draft-n-max = "2";
+        spec-draft-ngl = "0";
         temp = "0.6";
         top-p = "0.95";
         top-k = "20";
       };
 
-      "unsloth/gemma-4-E4B-it-GGUF:Q6_K_XL" = {
-        hf-repo = "unsloth/gemma-4-E4B-it-GGUF";
-        hf-file = "gemma-4-E4B-it-UD-Q6_K_XL.gguf";
+      "ornith-ai/Ornith-1.5-9B-GGUF:Q4_K_M" = {
+        hf-repo = "ornith-ai/Ornith-1.5-9B-GGUF";
+        hf-file = "Ornith-1.5-9B-Q4_K_M.gguf";
         load-on-startup = "true"; # ha-assist: preload; router keeps it until another model evicts it (models-max=1)
         cache-type-k = "q8_0";
         cache-type-v = "q8_0";
-        ctx-size = "65536";
+        ctx-size = "16384";
         n-gpu-layers = "999";
-        mmproj-offload = "true";
-        temp = "1.0";
+        temp = "0.6";
         top-p = "0.95";
-        top-k = "64";
-        spec-type = "draft-mtp";
-        spec-draft-n-max = "2";
-        spec-draft-ngl = "0";
+        top-k = "20";
       };
     };
   };
