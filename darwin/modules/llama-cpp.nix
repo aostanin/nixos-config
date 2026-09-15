@@ -14,6 +14,30 @@
     if cfg.modelsPreset != null
     then pkgs.writeText "llama-models.ini" (lib.generators.toINI {} cfg.modelsPreset)
     else null;
+
+  serverArgs =
+    [
+      "${cfg.package}/bin/llama-server"
+      "--host"
+      cfg.host
+      "--port"
+      (toString cfg.port)
+    ]
+    ++ lib.optionals (cfg.model != null) ["-m" (toString cfg.model)]
+    ++ lib.optionals (cfg.modelsDir != null) ["--models-dir" (toString cfg.modelsDir)]
+    ++ lib.optionals (cfg.modelsPreset != null) ["--models-preset" "${modelsPresetFile}"]
+    ++ cfg.extraFlags;
+
+  # Read HF_TOKEN from a file at launch: a launchd EnvironmentVariables entry
+  # would bake the secret into the world-readable plist in the store.
+  launchScript = pkgs.writeShellScript "llama-server-launch" ''
+    ${lib.optionalString (cfg.hfTokenFile != null) ''
+      if [ -r ${lib.escapeShellArg cfg.hfTokenFile} ]; then
+        export HF_TOKEN="$(${pkgs.coreutils}/bin/cat ${lib.escapeShellArg cfg.hfTokenFile})"
+      fi
+    ''}
+    exec ${lib.escapeShellArgs serverArgs}
+  '';
 in {
   options.localModules.llamaCpp = {
     enable = lib.mkEnableOption "llama-cpp llama-server";
@@ -56,6 +80,13 @@ in {
       '';
     };
 
+    hfTokenFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      example = "/run/secrets/huggingface/token";
+      description = "File whose contents are exported as HF_TOKEN, for pulling gated HuggingFace models.";
+    };
+
     extraFlags = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [];
@@ -72,19 +103,7 @@ in {
     '';
 
     launchd.daemons.llama-cpp = {
-      command = lib.escapeShellArgs (
-        [
-          "${cfg.package}/bin/llama-server"
-          "--host"
-          cfg.host
-          "--port"
-          (toString cfg.port)
-        ]
-        ++ lib.optionals (cfg.model != null) ["-m" (toString cfg.model)]
-        ++ lib.optionals (cfg.modelsDir != null) ["--models-dir" (toString cfg.modelsDir)]
-        ++ lib.optionals (cfg.modelsPreset != null) ["--models-preset" "${modelsPresetFile}"]
-        ++ cfg.extraFlags
-      );
+      command = "${launchScript}";
 
       serviceConfig = {
         Label = "org.nixos.llama-cpp";

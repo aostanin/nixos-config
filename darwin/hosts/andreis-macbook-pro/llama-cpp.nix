@@ -1,10 +1,17 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
+  sops.secrets."huggingface/token" = {};
+
   localModules.llamaCpp = {
     enable = true;
-    # nixpkgs-unstable (9842+) for MTP support + newer Metal kernels; 26.05 is 9190.
+    # nixpkgs-unstable for MTP support + newer Metal kernels; 26.05 lags well behind.
     package = pkgs.unstable.llama-cpp;
     host = "0.0.0.0";
     port = 8085;
+    hfTokenFile = config.sops.secrets."huggingface/token".path;
     extraFlags = [
       "--models-max"
       "1"
@@ -29,33 +36,32 @@
         metrics = "true";
       };
 
-      "unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_M" = {
-        hf-repo = "unsloth/Qwen3.6-35B-A3B-MTP-GGUF";
-        hf-file = "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf";
-        ctx-size = "262144";
-        spec-type = "draft-mtp";
-        spec-draft-n-max = "2";
-        temp = "0.6";
-        top-p = "0.95";
-        top-k = "20";
-      };
-
-      "unsloth/Qwen3.6-27B-GGUF:Q5_K_XL" = {
-        hf-repo = "unsloth/Qwen3.6-27B-GGUF";
-        hf-file = "Qwen3.6-27B-UD-Q5_K_XL.gguf";
+      "unsloth/Qwen3.8-27B-GGUF:Q5_K_XL" = {
+        hf-repo = "unsloth/Qwen3.8-27B-GGUF";
+        hf-file = "Qwen3.8-27B-UD-Q5_K_XL.gguf";
         ctx-size = "262144";
         temp = "0.6";
         top-p = "0.95";
         top-k = "20";
       };
 
-      "unsloth/gemma-4-E4B-it-GGUF:Q6_K_XL" = {
-        hf-repo = "unsloth/gemma-4-E4B-it-GGUF";
-        hf-file = "gemma-4-E4B-it-UD-Q6_K_XL.gguf";
+      "SAPSAN-SKLEP/HIDra-30B-A3B-GGUF:Q5_K_M" = {
+        hf-repo = "SAPSAN-SKLEP/HIDra-30B-A3B-GGUF-uncensored-cybersec";
+        hf-file = "HIDra-30B-A3B-Q5_K_M.gguf";
         ctx-size = "262144";
-        temp = "1.0";
+        temp = "0.7";
+        top-p = "0.8";
+        top-k = "20";
+        repeat-penalty = "1.05";
+      };
+
+      "orcarouter/Qwen3.8-27B-Uncensored-GGUF:Q5_K_M" = {
+        hf-repo = "orcarouter/Qwen3.8-27B-Uncensored-GGUF";
+        hf-file = "Qwen3.8-27B-Uncensored-Q5_K_M.gguf";
+        ctx-size = "262144";
+        temp = "0.6";
         top-p = "0.95";
-        top-k = "64";
+        top-k = "20";
       };
     };
   };
