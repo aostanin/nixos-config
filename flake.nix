@@ -58,6 +58,7 @@
     kvmd.url = "github:aostanin/kvmd.nix";
     terranix.url = "github:terranix/terranix";
     llm-agents.url = "github:numtide/llm-agents.nix";
+    maki.url = "github:tontinton/maki";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -121,6 +122,7 @@
         self.overlays.workarounds
         inputs.llm-agents.overlays.shared-nixpkgs
         (final: prev: {
+          maki = inputs.maki.packages.${system}.default;
           unstable = import nixpkgs-unstable {
             inherit config system;
           };

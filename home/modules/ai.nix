@@ -53,9 +53,11 @@ in {
         # Agents
         opencode
         pi
+        pkgs.maki
 
         # Tools
         (localLib.brokenOnDarwin agent-browser)
+        rtk
       ];
   };
 }
