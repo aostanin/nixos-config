@@ -26,18 +26,35 @@
 
     ${lib.getExe pkgs.zrepl} signal wakeup "''${zrepl_job}"
     delta_t=5  # seconds between loop iterations
+    max_t=43200  # give up rather than poll a job that will never report done
+    elapsed_t=0
     echo "NOTE: not all steps can be size-estimated, progress estimates may be imprecise."
     while :
     do
         sleep "''${delta_t}"
+        elapsed_t=$((elapsed_t + delta_t))
 
-        # pluck the state of all the stages and unify them into a single array
+        if [ "''${elapsed_t}" -gt "''${max_t}" ]; then
+            echo "Job ''${zrepl_job} did not finish within ''${max_t}s."
+            zrepl_error=1
+            break
+        fi
+
+        # pluck the state of all the stages and unify them into a single array.
+        # `zrepl status` exits 0 even when the control socket is gone, so let
+        # jq's parse failure stand in for "daemon is restarting"
         zrepl_job_result="$( \
           ${lib.getExe pkgs.zrepl} status --mode raw \
             | ZREPL_JOB="''${zrepl_job}" ${lib.getExe pkgs.jq} -c -r '
               .Jobs[$ENV.ZREPL_JOB].push | [.PruningReceiver.State?,.PruningSender.State?,.Replication.Attempts[-1].State] | map(tostring | ascii_downcase)
             ' \
-        )"
+        )" || continue
+
+        # A restarted daemon drops the job state along with our wakeup
+        if [[ $(${lib.getExe pkgs.jq} 'all(. == "null")' <<< "''${zrepl_job_result}") = "true" ]]; then
+            ${lib.getExe pkgs.zrepl} signal wakeup "''${zrepl_job}" || true
+            continue
+        fi
 
         if [[ "''${zrepl_job_result}" = *err* ]]; then
             zrepl_error=1
@@ -105,6 +122,8 @@ in {
         ''}
 
         ${lib.getExe' zfsUser "zpool"} status external
+        # Logical free space; raidz2 parity makes `zpool list` FREE read ~2x this
+        ${lib.getExe' zfsUser "zfs"} list external
         ${lib.getExe' zfsUser "zpool"} export external
 
         # Spin down the backup drives before turning them off

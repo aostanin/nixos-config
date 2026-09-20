@@ -164,8 +164,6 @@
             "rpool/appdata/temp<" = false;
             "rpool/home<" = true;
             "rpool/personal<" = true;
-            "rpool/root<" = true;
-            "rpool/root/nix<" = false;
             "tank/media/audiobooks<" = true;
             "tank/media/books<" = true;
             "tank/media/music<" = true;
@@ -182,7 +180,7 @@
             keep_receiver = [
               {
                 type = "grid";
-                grid = "1x1h(keep=all) | 24x1h | 90x1d";
+                grid = "1x1h(keep=all) | 24x1h | 30x1d";
                 regex = "^zrepl_.*";
               }
               {
