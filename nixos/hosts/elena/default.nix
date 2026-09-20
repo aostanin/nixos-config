@@ -310,6 +310,8 @@
       interfaces = ["br-lan"];
     };
 
+    watchdog.enable = true;
+
     zfs.enable = true;
   };
 

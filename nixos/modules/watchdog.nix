@@ -15,6 +15,15 @@ in {
     # inert iamt_wdt instead. AMT serial-over-LAN is unaffected.
     boot.blacklistedKernelModules = ["mei_wdt"];
 
+    # A CPU that locks up with interrupts off writes nothing at all unless the
+    # NMI detector is running, so a silent freeze leaves no trace to diagnose.
+    # mkAfter so consoleblank=0 lands after common.nix's consoleblank=300
+    boot.kernelParams = lib.mkAfter [
+      "nmi_watchdog=1"
+      "hardlockup_panic=1"
+      "consoleblank=0" # A blanked console hides the panic from an attached KVM
+    ];
+
     boot.kernel.sysctl = {
       "kernel.panic" = 10; # reboot 10s after a panic instead of hanging
       "kernel.panic_on_oops" = 1; # treat an oops as a panic on this headless host
