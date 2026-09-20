@@ -25,6 +25,7 @@ in {
       ai.enable = lib.mkDefault (!cfg.minimal);
       forgejo.enable = lib.mkDefault (!cfg.minimal);
       git.enable = lib.mkDefault true;
+      github.enable = lib.mkDefault (!cfg.minimal);
       neovim.enable = lib.mkDefault (!cfg.minimal);
       ssh.enable = lib.mkDefault true;
       television.enable = lib.mkDefault (!cfg.minimal);
@@ -79,7 +80,6 @@ in {
           caligula
           devenv
           ffmpeg
-          github-cli
           gpsbabel
           steam-run
           tealdeer

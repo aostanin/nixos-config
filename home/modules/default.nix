@@ -17,6 +17,7 @@
     ./gaming.nix
     ./ghostty.nix
     ./git.nix
+    ./github.nix
     ./gnupg.nix
     ./gtk.nix
     ./hammerspoon.nix
