@@ -213,6 +213,7 @@
             match app-id=r#"^element$"#
             match app-id=r#"^slack$"#
             match app-id=r#"^thunderbird$"#
+            exclude title=r#"Reminders?$"#
             open-on-workspace "2"
             default-column-display "tabbed"
         }
@@ -228,6 +229,13 @@
             match app-id=r#"^scrcpy$"#
             match title=r#"^Picture-in-Picture$"#
             open-floating true
+        }
+
+        window-rule {
+            match app-id=r#"^thunderbird$"# title=r#"Reminders?$"#
+            open-floating true
+            default-column-width { fixed 600; }
+            default-window-height { fixed 300; }
         }
 
         layer-rule {
