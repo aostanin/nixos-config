@@ -52,12 +52,17 @@ in {
       }
     ];
 
-    sops.secrets."containers/litellm/master_key" = {};
+    # litellm restarts itself when this rotates; without this the voice path
+    # keeps the old key and 401s silently.
+    sops.secrets."containers/litellm/master_key".restartUnits = ["podman-${name}.service"];
 
-    sops.templates."${name}.env".content =
-      lib.concatMapStrings (l: l + "\n")
-      (lib.optional (cfg.sttModels != []) "STT_OPENAI_KEY=${masterKey}"
-        ++ lib.optional (cfg.ttsModels != []) "TTS_OPENAI_KEY=${masterKey}");
+    sops.templates."${name}.env" = {
+      restartUnits = ["podman-${name}.service"];
+      content =
+        lib.concatMapStrings (l: l + "\n")
+        (lib.optional (cfg.sttModels != []) "STT_OPENAI_KEY=${masterKey}"
+          ++ lib.optional (cfg.ttsModels != []) "TTS_OPENAI_KEY=${masterKey}");
+    };
 
     localModules.containers.containers.${name} = {
       networks = ["proxy"];

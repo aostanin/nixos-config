@@ -35,6 +35,10 @@ in {
     sops.templates."${name}-settings.yml" = {
       content = lib.generators.toYAML {} settings;
       uid = 977;
+      # /run/secrets is a symlink to a per-activation generation directory that
+      # the mount resolves once, at container start, so a content-only change
+      # leaves the container serving the old file.
+      restartUnits = ["podman-${name}.service"];
     };
 
     localModules.containers.containers.${name} = {
