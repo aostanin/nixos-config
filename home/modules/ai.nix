@@ -29,7 +29,7 @@ in {
       mcpServers = config.programs.mcp.servers;
       inherit (secrets.claude-code) rules;
       settings = {
-        model = "claude-opus-5";
+        model = "claude-opus-5-5";
         effortLevel = "xhigh";
         tui = "fullscreen";
         permissions.defaultMode = "auto";
