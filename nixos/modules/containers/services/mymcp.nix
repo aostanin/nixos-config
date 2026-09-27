@@ -24,9 +24,10 @@ in {
       type = with lib.types; listOf str;
       default = ["home" "work" "personal"];
       description = ''
-        Calendars swept when none is named. Must cover everything in
+        Calendars swept when none is named. Must cover every event calendar in
         `calendarWritable`, or the assistant can add an event it will never
-        read back. `contact_birthdays` is left out as generated noise.
+        read back; `tasks` holds VTODOs, so it has no place in an event sweep.
+        `contact_birthdays` is left out as generated noise.
       '';
     };
 
