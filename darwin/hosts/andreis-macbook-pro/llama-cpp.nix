@@ -45,6 +45,16 @@
         top-k = "20";
       };
 
+      "ornith-ai/Ornith-1.5-35B-A3B-GGUF:Q5_K_M" = {
+        hf-repo = "ornith-ai/Ornith-1.5-35B-A3B-GGUF";
+        hf-file = "Ornith-1.5-35B-Q5_K_M.gguf";
+        ctx-size = "262144";
+        # Embedded MTP measured a net loss at depth: 33.7 -> 28.2 tok/s at 57.6k fill.
+        temp = "0.6";
+        top-p = "0.95";
+        top-k = "20";
+      };
+
       "SAPSAN-SKLEP/HIDra-30B-A3B-GGUF:Q5_K_M" = {
         hf-repo = "SAPSAN-SKLEP/HIDra-30B-A3B-GGUF-uncensored-cybersec";
         hf-file = "HIDra-30B-A3B-Q5_K_M.gguf";
@@ -55,9 +65,9 @@
         repeat-penalty = "1.05";
       };
 
-      "orcarouter/Qwen3.8-27B-Uncensored-GGUF:Q5_K_M" = {
-        hf-repo = "orcarouter/Qwen3.8-27B-Uncensored-GGUF";
-        hf-file = "Qwen3.8-27B-Uncensored-Q5_K_M.gguf";
+      "ajgazin/Swift-Qwen3.8-27B-Uncensored-Dynamic-MTP-GGUF:Q5_K_M" = {
+        hf-repo = "ajgazin/Swift-Qwen3.8-27B-Uncensored-Dynamic-MTP-GGUF";
+        hf-file = "Swift-Qwen3.8-27B-Uncensored-Dynamic-MTP-UD-Q5_K_M.gguf";
         ctx-size = "262144";
         temp = "0.6";
         top-p = "0.95";
