@@ -218,6 +218,14 @@ in {
       xfconf.enable = true;
     };
 
+    # glib only knows a fixed list of terminals (xterm, konsole, ...), none of
+    # which are installed, so Terminal=true entries like nvim and yazi fail to
+    # launch from xdg-open without this.
+    xdg.terminal-exec = {
+      enable = true;
+      settings.default = ["foot.desktop"];
+    };
+
     virtualisation.spiceUSBRedirection.enable = true;
 
     users.groups.plugdev = {};

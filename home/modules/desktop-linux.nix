@@ -21,6 +21,7 @@ in {
       foot.enable = lib.mkDefault true;
       gnupg.enable = lib.mkDefault true;
       gtk.enable = lib.mkDefault true;
+      mime-apps.enable = lib.mkDefault true;
       obs-studio.enable = lib.mkDefault true;
       polkit.enable = lib.mkDefault true;
       qt.enable = lib.mkDefault true;

@@ -23,6 +23,7 @@
     ./hammerspoon.nix
     ./inhibridge.nix
     ./karabiner-elements.nix
+    ./mime-apps.nix
     ./mpd.nix
     ./neovim.nix
     ./niri.nix
