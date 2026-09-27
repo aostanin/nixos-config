@@ -46,5 +46,9 @@
     };
   };
 
+  # The greeter's wlroots compositor needs its own opt-out from the broken UTM
+  # cursor plane; see localModules.niri.extraDebug in home/hosts/macnix.
+  environment.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
+
   services.qemuGuest.enable = true;
 }
