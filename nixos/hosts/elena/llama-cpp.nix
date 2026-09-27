@@ -27,7 +27,7 @@
     modelsPreset = {
       "*" = {
         jinja = "true";
-        mlock = "true";
+        load-mode = "mmap+mlock";
         mmproj-offload = "false";
         flash-attn = "on";
         batch-size = "1024";
@@ -72,7 +72,7 @@
     };
   };
 
-  # Preset mlock=true locks multi-GB model buffers; default 8M rlimit is too low.
+  # load-mode mmap+mlock locks multi-GB model buffers; default 8M rlimit is too low.
   systemd.services.llama-cpp.serviceConfig.LimitMEMLOCK = "infinity";
 
   localModules.ingress.llama-cpp.port = 8085;

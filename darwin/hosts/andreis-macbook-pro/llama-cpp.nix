@@ -26,7 +26,7 @@
         flash-attn = "on";
         batch-size = "2048";
         ubatch-size = "2048";
-        mlock = "true";
+        load-mode = "mmap+mlock";
         threads = "10";
         threads-batch = "10";
         sleep-idle-seconds = "300";
