@@ -59,7 +59,7 @@ in {
       // mkMymcp ["calendar" "matrix" "feeds" "search" "reddit" "rides" "grist"];
 
     models = [
-      (mkLlamaCppModel "qwen3.8-27b" "unsloth/Qwen3.8-27B-GGUF:Q4_K_XL")
+      (mkLlamaCppModel "ornith-1.5-35b-a3b" "ornith-ai/Ornith-1.5-35B-A3B-GGUF:Q4_K_M")
       (mkLlamaCppModel "ornith-1.5-9b" ornith9b)
       {
         model_name = "ha-assist";

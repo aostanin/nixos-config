@@ -42,16 +42,18 @@
         metrics = "true";
       };
 
-      "unsloth/Qwen3.8-27B-GGUF:Q4_K_XL" = {
-        hf-repo = "unsloth/Qwen3.8-27B-GGUF";
-        hf-file = "Qwen3.8-27B-UD-Q4_K_XL.gguf";
+      "ornith-ai/Ornith-1.5-35B-A3B-GGUF:Q4_K_M" = {
+        hf-repo = "ornith-ai/Ornith-1.5-35B-A3B-GGUF";
+        hf-file = "Ornith-1.5-35B-Q4_K_M.gguf";
         cache-type-k = "q8_0";
         cache-type-v = "q8_0";
-        ctx-size = "65536";
-        n-gpu-layers = "18";
-        spec-type = "draft-mtp";
-        spec-draft-n-max = "2";
-        spec-draft-ngl = "0";
+        ctx-size = "131072";
+        n-gpu-layers = "999";
+        n-cpu-moe = "37";
+        batch-size = "2048";
+        ubatch-size = "2048";
+        load-mode = "auto";
+        timeout = "1800";
         temp = "0.6";
         top-p = "0.95";
         top-k = "20";
@@ -60,10 +62,10 @@
       "ornith-ai/Ornith-1.5-9B-GGUF:Q4_K_M" = {
         hf-repo = "ornith-ai/Ornith-1.5-9B-GGUF";
         hf-file = "Ornith-1.5-9B-Q4_K_M.gguf";
-        load-on-startup = "true"; # ha-assist: preload; router keeps it until another model evicts it (models-max=1)
+        load-on-startup = "true";
         cache-type-k = "q8_0";
         cache-type-v = "q8_0";
-        ctx-size = "16384";
+        ctx-size = "65536";
         n-gpu-layers = "999";
         temp = "0.6";
         top-p = "0.95";
