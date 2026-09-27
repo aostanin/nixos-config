@@ -195,6 +195,7 @@
         };
 
         domi.enable = true;
+        mymcp.enable = true;
         martin.enable = true;
         valhalla = {
           enable = true;

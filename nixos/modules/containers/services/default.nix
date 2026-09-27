@@ -36,6 +36,7 @@
     ./meshcentral.nix
     ./miniflux.nix
     ./mosquitto.nix
+    ./mymcp.nix
     ./navidrome.nix
     ./neko.nix
     ./netbootxyz.nix
