@@ -2,7 +2,7 @@
   aiobmsble = python3Packages:
     python3Packages.buildPythonPackage rec {
       pname = "aiobmsble";
-      version = "0.12.1";
+      version = "0.23.0";
 
       pyproject = true;
 
@@ -19,39 +19,24 @@
         owner = "patman15";
         repo = pname;
         tag = version;
-        hash = "sha256-EaIJPBWKI9KZl7wcK/piZjAcywbgkrztKO0xuXbhh7A=";
+        hash = "sha256-u3JeqFDWQSC7/GA4+nOHScGLoMXXqOFA/r7bg16UMm8=";
       };
     };
   victron-ble = python3Packages:
-    python3Packages.buildPythonPackage rec {
-      pname = "victron-ble";
-      version = "0.9.3";
-
-      pyproject = true;
-
-      nativeBuildInputs = with python3Packages; [
-        setuptools-scm
-      ];
-
-      dependencies = with python3Packages; [
-        bleak
-        click
-        pycryptodome
-      ];
-
+    python3Packages.victron-ble.overridePythonAttrs (old: {
       src = pkgs.fetchFromGitHub {
         owner = "keshavdv";
-        repo = pname;
-        # To fix https://github.com/keshavdv/victron-ble/issues/20
+        repo = "victron-ble";
+        # Adds OffReason 0x81, which the Orion XS reports and 0.9.3 fails to parse
         rev = "c721522bee77fdf3b2cf304d5b9afc46e39bffe4";
         hash = "sha256-IV3W71N8c5ESY3XdpOeITOQ+a3jk36/3ZbIcU5rq788=";
       };
 
       # VERSION file in repo not updated
       postPatch = ''
-        echo "${version}" >victron_ble/VERSION
+        echo "${old.version}" >victron_ble/VERSION
       '';
-    };
+    });
 in {
   hardware.bluetooth.enable = true;
 
@@ -152,7 +137,7 @@ in {
       bms_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "patman15";
         domain = "bms_ble";
-        version = "2.2.0";
+        version = "2.13.0";
 
         dependencies = [
           (aiobmsble pkgs.home-assistant.python3Packages)
@@ -162,13 +147,13 @@ in {
           owner = "patman15";
           repo = "BMS_BLE-HA";
           tag = version;
-          hash = "sha256-qSff6sfDszdx56U0OdkCHWz4ndCGTTHS01lH8qwJYBI=";
+          hash = "sha256-9U2e7jbELrlBG2b591eaPUvlDkf0qQLxyv2T59lIjKM=";
         };
       };
       ef_ble = pkgs.buildHomeAssistantComponent rec {
         owner = "rabits";
         domain = "ef_ble";
-        version = "0.5.5";
+        version = "1.1.2";
 
         dependencies = with pkgs.home-assistant.python3Packages; [
           ecdsa
@@ -177,11 +162,14 @@ in {
           protobuf
         ];
 
+        # Pins protobuf~=6.30; its 6.31 gencode loads fine on nixpkgs' 7.x
+        ignoreVersionRequirement = ["protobuf"];
+
         src = pkgs.fetchFromGitHub {
           inherit owner;
           repo = "ha-ef-ble";
           tag = "v${version}";
-          hash = "sha256-474ov1RA7/D3tkvSjxvCeAxG26Gd72vgS87ao86b19s=";
+          hash = "sha256-ccWhF+vslBcPW8rKZKKYMcprSc/T9lsy1FNs4XP9O/A=";
         };
 
         postPatch = ''
