@@ -15,6 +15,7 @@
     ./incus.nix
     ./litellm.nix
     ./n8n.nix
+    ./silverbullet.nix
     ./llama-cpp.nix
     ./vfio.nix
     ./libvirt
