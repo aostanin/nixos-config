@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
     ./backup.nix
     ./backup-external.nix
+    ./incus.nix
     ./litellm.nix
     ./llama-cpp.nix
     ./vfio.nix

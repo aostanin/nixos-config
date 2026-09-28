@@ -51,6 +51,9 @@
             # snapshots have been pinning transient build layers (22.5G of them,
             # and an ENOSPC in CI).
             "rpool/virtualization/containers<" = false;
+            # Newer foreign snapshots make `incus snapshot restore` refuse to roll
+            # back; Incus manages its own snapshots.
+            "rpool/virtualization/incus<" = false;
           };
           snapshotting = {
             type = "cron";
@@ -129,6 +132,9 @@
             # snapshots have been pinning transient build layers (22.5G of them,
             # and an ENOSPC in CI).
             "rpool/virtualization/containers<" = false;
+            # Newer foreign snapshots make `incus snapshot restore` refuse to roll
+            # back; Incus manages its own snapshots.
+            "rpool/virtualization/incus<" = false;
           };
           snapshotting.type = "manual";
           pruning = {

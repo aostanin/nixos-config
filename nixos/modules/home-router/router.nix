@@ -9,12 +9,16 @@
   inherit (secrets.network.networks) lan guest iot;
   adguard = lib.head secrets.network.home.nameserversAdguard;
 
+  incus = config.virtualisation.incus.enable;
+
   # The drop-policy input chain must accept these: tailscale0 (else SSH over the
-  # tailnet locks out) and podman* (else containers can't reach aardvark DNS /
-  # host.containers.internal on their bridge gateway).
+  # tailnet locks out), podman* (else containers can't reach aardvark DNS /
+  # host.containers.internal on their bridge gateway) and incusbr0 (Incus's
+  # dnsmasq DHCP/DNS).
   inputAccept =
     lib.concatStringsSep ", " (map (i: ''"${i}"'')
-      ["lo" "br-lan" "vlan20" "vlan40" "tailscale0" "podman*"]);
+      (["lo" "br-lan" "vlan20" "vlan40" "tailscale0" "podman*"]
+        ++ lib.optional incus "incusbr0"));
 
   iotDevices = secrets.network.iot.devices;
   # DHCP reservations (devices with an address) + the WAN egress allowlist
@@ -79,6 +83,12 @@ in {
             # Containers reach the internet AND internal hosts (MQTT broker,
             # frigate cameras on iot, syncthing peers over tailscale, LAN).
             iifname "podman*" accept
+            ${lib.optionalString incus ''
+              # Incus instances are trusted like Incus's own default rules:
+              # out to anywhere, and reachable from the LAN (routed, no NAT).
+              iifname "incusbr0" accept
+              iifname "br-lan" oifname "incusbr0" accept
+            ''}
 
             # Published container ports reachable from LAN, IoT, tailscale, and
             # other containers (IoT -> MQTT broker, LAN -> netbootxyz TFTP,
@@ -104,6 +114,7 @@ in {
             # Containers reaching tailscale peers need SNAT (the tailnet has no
             # route back to the podman subnet).
             oifname "tailscale0" ip saddr 10.88.0.0/15 masquerade
+            ${lib.optionalString incus ''oifname "tailscale0" iifname "incusbr0" masquerade''}
           }
         }
       '';
