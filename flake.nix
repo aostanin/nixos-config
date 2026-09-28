@@ -170,36 +170,6 @@
 
         packages = import ./packages {inherit pkgs;};
 
-        apps = {
-          bootstrap = {
-            type = "app";
-            program = toString (pkgs.writeShellScript "bootstrap" ''
-              hostname=$1
-              ssh_host=$2
-
-              extra_files=$(mktemp -d)
-              restic_ssh_key=$(mktemp)
-              chmod 600 $restic_ssh_key
-              ${lib.getExe pkgs.sops} decrypt --extract '["restic"]["ssh_key"]' secrets/sops/secrets.enc.yaml > $restic_ssh_key
-              ${lib.getExe pkgs.restic} restore latest \
-                  --host $hostname \
-                  --include '**/etc/ssh/ssh_host_*' \
-                  --include '**/var/lib/tailscale/tailscaled.state' \
-                  --target $extra_files \
-                  --repo $(${lib.getExe pkgs.sops} decrypt --extract '["restic"]["repository"]' secrets/sops/secrets.enc.yaml) \
-                  --password-command "${lib.getExe pkgs.sops} decrypt --extract '[\"restic\"][\"password\"]' secrets/sops/secrets.enc.yaml" \
-                  --option sftp.args="-i $restic_ssh_key -o StrictHostKeyChecking=no"
-              rm $restic_ssh_key
-
-              mkdir $extra_files/persist/safe
-              mv $extra_files/persist/{etc,var} $extra_files/persist/safe
-
-              ${lib.getExe pkgs.nixos-anywhere} --flake .#$hostname --extra-files $extra_files $ssh_host
-              rm -rf $extra_files
-            '');
-          };
-        };
-
         treefmt = {
           projectRootFile = "flake.nix";
           programs = {

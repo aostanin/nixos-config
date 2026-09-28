@@ -29,7 +29,3 @@ creation_rules:
           - *host_vps-oci2
           - *host_vps-oci-arm1
           - *host_macnix
-  - path_regex: secrets/sops/bootstrap/.*$
-    key_groups:
-      - age:
-          - *user_aostanin
