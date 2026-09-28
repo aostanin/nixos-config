@@ -11,12 +11,6 @@ in {
   options.localModules.containers.services.${name} = {
     enable = lib.mkEnableOption name;
 
-    enableSlidingSync = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable the Sliding Sync Proxy.";
-    };
-
     enableFacebookBridge = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -51,18 +45,11 @@ in {
   config = lib.mkIf cfg.enable {
     sops.secrets = {
       "containers/${name}/postgres_password" = {};
-      "containers/${name}/syncv3_secret" = {};
       "forgejo/registry_token" = {};
     };
 
     sops.templates."synapse-db.env".content = ''
       POSTGRES_PASSWORD=${config.sops.placeholder."containers/${name}/postgres_password"}
-    '';
-
-    sops.templates."sliding-sync.env".content = ''
-      SYNCV3_SECRET=${config.sops.placeholder."containers/${name}/syncv3_secret"}
-      SYNCV3_SERVER=https://${lib.head (config.lib.containers.mkHosts "matrix")}
-      SYNCV3_DB=user=postgres dbname=syncv3 sslmode=disable host=synapse-db password=${config.sops.placeholder."containers/${name}/postgres_password"}
     '';
 
     localModules.containers.containers.synapse = {
@@ -113,19 +100,6 @@ in {
       volumes.db = {
         parent = name;
         destination = "/var/lib/postgresql/data";
-      };
-    };
-
-    localModules.containers.containers.sliding-sync = lib.mkIf cfg.enableSlidingSync {
-      raw.image = "ghcr.io/matrix-org/sliding-sync:latest";
-      networks = [name];
-      raw.dependsOn = ["synapse-db"];
-      raw.environmentFiles = [config.sops.templates."sliding-sync.env".path];
-      proxy = {
-        enable = true;
-        names = ["matrix-syncv3"];
-        port = 8008;
-        default.enable = true;
       };
     };
 

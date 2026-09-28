@@ -19,7 +19,7 @@
       handle /.well-known/matrix/client {
         header Content-Type application/json
         header Access-Control-Allow-Origin *
-        respond `{"m.homeserver": {"base_url": "https://matrix.${domain}"}, "org.matrix.msc3575.proxy": {"url": "https://matrix-syncv3.${domain}"}}`
+        respond `{"m.homeserver": {"base_url": "https://matrix.${domain}"}}`
       }
 
       handle /.well-known/lnurlp/* {
