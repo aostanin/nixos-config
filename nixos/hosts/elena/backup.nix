@@ -22,6 +22,8 @@
     prune = true;
     paths = [
       "/var/lib/nixos"
+      # n8n uses DynamicUser; /var/lib/n8n is a symlink to this.
+      "/var/lib/private/n8n"
       "/var/lib/tailscale"
       "/var/lib/traefik"
     ];

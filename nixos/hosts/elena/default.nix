@@ -14,6 +14,7 @@
     ./backup-external.nix
     ./incus.nix
     ./litellm.nix
+    ./n8n.nix
     ./llama-cpp.nix
     ./vfio.nix
     ./libvirt
