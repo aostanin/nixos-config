@@ -79,6 +79,8 @@ in {
         matchConfig.Name = "br0";
         networkConfig = {
           DHCP = "no";
+          # Explicit: the default turns RAs off whenever forwarding is on.
+          IPv6AcceptRA = true;
           IPv6PrivacyExtensions = "kernel";
           Address = "${cfg.address}/24";
           VLAN = lib.optional cfg.iotNetwork.enable "vlan40";
@@ -119,7 +121,7 @@ in {
         vlanConfig.Id = 40;
       };
 
-      networks.vlan40 = {
+      networks.vlan40 = lib.mkIf cfg.iotNetwork.enable {
         matchConfig.Name = "vlan40";
         networkConfig = {
           DHCP = "no";

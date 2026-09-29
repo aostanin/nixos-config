@@ -6,12 +6,8 @@
         {
           name = "incusbr0";
           type = "bridge";
-          # NAT and filtering live in the router's nftables ruleset: its full
-          # reload would flush the table Incus manages.
           config = {
             "ipv4.address" = "10.90.0.1/24";
-            "ipv4.nat" = "false";
-            "ipv4.firewall" = "false";
             "ipv6.address" = "none";
           };
         }

@@ -71,6 +71,10 @@
       url = "github:AshleyYakeley/NixVirt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    microvm = {
+      url = "github:microvm-nix/microvm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -111,6 +115,11 @@
         ];
       };
       roan = {system = "x86_64-linux";};
+      router = {
+        system = "x86_64-linux";
+        additionalModules = [inputs.microvm.nixosModules.microvm];
+        microvmHost = "elena";
+      };
       skye = {system = "x86_64-linux";};
       macnix = {system = "aarch64-linux";};
       vps-oci1 = {system = "x86_64-linux";};
@@ -227,11 +236,50 @@
                 };
               };
           };
+          # A microvm is deployed through its host: deploy-rs installs the runner
+          # where microvm@<name> looks for it and restarts the VM if it changed.
+          mkMicrovmNode = {
+            hostname,
+            system,
+            microvmHost,
+          }: let
+            pkgs = nixpkgs.legacyPackages.${system};
+            runner = self.nixosConfigurations.${hostname}.config.microvm.declaredRunner;
+            stateDir = self.nixosConfigurations.${microvmHost}.config.microvm.stateDir;
+          in {
+            hostname = microvmHost;
+            sshUser = secrets.user.username;
+            fastConnection = false;
+            autoRollback = false;
+            magicRollback = false;
+            remoteBuild = false;
+
+            profiles.system = {
+              user = "root";
+              profilePath = "/nix/var/nix/profiles/microvm-${hostname}";
+              path = deploy-rs.lib.${system}.activate.custom runner ''
+                dir=${stateDir}/${hostname}
+                mkdir -p "$dir"
+                ln -sTf ${runner} "$dir/current"
+                chown -h microvm:kvm "$dir" "$dir/current"
+                if [ "$(readlink "$dir/booted" 2>/dev/null)" != "${runner}" ]; then
+                  ${pkgs.systemd}/bin/systemctl restart microvm@${hostname}.service
+                fi
+              '';
+            };
+          };
         in (builtins.mapAttrs (hostname: host:
-          mkNode {
-            inherit hostname;
-            inherit (host) system;
-          })
+          if host ? microvmHost
+          then
+            mkMicrovmNode {
+              inherit hostname;
+              inherit (host) system microvmHost;
+            }
+          else
+            mkNode {
+              inherit hostname;
+              inherit (host) system;
+            })
         hosts);
 
         overlays = {

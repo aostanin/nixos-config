@@ -16,6 +16,7 @@
       hostname,
       system,
       additionalModules ? [],
+      ...
     }: let
       localLib = import ../lib {
         inherit lib;

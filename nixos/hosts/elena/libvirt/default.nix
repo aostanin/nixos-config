@@ -30,7 +30,7 @@ in {
             name = "default";
             uuid = "eb70d2b6-35a2-4206-bcbc-8eebb4b644e9";
             forward.mode = "bridge";
-            bridge.name = "br-lan";
+            bridge.name = "br0";
           };
           active = true;
         }

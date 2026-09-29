@@ -19,6 +19,7 @@
     ./llama-cpp.nix
     ./vfio.nix
     ./libvirt
+    ./microvm.nix
     ./power-management.nix
     ./autosuspend.nix
   ];
@@ -275,10 +276,10 @@
 
     forgejo-runner.enable = true;
 
-    home-router = {
+    home-server = {
       enable = true;
       interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
-      macAddress = secrets.network.home.hosts.elena.macAddress;
+      inherit (secrets.network.home.hosts.elena) address macAddress;
     };
 
     pikvm = {
@@ -300,18 +301,11 @@
       };
     };
 
-    tailscale = {
-      isClient = true;
-      isServer = true;
-      extraFlags = [
-        "--advertise-exit-node"
-        "--advertise-routes=${secrets.network.networks.iot.prefix}.0/24"
-      ];
-    };
+    tailscale.isClient = true;
 
     virtwold = {
       enable = true;
-      interfaces = ["br-lan"];
+      interfaces = ["br0"];
     };
 
     watchdog.enable = true;
