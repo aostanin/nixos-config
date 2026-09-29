@@ -30,7 +30,8 @@ in {
       inherit (secrets.claude-code) rules;
       settings = {
         model = "claude-opus-5-5";
-        effortLevel = "xhigh";
+        effortLevel = "high";
+        modelSettings.claude-opus-5-5.effortLevel = "high";
         tui = "fullscreen";
         permissions.defaultMode = "auto";
         skipAutoPermissionPrompt = true;
