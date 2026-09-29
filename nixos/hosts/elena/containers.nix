@@ -7,6 +7,11 @@
     enableTun = true;
   };
 
-  # A runaway agent should hit this instead of taking elena down with it.
-  systemd.services."container@dev".serviceConfig.MemoryMax = "32G";
+  # A runaway agent should hit this instead of taking elena down with it. No
+  # swap: zram lives in host RAM uncharged, so it would only delay the OOM kill.
+  systemd.services."container@dev".serviceConfig = {
+    MemoryHigh = "28G";
+    MemoryMax = "32G";
+    MemorySwapMax = "0";
+  };
 }
