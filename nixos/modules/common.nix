@@ -116,7 +116,8 @@ in {
 
     hardware.enableRedistributableFirmware = lib.mkDefault true;
 
-    zramSwap.enable = lib.mkDefault true;
+    # Swap belongs to the host.
+    zramSwap.enable = lib.mkDefault (!config.boot.isContainer);
 
     networking = {
       useDHCP = lib.mkDefault false;
