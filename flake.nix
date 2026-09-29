@@ -217,7 +217,7 @@
             hostname,
             system,
             # A nixos-container's system is part of its host's closure.
-            withSystem ? true,
+            deploySystemProfile ? true,
           }: {
             inherit hostname;
             sshUser = secrets.user.username;
@@ -227,7 +227,7 @@
             remoteBuild = false;
 
             profiles =
-              lib.optionalAttrs (withSystem && builtins.hasAttr hostname self.nixosConfigurations) {
+              lib.optionalAttrs (deploySystemProfile && builtins.hasAttr hostname self.nixosConfigurations) {
                 system = {
                   user = "root";
                   path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
@@ -289,7 +289,7 @@
             mkNode {
               inherit hostname;
               inherit (host) system;
-              withSystem = !(host ? containerHost);
+              deploySystemProfile = !(host ? containerHost);
             })
         hosts);
 
