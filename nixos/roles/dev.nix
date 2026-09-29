@@ -13,6 +13,13 @@ in {
 
   options.roles.dev = {
     enable = lib.mkEnableOption "a development environment driven through Paseo";
+
+    publicHostname = lib.mkOption {
+      type = with lib.types; nullOr str;
+      default = null;
+      example = "paseo.example.com";
+      description = "Hostname Paseo is reverse-proxied under; workspace dev servers get subdomains of it.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -44,11 +51,22 @@ in {
       # Clients connect over the tailnet; the password guards the LAN side.
       listenAddress = "0.0.0.0";
       relay.enable = false;
-      hostnames = [
-        hostName
-        "${hostName}.${secrets.terranix.tailscale.tailnetName}"
-      ];
-      environment.PASEO_WEB_UI_ENABLED = "true";
+      hostnames =
+        [
+          hostName
+          "${hostName}.${secrets.terranix.tailscale.tailnetName}"
+        ]
+        ++ lib.optionals (cfg.publicHostname != null) [
+          cfg.publicHostname
+          ".${cfg.publicHostname}"
+        ];
+      environment =
+        {
+          PASEO_WEB_UI_ENABLED = "true";
+        }
+        // lib.optionalAttrs (cfg.publicHostname != null) {
+          PASEO_SERVICE_PROXY_PUBLIC_BASE_URL = "https://${cfg.publicHostname}";
+        };
     };
 
     systemd.services.paseo.serviceConfig.EnvironmentFile = config.sops.templates."paseo.env".path;

@@ -32,5 +32,8 @@ in {
   # Swap and binfmt belong to the host.
   zramSwap.enable = false;
 
-  roles.dev.enable = true;
+  roles.dev = {
+    enable = true;
+    publicHostname = "paseo.${secrets.domain}";
+  };
 }
