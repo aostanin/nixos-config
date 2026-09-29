@@ -28,7 +28,7 @@
     || (lib.hasSuffix ".${domain}" fqdn
       && !(lib.hasInfix "." (lib.removeSuffix ".${domain}" fqdn)));
 
-  # A single-level wildcard over a bare name, e.g. `*.paseo.<domain>`.
+  # A single-level wildcard over a bare name, e.g. `*.<name>.<domain>`.
   isWildcardFqdn = domain: fqdn:
     lib.hasPrefix "*." fqdn && isBareFqdn domain (lib.removePrefix "*." fqdn);
 
