@@ -18,7 +18,23 @@ in {
       type = with lib.types; nullOr str;
       default = null;
       example = "paseo.example.com";
-      description = "Hostname Paseo is reverse-proxied under; workspace dev servers get subdomains of it.";
+      description = "Hostname Paseo's web UI is reverse-proxied under.";
+    };
+
+    appsHostname = lib.mkOption {
+      type = with lib.types; nullOr str;
+      default = null;
+      example = "paseoapps.example.com";
+      description = ''
+        Base for workspace dev server URLs (`<script>--<project>.<appsHostname>`).
+        Paseo reserves this name and its subdomains, so it can't be publicHostname.
+      '';
+    };
+
+    trustedProxies = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = ["loopback"];
+      description = "Reverse proxies whose X-Forwarded-Proto the web UI trusts to pick wss://.";
     };
   };
 
@@ -56,18 +72,14 @@ in {
           hostName
           "${hostName}.${secrets.terranix.tailscale.tailnetName}"
         ]
-        ++ lib.optionals (cfg.publicHostname != null) [
-          cfg.publicHostname
-          ".${cfg.publicHostname}"
-        ];
+        ++ lib.optional (cfg.publicHostname != null) cfg.publicHostname;
       environment =
         {
           PASEO_WEB_UI_ENABLED = "true";
+          PASEO_TRUSTED_PROXIES = lib.concatStringsSep "," cfg.trustedProxies;
         }
-        // lib.optionalAttrs (cfg.publicHostname != null) {
-          PASEO_SERVICE_PROXY_PUBLIC_BASE_URL = "https://${cfg.publicHostname}";
-          # The proxy rewrites Host, so the WebSocket isn't same-origin anymore.
-          PASEO_CORS_ORIGINS = "https://${cfg.publicHostname}";
+        // lib.optionalAttrs (cfg.appsHostname != null) {
+          PASEO_SERVICE_PROXY_PUBLIC_BASE_URL = "https://${cfg.appsHostname}";
         };
     };
 

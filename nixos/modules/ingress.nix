@@ -77,12 +77,6 @@
         description = "Explicit backend URL, overriding scheme/port.";
       };
 
-      passHostHeader = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = "Forward the client's Host header, rather than the backend's.";
-      };
-
       trusted = lib.mkOption {
         type = accessSubmodule true;
         default = {};
@@ -157,10 +151,7 @@ in {
               middlewares = authMiddlewares e.default.auth;
             };
           };
-        services.${name}.loadbalancer = {
-          servers = [{url = backend;}];
-          inherit (e) passHostHeader;
-        };
+        services.${name}.loadbalancer.servers = [{url = backend;}];
       };
 
       entries = lib.mapAttrsToList mkEntry nativeEntries;

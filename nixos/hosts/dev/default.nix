@@ -35,5 +35,8 @@ in {
   roles.dev = {
     enable = true;
     publicHostname = "paseo.${secrets.domain}";
+    appsHostname = "paseoapps.${secrets.domain}";
+    # Traefik on elena.
+    trustedProxies = ["loopback" secrets.network.home.hosts.elena.address];
   };
 }

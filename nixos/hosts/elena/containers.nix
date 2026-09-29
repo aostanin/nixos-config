@@ -15,20 +15,13 @@
     restartIfChanged = false;
   };
 
-  # Paseo reserves its public base hostname and subdomains for workspace dev
-  # servers, so the UI reaches it under the backend's own Host.
-  localModules.ingress = let
+  # Paseo's web UI, plus its service proxy for workspace dev servers.
+  localModules.ingress.paseo = {
     backendUrl = "http://${secrets.network.home.hosts.dev.address}:6767";
-  in {
-    paseo = {
-      inherit backendUrl;
-      hosts = ["paseo.${secrets.domain}"];
-      passHostHeader = false;
-    };
-    paseo-services = {
-      inherit backendUrl;
-      hosts = ["*.paseo.${secrets.domain}"];
-    };
+    hosts = [
+      "paseo.${secrets.domain}"
+      "*.paseoapps.${secrets.domain}"
+    ];
   };
 
   # A runaway agent should hit this instead of taking elena down with it. No
