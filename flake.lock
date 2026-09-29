@@ -991,6 +991,26 @@
         "type": "github"
       }
     },
+    "paseo": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790643114,
+        "narHash": "sha256-OY2BYNZVz4b2GhXUeKD0lRAub94GZmz6JJrR55vevAM=",
+        "owner": "getpaseo",
+        "repo": "paseo",
+        "rev": "68938b668e8dc56aec276732a4a4dfdf833f6b3f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "getpaseo",
+        "repo": "paseo",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "deploy-rs": "deploy-rs",
@@ -1018,6 +1038,7 @@
         "noctalia": "noctalia",
         "noctalia-greeter": "noctalia-greeter",
         "nur": "nur",
+        "paseo": "paseo",
         "sops-nix": "sops-nix",
         "terranix": "terranix",
         "treefmt-nix": "treefmt-nix_3"

@@ -1,0 +1,3 @@
+{
+  localModules.common.enable = true;
+}

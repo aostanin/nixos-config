@@ -35,6 +35,7 @@
         modules =
           [
             ./modules
+            ./roles
             {
               nixpkgs = mkPkgs system;
               system.stateVersion = "26.05";
