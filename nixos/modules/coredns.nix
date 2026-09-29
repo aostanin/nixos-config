@@ -116,8 +116,7 @@ in {
       # Tailscale's v4 CGNAT range plus its fixed v6 ULA prefix — coredns binds
       # tailscale0's v6 address too, and a v6-sourced query matched no view, so
       # it fell through to the public catch-all (Cloudflare tunnel IP).
-      tsExpr =
-        "incidr(client_ip(), '100.64.0.0/10') || incidr(client_ip(), 'fd7a:115c:a1e0::/48') || ${loopback}";
+      tsExpr = "incidr(client_ip(), '100.64.0.0/10') || incidr(client_ip(), 'fd7a:115c:a1e0::/48') || ${loopback}";
       lanExpr = "incidr(client_ip(), '${lan.prefix}.0/24')";
       untrustedExpr =
         lib.concatMapStringsSep " || "
