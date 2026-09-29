@@ -16,7 +16,7 @@
     traefik.enable = true;
     cloudflared.enable = true;
 
-    # Keepalived backup router for mareg (lower priority).
+    # Keepalived backup for the router VM (lower priority).
     home-router = {
       enable = true;
       interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.pikvm.integrated}";

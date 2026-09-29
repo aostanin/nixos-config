@@ -29,21 +29,10 @@
     esac
   '';
 in {
-  options.localModules.home-router = {
-    isMaster = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Run as VRRP master (else backup); sets state and default priority.";
-    };
-
-    priority = lib.mkOption {
-      type = lib.types.ints.between 1 254;
-      default =
-        if cfg.isMaster
-        then 200
-        else 100;
-      description = "VRRP priority; the highest live node holds the VIPs.";
-    };
+  options.localModules.home-router.isMaster = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+    description = "Run as VRRP master (else backup); sets state and priority.";
   };
 
   config = lib.mkIf cfg.enable {
@@ -98,7 +87,10 @@ in {
           then "MASTER"
           else "BACKUP";
         virtualRouterId = 51;
-        inherit (cfg) priority;
+        priority =
+          if cfg.isMaster
+          then 200
+          else 100;
         virtualIps = [
           {
             addr = "${lan.prefix}.1/24";
