@@ -3,6 +3,7 @@
   config,
   lib,
   localLib,
+  inputs,
   secrets,
   ...
 }: let
@@ -59,6 +60,8 @@ in {
         # Tools
         (localLib.brokenOnDarwin agent-browser)
         rtk
-      ];
+      ]
+      ++ lib.optional config.localModules.desktop.enable
+      inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.desktop;
   };
 }
