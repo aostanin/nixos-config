@@ -13,9 +13,9 @@
 
   incus = config.virtualisation.incus.enable;
 
-  # IoT devices are configured with the IoT gateway VIP as their MQTT broker.
-  # Routers that aren't the broker's host DNAT it there, so it follows the VIP
-  # and the broker can move hosts. On the broker's host the VIP is local and
+  # The IoT gateway VIP is the MQTT broker address for everything, devices and
+  # LAN services alike. Routers that aren't the broker's host DNAT it there, so
+  # it follows the VIP and the broker can move hosts. On the broker's host the VIP is local and
   # podman's published port already catches it.
   mqttHost = localLib.hostRunningService "mosquitto" self.nixosConfigurations;
   mqttAddr = secrets.network.home.hosts.${mqttHost}.address;
@@ -27,12 +27,12 @@
     "\n\n  chain prerouting {"
     "\n    type nat hook prerouting priority dstnat;"
     "\n    policy accept;"
-    "\n\n    iifname \"vlan40\" ip daddr ${iot.prefix}.1 tcp dport 1883 dnat to ${mqttAddr}"
+    "\n\n    iifname { \"vlan40\", \"br-lan\" } ip daddr ${iot.prefix}.1 tcp dport 1883 dnat to ${mqttAddr}"
     "\n  }"
   ]);
   mqttForward =
     lib.optionalString mqttDnat
-    "\n    iifname \"vlan40\" oifname \"br-lan\" ip daddr ${mqttAddr} tcp dport 1883 ct status dnat accept";
+    "\n    oifname \"br-lan\" ip daddr ${mqttAddr} tcp dport 1883 ct status dnat accept";
   # The broker's host may have no route back to the IoT subnet (a backup
   # router's only IoT address is the VIP), so replies must come back via us.
   mqttMasquerade =
