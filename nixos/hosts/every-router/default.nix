@@ -68,10 +68,8 @@
 
     tailscale = {
       isServer = true;
-      extraFlags = [
-        "--advertise-exit-node"
-        "--advertise-routes=10.0.50.0/24"
-      ];
+      advertiseExitNode = true;
+      advertiseRoutes = ["10.0.50.0/24"];
     };
 
     traefik.enable = true;

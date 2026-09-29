@@ -25,7 +25,10 @@ in {
   data.sops_file.secrets.source_file = toString ../secrets/sops/secrets.enc.yaml;
 
   provider.cloudflare.api_token = "\${data.sops_file.secrets.data[\"cloudflare.api_token\"]}";
-  provider.tailscale.api_key = "\${data.sops_file.secrets.data[\"tailscale.api_key\"]}";
+  provider.tailscale = {
+    oauth_client_id = "\${data.sops_file.secrets.data[\"tailscale.client_id\"]}";
+    oauth_client_secret = "\${data.sops_file.secrets.data[\"tailscale.client_secret\"]}";
+  };
 
   resource.cloudflare_dns_record = let
     servers = lib.filterAttrs (n: v: v.tunnelId != null) secrets.terranix.servers;
@@ -61,32 +64,6 @@ in {
         })
         (ingressDnsNames.${server} or []))))
       servers));
-
-  resource.tailscale_tailnet_key.nixos_auth_key = {
-    reusable = true;
-    ephemeral = false;
-    preauthorized = true;
-    tags = ["tag:managed"];
-    description = "NixOS Terraform";
-  };
-
-  output.tailscale_auth_key = {
-    value = config.resource.tailscale_tailnet_key.nixos_auth_key "key";
-    sensitive = true;
-  };
-
-  resource.tailscale_tailnet_key.nixos_auth_key_ephemeral = {
-    reusable = true;
-    ephemeral = true;
-    preauthorized = true;
-    tags = ["tag:ephemeral"];
-    description = "NixOS Terraform Ephemeral";
-  };
-
-  output.tailscale_auth_key_ephemeral = {
-    value = config.resource.tailscale_tailnet_key.nixos_auth_key_ephemeral "key";
-    sensitive = true;
-  };
 
   data.tailscale_devices.devices = {};
 
@@ -153,7 +130,7 @@ in {
       internal = {
         domain = domain;
         nameservers = [
-          (tailscaleDevice "elena" "address")
+          (tailscaleDevice "router" "address")
           (tailscaleDevice "vps-oci2" "address")
         ];
       };
@@ -215,10 +192,6 @@ in {
 
   resource.local_sensitive_file.secrets-json = {
     content = builtins.toJSON {
-      tailscale = {
-        auth_key = config.output.tailscale_auth_key.value;
-        auth_key_ephemeral = config.output.tailscale_auth_key_ephemeral.value;
-      };
       cloudflare.tunnels = {
         elena.tunnel_token = config.output.tunnel_token_elena.value;
         every-router.tunnel_token = config.output.tunnel_token_every-router.value;

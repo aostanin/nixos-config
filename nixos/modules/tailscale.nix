@@ -1,10 +1,17 @@
 {
   config,
   lib,
-  sopsFiles,
+  secrets,
   ...
 }: let
   cfg = config.localModules.tailscale;
+  device = secrets.terranix.tailscale.devices.${config.networking.hostName} or {};
+  # Always passed, even when empty: `tailscale set` only changes the flags it's
+  # given, so leaving one out would keep a stale advertisement.
+  advertiseFlags = [
+    "--advertise-exit-node=${lib.boolToString cfg.advertiseExitNode}"
+    "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"
+  ];
 in {
   options.localModules.tailscale = {
     enable = lib.mkEnableOption "tailscale";
@@ -25,6 +32,24 @@ in {
       '';
     };
 
+    tags = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      # Match what terraform assigns, so a re-registration doesn't change them.
+      default =
+        if device.isServer or false
+        then ["tag:server"]
+        else ["tag:managed"];
+      description = "Tags to register with; OAuth-registered nodes must be tagged.";
+    };
+
+    advertiseExitNode = lib.mkEnableOption "advertising this node as an exit node";
+
+    advertiseRoutes = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [];
+      description = "Subnet routes to advertise.";
+    };
+
     extraFlags = lib.mkOption {
       description = "Extra flags.";
       type = lib.types.listOf lib.types.str;
@@ -34,14 +59,18 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets."tailscale/auth_key".sopsFile = sopsFiles.terranix;
+    sops.secrets."tailscale/client_secret" = {};
 
     services.tailscale = {
       enable = true;
       openFirewall = true;
-      authKeyFile = config.sops.secrets."tailscale/auth_key".path;
-      extraUpFlags = cfg.extraFlags;
-      extraSetFlags = cfg.extraFlags;
+      # An OAuth client secret registers the node directly, so there's no
+      # expiring auth key to regenerate.
+      authKeyFile = config.sops.secrets."tailscale/client_secret".path;
+      authKeyParameters.preauthorized = true;
+      # `tailscale set` rejects --advertise-tags.
+      extraUpFlags = advertiseFlags ++ cfg.extraFlags ++ ["--advertise-tags=${lib.concatStringsSep "," cfg.tags}"];
+      extraSetFlags = advertiseFlags ++ cfg.extraFlags;
       useRoutingFeatures =
         if (cfg.isClient && cfg.isServer)
         then "both"

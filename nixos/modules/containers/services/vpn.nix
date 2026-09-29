@@ -2,16 +2,10 @@
   lib,
   pkgs,
   config,
-  sopsFiles,
   ...
 }: let
   name = "vpn";
   cfg = config.localModules.containers.services.${name};
-
-  authKey =
-    if cfg.ephemeral
-    then "tailscale/auth_key_ephemeral"
-    else "tailscale/auth_key";
 
   # Boot pins the exit node by IP (resolves without a netmap; a stale/rotated IP
   # blackholes egress rather than leaking). Once the node is healthy the netmap
@@ -50,7 +44,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     sops.secrets = {
-      ${authKey}.sopsFile = sopsFiles.terranix;
+      "tailscale/client_secret" = {};
       "containers/vpn/exit_node" = {};
       "containers/vpn/exit_node_hostname" = {};
     };
@@ -58,7 +52,7 @@ in {
     systemd.services."podman-${name}".serviceConfig.ExecStartPost = ["${setExitNode}"];
 
     sops.templates."${name}.env".content = ''
-      TS_AUTHKEY=${config.sops.placeholder.${authKey}}
+      TS_AUTHKEY=${config.sops.placeholder."tailscale/client_secret"}?ephemeral=${lib.boolToString cfg.ephemeral}&preauthorized=true
       TS_EXTRA_ARGS=--exit-node=${config.sops.placeholder."containers/vpn/exit_node"} --exit-node-allow-lan-access=false --accept-routes=false --advertise-tags=tag:mullvad
     '';
 
@@ -70,6 +64,8 @@ in {
       raw.image = "docker.io/tailscale/tailscale:latest";
       raw.environment = {
         TS_ACCEPT_DNS = "false";
+        # Else every start runs `up` with the OAuth secret, minting a new key.
+        TS_AUTH_ONCE = "true";
         TS_HOSTNAME = "container-${config.networking.hostName}";
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_USERSPACE = "false"; # Needed to use exit node

@@ -41,7 +41,7 @@
 
     tailscale = {
       isServer = true;
-      extraFlags = ["--advertise-exit-node"];
+      advertiseExitNode = true;
     };
   };
 
