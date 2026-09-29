@@ -66,6 +66,8 @@ in {
         }
         // lib.optionalAttrs (cfg.publicHostname != null) {
           PASEO_SERVICE_PROXY_PUBLIC_BASE_URL = "https://${cfg.publicHostname}";
+          # The proxy rewrites Host, so the WebSocket isn't same-origin anymore.
+          PASEO_CORS_ORIGINS = "https://${cfg.publicHostname}";
         };
     };
 
