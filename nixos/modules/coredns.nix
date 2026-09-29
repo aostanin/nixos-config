@@ -97,6 +97,29 @@ in {
         (lib.filterAttrs (n: v: builtins.hasAttr n secrets.network.home.hosts) dnsNames)
       );
 
+      # The hosts plugin can't match wildcards. AAAA gets an empty answer, like
+      # hosts gives the v4-only names.
+      dnsWildcards = localLib.dnsWildcardsByHost cfg.domain self.nixosConfigurations;
+      wildcardTemplates = addresses:
+        lib.concatStrings (lib.flatten (lib.mapAttrsToList (n: wildcards:
+          map (w: let
+            zone = lib.removePrefix "*." w;
+            match = "^[^.]+\\.${lib.escapeRegex zone}\\.$";
+          in ''
+            template IN A ${zone} {
+              match ${match}
+              answer "{{ .Name }} 60 IN A ${addresses.${n}.address}"
+              fallthrough
+            }
+            template IN AAAA ${zone} {
+              match ${match}
+              rcode NOERROR
+              fallthrough
+            }
+          '')
+          wildcards)
+        (lib.filterAttrs (n: _: builtins.hasAttr n addresses) dnsWildcards)));
+
       tailnet = secrets.terranix.tailscale.tailnetName;
       dom = lib.escapeRegex cfg.domain;
       bindLine = "bind ${lib.concatStringsSep " " cfg.bindInterfaces}";
@@ -125,12 +148,13 @@ in {
 
       # Trusted view: internal names + split-horizon hosts, everything else to
       # the filtered upstream.
-      internal = name: expr: hosts: ''
+      internal = name: expr: hosts: templates: ''
         .:53 {
           ${bindLine}
           view ${name} {
             expr ${expr}
           }
+          ${templates}
           hosts {
             ${hosts}
             fallthrough
@@ -167,8 +191,8 @@ in {
       '';
 
       blocks =
-        [(internal "tailscale" tsExpr hostsTailscale)]
-        ++ lib.optional cfg.enableLan (internal "lan" lanExpr hostsLan)
+        [(internal "tailscale" tsExpr hostsTailscale (wildcardTemplates secrets.network.tailscale.hosts))]
+        ++ lib.optional cfg.enableLan (internal "lan" lanExpr hostsLan (wildcardTemplates secrets.network.home.hosts))
         ++ lib.optional (cfg.untrustedSubnets != []) (public untrustedExpr)
         ++ [(public null)];
     in {

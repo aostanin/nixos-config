@@ -92,11 +92,15 @@ in {
               domains = [
                 {
                   main = domain;
-                  sans = [
-                    "*.${domain}"
-                    "${host}.ts.${domain}"
-                    "*.${host}.ts.${domain}"
-                  ];
+                  sans =
+                    [
+                      "*.${domain}"
+                      "${host}.ts.${domain}"
+                      "*.${host}.ts.${domain}"
+                    ]
+                    # `*.<domain>` covers one level only.
+                    ++ lib.filter (lib.hasPrefix "*.") (lib.concatMap (e: e.hosts)
+                      (lib.attrValues (lib.filterAttrs (_: e: e.enable) config.localModules.ingress)));
                 }
               ];
             };

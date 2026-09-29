@@ -28,6 +28,10 @@
     || (lib.hasSuffix ".${domain}" fqdn
       && !(lib.hasInfix "." (lib.removeSuffix ".${domain}" fqdn)));
 
+  # A single-level wildcard over a bare name, e.g. `*.paseo.<domain>`.
+  isWildcardFqdn = domain: fqdn:
+    lib.hasPrefix "*." fqdn && isBareFqdn domain (lib.removePrefix "*." fqdn);
+
   # The hostname running a given container service, discovered across all
   # hosts. Throws unless exactly one host enables it.
   hostRunningService = service: nixosConfigurations: let
@@ -45,14 +49,7 @@
   #   { <host> = [ "name.domain" "domain" ... ]; }  (full FQDNs)
   # Throws on a name claimed by more than one host (conflicting records).
   dnsNamesByHost = domain: nixosConfigurations: let
-    allEntries = lib.flatten (lib.mapAttrsToList (
-        _: node:
-          lib.mapAttrsToList (_: e: {inherit (e) host hosts enable;})
-          (node.config.localModules.ingress or {})
-      )
-      nixosConfigurations);
-    enabled = lib.filter (e: e.enable) allEntries;
-    byHost = lib.groupBy (e: e.host) enabled;
+    byHost = ingressEntriesByHost nixosConfigurations;
     perHost =
       lib.mapAttrs (
         _: entries:
@@ -75,4 +72,23 @@
           )
           collisions))
     else perHost;
+
+  # Wildcard names served by each host, like dnsNamesByHost but kept apart so
+  # consumers that publish records (terraform) never see them:
+  #   { <host> = [ "*.name.domain" ... ]; }
+  dnsWildcardsByHost = domain: nixosConfigurations:
+    lib.filterAttrs (_: names: names != []) (lib.mapAttrs (
+        _: entries:
+          lib.sort (a: b: a < b) (lib.unique (lib.filter (isWildcardFqdn domain)
+              (lib.flatten (map (e: e.hosts) entries))))
+      )
+      (ingressEntriesByHost nixosConfigurations));
+
+  ingressEntriesByHost = nixosConfigurations:
+    lib.groupBy (e: e.host) (lib.filter (e: e.enable) (lib.flatten (lib.mapAttrsToList (
+        _: node:
+          lib.mapAttrsToList (_: e: {inherit (e) host hosts enable;})
+          (node.config.localModules.ingress or {})
+      )
+      nixosConfigurations)));
 }

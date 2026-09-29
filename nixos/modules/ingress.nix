@@ -77,6 +77,12 @@
         description = "Explicit backend URL, overriding scheme/port.";
       };
 
+      passHostHeader = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Forward the client's Host header, rather than the backend's.";
+      };
+
       trusted = lib.mkOption {
         type = accessSubmodule true;
         default = {};
@@ -121,7 +127,11 @@ in {
         else [];
 
       mkEntry = name: e: let
-        hostRules = lib.concatStringsSep " || " (map (h: "Host(`${h}`)") e.hosts);
+        hostRule = h:
+          if lib.hasPrefix "*." h
+          then "HostRegexp(`^[^.]+${lib.escapeRegex (lib.removePrefix "*" h)}$`)"
+          else "Host(`${h}`)";
+        hostRules = lib.concatStringsSep " || " (map hostRule e.hosts);
         trustedClientRules = lib.concatStringsSep " || " (map (ip: "ClientIP(`${ip}`)") trustedClientIps);
         backend =
           if e.backendUrl != null
@@ -147,7 +157,10 @@ in {
               middlewares = authMiddlewares e.default.auth;
             };
           };
-        services.${name}.loadbalancer.servers = [{url = backend;}];
+        services.${name}.loadbalancer = {
+          servers = [{url = backend;}];
+          inherit (e) passHostHeader;
+        };
       };
 
       entries = lib.mapAttrsToList mkEntry nativeEntries;
