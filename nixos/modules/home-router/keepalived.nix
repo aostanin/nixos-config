@@ -8,6 +8,7 @@
   cfg = config.localModules.home-router;
   inherit (secrets.network.networks) lan guest iot;
   systemctl = "${pkgs.systemd}/bin/systemctl";
+  ndiscHandover = pkgs.writers.writePython3 "home-router-ndisc-handover" {flakeIgnore = ["E501"];} (builtins.readFile ./ndisc-handover.py);
 
   # Debounced demote: keepalived dips through BACKUP on every restart, so
   # notify_backup only arms a timer that notify_master cancels.
@@ -16,6 +17,11 @@
       master)
         ${systemctl} stop home-router-demote.timer home-router-demote.service
         ${systemctl} --no-block start home-router-active.target
+        # Re-announce even if the data plane never stopped: a demotion cut
+        # short may already have sent the goodbye RA, and a peer that briefly
+        # held the VIPs has pointed the upstream neighbour cache at itself.
+        ${systemctl} --no-block try-restart dnsmasq.service
+        ${systemctl} --no-block restart home-router-na-refresh.service
         ;;
       backup | fault)
         ${systemctl} --no-block start home-router-demote.timer
@@ -23,10 +29,21 @@
     esac
   '';
 in {
-  options.localModules.home-router.isMaster = lib.mkOption {
-    type = lib.types.bool;
-    default = true;
-    description = "Run as VRRP master (else backup); sets state and priority.";
+  options.localModules.home-router = {
+    isMaster = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Run as VRRP master (else backup); sets state and default priority.";
+    };
+
+    priority = lib.mkOption {
+      type = lib.types.ints.between 1 254;
+      default =
+        if cfg.isMaster
+        then 200
+        else 100;
+      description = "VRRP priority; the highest live node holds the VIPs.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -45,10 +62,19 @@ in {
           description = "Stop home-router active data plane (VRRP demotion)";
           serviceConfig.Type = "oneshot";
           script = ''
+            ${ndiscHandover} goodbye-ra ${lan.interface} || true
             ${systemctl} stop home-router-active.target
             # drop the floating GUA (a oneshot stop won't undo the add)
             ${pkgs.iproute2}/bin/ip -6 addr flush dev ${lan.interface} scope global || true
           '';
+        };
+
+        home-router-na-refresh = {
+          description = "Point the upstream neighbour cache at this node after a VRRP promotion";
+          wantedBy = ["home-router-active.target"];
+          partOf = ["home-router-active.target"];
+          path = [pkgs.iproute2 pkgs.conntrack-tools];
+          script = "${ndiscHandover} refresh-na ${cfg.wanInterface} ${lan.interface} 60";
         };
       };
     systemd.timers.lan-prefix = {
@@ -72,10 +98,7 @@ in {
           then "MASTER"
           else "BACKUP";
         virtualRouterId = 51;
-        priority =
-          if cfg.isMaster
-          then 200
-          else 100;
+        inherit (cfg) priority;
         virtualIps = [
           {
             addr = "${lan.prefix}.1/24";

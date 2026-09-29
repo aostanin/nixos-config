@@ -27,11 +27,15 @@ in {
         # zero-hextet prefixes, and the WAN addr is noprefixroute so there's
         # no kernel /64 route to read instead.
         want=$(python3 -c "import ipaddress,sys; n=ipaddress.ip_network(sys.argv[1]+'/64',strict=False); print(str(n.network_address+1)+'/64')" "$addr") || { echo "bad WAN addr '$addr'"; exit 0; }
-        cur=$(ip -6 -o addr show dev "$LAN" scope global 2>/dev/null \
-          | awk '{print $4}' | head -n1)
+        line=$(ip -6 -o addr show dev "$LAN" scope global 2>/dev/null | head -n1)
+        cur=$(echo "$line" | awk '{print $4}')
+        case "$line" in *dadfailed*) cur="dadfailed:$cur" ;; esac
         if [ "$cur" != "$want" ]; then
-          [ -n "$cur" ] && ip -6 addr del "$cur" dev "$LAN" || true
-          ip -6 addr add "$want" dev "$LAN"
+          [ -n "$cur" ] && ip -6 addr del "''${cur#dadfailed:}" dev "$LAN" || true
+          # ::1 floats between VRRP nodes like the VIPs and briefly overlaps
+          # during a handover. A failed DAD leaves it tentative, and dnsmasq
+          # then stops sending periodic RAs (it still answers solicitations).
+          ip -6 addr add "$want" dev "$LAN" nodad
           systemctl reload-or-restart dnsmasq || true
         fi
       '';

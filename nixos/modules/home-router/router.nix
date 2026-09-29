@@ -3,6 +3,8 @@
   lib,
   pkgs,
   secrets,
+  localLib,
+  self,
   ...
 }: let
   wan = config.localModules.home-router.wanInterface;
@@ -11,14 +13,39 @@
 
   incus = config.virtualisation.incus.enable;
 
+  # IoT devices are configured with the IoT gateway VIP as their MQTT broker.
+  # Routers that aren't the broker's host DNAT it there, so it follows the VIP
+  # and the broker can move hosts. On the broker's host the VIP is local and
+  # podman's published port already catches it.
+  mqttHost = localLib.hostRunningService "mosquitto" self.nixosConfigurations;
+  mqttAddr = secrets.network.home.hosts.${mqttHost}.address;
+  mqttDnat = mqttHost != config.networking.hostName;
+  # Spliced onto existing lines so the ruleset stays byte-identical where
+  # they're off: any change makes nftables flush and reload everything,
+  # including podman's and Incus's tables.
+  mqttPrerouting = lib.optionalString mqttDnat (lib.concatStrings [
+    "\n\n  chain prerouting {"
+    "\n    type nat hook prerouting priority dstnat;"
+    "\n    policy accept;"
+    "\n\n    iifname \"vlan40\" ip daddr ${iot.prefix}.1 tcp dport 1883 dnat to ${mqttAddr}"
+    "\n  }"
+  ]);
+  mqttForward =
+    lib.optionalString mqttDnat
+    "\n    iifname \"vlan40\" oifname \"br-lan\" ip daddr ${mqttAddr} tcp dport 1883 ct status dnat accept";
+  # The broker's host may have no route back to the IoT subnet (a backup
+  # router's only IoT address is the VIP), so replies must come back via us.
+  mqttMasquerade =
+    lib.optionalString mqttDnat
+    "\n    oifname \"br-lan\" ip daddr ${mqttAddr} tcp dport 1883 ct status dnat masquerade";
+
   # The drop-policy input chain must accept these: tailscale0 (else SSH over the
   # tailnet locks out), podman* (else containers can't reach aardvark DNS /
   # host.containers.internal on their bridge gateway) and incusbr0 (Incus's
   # dnsmasq DHCP/DNS).
-  inputAccept =
-    lib.concatStringsSep ", " (map (i: ''"${i}"'')
-      (["lo" "br-lan" "vlan20" "vlan40" "tailscale0" "podman*"]
-        ++ lib.optional incus "incusbr0"));
+  inputAccept = lib.concatStringsSep ", " (map (i: ''"${i}"'')
+    (["lo" "br-lan" "vlan20" "vlan40" "tailscale0" "podman*"]
+      ++ lib.optional incus "incusbr0"));
 
   iotDevices = secrets.network.iot.devices;
   # DHCP reservations (devices with an address) + the WAN egress allowlist
@@ -77,6 +104,13 @@ in {
             # hosts (e.g. IoT/LAN devices that don't run tailscale).
             iifname "tailscale0" oifname { "br-lan", "vlan20", "vlan40" } accept
 
+            # Exit node: tailnet clients out to the internet.
+            iifname "tailscale0" oifname { "${wan}", "ds-wan" } accept
+
+            # LAN servers (HA, frigate) and clients reach IoT devices; IoT can't
+            # reach back except the MQTT DNAT.
+            iifname "br-lan" oifname "vlan40" accept
+
             # LAN and guest reach the internet unrestricted.
             iifname { "br-lan", "vlan20" } oifname { "${wan}", "ds-wan" } accept
 
@@ -84,18 +118,18 @@ in {
             # frigate cameras on iot, syncthing peers over tailscale, LAN).
             iifname "podman*" accept
             ${lib.optionalString incus ''
-              # Incus instances are trusted like Incus's own default rules:
-              # out to anywhere, and reachable from the LAN (routed, no NAT).
-              iifname "incusbr0" accept
-              iifname "br-lan" oifname "incusbr0" accept
-            ''}
+          # Incus instances are trusted like Incus's own default rules:
+          # out to anywhere, and reachable from the LAN (routed, no NAT).
+          iifname "incusbr0" accept
+          iifname "br-lan" oifname "incusbr0" accept
+        ''}
 
             # Published container ports reachable from LAN, IoT, tailscale, and
             # other containers (IoT -> MQTT broker, LAN -> netbootxyz TFTP,
             # tailnet -> forgejo SSH 2222): netavark DNATs the inbound to the
             # container bridge. Scoped by ingress iface so guest (vlan20) and
             # the WAN can't reach them.
-            iifname { "br-lan", "vlan40", "tailscale0", "podman*" } ct status dnat oifname "podman*" accept
+            iifname { "br-lan", "vlan40", "tailscale0", "podman*" } ct status dnat oifname "podman*" accept${mqttForward}
 
             # IoT egress allowlist, then deny the rest (no IoT->LAN/guest at all).
             iifname "vlan40" oifname { "${wan}", "ds-wan" } ether saddr { ${iotWanAllow} } accept
@@ -105,12 +139,12 @@ in {
           }
         }
 
-        table ip nat {
+        table ip nat {${mqttPrerouting}
           chain postrouting {
             type nat hook postrouting priority 100;
             policy accept;
 
-            oifname { "${wan}", "ds-wan" } masquerade
+            oifname { "${wan}", "ds-wan" } masquerade${mqttMasquerade}
             # Containers reaching tailscale peers need SNAT (the tailnet has no
             # route back to the podman subnet).
             oifname "tailscale0" ip saddr 10.88.0.0/15 masquerade
