@@ -67,6 +67,9 @@ in {
     system.defaults = {
       ActivityMonitor.IconType = 6; # CPU History
 
+      # idleTime is per-host; defaults resolves this ByHost path to the current host's UUID plist.
+      CustomUserPreferences."~${config.system.primaryUser}/Library/Preferences/ByHost/com.apple.screensaver".idleTime = 0;
+
       NSGlobalDomain = {
         AppleInterfaceStyle = "Dark";
         ApplePressAndHoldEnabled = false;
