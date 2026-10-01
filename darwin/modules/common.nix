@@ -24,6 +24,12 @@ in {
         nixpkgs-unstable.flake = nixpkgs-unstable;
         nixos-config.flake = self;
       };
+      gc = {
+        automatic = true;
+        options = "--delete-older-than 30d";
+      };
+      # nix-darwin rejects auto-optimise-store as known to corrupt the store.
+      optimise.automatic = true;
       settings = {
         experimental-features = ["nix-command" "flakes"];
         trusted-users = [
