@@ -51,6 +51,7 @@ in {
       "nvidia-container-toolkit-cdi-generator.service"
       "podman-open-webui.service"
       "podman-openedai-speech.service"
+      "podman-whisper-cpp.service"
     ];
     vms = let
       isolate6ThreadFirst = {

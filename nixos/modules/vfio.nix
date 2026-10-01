@@ -296,6 +296,8 @@
     fi
   '';
 
+  nvidiaSmi = lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi";
+
   gpuDetachScript = gpu:
     pkgs.writeScriptBin "vfio-gpu-detach"
     (
@@ -330,18 +332,22 @@
         ''}
         ${gpu.preDetachCommands}
 
-        systemctl stop nvidia-persistenced.service
+        # The modules stay loaded so that other GPUs remain usable on the host.
+        ${nvidiaSmi} -i 0000:${gpu.busId} -pm 0
 
-        # Avoid in use error when modeset is enabled
-        modprobe -r nvidia_uvm
-        modprobe -r nvidia_drm
-        modprobe -r nvidia_modeset
-        modprobe -r nvidia
-        modprobe -r i2c_nvidia_gpu
-
-        # Avoid detaching the GPU if it's in use
-        # TODO: Kill processes with --kill?
-        ${lib.getExe' pkgs.psmisc "fuser"} /dev/nvidia0 && exit 1
+        # Unbinding a GPU that is still open wedges the nvidia driver until reboot.
+        # fuser can't be used as containers see the device through a different inode.
+        minor=$(sed -n 's/^Device Minor:\s*//p' /proc/driver/nvidia/gpus/0000:${gpu.busId}/information)
+        pids=$(find /proc/[0-9]*/fd -mindepth 1 -maxdepth 1 2>/dev/null \
+          | xargs stat -L -c '%t:%T %n' 2>/dev/null \
+          | grep "^c3:$(printf '%x' "$minor") " \
+          | cut -d/ -f3 | sort -u)
+        if [ -n "$pids" ]; then
+          for pid in $pids; do
+            echo "GPU ${gpu.busId} in use by $pid $(cat /proc/$pid/comm)" >&2
+          done
+          exit 1
+        fi
 
         if [ $(basename $(readlink /sys/bus/pci/devices/0000:${gpu.busId}/driver)) != "vfio-pci" ]; then
           ${lib.getExe' libvirt "virsh"} nodedev-detach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
@@ -373,13 +379,7 @@
           ${lib.getExe' libvirt "virsh"} nodedev-reattach pci_0000_${(lib.replaceStrings [":" "."] ["_" "_"] gpu.busId)}
         fi
 
-        modprobe i2c_nvidia_gpu
-        modprobe nvidia
-        modprobe nvidia_modeset
-        modprobe nvidia_drm
-        modprobe nvidia_uvm
-
-        systemctl start nvidia-persistenced.service
+        ${nvidiaSmi} -i 0000:${gpu.busId} -pm 1
 
         ${gpu.postAttachCommands}
 
