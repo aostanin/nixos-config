@@ -30,6 +30,12 @@
   iotWanAllow =
     lib.concatStringsSep ", "
     (lib.attrNames (lib.filterAttrs (_: d: d.allowWan or false) iotDevices));
+  # LAN hosts normally configure their own static address; `dhcp` marks the
+  # ones that get theirs as a reservation instead.
+  lanReservations =
+    lib.mapAttrsToList
+    (name: h: "${h.macAddress},${name},${h.address}")
+    (lib.filterAttrs (_: h: h.dhcp or false) secrets.network.home.hosts);
 in {
   config = lib.mkIf config.localModules.home-router.enable {
     # The hand-written ruleset is authoritative; the default NixOS firewall
@@ -189,7 +195,7 @@ in {
           "tag:iot,6,${iot.prefix}.1"
           "tag:iot,42,${iot.prefix}.1"
         ];
-        dhcp-host = iotReservations;
+        dhcp-host = iotReservations ++ lanReservations;
       };
     };
   };
