@@ -17,6 +17,20 @@
     };
   };
 
+  # Splash on the MacBook, which sleeps at home and wakes on
+  # the first connection. Splash only accepts known Host names, hence the
+  # .local name mapped to the Mac's DHCP reservation below.
+  mac = "andreis-macbook-pro";
+  macApiBase = "http://${mac}.local:8085/v1";
+  mkMacModel = model_name: splashModel: {
+    inherit model_name;
+    litellm_params = {
+      model = "openai/${splashModel}";
+      api_base = macApiBase;
+      api_key = config.sops.placeholder."splash/api_key";
+    };
+  };
+
   ornith9b = "ornith-ai/Ornith-1.5-9B-GGUF:Q4_K_M";
 
   # One litellm entry per mymcp endpoint: each is its own MCP server, and
@@ -34,9 +48,15 @@ in {
   # Declared here rather than in the module: which MCP servers litellm fronts is
   # a host decision.
   sops.secrets = {
+    "splash/api_key" = {};
     "containers/litellm/ha_mcp_token" = {};
     "containers/mymcp/bearer_token" = {};
   };
+
+  # Containers only use unicast DNS, so they can't resolve .local names.
+  localModules.containers.containers.litellm.raw.extraOptions = [
+    "--add-host=${mac}.local:${secrets.network.home.hosts.${mac}.address}"
+  ];
 
   localModules.containers.services.litellm = {
     enable = true;
@@ -59,6 +79,7 @@ in {
       // mkMymcp ["calendar" "matrix" "feeds" "search" "reddit" "rides" "grist"];
 
     models = [
+      (mkMacModel "swift-qwen3.8-27b-mac" "ajgazin/Swift-Qwen3.8-27B-Uncensored-Dynamic-MTP-GGUF:UD-Q5_K_M")
       (mkLlamaCppModel "ornith-1.5-35b-a3b" "ornith-ai/Ornith-1.5-35B-A3B-GGUF:Q4_K_M")
       (mkLlamaCppModel "ornith-1.5-9b" ornith9b)
       {

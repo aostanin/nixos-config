@@ -5,6 +5,7 @@ in {
   claude-code-openai-wrapper = pkgs.python3Packages.callPackage ./claude-code-openai-wrapper {
     inherit claude-agent-sdk;
   };
+  splash = pkgs.callPackage ./splash {};
   vfio-isolate = pkgs.python3Packages.callPackage ./vfio-isolate {};
   virtwold = pkgs.callPackage ./virtwold {};
 }

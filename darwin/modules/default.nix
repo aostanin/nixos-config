@@ -6,5 +6,6 @@
     ./karabiner-elements.nix
     ./linux-builder.nix
     ./llama-cpp.nix
+    ./splash.nix
   ];
 }
