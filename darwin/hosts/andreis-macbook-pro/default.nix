@@ -4,10 +4,10 @@
   ];
 
   localModules = {
-    aerospace.enable = true;
     common.enable = true;
     karabiner-elements.enable = true;
     linuxBuilder.enable = true;
+    paneru.enable = true;
   };
 
   environment.systemPackages = [

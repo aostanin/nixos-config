@@ -84,6 +84,24 @@ in {
         ];
       }
       {
+        description = "Cmd+Shift+Q to close window";
+        manipulators = [
+          {
+            from = {
+              key_code = "q";
+              modifiers.mandatory = ["left_command" "left_control" "left_option" "shift"];
+            };
+            to = [
+              {
+                key_code = "w";
+                modifiers = ["left_command"];
+              }
+            ];
+            type = "basic";
+          }
+        ];
+      }
+      {
         description = "E/J key to switch input";
         manipulators = [
           {

@@ -143,7 +143,7 @@ in {
         target = "clipboard";
       };
 
-      spaces.spans-displays = true;
+      spaces.spans-displays = lib.mkDefault true;
 
       trackpad = {
         TrackpadRightClick = true;

@@ -56,6 +56,7 @@ in {
           lftp
           lsix
           lsof
+          macmon
           minicom
           miniserve
           mqttui

@@ -79,6 +79,14 @@
       url = "github:getpaseo/paseo";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    paneru = {
+      # On testing for the window-rule width fix; back to main once it lands there.
+      # https://github.com/karinushka/paneru/commit/b93560b86da001d239d46de3498ec42ff5f25d7c
+      url = "github:karinushka/paneru/testing";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nix-darwin.follows = "nix-darwin";
+      inputs.flake-parts.follows = "flake-parts";
+    };
   };
 
   outputs = inputs @ {
