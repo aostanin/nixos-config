@@ -115,7 +115,7 @@ in {
     };
 
     localModules.containers.containers.mautrix-meta-instagram = lib.mkIf cfg.enableInstagramBridge {
-      raw.image = "dock.mau.dev/mautrix/meta:latest";
+      raw.image = "dock.mau.dev/mautrix/meta:ig-latest";
       networks = [name];
       raw.dependsOn = ["synapse"];
       volumes.data = {
