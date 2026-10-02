@@ -388,51 +388,15 @@ in {
       plugins = {
         auto-session.enable = true;
 
-        blink-copilot.enable = true;
-
         blink-cmp = {
           enable = true;
           settings = {
-            keymap = {
-              "<Tab>" = [
-                "snippet_forward"
-                {
-                  __raw = ''
-                    function()
-                      return require("sidekick").nes_jump_or_apply()
-                    end
-                  '';
-                }
-                "fallback"
-              ];
-            };
-            sources = {
-              default = [
-                "copilot"
-                "lsp"
-                "path"
-                "snippets"
-                "buffer"
-              ];
-              providers.copilot = {
-                name = "copilot";
-                module = "blink-copilot";
-                score_offset = 100;
-                async = true;
-                opts = {
-                  max_completions = 3;
-                  max_attempts = 4;
-                  kind_name = "Copilot";
-                  kind_icon = " ";
-                  kind_hl = false;
-                  debounce = 200;
-                  auto_refresh = {
-                    backward = true;
-                    forward = true;
-                  };
-                };
-              };
-            };
+            sources.default = [
+              "lsp"
+              "path"
+              "snippets"
+              "buffer"
+            ];
           };
         };
 
@@ -482,14 +446,6 @@ in {
           };
         };
 
-        copilot-lua = {
-          enable = true;
-          settings = {
-            suggestion.enabled = false;
-            panel.enabled = false;
-          };
-        };
-
         gitsigns = {
           enable = true;
           settings.current_line_blame = true;
@@ -532,27 +488,6 @@ in {
         lualine = {
           enable = true;
           settings.sections = {
-            lualine_c = [
-              "filename"
-              {
-                __unkeyed-1.__raw = ''function() return vim.fn.nr2char(0xf544) .. " " end'';
-                color.__raw = ''
-                  function()
-                    local status = require("sidekick.status").get()
-                    if status then
-                      return status.kind == "Error" and "DiagnosticError"
-                        or status.busy and "DiagnosticWarn"
-                        or "Special"
-                    end
-                  end
-                '';
-                cond.__raw = ''
-                  function()
-                    return require("sidekick.status").get() ~= nil
-                  end
-                '';
-              }
-            ];
             lualine_x = [
               "encoding"
               {
@@ -586,6 +521,7 @@ in {
         sidekick = {
           enable = true;
           settings = {
+            nes.enabled = false;
             cli = {
               mux = {
                 backend = "tmux";
