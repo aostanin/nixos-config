@@ -28,6 +28,9 @@
       model = "openai/${splashModel}";
       api_base = macApiBase;
       api_key = config.sops.placeholder."splash/api_key";
+      # litellm drops Splash's own SSE keepalives, so a long prefill goes silent
+      # and trips the client's idle timeout.
+      keepalive_seconds = 15;
     };
   };
 
