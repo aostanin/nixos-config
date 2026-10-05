@@ -42,6 +42,21 @@ in {
     ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="auto"
   '';
 
+  # 150W costs ~4% tok/s on the 9B model for ~23% less power under load.
+  # Driver resets the limit on unbind, so reapply whenever gpu-host.target starts.
+  systemd.services.nvidia-power-limit = {
+    description = "Set NVIDIA GPU power limit";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = [
+        "${lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi"} -pm 1"
+        "${lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi"} -pl 150"
+      ];
+    };
+  };
+  localModules.vfio.gpuHostUnits = ["nvidia-power-limit.service"];
+
   # WD drives aren't going to sleep with just the standby timeout set
   systemd.services."hd-idle" = {
     description = "hd-idle - spin down idle hard disks";
