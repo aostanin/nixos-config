@@ -15,6 +15,7 @@
     ./containers.nix
     ./incus.nix
     ./litellm.nix
+    ./actual.nix
     ./n8n.nix
     ./silverbullet.nix
     ./llama-cpp.nix

@@ -21,6 +21,8 @@
     enable = true;
     prune = true;
     paths = [
+      # actual uses DynamicUser; /var/lib/actual is a symlink to this.
+      "/var/lib/private/actual"
       "/var/lib/nixos"
       # n8n uses DynamicUser; /var/lib/n8n is a symlink to this.
       "/var/lib/private/n8n"
