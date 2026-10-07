@@ -44,6 +44,7 @@
     ./caddy.nix
     ./nginx.nix
     ./nzbget.nix
+    ./paseo-hub.nix
     ./ollama.nix
     ./open-webui.nix
     ./kokoro-fastapi.nix

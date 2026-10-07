@@ -227,6 +227,7 @@
         karakeep.enable = true;
         mealie.enable = true;
         netbootxyz.enable = true;
+        paseo-hub.enable = true;
         nextcloud.enable = true;
         scrutiny.enable = true;
         syncthing = {
