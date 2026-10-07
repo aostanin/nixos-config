@@ -12,28 +12,22 @@
     ./domi.nix
     ./forgejo.nix
     ./frigate.nix
-    ./grafana.nix
     ./grist.nix
     ./guacamole.nix
     ./hauk.nix
     ./home-assistant.nix
     ./immich.nix
-    ./influxdb.nix
-    ./invidious.nix
     ./ir-mqtt-bridge.nix
     ./jellyfin.nix
     ./jellyseerr.nix
-    ./jobcan.nix
     ./karakeep.nix
     ./komga.nix
-    ./librespeed.nix
     ./lidarr.nix
     ./litellm.nix
     ./lnbits.nix
     ./martin.nix
     ./matrix.nix
     ./mealie.nix
-    ./meshcentral.nix
     ./miniflux.nix
     ./mosquitto.nix
     ./mymcp.nix
@@ -42,10 +36,8 @@
     ./netbootxyz.nix
     ./nextcloud.nix
     ./caddy.nix
-    ./nginx.nix
     ./nzbget.nix
     ./paseo-hub.nix
-    ./ollama.nix
     ./open-webui.nix
     ./kokoro-fastapi.nix
     ./openedai-speech.nix
@@ -53,7 +45,6 @@
     ./open-meteo.nix
     ./overpass.nix
     ./photon.nix
-    ./piper.nix
     ./prowlarr.nix
     ./qbittorrent.nix
     ./radarr.nix
@@ -61,8 +52,6 @@
     ./scrutiny.nix
     ./searxng.nix
     ./sonarr.nix
-    ./stable-diffusion.nix
-    ./stalwart.nix
     ./syncthing.nix
     ./tasmoadmin.nix
     ./tdarr.nix
@@ -72,9 +61,6 @@
     ./valhalla.nix
     ./vaultwarden.nix
     ./vpn.nix
-    ./webtop.nix
-    ./whisper.nix
-    ./whoami.nix
     ./wyoming-openai.nix
     ./xbvr.nix
     ./zigbee2mqtt.nix
