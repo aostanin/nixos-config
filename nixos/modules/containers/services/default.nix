@@ -61,7 +61,6 @@
     ./scrutiny.nix
     ./searxng.nix
     ./sonarr.nix
-    ./whisper-cpp.nix
     ./stable-diffusion.nix
     ./stalwart.nix
     ./syncthing.nix

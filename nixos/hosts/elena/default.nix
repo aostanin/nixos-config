@@ -19,6 +19,7 @@
     ./n8n.nix
     ./silverbullet.nix
     ./llama-cpp.nix
+    ./whisper-cpp.nix
     ./vfio.nix
     ./libvirt
     ./microvm.nix
@@ -90,7 +91,6 @@
         open-webui.enable = true;
 
         kokoro-fastapi.enable = true;
-        whisper-cpp.enable = true;
 
         grist.enable = true;
 

@@ -28,6 +28,7 @@
     ./vfio.nix
     ./virtwold.nix
     ./watchdog.nix
+    ./whisper-cpp.nix
     ./zfs.nix
   ];
 }
