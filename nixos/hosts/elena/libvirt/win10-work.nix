@@ -201,7 +201,7 @@
         managed = true;
         source.address = {
           domain = 0;
-          bus = 6;
+          bus = 9;
           slot = 0;
           function = 0;
         };
