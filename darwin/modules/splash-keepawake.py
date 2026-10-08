@@ -35,7 +35,8 @@ def busy():
     request = urllib.request.Request(SPLASH + "/status", headers=headers)
     with urllib.request.urlopen(request, timeout=3) as response:
         status = json.load(response)
-    return status["state"]["active_cells"] > 0 or status["admission"]["waiting"] > 0
+    admission = status["admission"]
+    return status["state"]["active_lanes"] > 0 or admission["waiting_memory"] > 0 or admission["waiting_concurrency"] > 0
 
 
 was_busy = False
