@@ -50,7 +50,6 @@ in {
       "llama-cpp.service"
       "nvidia-container-toolkit-cdi-generator.service"
       "podman-open-webui.service"
-      "podman-openedai-speech.service"
       "whisper-cpp.service"
     ];
     vms = let

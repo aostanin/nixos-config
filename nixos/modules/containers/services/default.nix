@@ -40,7 +40,6 @@
     ./paseo-hub.nix
     ./open-webui.nix
     ./kokoro-fastapi.nix
-    ./openedai-speech.nix
     ./openwakeword.nix
     ./open-meteo.nix
     ./overpass.nix

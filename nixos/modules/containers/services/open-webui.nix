@@ -16,10 +16,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    localModules.containers.services = {
-      openedai-speech.enable = lib.mkDefault true;
-    };
-
     sops.secrets = {
       "containers/${name}/webui_secret_key" = {};
     };
