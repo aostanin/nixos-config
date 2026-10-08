@@ -25,7 +25,7 @@ in {
     '';
 
     localModules.containers.containers.${name} = {
-      raw.image = "ghcr.io/open-webui/open-webui:cuda";
+      raw.image = "ghcr.io/open-webui/open-webui:${if cfg.enableNvidia then "cuda" else "main"}";
       networks = ["ai"];
       raw.environment = {
         ENABLE_SIGNUP = "false";

@@ -88,7 +88,10 @@
         uid = 1000;
         gid = 100;
       in {
-        open-webui.enable = true;
+        open-webui = {
+          enable = true;
+          enableNvidia = false;
+        };
 
         kokoro-fastapi.enable = true;
 

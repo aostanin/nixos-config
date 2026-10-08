@@ -49,7 +49,6 @@ in {
     gpuHostUnits = [
       "llama-cpp.service"
       "nvidia-container-toolkit-cdi-generator.service"
-      "podman-open-webui.service"
       "whisper-cpp.service"
     ];
     vms = let
