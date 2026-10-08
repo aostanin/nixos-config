@@ -20,13 +20,18 @@ in {
     # mkAfter so consoleblank=0 lands after common.nix's consoleblank=300
     boot.kernelParams = lib.mkAfter [
       "nmi_watchdog=1"
-      "hardlockup_panic=1"
       "consoleblank=0" # A blanked console hides the panic from an attached KVM
     ];
 
     boot.kernel.sysctl = {
       "kernel.panic" = 10; # reboot 10s after a panic instead of hanging
       "kernel.panic_on_oops" = 1; # treat an oops as a panic on this headless host
+      "kernel.hardlockup_panic" = 1;
+      # Soft lockups (20s) and RCU stalls (21s) only warn, and a frozen host
+      # never gets that warning to disk; as panics they reach EFI pstore before
+      # the 30s watchdog reset. hung_task_panic stays off: ZFS can trip it.
+      "kernel.softlockup_panic" = 1;
+      "kernel.panic_on_rcu_stall" = 1;
     };
 
     # Arm the iTCO hardware watchdog: chipset resets the host if systemd stops
