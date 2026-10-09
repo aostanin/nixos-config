@@ -22,6 +22,7 @@
     ./llama-swap.nix
     ./strata.nix
     ./whisper-cpp.nix
+    ./kokoro-fastapi.nix
     ./vfio.nix
     ./libvirt
     ./microvm.nix
@@ -94,8 +95,6 @@
           enable = true;
           enableNvidia = false;
         };
-
-        kokoro-fastapi.enable = true;
 
         grist.enable = true;
 

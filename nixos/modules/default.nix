@@ -14,6 +14,7 @@
     ./impermanence.nix
     ./ingress.nix
     ./intel-amt.nix
+    ./kokoro-fastapi.nix
     ./msmtp.nix
     ./networkmanager.nix
     ./nix-ld.nix

@@ -39,7 +39,6 @@
     ./nzbget.nix
     ./paseo-hub.nix
     ./open-webui.nix
-    ./kokoro-fastapi.nix
     ./openwakeword.nix
     ./open-meteo.nix
     ./overpass.nix
