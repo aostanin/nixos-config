@@ -96,6 +96,10 @@ in {
           api_base = llamaCppApiBase;
           api_key = "none";
           extra_body.chat_template_kwargs.enable_thinking = false;
+          # Requests queue behind a running Strata job and then wait for
+          # the swap back; voice can't wait that long, so fall back.
+          timeout = 15;
+          stream_timeout = 10;
         };
       }
       {
@@ -115,6 +119,7 @@ in {
           model = "openai/whisper-1";
           api_base = whisperCppApiBase;
           api_key = "none";
+          timeout = 10;
         };
         model_info.mode = "audio_transcription";
       }
@@ -137,14 +142,15 @@ in {
       }
     ];
 
-    # whisper stops while elena's GPU is passed through to a VM. Retrying
-    # elena first would only delay the fallback.
+    # whisper and ha-assist stop while elena's GPU is passed through to a VM
+    # or held by Strata. Retrying elena first would only delay the fallback.
     routerSettings = {
       fallbacks = [
         {whisper = ["whisper-mac"];}
         {kokoro = ["kokoro-mac"];}
+        {ha-assist = ["ornith-1.5-35b-a3b-mac"];}
       ];
-      model_group_retry_policy = lib.genAttrs ["whisper" "kokoro"] (_: {DefaultRetries = 0;});
+      model_group_retry_policy = lib.genAttrs ["whisper" "kokoro" "ha-assist"] (_: {DefaultRetries = 0;});
     };
   };
 }
