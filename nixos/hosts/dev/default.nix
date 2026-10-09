@@ -31,6 +31,11 @@ in {
 
   services.resolved.enable = true;
 
+  # Agents run under the paseo system service, not a login session, so without
+  # linger the user manager stops on logout and wipes the home-manager sops
+  # secrets in /run/user.
+  users.users.${secrets.user.username}.linger = true;
+
   localModules = {
     common = {
       enable = true;
