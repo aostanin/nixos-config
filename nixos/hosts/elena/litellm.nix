@@ -142,6 +142,10 @@ in {
       }
     ];
 
+    # Otherwise litellm polls every deployment's /v1/models every 5 minutes for
+    # token limits, and each poll wakes the sleeping Mac.
+    generalSettings.disable_model_info_refresh = true;
+
     # whisper and ha-assist stop while elena's GPU is passed through to a VM
     # or held by Strata. Retrying elena first would only delay the fallback.
     routerSettings = {

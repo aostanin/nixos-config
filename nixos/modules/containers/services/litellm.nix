@@ -13,7 +13,7 @@
   # for mcp_servers, so those tokens have to be in the file itself.
   configContent = builtins.toJSON ({
       model_list = cfg.models;
-      general_settings.master_key = "os.environ/LITELLM_MASTER_KEY";
+      general_settings = cfg.generalSettings // {master_key = "os.environ/LITELLM_MASTER_KEY";};
       litellm_settings = {
         drop_params = true;
         num_retries = 2;
@@ -29,6 +29,12 @@ in {
       type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
       default = [];
       description = "litellm `model_list` entries (each `{ model_name; litellm_params; }`).";
+    };
+
+    generalSettings = lib.mkOption {
+      type = lib.types.attrsOf lib.types.anything;
+      default = {};
+      description = "litellm `general_settings`, besides the master key.";
     };
 
     routerSettings = lib.mkOption {
