@@ -1,6 +1,9 @@
 {pkgs, ...}: {
   localModules = {
-    common.enable = true;
+    common = {
+      enable = true;
+      enableNvidia = true;
+    };
 
     vdirsyncer.enable = true;
   };

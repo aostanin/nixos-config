@@ -18,6 +18,8 @@ in {
         Don't install some optional packages.
       '';
     };
+
+    enableNvidia = lib.mkEnableOption "NVIDIA GPU support in tools";
   };
 
   config = lib.mkIf cfg.enable {
@@ -41,7 +43,6 @@ in {
         [
           aria2
           bat
-          btop
           cksfv
           ctop
           dhex
@@ -104,6 +105,11 @@ in {
       broot = {
         enable = true;
         settings.modal = true;
+      };
+
+      btop = {
+        enable = true;
+        package = pkgs.btop.override {cudaSupport = cfg.enableNvidia;};
       };
 
       direnv = {
