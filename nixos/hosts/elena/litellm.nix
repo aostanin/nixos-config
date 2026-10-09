@@ -103,7 +103,7 @@ in {
         };
       }
       {
-        model_name = "strata";
+        model_name = "qwen3.8-flash-next";
         litellm_params = {
           # Strata serves one model under any name.
           model = "openai/strata";
