@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   imports = [
-    ./splash.nix
+    ./llama-swap.nix
   ];
 
   localModules = {

@@ -1,4 +1,4 @@
-"""Keeps the Mac in full wake while Splash serves requests.
+"""Keeps the Mac in full wake while llama-swap serves requests.
 
 A network wake is a dark wake that powerd ends after ~45s regardless of open
 connections, and Metal work needs full wake, so declare remote user activity
@@ -11,7 +11,7 @@ import sys
 import time
 import urllib.request
 
-SPLASH = sys.argv[1]
+LLAMA_SWAP = sys.argv[1]
 API_KEY_FILE = sys.argv[2] if len(sys.argv) > 2 else None
 POLL_SECONDS = 5
 kIOPMUserActiveRemote = 1
@@ -23,7 +23,7 @@ cf.CFStringCreateWithCString.restype = ctypes.c_void_p
 cf.CFStringCreateWithCString.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_uint32]
 iokit.IOPMAssertionDeclareUserActivity.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(ctypes.c_uint32)]
 iokit.IOPMAssertionDeclareUserActivity.restype = ctypes.c_int
-name = cf.CFStringCreateWithCString(None, b"Splash serving a remote request", kCFStringEncodingUTF8)
+name = cf.CFStringCreateWithCString(None, b"llama-swap serving a remote request", kCFStringEncodingUTF8)
 assertion = ctypes.c_uint32(0)
 
 
@@ -32,11 +32,16 @@ def busy():
     if API_KEY_FILE:
         with open(API_KEY_FILE) as key:
             headers["Authorization"] = "Bearer " + key.read().strip()
-    request = urllib.request.Request(SPLASH + "/status", headers=headers)
+    # The event stream opens with a snapshot of the in-flight requests, which
+    # include ones waiting on a model to load.
+    request = urllib.request.Request(LLAMA_SWAP + "/api/events", headers=headers)
     with urllib.request.urlopen(request, timeout=3) as response:
-        status = json.load(response)
-    admission = status["admission"]
-    return status["state"]["active_lanes"] > 0 or admission["waiting_memory"] > 0 or admission["waiting_concurrency"] > 0
+        for line in response:
+            if line.startswith(b"data:"):
+                message = json.loads(line[5:])
+                if message["type"] == "inflight":
+                    return len(json.loads(message["data"]).get("requests", [])) > 0
+    raise RuntimeError("event stream ended before the in-flight snapshot")
 
 
 was_busy = False
