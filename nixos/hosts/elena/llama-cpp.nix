@@ -1,10 +1,12 @@
 {
+  config,
   pkgs,
   lib,
   ...
 }: {
+  # Run by llama-swap (llama-swap.nix), which reads these settings.
   services.llama-cpp = {
-    enable = true;
+    enable = false;
     package = pkgs.unstable.pkgsForCudaArch.sm_75.llama-cpp.overrideAttrs (old: {
       cmakeFlags =
         (old.cmakeFlags or [])
@@ -75,7 +77,7 @@
   };
 
   # load-mode mmap+mlock locks multi-GB model buffers; default 8M rlimit is too low.
-  systemd.services.llama-cpp.serviceConfig.LimitMEMLOCK = "infinity";
-
-  localModules.ingress.llama-cpp.port = 8085;
+  systemd.services.llama-cpp = lib.mkIf config.services.llama-cpp.enable {
+    serviceConfig.LimitMEMLOCK = "infinity";
+  };
 }

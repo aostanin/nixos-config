@@ -47,9 +47,8 @@ in {
     };
     gpus = gpus;
     gpuHostUnits = [
-      "llama-cpp.service"
+      "llama-swap.service"
       "nvidia-container-toolkit-cdi-generator.service"
-      "whisper-cpp.service"
     ];
     vms = let
       isolate6ThreadFirst = {

@@ -95,6 +95,16 @@ in {
         };
       }
       {
+        model_name = "strata";
+        litellm_params = {
+          # Strata serves one model under any name.
+          model = "openai/strata";
+          api_base = llamaCppApiBase;
+          api_key = "none";
+          keepalive_seconds = 15;
+        };
+      }
+      {
         model_name = "whisper";
         litellm_params = {
           # whisper-server picks its model at startup and ignores this.

@@ -1,9 +1,8 @@
 {pkgs, ...}: {
+  # Run by llama-swap (llama-swap.nix), which reads these settings.
   localModules.whisper-cpp = {
-    enable = true;
+    enable = false;
     package = pkgs.unstable.pkgsForCudaArch.sm_75.whisper-cpp;
     port = 8086;
   };
-
-  localModules.ingress.whisper-cpp.port = 8086;
 }
