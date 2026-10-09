@@ -28,5 +28,13 @@ in {
         port = 3000;
       };
     };
+
+    # An unclean shutdown leaves these behind and the hub then refuses to start;
+    # nothing can hold them while the unit is starting.
+    systemd.services."podman-${name}".preStart = let
+      data = config.localModules.containers.containers.${name}.volumes.data.source;
+    in ''
+      rm -f ${lib.escapeShellArg "${data}/.paseo-hub.lock"} ${lib.escapeShellArg "${data}/postmaster.pid"}
+    '';
   };
 }
