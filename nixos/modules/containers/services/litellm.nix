@@ -19,6 +19,7 @@
         num_retries = 2;
       };
     }
+    // lib.optionalAttrs (cfg.routerSettings != {}) {router_settings = cfg.routerSettings;}
     // lib.optionalAttrs (cfg.mcpServers != {}) {mcp_servers = cfg.mcpServers;});
 in {
   options.localModules.containers.services.${name} = {
@@ -28,6 +29,12 @@ in {
       type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
       default = [];
       description = "litellm `model_list` entries (each `{ model_name; litellm_params; }`).";
+    };
+
+    routerSettings = lib.mkOption {
+      type = lib.types.attrsOf lib.types.anything;
+      default = {};
+      description = "litellm `router_settings`.";
     };
 
     mcpServers = lib.mkOption {

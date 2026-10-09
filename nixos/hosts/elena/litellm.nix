@@ -17,21 +17,24 @@
     };
   };
 
-  # Splash on the MacBook, which sleeps at home and wakes on
-  # the first connection. Splash only accepts known Host names, hence the
+  # llama-swap on the MacBook, which sleeps at home and wakes on the first
+  # connection. Splash behind it only accepts known Host names, hence the
   # .local name mapped to the Mac's DHCP reservation below.
   mac = "andreis-macbook-pro";
-  macApiBase = "http://${mac}.local:8085/v1";
+  macLitellmParams = macModel: {
+    model = "openai/${macModel}";
+    api_base = "http://${mac}.local:8085/v1";
+    api_key = config.sops.placeholder."splash/api_key";
+  };
   mkMacModel = model_name: splashModel: {
     inherit model_name;
-    litellm_params = {
-      model = "openai/${splashModel}";
-      api_base = macApiBase;
-      api_key = config.sops.placeholder."splash/api_key";
-      # litellm drops Splash's own SSE keepalives, so a long prefill goes silent
-      # and trips the client's idle timeout.
-      keepalive_seconds = 15;
-    };
+    litellm_params =
+      macLitellmParams splashModel
+      // {
+        # litellm drops Splash's own SSE keepalives, so a long prefill goes
+        # silent and trips the client's idle timeout.
+        keepalive_seconds = 15;
+      };
   };
 
   ornith9b = "ornith-ai/Ornith-1.5-9B-GGUF:Q4_K_M";
@@ -83,6 +86,7 @@ in {
 
     models = [
       (mkMacModel "swift-qwen3.8-27b-mac" "ajgazin/Swift-Qwen3.8-27B-Uncensored-Dynamic-MTP-GGUF:UD-Q5_K_M")
+      (mkMacModel "ornith-1.5-35b-a3b-mac" "ornith-ai/Ornith-1.5-35B-A3B-GGUF:Q5_K_M")
       (mkLlamaCppModel "ornith-1.5-35b-a3b" "ornith-ai/Ornith-1.5-35B-A3B-GGUF:Q4_K_M")
       (mkLlamaCppModel "ornith-1.5-9b" ornith9b)
       {
@@ -122,6 +126,25 @@ in {
           api_key = "none";
         };
       }
+      {
+        model_name = "whisper-mac";
+        litellm_params = macLitellmParams "whisper";
+        model_info.mode = "audio_transcription";
+      }
+      {
+        model_name = "kokoro-mac";
+        litellm_params = macLitellmParams "kokoro";
+      }
     ];
+
+    # whisper stops while elena's GPU is passed through to a VM. Retrying
+    # elena first would only delay the fallback.
+    routerSettings = {
+      fallbacks = [
+        {whisper = ["whisper-mac"];}
+        {kokoro = ["kokoro-mac"];}
+      ];
+      model_group_retry_policy = lib.genAttrs ["whisper" "kokoro"] (_: {DefaultRetries = 0;});
+    };
   };
 }
