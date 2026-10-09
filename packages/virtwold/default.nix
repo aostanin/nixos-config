@@ -7,16 +7,16 @@
 }:
 buildGoModule rec {
   pname = "virtwold";
-  version = "23.12.0";
+  version = "25.10.0";
 
   src = fetchFromGitHub {
     owner = "ScottESanDiego";
     repo = "virtwold";
     rev = version;
-    sha256 = "sha256-HFJWG0s5FRcJibnw18iO6dtFO5K4XAtePgLRUCTo8Go=";
+    sha256 = "sha256-1oKL0v8H9Hb0ISMMP7Y5reReqV/Gh5/x/B2YBEzxeJ0=";
   };
 
-  vendorHash = "sha256-glRLE/6pKKRYUb4cVbKWjdbgk50mtpc82E3QsFVu4Tk=";
+  vendorHash = "sha256-ungDRueod3qdht07wI9zfPcGbOcl19bM997QcL+8Fok=";
 
   buildInputs = [
     libpcap
