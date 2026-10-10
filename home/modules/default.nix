@@ -1,7 +1,7 @@
 {
   imports = [
     ./3dprinting.nix
-    ./ai.nix
+    ./ai
     ./alacritty.nix
     ./android.nix
     ./chromium.nix

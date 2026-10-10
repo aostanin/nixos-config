@@ -4,7 +4,6 @@
   lib,
   localLib,
   inputs,
-  secrets,
   ...
 }: let
   cfg = config.localModules."ai";
@@ -28,7 +27,8 @@ in {
       enable = true;
       package = pkgs.llm-agents.claude-code;
       mcpServers = config.programs.mcp.servers;
-      inherit (secrets.claude-code) rules;
+      rulesDir = ./rules;
+      skills = ./skills;
       settings = {
         model = "claude-opus-5-5";
         effortLevel = "high";
@@ -49,6 +49,10 @@ in {
         };
       };
     };
+
+    # Maki has no rules directory, only one global instruction file.
+    xdg.configFile."maki/AGENTS.md".text =
+      lib.concatMapStringsSep "\n" builtins.readFile (lib.filesystem.listFilesRecursive ./rules);
 
     home.packages = with pkgs.llm-agents;
       localLib.filterAvailable [
