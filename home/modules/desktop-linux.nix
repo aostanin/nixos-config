@@ -26,6 +26,7 @@ in {
       polkit.enable = lib.mkDefault true;
       qt.enable = lib.mkDefault true;
       syncthing.enable = lib.mkDefault true;
+      thunderbird.enable = lib.mkDefault true;
       video.enable = lib.mkDefault true;
       vscode.enable = lib.mkDefault true;
       wayland.enable = lib.mkDefault true;
@@ -47,7 +48,6 @@ in {
           libreoffice
           moonlight-qt
           sparrow
-          thunderbird
           virt-manager
           wl-clipboard
           xournalpp

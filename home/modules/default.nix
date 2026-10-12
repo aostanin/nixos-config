@@ -34,6 +34,7 @@
     ./ssh.nix
     ./syncthing.nix
     ./television.nix
+    ./thunderbird.nix
     ./tmux.nix
     ./trayscale.nix
     ./vdirsyncer.nix

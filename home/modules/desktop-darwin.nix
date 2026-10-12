@@ -19,6 +19,7 @@ in {
       hammerspoon.enable = lib.mkDefault true;
       karabiner-elements.enable = lib.mkDefault true;
       syncthing.enable = lib.mkDefault true;
+      thunderbird.enable = lib.mkDefault true;
     };
 
     # Workaround for Ctrl+/ triggering system alert sound in Alacritty and other apps
@@ -34,7 +35,6 @@ in {
       flameshot
       ice-bar
       scroll-reverser
-      thunderbird
       utm
 
       # Chat
