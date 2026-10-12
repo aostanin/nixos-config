@@ -20,9 +20,6 @@
       };
       efi.canTouchEfiVariables = true;
     };
-    # The RTL8127 SFP+ NIC needs fixes from 7.0. From unstable because stable's
-    # NVIDIA driver doesn't build against its latest kernel.
-    kernelPackages = pkgs.unstable.linuxPackages_latest;
     tmp.useTmpfs = true;
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
