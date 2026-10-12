@@ -23,10 +23,6 @@
       in "${lib.getExe pkgs.bash} -c '${echo} 0 > /sys/class/rtc/rtc0/wakealarm && ${echo} {timestamp:.0f} > /sys/class/rtc/rtc0/wakealarm'";
     };
     checks = {
-      ActiveConnection.ports = lib.concatStringsSep "," [
-        "8888" # zrepl
-        "8889" # zrepl
-      ];
       LogindSessionsIdle = {};
       Processes.processes = lib.concatStringsSep "," [
         "mosh-server"

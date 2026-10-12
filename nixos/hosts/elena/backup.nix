@@ -118,8 +118,9 @@
           type = "push";
           name = "local-push";
           connect = {
-            type = "tcp";
-            address = "127.0.0.1:8888";
+            type = "local";
+            listener_name = "sink";
+            client_identity = config.networking.hostName;
           };
           filesystems = {
             "rpool/appdata<" = true;
@@ -166,8 +167,9 @@
           type = "push";
           name = "external-push";
           connect = {
-            type = "tcp";
-            address = "127.0.0.1:8889";
+            type = "local";
+            listener_name = "sink-external";
+            client_identity = config.networking.hostName;
           };
           filesystems = {
             "rpool/appdata<" = true;
@@ -205,14 +207,8 @@
           type = "sink";
           name = "sink";
           serve = {
-            type = "tcp";
-            listen = ":8888";
-            listen_freebind = true;
-            clients =
-              {
-                "127.0.0.1" = "elena";
-              }
-              // lib.mapAttrs' (n: v: lib.nameValuePair v.address n) secrets.network.tailscale.hosts;
+            type = "local";
+            listener_name = "sink";
           };
           root_fs = "tank/backup/hosts/zfs";
         }
@@ -220,12 +216,8 @@
           type = "sink";
           name = "sink-external";
           serve = {
-            type = "tcp";
-            listen = ":8889";
-            listen_freebind = true;
-            clients = {
-              "127.0.0.1" = "elena";
-            };
+            type = "local";
+            listener_name = "sink-external";
           };
           root_fs = "external/backup/hosts/zfs";
         }
