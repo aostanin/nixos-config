@@ -20,9 +20,6 @@
       efi.canTouchEfiVariables = true;
     };
     tmp.useTmpfs = true;
-    kernelParams = [
-      "zfs.zfs_arc_max=${toString (4 * 1024 * 1024 * 1024)}"
-    ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
