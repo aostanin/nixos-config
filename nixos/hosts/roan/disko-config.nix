@@ -16,14 +16,14 @@
               };
             };
             rpool = {
-              size = "477G";
+              size = "100%";
               content = {
                 type = "zfs";
                 pool = "rpool";
               };
             };
             swap = {
-              size = "100%";
+              size = "12G";
               content = {
                 type = "swap";
                 resumeDevice = true;
