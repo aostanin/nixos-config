@@ -79,7 +79,7 @@
 
     networkmanager.enable = true;
 
-    nvtop.package = pkgs.nvtopPackages.amd;
+    nvtop.package = pkgs.nvtopPackages.full;
 
     podman = {
       enable = true;
