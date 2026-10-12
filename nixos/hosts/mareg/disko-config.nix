@@ -28,6 +28,7 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot1";
+                mountOptions = ["umask=0077"];
               };
             };
             rpool = {
@@ -58,6 +59,7 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot2";
+                mountOptions = ["umask=0077"];
               };
             };
             rpool = {
