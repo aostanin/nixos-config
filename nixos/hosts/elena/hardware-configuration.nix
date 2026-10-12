@@ -15,16 +15,10 @@
   boot.kernelModules = ["kvm-intel" "i2c-dev"];
   boot.extraModulePackages = [];
 
-  fileSystems."/boot1" = {
+  fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/6FE7-AC4D";
     fsType = "vfat";
-    options = ["nofail"];
-  };
-
-  fileSystems."/boot2" = {
-    device = "/dev/disk/by-uuid/5A1C-CB4B";
-    fsType = "vfat";
-    options = ["nofail"];
+    options = ["umask=0077"];
   };
 
   fileSystems."/" = {
@@ -42,10 +36,6 @@
   swapDevices = [
     {
       device = "/dev/disk/by-uuid/334764a1-5ff9-4cb2-8a63-132f99c3410d";
-      options = ["nofail"];
-    }
-    {
-      device = "/dev/disk/by-uuid/be604aa1-8ae2-4fad-a0b7-3e1bae2259ae";
       options = ["nofail"];
     }
   ];
