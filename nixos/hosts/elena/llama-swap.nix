@@ -68,10 +68,9 @@ in {
     };
   };
 
-  # Root, unsandboxed: Strata runs through rootful podman, and the router
-  # mlocks model buffers and reads the state of the disabled services above.
+  # Root, unsandboxed: the router mlocks model buffers and reads the state of
+  # the disabled services above.
   systemd.services.llama-swap = {
-    after = ["nvidia-container-toolkit-cdi-generator.service"];
     serviceConfig =
       {
         LimitMEMLOCK = "infinity";

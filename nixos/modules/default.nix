@@ -24,6 +24,7 @@
     ./podman.nix
     ./redir.nix
     ./scrutiny-collector.nix
+    ./strata.nix
     ./tailscale.nix
     ./traefik.nix
     ./vfio.nix
