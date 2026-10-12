@@ -128,6 +128,7 @@
         microvmHost = "elena";
       };
       skye = {system = "x86_64-linux";};
+      valmar = {system = "x86_64-linux";};
       macnix = {system = "aarch64-linux";};
       vps-oci1 = {system = "x86_64-linux";};
       vps-oci2 = {system = "x86_64-linux";};

@@ -8,6 +8,7 @@ keys:
   - &host_pikvm age1x8t8k0j25l8af8n2p56uuh4ky7m9ddmu9ynytmzqj0evl7wvxpps5dvzdf
   - &host_roan age1a5ef43c7dq3dc6fsu8ph5ltnsrqt4eluw3343y0jtandp30wz3wq3ymv47
   - &host_skye age12qv0y9fa3sxadszjrwkm6njul5eryqcenp8krv2j5qhar9qwkgksq5ya7g
+  - &host_valmar age1ahx9g33yuyw2hftw59gqtvjqeyel9zgffturttgfkk5hktyn7q7saxrumq
   - &host_vps-oci1 age1zj65k3rjkhwnlh577zcvdxq9cf94z5l5yaqj0lush9m9z70z85tqjs0clj
   - &host_vps-oci2 age1zkmucm6pnskzuddmtw7ve4kx3rw2amjtta2ew4zwlt54ysh3q3fscrgfmx
   - &host_vps-oci-arm1 age1mj4zy3krjlzk5vf3gzrqdnyheztjzcyemulvc646l3lkl6nunckss980dw
@@ -27,6 +28,7 @@ creation_rules:
           - *host_pikvm
           - *host_roan
           - *host_skye
+          - *host_valmar
           - *host_vps-oci1
           - *host_vps-oci2
           - *host_vps-oci-arm1
