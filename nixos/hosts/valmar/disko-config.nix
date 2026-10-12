@@ -15,9 +15,6 @@
                 mountpoint = "/boot";
               };
             };
-            # Random-key encrypted: keeps tmpfs contents (decrypted sops secrets
-            # in /run/secrets) off the disk. No hibernation. rpool takes the rest;
-            # disko places the "100%" partition last regardless of order.
             swap = {
               size = "32G";
               content = {

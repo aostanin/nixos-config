@@ -6,7 +6,7 @@
   cfg = config.localModules.watchdog;
 in {
   options.localModules.watchdog = {
-    enable = lib.mkEnableOption "iTCO hardware watchdog and panic-reboot recovery for a headless host";
+    enable = lib.mkEnableOption "hardware watchdog and panic-reboot recovery for a headless host";
   };
 
   config = lib.mkIf cfg.enable {
@@ -34,7 +34,7 @@ in {
       "kernel.panic_on_rcu_stall" = 1;
     };
 
-    # Arm the iTCO hardware watchdog: chipset resets the host if systemd stops
+    # Arm the hardware watchdog (iTCO on Intel, sp5100_tco on AMD): it resets the host if systemd stops
     # petting /dev/watchdog (catches silent lockups the panic reboot can't).
     systemd.settings.Manager = {
       RuntimeWatchdogSec = "30s";

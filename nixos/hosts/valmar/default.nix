@@ -94,6 +94,8 @@
       ];
     };
 
+    watchdog.enable = true;
+
     zfs.enable = true;
   };
 

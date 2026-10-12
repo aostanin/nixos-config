@@ -1,9 +1,6 @@
 {...}: {
   boot = {
-    kernelParams = [
-      "pcie_aspm.policy=powersupersave"
-      "nmi_watchdog=0"
-    ];
+    kernelParams = ["pcie_aspm.policy=powersupersave"];
     kernel.sysctl."vm.dirty_writeback_centisecs" = 1500;
   };
 
