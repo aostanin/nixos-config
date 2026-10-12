@@ -81,6 +81,13 @@ in {
         else "none";
     };
 
+    # A first registration fetches an OAuth token, which fails if it runs
+    # before the network is up.
+    systemd.services.tailscaled-autoconnect = {
+      after = ["network-online.target"];
+      wants = ["network-online.target"];
+    };
+
     systemd.services.tailscaled.environment = {
       # TS_DEBUG_ALWAYS_USE_DERP = "true";
       TS_DISCO_PONG_IPV4_DELAY = "300ms"; # Bias towards IPv6
