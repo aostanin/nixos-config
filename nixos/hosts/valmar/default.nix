@@ -9,6 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ./backup.nix
+    ./power-management.nix
   ];
 
   boot = {
