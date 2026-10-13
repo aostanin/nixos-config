@@ -2,7 +2,7 @@
   lib,
   autoAddDriverRunpath,
   cmake,
-  cudaPackages_13,
+  cudaPackages_13_0,
   fetchFromGitHub,
   makeWrapper,
   ninja,
@@ -11,7 +11,9 @@
   # baseline; upstream's default, -march=native, would depend on the builder.
   cpuArch ? null,
 }: let
-  cudaPackages = cudaPackages_13;
+  # nvcc 13.2 miscompiles the IQ*_S kernels for sm_120: every answer is garbage.
+  # https://github.com/Niko1221/Strata/issues/892
+  cudaPackages = cudaPackages_13_0;
 
   # The ggml that Strata's CPU experts build against: setup.py's LLAMA_CPP_COMMIT.
   llama-cpp-src = fetchFromGitHub {
