@@ -75,7 +75,7 @@ in {
       sendLoadingState = true;
     };
 
-    # Strata needs the whole GPU, and won't fit beside whisper.
+    # Strata takes all the VRAM llama.cpp would use; whisper stays (llama-swap.nix).
     routing.router.settings.groups.strata = {
       exclusive = true;
       members = ["strata"];

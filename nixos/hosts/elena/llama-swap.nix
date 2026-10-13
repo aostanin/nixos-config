@@ -60,10 +60,20 @@ in {
         };
       };
 
-      routing.router.settings.groups.gpu = {
-        swap = false;
-        exclusive = true;
-        members = ["llamacpp" "whisper"];
+      routing.router.settings.groups = {
+        gpu = {
+          swap = false;
+          exclusive = true;
+          members = ["llamacpp"];
+        };
+        # Stays loaded beside Strata, which sizes its expert cache to the VRAM
+        # left when it starts, so whisper has to be running first.
+        whisper = {
+          persistent = true;
+          swap = false;
+          exclusive = false;
+          members = ["whisper"];
+        };
       };
     };
   };
