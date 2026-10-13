@@ -94,20 +94,14 @@
             "/storage/personal/photos:/mnt/media/photos:ro"
             "/var/empty:/mnt/media/photos/sync/immich:ro"
           ];
-          devices = [
-            "/dev/dri/renderD128"
-            "/dev/dri/card0"
-          ];
+          devices = ["/dev/dri/renderD128"];
         };
 
         jellyfin = {
           enable = true;
           inherit uid gid;
           volumes = ["/storage/media/videos:/srv/media/videos:ro"];
-          devices = [
-            "/dev/dri/renderD128"
-            "/dev/dri/card0"
-          ];
+          devices = ["/dev/dri/renderD128"];
         };
         navidrome = {
           enable = true;
