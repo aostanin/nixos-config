@@ -312,16 +312,13 @@
   services = {
     logind.settings.Login.HandlePowerKey = "suspend";
 
-    udev.packages = with pkgs; [openrgb];
-
     xserver.videoDrivers = ["modesetting" "nvidia"];
   };
 
   hardware.nvidia = {
     modesetting.enable = true;
-    # TODO: Open has issues with VFIO
-    # ref: https://www.reddit.com/r/VFIO/comments/xt5cdm/dmesg_shows_thousands_of_these_errors_ioremap/
-    open = false;
+    # Blackwell requires the open modules.
+    open = true;
     # FIXME: Workaround for nvidia-gpu 0000:01:00.3: Unable to change power state from D3hot to D0, device inaccessible
     powerManagement.finegrained = false;
     prime = {

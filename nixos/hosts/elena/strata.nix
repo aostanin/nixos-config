@@ -9,7 +9,7 @@
 in {
   localModules.strata = {
     enable = true;
-    package = pkgs.pkgsForCudaArch.sm_75.strata;
+    package = pkgs.pkgsForCudaArch.sm_120.strata;
     cpuArch = "raptorlake";
 
     # Tuned for IQ3_XXS with setup.py --calibrate.

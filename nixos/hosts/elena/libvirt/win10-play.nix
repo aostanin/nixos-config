@@ -289,28 +289,6 @@
         managed = true;
         source.address = {
           domain = 0;
-          bus = 1;
-          slot = 0;
-          function = 2;
-        };
-      }
-      {
-        mode = "subsystem";
-        type = "pci";
-        managed = true;
-        source.address = {
-          domain = 0;
-          bus = 1;
-          slot = 0;
-          function = 3;
-        };
-      }
-      {
-        mode = "subsystem";
-        type = "pci";
-        managed = true;
-        source.address = {
-          domain = 0;
           bus = 9;
           slot = 0;
           function = 0;

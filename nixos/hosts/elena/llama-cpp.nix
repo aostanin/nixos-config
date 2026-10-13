@@ -7,7 +7,7 @@
   # Run by llama-swap (llama-swap.nix), which reads these settings.
   services.llama-cpp = {
     enable = false;
-    package = pkgs.unstable.pkgsForCudaArch.sm_75.llama-cpp.overrideAttrs (old: {
+    package = pkgs.unstable.pkgsForCudaArch.sm_120.llama-cpp.overrideAttrs (old: {
       cmakeFlags =
         (old.cmakeFlags or [])
         ++ [

@@ -1,23 +1,14 @@
 {
   config,
   lib,
-  pkgs,
   secrets,
   ...
 }: let
   gpus = {
-    nvidiaRTX2070Super = let
-      setGpuLedColor = color: "${lib.getExe pkgs.openrgb} --noautoconnect -d 'RTX 2070 Super' -m direct -c ${color}";
-    in {
+    nvidiaRTX5060Ti = {
       driver = "nvidia";
-      pciIds = ["10de:1e84" "10de:10f8" "10de:1ad8" "10de:1ad9"];
+      pciIds = ["10de:2d04" "10de:22eb"];
       busId = "01:00.0";
-      preDetachCommands = ''
-        ${setGpuLedColor "FF4444"} || true
-      '';
-      postAttachCommands = ''
-        ${setGpuLedColor "000000"} || true
-      '';
     };
   };
   usbControllerIds = [
@@ -80,7 +71,7 @@ in {
       };
     in {
       win10-play = {
-        gpu = "nvidiaRTX2070Super";
+        gpu = "nvidiaRTX5060Ti";
         enableHibernation = true;
         isolate = isolate14Thread;
       };
