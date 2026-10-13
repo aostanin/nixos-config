@@ -1,5 +1,6 @@
 {
   lib,
+  addDriverRunpath,
   autoAddDriverRunpath,
   cmake,
   cudaPackages_13_0,
@@ -78,7 +79,9 @@ in
       mkdir -p $out/share/strata $out/bin
       cp -r $src/{serve,tools,data} $out/share/strata/
       install -Dm755 strata $out/share/strata/engine/strata
+      # The server loads libnvidia-ml (web UI telemetry) and libcuda through ctypes.
       makeWrapper ${python.interpreter} $out/bin/strata-server \
+        --prefix LD_LIBRARY_PATH : ${addDriverRunpath.driverLink}/lib \
         --add-flags $out/share/strata/serve/server.py
       runHook postInstall
     '';
