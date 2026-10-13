@@ -9,11 +9,13 @@
     hypervisor = "qemu";
     vcpu = 2;
     mem = 1024;
-    # Onboard i225-V: the VM's only NIC, a trunk port like the physical routers'.
-    devices = [
+    # The VM's only NIC: a trunk port on elena's br0, like the physical routers'.
+    interfaces = [
       {
-        bus = "pci";
-        path = "0000:08:00.0";
+        type = "tap";
+        id = "vm-router";
+        mac = secrets.network.home.hosts.router.macAddress;
+        tap.vhost = true;
       }
     ];
     volumes = [
@@ -75,7 +77,7 @@
 
   localModules.home-router = {
     enable = true;
-    interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.integrated}";
+    interface = "enx${lib.replaceStrings [":"] [""] secrets.network.home.hosts.router.macAddress}";
     macAddress = secrets.network.home.hosts.router.macAddress;
   };
 }
