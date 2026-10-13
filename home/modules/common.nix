@@ -80,7 +80,7 @@ in {
         ]
         ++ lib.optionals (!cfg.minimal) [
           caligula
-          devenv
+          unstable.devenv
           ffmpeg
           gpsbabel
           steam-run
