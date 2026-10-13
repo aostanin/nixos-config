@@ -42,20 +42,27 @@ in {
     ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="auto"
   '';
 
-  # 150W costs ~4% tok/s on the 9B model for ~23% less power under load.
-  # Driver resets the limit on unbind, so reapply whenever gpu-host.target starts.
-  systemd.services.nvidia-power-limit = {
-    description = "Set NVIDIA GPU power limit";
-    serviceConfig = {
+  # Memory +4000 (Afterburner +2000) and an undervolt (core +300, capped at
+  # 2730 MHz): the 9B decodes 14% faster at 8% less power. Soak-tested with
+  # greedy output identical to stock. The driver drops these on unbind, so
+  # reapply whenever gpu-host.target starts.
+  systemd.services.nvidia-tune = {
+    description = "Tune NVIDIA GPU clocks";
+    serviceConfig = let
+      nvidiaSmi = lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi";
+      nvidiaOc = lib.getExe pkgs.nvidia_oc;
+    in {
       Type = "oneshot";
       RemainAfterExit = true;
       ExecStart = [
-        "${lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi"} -pm 1"
-        "${lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi"} -pl 150"
+        "${nvidiaSmi} -pm 1"
+        "${nvidiaSmi} -lgc 210,2730"
+        "${nvidiaOc} set --index 0 --mem-offset 4000"
+        "${nvidiaOc} set --index 0 --freq-offset 300"
       ];
     };
   };
-  localModules.vfio.gpuHostUnits = ["nvidia-power-limit.service"];
+  localModules.vfio.gpuHostUnits = ["nvidia-tune.service"];
 
   # WD drives aren't going to sleep with just the standby timeout set
   systemd.services."hd-idle" = {
