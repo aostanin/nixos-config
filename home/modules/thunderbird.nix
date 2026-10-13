@@ -89,18 +89,7 @@ in {
 
     programs.thunderbird = {
       enable = true;
-      package = (pkgs.thunderbird.override {extraPrefs = xulStoreJs;}).overrideAttrs (old:
-        lib.optionalAttrs pkgs.stdenv.isDarwin {
-          # nixpkgs' wrapper writes autoconfig.js where Firefox reads it on
-          # macOS; Thunderbird only reads defaults/pref, so mozilla.cfg never runs.
-          buildCommand =
-            old.buildCommand
-            + ''
-              resources=$out/Applications/Thunderbird.app/Contents/Resources
-              mkdir -p $resources/defaults/pref
-              cp $resources/browser/defaults/preferences/autoconfig.js $resources/defaults/pref/
-            '';
-        });
+      package = pkgs.thunderbird.override {extraPrefs = xulStoreJs;};
       profiles.${profile} = {
         isDefault = true;
         accountsOrder = secrets.thunderbird.emailAccounts ++ ["account_smart"];

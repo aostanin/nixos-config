@@ -6,11 +6,7 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Pinned off nixos-26.05: 1bc55b9 (2026-09-22) ships podman 5.8.7, which
-    # rejects the forgejo runner's copy into /var/run/act and fails every CI job
-    # in under ten seconds at actions/checkout. 6aefcda is the last revision this
-    # host ran green. Unpin once podman is fixed upstream or the mount changes.
-    nixpkgs.url = "github:NixOS/nixpkgs/6aefcda9401be8acc2b74244fb3b37520ea1f0a8";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
     home-manager = {
@@ -80,9 +76,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     paneru = {
-      # On testing for the window-rule width fix; back to main once it lands there.
-      # https://github.com/karinushka/paneru/commit/b93560b86da001d239d46de3498ec42ff5f25d7c
-      url = "github:karinushka/paneru/testing";
+      url = "github:karinushka/paneru";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.nix-darwin.follows = "nix-darwin";
       inputs.flake-parts.follows = "flake-parts";
