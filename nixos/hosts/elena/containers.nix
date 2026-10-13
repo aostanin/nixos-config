@@ -9,6 +9,10 @@
     privateNetwork = true;
     hostBridge = "br0";
     enableTun = true;
+    bindMounts."/home/${secrets.user.username}/dev" = {
+      hostPath = "/home/${secrets.user.username}/dev";
+      isReadOnly = false;
+    };
     # Deploys switch it in place (see reloadIfChanged below) instead of
     # restarting it under running agents. Changes to the nspawn side (flags,
     # mounts, network) still need an explicit restart.
