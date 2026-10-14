@@ -100,10 +100,7 @@
     };
     hosts = {
       andreis-macbook-pro = {system = "aarch64-darwin";};
-      dev = {
-        system = "x86_64-linux";
-        containerHost = "elena";
-      };
+      dev = {system = "x86_64-linux";};
       elena = {system = "x86_64-linux";};
       every-router = {
         system = "aarch64-linux";
@@ -219,8 +216,6 @@
           mkNode = {
             hostname,
             system,
-            # A nixos-container's system is part of its host's closure.
-            deploySystemProfile ? true,
           }: {
             inherit hostname;
             sshUser = secrets.user.username;
@@ -230,7 +225,7 @@
             remoteBuild = false;
 
             profiles =
-              lib.optionalAttrs (deploySystemProfile && builtins.hasAttr hostname self.nixosConfigurations) {
+              lib.optionalAttrs (builtins.hasAttr hostname self.nixosConfigurations) {
                 system = {
                   user = "root";
                   path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations."${hostname}";
@@ -292,7 +287,6 @@
             mkNode {
               inherit hostname;
               inherit (host) system;
-              deploySystemProfile = !(host ? containerHost);
             })
         hosts);
 

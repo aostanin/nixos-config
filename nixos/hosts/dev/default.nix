@@ -36,6 +36,35 @@ in {
   # secrets in /run/user.
   users.users.${secrets.user.username}.linger = true;
 
+  # Profiles under ~ get their GC roots registered by elena's nix-daemon at the
+  # same path on elena, where they resolve to elena's own home, so elena's GC
+  # deletes this container's home-manager generations. elena does scan its
+  # per-container copy of /nix/var/nix/profiles.
+  systemd.tmpfiles.settings."10-user-profiles" = let
+    inherit (secrets.user) username;
+    home = "/home/${username}";
+    userDir = {
+      user = username;
+      group = "users";
+      mode = "0755";
+    };
+  in {
+    "/nix/var/nix/profiles/per-user/${username}".d = userDir;
+    "${home}/.local".d = userDir;
+    "${home}/.local/state".d = userDir;
+    "${home}/.local/state/nix".d = userDir;
+    "${home}/.local/state/nix/profiles".L.argument = "/nix/var/nix/profiles/per-user/${username}";
+  };
+
+  nix = {
+    # The store database is the host's, read-only in here. Users get
+    # NIX_REMOTE=daemon from their environment, but root under sudo (deploys)
+    # needs this.
+    settings.store = "daemon";
+    # elena's GC covers this container's profiles too.
+    gc.automatic = lib.mkForce false;
+  };
+
   localModules = {
     common = {
       enable = true;

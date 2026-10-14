@@ -1,10 +1,7 @@
-{
-  self,
-  secrets,
-  ...
-}: {
+{secrets, ...}: {
   containers.dev = {
-    path = self.nixosConfigurations.dev.config.system.build.toplevel;
+    # Installed and switched by `deploy .#dev`, not by this host's closure.
+    path = "/nix/var/nix/profiles/per-container/dev/system";
     autoStart = true;
     privateNetwork = true;
     hostBridge = "br0";
@@ -13,9 +10,9 @@
       hostPath = "/home/${secrets.user.username}/dev";
       isReadOnly = false;
     };
-    # Deploys switch it in place (see reloadIfChanged below) instead of
-    # restarting it under running agents. Changes to the nspawn side (flags,
-    # mounts, network) still need an explicit restart.
+    # Don't restart it under running agents when this host's nixpkgs moves.
+    # Changes to the nspawn side (flags, mounts, network) need an explicit
+    # restart.
     restartIfChanged = false;
   };
 
@@ -30,7 +27,6 @@
 
   # A runaway agent should hit this instead of taking elena down with it. No
   # swap: zram lives in host RAM uncharged, so it would only delay the OOM kill.
-  systemd.services."container@dev".reloadIfChanged = true;
   systemd.services."container@dev".serviceConfig = {
     MemoryHigh = "28G";
     MemoryMax = "32G";
