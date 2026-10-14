@@ -13,12 +13,12 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages = localLib.filterAvailable (with pkgs; [
-      (localLib.brokenOnDarwin blender)
+      blender
       cura-appimage
-      (localLib.brokenOnDarwin f3d)
+      f3d
       freecad
       meshlab
-      (localLib.brokenOnDarwin openscad-unstable)
+      openscad-unstable
       orca-slicer
     ]);
   };

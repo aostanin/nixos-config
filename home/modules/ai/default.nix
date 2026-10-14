@@ -62,7 +62,7 @@ in {
         pkgs.maki
 
         # Tools
-        (localLib.brokenOnDarwin agent-browser)
+        agent-browser
         rtk
       ]
       ++ lib.optional config.localModules.desktop.enable

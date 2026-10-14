@@ -1,7 +1,16 @@
-final: prev: {
-  # direnv tests fail on darwin (fish test)
-  # ref: https://github.com/NixOS/nixpkgs/issues/507531
-  direnv = prev.direnv.overrideAttrs (_: {doCheck = false;});
+final: prev: let
+  # localLib.filterAvailable drops broken packages, so darwin skips them
+  # instead of trying to build them.
+  brokenOnDarwin = pkg:
+    pkg.overrideAttrs (old: {
+      meta = (old.meta or {}) // {broken = (old.meta.broken or false) || prev.stdenv.hostPlatform.isDarwin;};
+    });
+in {
+  # Fail on aarch64-darwin as of 2026-10-14: manifold's tests crash (blender,
+  # openscad-unstable); qtwebengine doesn't compile (f3d, via openusd).
+  blender = brokenOnDarwin prev.blender;
+  f3d = brokenOnDarwin prev.f3d;
+  openscad-unstable = brokenOnDarwin prev.openscad-unstable;
 
   # Blockstream Jade needs cbor2
   hwi = prev.hwi.overrideAttrs (old: {

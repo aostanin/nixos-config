@@ -142,7 +142,6 @@
       overlays = [
         nur.overlays.default
         self.overlays.packages
-        self.overlays.workarounds
         inputs.llm-agents.overlays.shared-nixpkgs
         (final: prev: {
           maki = inputs.maki.packages.${system}.default;
@@ -150,6 +149,8 @@
             inherit config system;
           };
         })
+        # Last, so no later overlay replaces a patched package.
+        self.overlays.workarounds
       ];
     };
   in
