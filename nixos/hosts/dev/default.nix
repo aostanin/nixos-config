@@ -113,5 +113,10 @@ in {
   sops.templates."paseo-maki.env".content = ''
     ELENA_API_KEY=${config.sops.placeholder."containers/litellm/master_key"}
   '';
-  systemd.services.paseo.serviceConfig.EnvironmentFile = [config.sops.templates."paseo-maki.env".path];
+  systemd.services.paseo.serviceConfig = {
+    EnvironmentFile = [config.sops.templates."paseo-maki.env".path];
+    # When elena's MemoryMax on the container OOM-kills one agent, the default
+    # (stop) would take every other agent down with it.
+    OOMPolicy = "continue";
+  };
 }
