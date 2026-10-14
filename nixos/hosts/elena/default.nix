@@ -182,11 +182,6 @@
         };
         jellyseerr.enable = true;
 
-        neko = {
-          enable = true;
-          devices = ["/dev/dri/renderD128"];
-        };
-
         domi.enable = true;
         mymcp.enable = true;
         martin.enable = true;

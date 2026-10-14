@@ -32,7 +32,6 @@
     ./mosquitto.nix
     ./mymcp.nix
     ./navidrome.nix
-    ./neko.nix
     ./netbootxyz.nix
     ./nextcloud.nix
     ./caddy.nix
