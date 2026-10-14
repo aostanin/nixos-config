@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  secrets,
   ...
 }: let
   splash = pkgs.splash.override {python3 = pkgs.unstable.python313;};
@@ -28,6 +29,7 @@
       ++ lib.concatMap (host: ["--allowed-host" host]) [
         config.networking.hostName
         "${config.networking.hostName}.local"
+        secrets.network.tailscale.hosts.andreis-macbook-pro.address
       ]);
     proxy = "http://127.0.0.1:\${PORT}";
     # /health answers before the model has loaded.
