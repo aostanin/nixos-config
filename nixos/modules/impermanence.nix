@@ -97,7 +97,7 @@ in {
           ++ lib.optional config.services.upower.enable "/var/lib/upower"
           ++ lib.optional config.services.printing.enable "/var/lib/cups"
           ++ lib.optional config.services.fprintd.enable "/var/lib/fprint"
-          ++ lib.optional config.programs.noctalia-greeter.enable {
+          ++ lib.optional config.services.displayManager.noctalia-greeter.enable {
             directory = "/var/lib/noctalia-greeter";
             user = "greeter";
             group = "greeter";

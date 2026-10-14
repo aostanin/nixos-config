@@ -120,7 +120,7 @@ in {
       useNautilus = false;
     };
 
-    programs.noctalia-greeter = {
+    services.displayManager.noctalia-greeter = {
       enable = true;
       settings = {
         session.default = "niri";
