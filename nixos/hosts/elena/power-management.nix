@@ -18,9 +18,6 @@ in {
       "pcie_aspm.policy=powersupersave"
       "snd_hda_intel.power_save=1"
     ];
-    # For hardware monitoring
-    extraModulePackages = [config.boot.kernelPackages.nct6687d];
-    kernelModules = ["nct6687"];
   };
 
   powerManagement = {
@@ -35,17 +32,14 @@ in {
 
   # Match PowerTOP
   services.udev.extraRules = ''
-    # Disable power management for Intel I225-V as it causes issues
-    SUBSYSTEM=="pci", ATTR{vendor}=="0x8086", ATTR{device}=="0x15f3", ATTR{power/control}="on", GOTO="pci_pm_end"
     SUBSYSTEM=="pci", ATTR{power/control}="auto"
-    LABEL="pci_pm_end"
     ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="auto"
   '';
 
-  # Memory +4000 (Afterburner +2000) and an undervolt (core +300, capped at
-  # 2730 MHz): the 9B decodes 14% faster at 8% less power. Soak-tested with
-  # greedy output identical to stock. The driver drops these on unbind, so
-  # reapply whenever gpu-host.target starts.
+  # 150W instead of 215W costs the 9B ~6% decode for ~60W less. Undervolt
+  # (core +125, capped at 1800 MHz): decode +3% and prefill at 16% less power,
+  # soak-tested with greedy output identical to stock. With core +150, a 1700 MHz
+  # cap or a memory offset changed the output.
   systemd.services.nvidia-tune = {
     description = "Tune NVIDIA GPU clocks";
     serviceConfig = let
@@ -56,9 +50,9 @@ in {
       RemainAfterExit = true;
       ExecStart = [
         "${nvidiaSmi} -pm 1"
-        "${nvidiaSmi} -lgc 210,2730"
-        "${nvidiaOc} set --index 0 --mem-offset 4000"
-        "${nvidiaOc} set --index 0 --freq-offset 300"
+        "${nvidiaSmi} -pl 150"
+        "${nvidiaSmi} -lgc 210,1800"
+        "${nvidiaOc} set --index 0 --freq-offset 125"
       ];
     };
   };

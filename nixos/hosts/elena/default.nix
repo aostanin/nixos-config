@@ -7,7 +7,6 @@
   ...
 }: {
   imports = [
-    "${inputs.nixos-hardware}/common/cpu/intel"
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
     ./backup.nix
@@ -47,7 +46,6 @@
       "zfs.l2arc_noprefetch=0"
       "zfs.l2arc_write_max=536870912"
       "zfs.l2arc_write_boost=1073741824"
-      "zfs.zfs_arc_max=${toString (96 * 1024 * 1024 * 1024)}"
     ];
     binfmt.emulatedSystems = ["aarch64-linux"];
   };
@@ -306,18 +304,9 @@
 
   hardware.nvidia = {
     modesetting.enable = true;
-    # Blackwell requires the open modules.
     open = true;
     # FIXME: Workaround for nvidia-gpu 0000:01:00.3: Unable to change power state from D3hot to D0, device inaccessible
     powerManagement.finegrained = false;
-    prime = {
-      offload = {
-        enable = true;
-        enableOffloadCmd = true;
-      };
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-    };
   };
 
   virtualisation.libvirtd.enable = true;

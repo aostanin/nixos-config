@@ -5,14 +5,20 @@
   config,
   lib,
   pkgs,
+  inputs,
   modulesPath,
   ...
 }: {
-  imports = ["${modulesPath}/installer/scan/not-detected.nix"];
+  imports = [
+    "${modulesPath}/installer/scan/not-detected.nix"
+    "${inputs.nixos-hardware}/common/cpu/amd/pstate.nix"
+    "${inputs.nixos-hardware}/common/gpu/amd"
+  ];
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "mpt3sas" "usbhid" "usb_storage" "sd_mod"];
   boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel" "i2c-dev"];
+  # nct6775 drives the board's Nuvoton NCT6799D Super I/O (fans, voltages).
+  boot.kernelModules = ["kvm-amd" "i2c-dev" "nct6775"];
   boot.extraModulePackages = [];
 
   fileSystems."/boot" = {

@@ -5,7 +5,10 @@
   ...
 }: {
   localModules = {
-    common.enable = true;
+    common = {
+      enable = true;
+      enableNvidia = true;
+    };
 
     desktop.enable = true;
 

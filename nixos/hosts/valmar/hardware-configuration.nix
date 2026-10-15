@@ -8,19 +8,18 @@
 }: {
   imports = [
     "${modulesPath}/installer/scan/not-detected.nix"
-    "${inputs.nixos-hardware}/common/cpu/amd/pstate.nix"
-    "${inputs.nixos-hardware}/common/gpu/amd"
+    "${inputs.nixos-hardware}/common/cpu/intel"
     ./disko-config.nix
   ];
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
   boot.initrd.kernelModules = [];
-  # nct6775 drives the board's Nuvoton NCT6799D Super I/O (fans, voltages).
-  boot.kernelModules = ["kvm-amd" "nct6775"];
-  boot.extraModulePackages = [];
+  boot.kernelModules = ["kvm-intel" "nct6687"];
+  # For hardware monitoring on the MSI board's Nuvoton NCT6687D.
+  boot.extraModulePackages = [config.boot.kernelPackages.nct6687d];
 
   # Partition layout, rpool, and fileSystems/swap come from disko-config.nix.
-  disko.devices.disk.main.device = "/dev/disk/by-id/nvme-PS5027-E27T-1000G_BiCS6_250807139002760";
+  disko.devices.disk.main.device = "/dev/disk/by-id/nvme-SHPP41-2000GM_ADC8N56931240921A";
   disko.zfs.enable = true;
 
   # The iGPU drives the displays; the NVIDIA card is for compute only.
@@ -29,11 +28,19 @@
     # Required for Blackwell; Turing works with either.
     open = true;
     modesetting.enable = true;
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
   };
 
   # WLR_DRM_DEVICES is colon-separated, so it can't take a /dev/dri/by-path name.
   services.udev.extraRules = ''
-    SUBSYSTEM=="drm", KERNEL=="card*", DRIVERS=="amdgpu", SYMLINK+="dri/igpu"
+    SUBSYSTEM=="drm", KERNEL=="card*", DRIVERS=="i915", SYMLINK+="dri/igpu"
   '';
 
   # Keep the greeter's wlroots compositor off the NVIDIA card: it otherwise opens
