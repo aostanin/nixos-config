@@ -22,8 +22,6 @@
     ./strata.nix
     ./whisper-cpp.nix
     ./kokoro-fastapi.nix
-    ./vfio.nix
-    ./libvirt
     ./microvm.nix
     ./power-management.nix
     ./autosuspend.nix
@@ -54,10 +52,6 @@
     hostName = "elena";
     hostId = "fc172604";
   };
-
-  # Pin EGL to mesa: the NVIDIA card is bound to vfio for win10-play, and its
-  # glvnd vendor file would otherwise be a candidate for the compositor.
-  environment.sessionVariables.__EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json";
 
   localModules = {
     common.enable = true;
@@ -286,11 +280,6 @@
 
     tailscale.isClient = true;
 
-    virtwold = {
-      enable = true;
-      interfaces = ["br0"];
-    };
-
     watchdog.enable = true;
 
     zfs.enable = true;
@@ -308,8 +297,6 @@
     # FIXME: Workaround for nvidia-gpu 0000:01:00.3: Unable to change power state from D3hot to D0, device inaccessible
     powerManagement.finegrained = false;
   };
-
-  virtualisation.libvirtd.enable = true;
 
   systemd.timers.update-mam = {
     wantedBy = ["timers.target"];

@@ -33,8 +33,52 @@
           };
         };
       };
+      vm = {
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions.vmpool = {
+            size = "100%";
+            content = {
+              type = "zfs";
+              pool = "vmpool";
+            };
+          };
+        };
+      };
     };
     zpool = {
+      vmpool = {
+        type = "zpool";
+        rootFsOptions = {
+          canmount = "off";
+          mountpoint = "none";
+          atime = "off";
+          compression = "zstd";
+          dnodesize = "auto";
+          xattr = "sa";
+          acltype = "posix";
+        };
+        options.ashift = "12";
+
+        # Outside any impermanence bind: zfs-mount.service isn't ordered against
+        # them. With 26.11's zfs-mount-generator support (nixpkgs#517731) this
+        # can mount under /var/lib/libvirt/images instead.
+        datasets = {
+          images = {
+            type = "zfs_fs";
+            options = {
+              canmount = "off";
+              mountpoint = "/vm";
+            };
+          };
+          "images/default".type = "zfs_fs";
+          "images/isos".type = "zfs_fs";
+          "images/win10-play".type = "zfs_fs";
+          "images/win10-work".type = "zfs_fs";
+        };
+      };
+
       rpool = {
         type = "zpool";
         rootFsOptions = {

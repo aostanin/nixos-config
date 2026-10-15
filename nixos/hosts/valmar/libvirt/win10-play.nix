@@ -39,7 +39,7 @@
     nvram = {
       template = "/run/libvirt/nix-ovmf/edk2-i386-vars.fd";
       format = "raw";
-      path = "/var/lib/libvirt/images/tank/win10-play/win10-play_VARS.fd";
+      path = "/vm/win10-play/win10-play_VARS.fd";
     };
     boot = [{dev = "hd";}];
     smbios = {mode = "host";};
@@ -135,7 +135,7 @@
           discard = "unmap";
           iothread = 1;
         };
-        source.file = "/var/lib/libvirt/images/tank/win10-play/win10-play.img";
+        source.file = "/vm/win10-play/win10-play.img";
         target = {
           dev = "vda";
           bus = "virtio";
@@ -150,7 +150,7 @@
           cache = "none";
           discard = "unmap";
         };
-        source.file = "/var/lib/libvirt/images/tank/win10-play/win10-play-games-fast.img";
+        source.file = "/vm/win10-play/win10-play-games-fast.img";
         target = {
           dev = "vdb";
           bus = "virtio";
@@ -289,7 +289,7 @@
         managed = true;
         source.address = {
           domain = 0;
-          bus = 9;
+          bus = 7;
           slot = 0;
           function = 0;
         };

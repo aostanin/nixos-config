@@ -13,7 +13,6 @@
   };
   usbControllerIds = [
     "1912:0014" # Renesas Technology Corp. uPD720201
-    "1b73:1100" # Fresco Logic FL1100
   ];
   vfioPciIds = usbControllerIds;
 in {
@@ -42,24 +41,6 @@ in {
       "nvidia-container-toolkit-cdi-generator.service"
     ];
     vms = let
-      isolate6ThreadFirst = {
-        enable = true;
-        dropCaches = false;
-        compactMemory = false;
-        isolateCpus = true;
-        allCpus = ["0-23"];
-        hostCpus = ["0-1" "8-15" "16-23"];
-        guestCpus = ["0-1" "2-7"];
-      };
-      isolate8ThreadSecond = {
-        enable = true;
-        dropCaches = false;
-        compactMemory = false;
-        isolateCpus = true;
-        allCpus = ["0-23"];
-        hostCpus = ["0-7" "16-23"];
-        guestCpus = ["0-1" "8-15"];
-      };
       isolate14Thread = {
         enable = true;
         dropCaches = false;

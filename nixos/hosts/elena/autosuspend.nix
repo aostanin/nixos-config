@@ -73,17 +73,6 @@
             echo $nodes | ${lib.getExe pkgs.jq} -e '.[].workers | to_entries | map(select(.value.idle == false)) != []'
           '');
       };
-      vms = {
-        class = "ExternalCommand";
-        command = toString (pkgs.writeShellScript "check_running_vms" ''
-          status=$(${lib.getExe' pkgs.libvirt "virsh"} -q list --state-running | grep "running")
-          if [ -z "$status" ]; then
-            exit 1
-          else
-            exit 0
-          fi
-        '');
-      };
       zfs = {
         class = "ExternalCommand";
         command = let

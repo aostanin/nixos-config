@@ -20,6 +20,7 @@
 
   # Partition layout, rpool, and fileSystems/swap come from disko-config.nix.
   disko.devices.disk.main.device = "/dev/disk/by-id/nvme-SHPP41-2000GM_ADC8N56931240921A";
+  disko.devices.disk.vm.device = "/dev/disk/by-id/nvme-Sabrent_Rocket_4.0_1TB_BE250717022D00135054";
   disko.zfs.enable = true;
 
   # The iGPU drives the displays; the NVIDIA card is for compute only.
@@ -37,6 +38,10 @@
       nvidiaBusId = "PCI:1:0:0";
     };
   };
+
+  # Pin EGL to mesa: the NVIDIA card is for compute and VFIO passthrough, and its
+  # glvnd vendor file would otherwise be a candidate for the compositor.
+  environment.sessionVariables.__EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json";
 
   # WLR_DRM_DEVICES is colon-separated, so it can't take a /dev/dri/by-path name.
   services.udev.extraRules = ''

@@ -102,7 +102,7 @@
           cache = "none";
           discard = "unmap";
         };
-        source.file = "/var/lib/libvirt/images/tank/win10-work/win10-work.img";
+        source.file = "/vm/win10-work/win10-work.img";
         target = {
           dev = "sda";
           bus = "sata";
@@ -201,7 +201,7 @@
         managed = true;
         source.address = {
           domain = 0;
-          bus = 9;
+          bus = 7;
           slot = 0;
           function = 0;
         };

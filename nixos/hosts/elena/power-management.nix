@@ -42,6 +42,7 @@ in {
   # cap or a memory offset changed the output.
   systemd.services.nvidia-tune = {
     description = "Tune NVIDIA GPU clocks";
+    wantedBy = ["multi-user.target"];
     serviceConfig = let
       nvidiaSmi = lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi";
       nvidiaOc = lib.getExe pkgs.nvidia_oc;
@@ -56,7 +57,6 @@ in {
       ];
     };
   };
-  localModules.vfio.gpuHostUnits = ["nvidia-tune.service"];
 
   # WD drives aren't going to sleep with just the standby timeout set
   systemd.services."hd-idle" = {

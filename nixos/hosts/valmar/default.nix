@@ -9,8 +9,10 @@
   imports = [
     ./hardware-configuration.nix
     ./backup.nix
+    ./libvirt
     ./network.nix
     ./power-management.nix
+    ./vfio.nix
   ];
 
   boot = {
