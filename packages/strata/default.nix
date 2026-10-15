@@ -70,6 +70,14 @@ in
 
     ninjaFlags = ["strata"];
 
+    # The image encoder is a project of its own, for the engine's architectures.
+    postBuild = ''
+      cmake -S $src/tools/vision -B vision -G Ninja -DCMAKE_BUILD_TYPE=Release \
+        -DLLAMA_DIR=${llama-cpp-src} -DSTRATA_VISION_CUDA=ON \
+        -DCMAKE_CUDA_ARCHITECTURES="$(sed -n 's/^CMAKE_CUDA_ARCHITECTURES:[A-Z]*=//p' CMakeCache.txt)"
+      ninja -C vision -j$NIX_BUILD_CORES strata-vision
+    '';
+
     env.NIX_CFLAGS_COMPILE = lib.optionalString (cpuArch != null) "-march=${cpuArch}";
 
     # The server finds its web UI, tokenizer helpers and data files relative to
@@ -81,6 +89,7 @@ in
       install -Dm755 strata $out/share/strata/engine/strata
       # The K-quant prompt kernels, opened from beside the engine for the Unsloth files.
       install -Dm755 libstrata_kq.so $out/share/strata/engine/libstrata_kq.so
+      install -Dm755 vision/bin/strata-vision $out/share/strata/engine/strata-vision
       # The server loads libnvidia-ml (web UI telemetry) and libcuda through ctypes.
       makeWrapper ${python.interpreter} $out/bin/strata-server \
         --prefix LD_LIBRARY_PATH : ${addDriverRunpath.driverLink}/lib \
