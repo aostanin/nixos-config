@@ -18,7 +18,7 @@
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "mpt3sas" "usbhid" "usb_storage" "sd_mod"];
   boot.initrd.kernelModules = [];
   # nct6775 drives the board's Nuvoton NCT6799D Super I/O (fans, voltages).
-  boot.kernelModules = ["kvm-amd" "i2c-dev" "nct6775"];
+  boot.kernelModules = ["kvm-amd" "nct6775"];
   boot.extraModulePackages = [];
 
   fileSystems."/boot" = {
