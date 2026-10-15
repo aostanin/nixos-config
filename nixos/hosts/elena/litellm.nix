@@ -37,6 +37,18 @@
       };
   };
 
+  # llama-swap on valmar. Its engines reject Host names outside their
+  # allowed_hosts, which include the tailnet name.
+  mkValmarModel = model_name: swapModel: {
+    inherit model_name;
+    litellm_params = {
+      model = "openai/${swapModel}";
+      api_base = "http://valmar.${secrets.terranix.tailscale.tailnetName}:8085/v1";
+      api_key = "none";
+      keepalive_seconds = 15;
+    };
+  };
+
   ornith9b = "ornith-ai/Ornith-1.5-9B-GGUF:Q4_K_M";
 
   # One litellm entry per mymcp endpoint: each is its own MCP server, and
@@ -87,8 +99,10 @@ in {
     models = [
       (mkMacModel "swift-qwen3.8-27b-mac" "ajgazin/Swift-Qwen3.8-27B-Uncensored-Dynamic-MTP-GGUF:UD-Q5_K_M")
       (mkMacModel "ornith-1.5-35b-a3b-mac" "ornith-ai/Ornith-1.5-35B-A3B-GGUF:Q5_K_M")
-      (mkLlamaCppModel "ornith-1.5-35b-a3b" "ornith-ai/Ornith-1.5-35B-A3B-GGUF:Q4_K_M")
       (mkLlamaCppModel "ornith-1.5-9b" ornith9b)
+      (mkValmarModel "ornith-1.5-35b-a3b" "polystrata-ornith")
+      (mkValmarModel "gemma-4-26b-a4b" "polystrata-gemma")
+      (mkValmarModel "qwen3.8-flash-next" "strata")
       {
         model_name = "ha-assist";
         litellm_params = {
@@ -96,20 +110,9 @@ in {
           api_base = llamaCppApiBase;
           api_key = "none";
           extra_body.chat_template_kwargs.enable_thinking = false;
-          # Requests queue behind a running Strata job and then wait for
-          # the swap back; voice can't wait that long, so fall back.
+          # Voice can't wait on a busy or restarting server, so fall back.
           timeout = 15;
           stream_timeout = 10;
-        };
-      }
-      {
-        model_name = "qwen3.8-flash-next";
-        litellm_params = {
-          # Strata serves one model under any name.
-          model = "openai/strata";
-          api_base = llamaCppApiBase;
-          api_key = "none";
-          keepalive_seconds = 15;
         };
       }
       {
@@ -146,8 +149,7 @@ in {
     # token limits, and each poll wakes the sleeping Mac.
     generalSettings.disable_model_info_refresh = true;
 
-    # whisper and ha-assist stop while elena's GPU is passed through to a VM
-    # or held by Strata. Retrying elena first would only delay the fallback.
+    # Retrying elena first would only delay the fallback.
     routerSettings = {
       fallbacks = [
         {whisper = ["whisper-mac"];}

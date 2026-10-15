@@ -18,8 +18,6 @@
     ./n8n.nix
     ./silverbullet.nix
     ./llama-cpp.nix
-    ./llama-swap.nix
-    ./strata.nix
     ./whisper-cpp.nix
     ./kokoro-fastapi.nix
     ./microvm.nix

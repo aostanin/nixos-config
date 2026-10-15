@@ -11,8 +11,11 @@
     ./backup.nix
     ./dev-container.nix
     ./libvirt
+    ./llama-cpp.nix
+    ./llama-swap.nix
     ./network.nix
     ./power-management.nix
+    ./strata.nix
     ./vfio.nix
   ];
 
