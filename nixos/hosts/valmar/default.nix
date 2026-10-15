@@ -9,6 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ./backup.nix
+    ./network.nix
     ./power-management.nix
   ];
 
