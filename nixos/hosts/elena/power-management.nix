@@ -53,6 +53,9 @@ in {
 
   # WD drives aren't going to sleep with just the standby timeout set
   systemd.services."hd-idle" = {
+    # Spin-up through the SAS2008 outlasts the SCSI EH timeout and faulted a tank
+    # disk. Re-enable after the ASM1166 swap.
+    enable = false;
     description = "hd-idle - spin down idle hard disks";
     after = ["suspend.target" "hibernate.target" "hybrid-sleep.target" "suspend-then-hibernate.target"];
     serviceConfig = {
