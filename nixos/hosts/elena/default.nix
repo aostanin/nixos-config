@@ -23,6 +23,7 @@
     ./microvm.nix
     ./power-management.nix
     ./autosuspend.nix
+    ./fan2go.nix
   ];
 
   boot = {

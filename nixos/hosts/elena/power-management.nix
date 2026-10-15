@@ -4,14 +4,7 @@
   pkgs,
   ...
 }: let
-  drives = [
-    "/dev/disk/by-id/ata-TOSHIBA_MN07ACA12T_80U0A007FEQG"
-    "/dev/disk/by-id/ata-TOSHIBA_MN07ACA12T_9010A00BFEQG"
-    "/dev/disk/by-id/ata-TOSHIBA_MN07ACA12T_Y240A03MFEQG"
-    "/dev/disk/by-id/ata-TOSHIBA_MN07ACA12T_Y240A07LFEQG"
-    "/dev/disk/by-id/ata-WDC_WD120EMFZ-11A6JA0_9JHA5RKT"
-    "/dev/disk/by-id/ata-WDC_WD120EMFZ-11A6JA0_9RG1G3RC"
-  ];
+  drives = map (id: "/dev/disk/by-id/${id}") (import ./drives.nix);
 in {
   boot = {
     kernelParams = [
