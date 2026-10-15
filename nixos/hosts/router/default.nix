@@ -36,6 +36,10 @@
   # Root is tmpfs; keep the identity on the /var volume, mounted early enough
   # for sops to decrypt with the host key during activation.
   environment.etc.machine-id.text = "8d1c0e7f3a5b4c2e9f6a1d3b5c7e9f02\n";
+  # The ID lives in the store, so systemd overmounts a transient copy and the
+  # commit can only fail writing it back. Same unit as
+  # https://github.com/nix-community/impermanence/issues/229.
+  systemd.services.systemd-machine-id-commit.enable = false;
   fileSystems."/var".neededForBoot = true;
   sops.age.sshKeyPaths = ["/var/lib/ssh/ssh_host_ed25519_key"];
   services.openssh = {
