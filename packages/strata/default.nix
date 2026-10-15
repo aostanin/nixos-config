@@ -36,14 +36,14 @@
 in
   cudaPackages.backendStdenv.mkDerivation (finalAttrs: {
     pname = "strata";
-    version = "0.1.43.1";
+    version = "0.1.44.1";
 
     # Upstream rewrites history, so pin the tag's commit rather than the tag.
     src = fetchFromGitHub {
       owner = "Niko1221";
       repo = "Strata";
-      rev = "a0116b2782a5b82622358c04a06496485d12b2d6";
-      hash = "sha256-ouJseBgkuS0WxgHgHw8vxuNNqR/B3W5yjbjfBzkBpqA=";
+      rev = "296b59d2f73c8f04a805df29c2fa97655adace78";
+      hash = "sha256-Jfo2uldtyXW8Y/wQxA7WcYwtmzCGAOaXgnlMSo7K9LE=";
     };
 
     nativeBuildInputs = [
@@ -79,6 +79,8 @@ in
       mkdir -p $out/share/strata $out/bin
       cp -r $src/{serve,tools,data} $out/share/strata/
       install -Dm755 strata $out/share/strata/engine/strata
+      # The K-quant prompt kernels, opened from beside the engine for the Unsloth files.
+      install -Dm755 libstrata_kq.so $out/share/strata/engine/libstrata_kq.so
       # The server loads libnvidia-ml (web UI telemetry) and libcuda through ctypes.
       makeWrapper ${python.interpreter} $out/bin/strata-server \
         --prefix LD_LIBRARY_PATH : ${addDriverRunpath.driverLink}/lib \
