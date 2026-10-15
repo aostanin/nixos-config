@@ -9,6 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ./backup.nix
+    ./dev-container.nix
     ./libvirt
     ./network.nix
     ./power-management.nix

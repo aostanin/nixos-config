@@ -134,6 +134,18 @@
             type = "zfs_fs";
             options.mountpoint = "/home";
           };
+
+          containers = {
+            type = "zfs_fs";
+            options = {
+              canmount = "off";
+              mountpoint = "none";
+            };
+          };
+          "containers/dev" = {
+            type = "zfs_fs";
+            options.mountpoint = "/var/lib/nixos-containers/dev";
+          };
         };
       };
     };
