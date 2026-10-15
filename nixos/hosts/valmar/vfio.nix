@@ -39,6 +39,8 @@ in {
     gpuHostUnits = [
       "llama-swap.service"
       "nvidia-container-toolkit-cdi-generator.service"
+      # Holds the NVIDIA card's i2c buses and /dev/nvidia0 for GPU RGB.
+      "openrgb.service"
     ];
     vms = let
       isolate14Thread = {
