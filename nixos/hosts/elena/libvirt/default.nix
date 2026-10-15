@@ -11,10 +11,6 @@ in {
     connections."qemu:///system" = {
       domains = [
         {
-          definition = domain.writeXML (import ./macos.nix args);
-          active = null;
-        }
-        {
           definition = domain.writeXML (import ./win10-play.nix args);
           active = null;
         }
