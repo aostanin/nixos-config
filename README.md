@@ -19,7 +19,6 @@
 | elena               | Home Desktop           |
 | every-router        | BananaPi R3 Mini       |
 | mac-vm              | macOS VM on elena      |
-| mareg               | ThinkPad T440p         |
 | octopi              | Raspberry Pi 3         |
 | pikvm               | Raspberry Pi 4 4 GB    |
 | roan                | ThinkPad X250          |

@@ -110,7 +110,6 @@
         ];
       };
       mac-vm = {system = "x86_64-darwin";};
-      mareg = {system = "x86_64-linux";};
       octopi = {system = "aarch64-linux";};
       pikvm = {
         system = "aarch64-linux";

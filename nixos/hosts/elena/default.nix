@@ -188,7 +188,6 @@
           models = ["jma_msm" "dwd_icon"];
         };
 
-        # Migrated from mareg
         archivebox.enable = true;
         authelia.enable = true;
         changedetection.enable = true;
@@ -208,7 +207,7 @@
         };
         miniflux.enable = true;
 
-        # Home automation (migrated from mareg)
+        # Home automation
         frigate = {
           enable = true;
           devices = [
@@ -226,7 +225,7 @@
           adapterPath = "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_5c9c4df6b1c9eb118d7d8b4f1d69213e-if00-port0";
         };
 
-        # Voice assistant (migrated from mareg)
+        # Voice assistant
         openwakeword.enable = true;
         wyoming-openai = {
           enable = true;
