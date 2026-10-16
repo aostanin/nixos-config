@@ -1,5 +1,6 @@
 {pkgs}: {
   kokoro-fastapi = pkgs.callPackage ./kokoro-fastapi {};
+  maya = pkgs.callPackage ./maya {};
   polystrata = pkgs.callPackage ./polystrata {};
   splash = pkgs.callPackage ./splash {};
   strata = pkgs.callPackage ./strata {};
