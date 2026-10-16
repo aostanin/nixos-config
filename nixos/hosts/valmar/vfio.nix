@@ -1,14 +1,25 @@
 {
   config,
   lib,
+  pkgs,
   secrets,
   ...
 }: let
+  # JRAINBOW1 is the only ARGB header with a strip. It starts with zero LEDs, so
+  # it is sized in the same block as its color.
+  setLedColor = color: "${lib.getExe pkgs.openrgb} --noautoconnect --device 'PRO Z690-A' --zone 1 --size 30 --mode static --color ${color}";
+
   gpus = {
     nvidiaRTX5060Ti = {
       driver = "nvidia";
       pciIds = ["10de:2d04" "10de:22eb"];
       busId = "01:00.0";
+      preDetachCommands = ''
+        ${setLedColor "FF4444"} || true
+      '';
+      postAttachCommands = ''
+        ${setLedColor "000000"} || true
+      '';
     };
   };
   usbControllerIds = [
@@ -39,8 +50,6 @@ in {
     gpuHostUnits = [
       "llama-swap.service"
       "nvidia-container-toolkit-cdi-generator.service"
-      # Holds the NVIDIA card's i2c buses and /dev/nvidia0 for GPU RGB.
-      "openrgb.service"
     ];
     vms = let
       isolate14Thread = {
