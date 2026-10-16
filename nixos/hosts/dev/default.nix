@@ -36,10 +36,10 @@ in {
   # secrets in /run/user.
   users.users.${secrets.user.username}.linger = true;
 
-  # Profiles under ~ get their GC roots registered by elena's nix-daemon at the
-  # same path on elena, where they resolve to elena's own home, so elena's GC
-  # deletes this container's home-manager generations. elena does scan its
-  # per-container copy of /nix/var/nix/profiles.
+  # Profiles under ~ get their GC roots registered by the host's nix-daemon at
+  # the same path on the host, where they resolve to the host's own home, so
+  # the host's GC deletes this container's home-manager generations. The host
+  # does scan its per-container copy of /nix/var/nix/profiles.
   systemd.tmpfiles.settings."10-user-profiles" = let
     inherit (secrets.user) username;
     home = "/home/${username}";
@@ -61,7 +61,7 @@ in {
     # NIX_REMOTE=daemon from their environment, but root under sudo (deploys)
     # needs this.
     settings.store = "daemon";
-    # elena's GC covers this container's profiles too.
+    # The host's GC covers this container's profiles too.
     gc.automatic = lib.mkForce false;
   };
 
@@ -71,14 +71,23 @@ in {
       minimal = true;
     };
     nix-ld.enable = true;
+    traefik.enable = true;
+
+    # Paseo's web UI, plus its service proxy for workspace dev servers. Served
+    # from here so it follows the container between hosts.
+    ingress.paseo = {
+      inherit (config.services.paseo) port;
+      hosts = [
+        config.roles.dev.publicHostname
+        "*.${config.roles.dev.appsHostname}"
+      ];
+    };
   };
 
   roles.dev = {
     enable = true;
     publicHostname = "paseo.${secrets.domain}";
     appsHostname = "paseoapps.${secrets.domain}";
-    # Traefik on elena.
-    trustedProxies = ["loopback" secrets.network.home.hosts.elena.address];
   };
 
   services.paseo.settings = {
@@ -115,8 +124,8 @@ in {
   '';
   systemd.services.paseo.serviceConfig = {
     EnvironmentFile = [config.sops.templates."paseo-maki.env".path];
-    # When elena's MemoryMax on the container OOM-kills one agent, the default
-    # (stop) would take every other agent down with it.
+    # When the host's MemoryMax on the container OOM-kills one agent, the
+    # default (stop) would take every other agent down with it.
     OOMPolicy = "continue";
   };
 }

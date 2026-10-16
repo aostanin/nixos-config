@@ -26,9 +26,6 @@
   # /var/lib/nixos-containers/dev. Safe because /var/lib is the rolled-back
   # root rather than an impermanence bind.
 
-  # Paseo's ingress stays on elena (Traefik runs there) and keeps pointing at
-  # the container's own address, which doesn't change with the move.
-
   # A runaway agent should hit this instead of taking valmar down with it. No
   # MemoryHigh: above it the whole container stalls in reclaim indefinitely
   # rather than OOM-killing the culprit. No swap: zram lives in host RAM

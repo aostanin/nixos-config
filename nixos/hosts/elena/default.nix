@@ -11,7 +11,6 @@
     ./hardware-configuration.nix
     ./backup.nix
     ./backup-external.nix
-    ./containers.nix
     ./incus.nix
     ./litellm.nix
     ./actual.nix
