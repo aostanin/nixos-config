@@ -295,8 +295,6 @@
     open = true;
     nvidiaPersistenced = true;
     powerManagement.enable = true;
-    # FIXME: Workaround for nvidia-gpu 0000:01:00.3: Unable to change power state from D3hot to D0, device inaccessible
-    powerManagement.finegrained = false;
   };
 
   systemd.timers.update-mam = {
