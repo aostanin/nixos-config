@@ -26,7 +26,7 @@
   # The iGPU drives the displays; the NVIDIA card is for compute only.
   services.xserver.videoDrivers = ["modesetting" "nvidia"];
   hardware.nvidia = {
-    # Required for Blackwell; Turing works with either.
+    # Required for Blackwell.
     open = true;
     modesetting.enable = true;
     nvidiaPersistenced = true;

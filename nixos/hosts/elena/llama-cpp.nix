@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: {
   services.llama-cpp = {
@@ -50,7 +49,7 @@
   localModules.ingress.llama-cpp.port = config.services.llama-cpp.port;
 
   # load-mode mmap+mlock locks multi-GB model buffers; default 8M rlimit is too low.
-  systemd.services.llama-cpp = lib.mkIf config.services.llama-cpp.enable {
+  systemd.services.llama-cpp = {
     serviceConfig.LimitMEMLOCK = "infinity";
   };
 }

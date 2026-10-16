@@ -30,12 +30,6 @@ in {
         Paseo reserves this name and its subdomains, so it can't be publicHostname.
       '';
     };
-
-    trustedProxies = lib.mkOption {
-      type = with lib.types; listOf str;
-      default = ["loopback"];
-      description = "Reverse proxies whose X-Forwarded-Proto the web UI trusts to pick wss://.";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -76,7 +70,7 @@ in {
       environment =
         {
           PASEO_WEB_UI_ENABLED = "true";
-          PASEO_TRUSTED_PROXIES = lib.concatStringsSep "," cfg.trustedProxies;
+          PASEO_TRUSTED_PROXIES = "loopback";
         }
         // lib.optionalAttrs (cfg.appsHostname != null) {
           PASEO_SERVICE_PROXY_PUBLIC_BASE_URL = "https://${cfg.appsHostname}";

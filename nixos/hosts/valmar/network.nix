@@ -6,7 +6,7 @@
   mac = secrets.network.nics.valmar.integrated;
   interface = "enx${lib.replaceStrings [":"] [""] mac}";
 in {
-  # br0 for the dev container and the VMs, as on elena.
+  # br0 for the dev container and the VMs.
   localModules.home-server = {
     enable = true;
     inherit interface;

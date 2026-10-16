@@ -142,6 +142,8 @@
               mountpoint = "none";
             };
           };
+          # A native mount is safe here because /var/lib is the rolled-back root
+          # rather than an impermanence bind.
           "containers/dev" = {
             type = "zfs_fs";
             options.mountpoint = "/var/lib/nixos-containers/dev";
