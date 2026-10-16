@@ -84,8 +84,6 @@
 
     impermanence.enable = true;
 
-    networkmanager.enable = true;
-
     nvtop.package = pkgs.nvtopPackages.full;
 
     podman = {
