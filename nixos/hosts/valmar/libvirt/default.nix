@@ -1,8 +1,4 @@
-{
-  config,
-  inputs,
-  ...
-} @ args: let
+{inputs, ...} @ args: let
   domain = inputs.nixvirt.lib.domain;
   network = inputs.nixvirt.lib.network;
   pool = inputs.nixvirt.lib.pool;
@@ -32,30 +28,12 @@ in {
 
       networks = [
         {
-          # NAT until br0 exists (network.nix).
-          definition = network.writeXML ({
-              name = "default";
-              uuid = "eb70d2b6-35a2-4206-bcbc-8eebb4b644e9";
-            }
-            // (
-              if config.localModules.home-server.enable
-              then {
-                forward.mode = "bridge";
-                bridge.name = "br0";
-              }
-              else {
-                forward.mode = "nat";
-                bridge.name = "virbr0";
-                ip = {
-                  address = "192.168.122.1";
-                  netmask = "255.255.255.0";
-                  dhcp.range = {
-                    start = "192.168.122.2";
-                    end = "192.168.122.254";
-                  };
-                };
-              }
-            ));
+          definition = network.writeXML {
+            name = "default";
+            uuid = "eb70d2b6-35a2-4206-bcbc-8eebb4b644e9";
+            forward.mode = "bridge";
+            bridge.name = "br0";
+          };
           active = true;
         }
       ];
