@@ -22,7 +22,6 @@
     ./kokoro-fastapi.nix
     ./microvm.nix
     ./power-management.nix
-    ./autosuspend.nix
     ./fan2go.nix
   ];
 
