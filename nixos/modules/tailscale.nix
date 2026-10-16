@@ -82,7 +82,8 @@ in {
     };
 
     # A first registration fetches an OAuth token, which fails if it runs
-    # before the network is up.
+    # before the network is up. Upstream's network-online ordering is inert:
+    # https://github.com/NixOS/nixpkgs/issues/527403
     systemd.services.tailscaled-autoconnect = {
       after = ["network-online.target"];
       wants = ["network-online.target"];
