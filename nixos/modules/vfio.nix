@@ -497,11 +497,6 @@ in {
         '';
       };
 
-      hardware.nvidia = lib.mkIf (lib.lists.any (gpu: gpu.driver == "nvidia") (lib.attrsets.attrValues cfg.gpus)) {
-        nvidiaPersistenced = true;
-        powerManagement.enable = true;
-      };
-
       systemd.services.libvirtd = {
         path = with pkgs; [
           stdenv.shell

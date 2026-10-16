@@ -29,6 +29,8 @@
     # Required for Blackwell; Turing works with either.
     open = true;
     modesetting.enable = true;
+    nvidiaPersistenced = true;
+    powerManagement.enable = true;
     prime = {
       offload = {
         enable = true;
