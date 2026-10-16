@@ -7,6 +7,7 @@
   cfg = config.localModules.strata;
   dataDir = "/persist/cache/strata/data";
   polyDir = "/persist/cache/polystrata";
+  mayaDir = "/persist/cache/maya/models";
 
   # llama-swap passes the client's Host header through, and both engines reject
   # unknown names as DNS rebinding.
@@ -31,6 +32,32 @@
     pkgs.writeShellScript "polystrata-${name}-launch" ''
       install -D -m 644 ${runConfig} /run/polystrata/${name}.json
       exec ${polystrata}/bin/polystrata-server --engine strata --config /run/polystrata/${name}.json --port "$1"
+    '';
+
+  maya = pkgs.pkgsForCudaArch.sm_120.maya.override {cpuArch = "raptorlake";};
+
+  mayaLauncher = name: settings: let
+    runConfig = pkgs.writeText "maya-${name}.json" (builtins.toJSON ({
+        exe = "${maya}/share/maya/engine/strata";
+        cwd = "/var/lib/maya";
+        log = "/var/lib/maya/${name}.log";
+        host = "127.0.0.1";
+        gpu = [0];
+        model_name = "glm-5.3-flash";
+        sampling = {
+          temperature = 1.0;
+          top_p = 0.95;
+        };
+        reasoning_effort = "high";
+        fit_max_tokens = true;
+      }
+      // settings));
+  in
+    # The web UI's Settings view rewrites the config it was started with, and
+    # the server writes the vision encoder's measured footprint beside it.
+    pkgs.writeShellScript "maya-${name}-launch" ''
+      install -D -m 644 ${runConfig} /run/maya/${name}.json
+      exec ${maya}/bin/maya-server --engine strata --config /run/maya/${name}.json --port "$1"
     '';
 
   # No unloadTimeout: the engine stays loaded until another group needs the GPU.
@@ -100,7 +127,10 @@ in {
     };
   };
 
-  systemd.tmpfiles.rules = ["d /var/lib/polystrata 0750 root root -"];
+  systemd.tmpfiles.rules = [
+    "d /var/lib/polystrata 0750 root root -"
+    "d /var/lib/maya 0750 root root -"
+  ];
 
   services.llama-swap.settings = {
     # The engines' own start timeout; a Strata cold start takes minutes.
@@ -146,10 +176,35 @@ in {
         tokenizer = "${polyDir}/gemma/tokenizer";
         model_name = "gemma-4-26b-a4b";
       });
+
+      maya-glm = engineModel (mayaLauncher "glm" {
+        args = [
+          "--glm-pack"
+          "${mayaDir}/Maya-S24/pack"
+          "--max-context"
+          "131072"
+          "--expert-cache"
+          "auto"
+          "--prefill"
+          "auto"
+          "--kv-streaming"
+          "on"
+          "--expert-profile"
+          "${maya}/share/maya/data/expert-profile-glm.bin"
+        ];
+        tokenizer = "${mayaDir}/Maya-S24/pack/tokenizer";
+        vision = {
+          exe = "${maya}/share/maya/engine/strata-vision";
+          mmproj = "${mayaDir}/vision/mmproj-GLM-5.3-Flash-F16.gguf";
+          # Opened for its vocabulary only.
+          model = "${mayaDir}/vision/GLM-5.3-Flash-vocab.gguf";
+          gpu = true;
+        };
+      });
     };
 
     # Each engine fills the VRAM, so only one runs at a time.
-    routing.router.settings.groups = lib.genAttrs ["strata" "polystrata-ornith" "polystrata-gemma"] (name: {
+    routing.router.settings.groups = lib.genAttrs ["strata" "polystrata-ornith" "polystrata-gemma" "maya-glm"] (name: {
       exclusive = true;
       members = [name];
     });
