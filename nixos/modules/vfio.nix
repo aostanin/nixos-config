@@ -326,6 +326,9 @@
         #!${pkgs.stdenv.shell}
         set -e
 
+        # libvirt runs no release hook after a failed prepare, so undo what ran so far.
+        trap '[ $? -eq 0 ] || ${lib.getExe (gpuAttachScript gpu)}' EXIT
+
         ${lib.optionalString (cfg.gpuHostUnits != []) ''
           # Blocks until the gpu-host.target units are stopped.
           systemctl start gpu-vm.target
