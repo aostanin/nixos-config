@@ -9,10 +9,18 @@
 
   mac = "andreis-macbook-pro";
   macTailscaleIp = secrets.network.tailscale.hosts.${mac}.address;
-  macOnline = pkgs.writeShellScript "${mac}-online" ''
-    tailscale status --json 2>/dev/null \
+  # Picks the route per connection here rather than with a Match block:
+  # eternal-terminal's ssh_config parser ignores Match conditions, so a Match
+  # block's options leak onto every host.
+  macProxy = pkgs.writeShellScript "${mac}-proxy" ''
+    if tailscale status --json 2>/dev/null \
       | ${lib.getExe pkgs.jq} -e --arg ip ${macTailscaleIp} \
-        '.Peer[] | select(.TailscaleIPs | index($ip)) | .Online' >/dev/null
+        '.Peer[] | select(.TailscaleIPs | index($ip)) | .Online' >/dev/null; then
+      exec ${lib.getExe pkgs.netcat} ${macTailscaleIp} "$1"
+    fi
+    # A sleeping Mac is offline on the tailnet, but a connection to its LAN
+    # address wakes it through the Bonjour sleep proxy.
+    exec ssh -W ${secrets.network.home.hosts.${mac}.address}:"$1" elena
   '';
 in {
   options.localModules.ssh = {
@@ -31,18 +39,7 @@ in {
           User = "git";
         };
 
-        "${mac}-tailscale" = lib.hm.dag.entryBefore [mac] {
-          header = ''Match originalhost ${mac} exec "${macOnline}"'';
-          HostName = macTailscaleIp;
-          ProxyJump = "none";
-        };
-
-        # A sleeping Mac is offline on the tailnet, but a connection to its LAN
-        # address wakes it through the Bonjour sleep proxy.
-        ${mac} = {
-          HostName = secrets.network.home.hosts.${mac}.address;
-          ProxyJump = "elena";
-        };
+        ${mac}.ProxyCommand = "${macProxy} %p";
       };
     };
   };
