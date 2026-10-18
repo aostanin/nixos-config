@@ -12,11 +12,18 @@
     ./disko-config.nix
   ];
 
+  # RTL8127ATF SFP+ support in r8169 needs 7.0+.
+  boot.kernelPackages = pkgs.linuxPackages_7_2;
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-intel" "nct6687"];
   # For hardware monitoring on the MSI board's Nuvoton NCT6687D.
-  boot.extraModulePackages = [config.boot.kernelPackages.nct6687d];
+  # 26.05's snapshot calls strncpy, which 7.x no longer provides.
+  boot.extraModulePackages = [
+    (config.boot.kernelPackages.nct6687d.overrideAttrs {
+      inherit (pkgs.unstable.linuxPackages.nct6687d) src version;
+    })
+  ];
 
   # Partition layout, rpool, and fileSystems/swap come from disko-config.nix.
   disko.devices.disk.main.device = "/dev/disk/by-id/nvme-SHPP41-2000GM_ADC8N56931240921A";
@@ -28,6 +35,10 @@
   hardware.nvidia = {
     # Required for Blackwell.
     open = true;
+    # 26.05's 595.71.05 calls strncpy, which 7.x no longer provides. Unstable's
+    # driver definitions, built against this kernel.
+    package =
+      (config.boot.kernelPackages.callPackage "${inputs.nixpkgs-unstable}/pkgs/os-specific/linux/nvidia-x11" {}).production;
     modesetting.enable = true;
     nvidiaPersistenced = true;
     powerManagement.enable = true;

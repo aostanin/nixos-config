@@ -12,7 +12,9 @@
     "${inputs.nixos-hardware}/common/gpu/amd"
   ];
 
-  boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "mpt3sas" "usbhid" "usb_storage" "sd_mod"];
+  # RTL8127ATF SFP+ support in r8169 needs 7.0+.
+  boot.kernelPackages = pkgs.linuxPackages_7_2;
+  boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];
   boot.initrd.kernelModules = [];
   # nct6775 drives the board's Nuvoton NCT6799D Super I/O (fans, voltages).
   boot.kernelModules = ["kvm-amd" "nct6775"];

@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
@@ -289,6 +290,10 @@
   hardware.nvidia = {
     modesetting.enable = true;
     open = true;
+    # 26.05's 595.71.05 calls strncpy, which 7.x no longer provides. Unstable's
+    # driver definitions, built against this kernel.
+    package =
+      (config.boot.kernelPackages.callPackage "${inputs.nixpkgs-unstable}/pkgs/os-specific/linux/nvidia-x11" {}).production;
     nvidiaPersistenced = true;
     powerManagement.enable = true;
   };
