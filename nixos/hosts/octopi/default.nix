@@ -67,14 +67,22 @@
     nginx.clientMaxBodySize = "100M";
 
     ustreamer = {
-      # TODO: Unstable
-      # enable = true;
+      enable = true;
       device = "/dev/v4l/by-id/usb-046d_C270_HD_WEBCAM_49407AC0-video-index0";
+      # Low-bandwidth MJPEG: the Pi 3's single USB bus also carries Ethernet
+      # and the printer's serial link.
       extraArgs = [
-        "--resolution=1280x720"
-        "--desired-fps=30"
+        "--resolution=640x480"
+        "--desired-fps=10"
+        "--format=MJPEG"
+        "--encoder=HW"
       ];
     };
+
+    # The C270 defaults to 60 Hz anti-flicker; mains here is 50 Hz.
+    udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="0825", ATTR{index}=="0", RUN+="${pkgs.v4l-utils}/bin/v4l2-ctl -d $devnode --set-ctrl=power_line_frequency=1"
+    '';
   };
 
   environment.systemPackages = with pkgs; [
