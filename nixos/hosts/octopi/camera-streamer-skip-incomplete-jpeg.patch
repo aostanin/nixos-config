@@ -1,0 +1,44 @@
+--- a/device/links.c
++++ b/device/links.c
+@@ -7,6 +7,7 @@
+ #include "util/opts/fourcc.h"
+ 
+ #include <inttypes.h>
++#include <linux/videodev2.h>
+ 
+ #define CAPTURE_TIMEOUT_US (1000*1000)
+ #define STALE_TIMEOUT_US (1000*1000*1000)
+@@ -233,6 +234,21 @@
+   return n;
+ }
+ 
++// A JPEG cut short in transit (e.g. a lost USB isochronous payload) makes the
++// Raspberry Pi hardware decoder end its stream, which the "last buffer"
++// restart above does not recover from.
++static bool links_jpeg_is_complete(buffer_t *buf)
++{
++  const unsigned char *data = buf->start;
++
++  if (buf->buf_list->fmt.format != V4L2_PIX_FMT_MJPEG &&
++      buf->buf_list->fmt.format != V4L2_PIX_FMT_JPEG)
++    return true;
++  if (!data)
++    return true;
++  return buf->used >= 4 && data[buf->used - 2] == 0xFF && data[buf->used - 1] == 0xD9;
++}
++
+ static int links_enqueue_from_capture_list(buffer_list_t *capture_list, link_t *link)
+ {
+   if (!link) {
+@@ -258,6 +274,11 @@
+     return 0;
+   }
+ 
++  if (!links_jpeg_is_complete(buf)) {
++    LOG_INFO(buf, "Capture image is an incomplete JPEG (%zu bytes). Skipped.", buf->used);
++    return 0;
++  }
++
+   bool dropped = false;
+ 
+   int max_bufs_queued = buf->flags.is_keyed ? MAX_QUEUED_ON_KEYED : MAX_QUEUED_ON_NON_KEYED;
