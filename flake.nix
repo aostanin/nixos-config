@@ -110,7 +110,14 @@
         ];
       };
       mac-vm = {system = "x86_64-darwin";};
-      octopi = {system = "aarch64-linux";};
+      octopi = {
+        system = "aarch64-linux";
+        additionalModules = [
+          inputs.kvmd.inputs.nixos-raspberrypi.nixosModules.raspberry-pi-3.base
+          inputs.kvmd.inputs.nixos-raspberrypi.lib.inject-overlays
+          {_module.args.nixos-raspberrypi = inputs.kvmd.inputs.nixos-raspberrypi;}
+        ];
+      };
       pikvm = {
         system = "aarch64-linux";
         additionalModules = [

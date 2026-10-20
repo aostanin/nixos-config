@@ -1,9 +1,32 @@
-{modulesPath, ...}: {
-  boot.loader.grub.enable = false;
-  boot.loader.generic-extlinux-compatible.enable = true;
-
+{
+  lib,
+  pkgs,
+  inputs,
+  ...
+}: {
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXOS_SD";
     fsType = "ext4";
   };
+
+  fileSystems."/boot/firmware" = {
+    device = "/dev/disk/by-label/FIRMWARE";
+    fsType = "vfat";
+    options = ["noatime" "nofail"];
+  };
+
+  boot.loader.raspberry-pi = {
+    # nixpkgs' firmware rather than nixos-raspberrypi's newer one: camera-streamer's
+    # hardware decoder was tested with it.
+    firmwarePackage = pkgs.runCommand "raspberrypifw-rpi3-only" {} ''
+      src=${inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.raspberrypifw}/share/raspberrypi/boot
+      dst=$out/share/raspberrypi/boot
+      mkdir -p $dst
+      cp $src/bcm2710-rpi-3-b.dtb $src/start.elf $src/fixup.dat $src/bootcode.bin $dst/
+    '';
+    ubootPackage = pkgs.ubootRaspberryPi3_64bit;
+  };
+  # U-Boot boots with the vendor DTB, but the kernel must get the generation's,
+  # which carries the dwc2 overlay.
+  boot.loader.generic-extlinux-compatible.useGenerationDeviceTree = lib.mkForce true;
 }

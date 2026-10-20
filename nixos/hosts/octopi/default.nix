@@ -5,10 +5,26 @@
   ...
 }: {
   imports = [
-    "${inputs.nixos-hardware}/raspberry-pi/3"
     ./klipper
     ./hardware-configuration.nix
   ];
+
+  # nixos-hardware's kernel, not nixos-raspberrypi's: the USB and serial testing
+  # was done on it.
+  boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage "${inputs.nixos-hardware}/raspberry-pi/common/kernel.nix" {rpiVersion = 3;});
+
+  hardware.raspberry-pi.config.pi3.options = {
+    # Otherwise the serial output will be garbled.
+    core_freq = {
+      enable = true;
+      value = 250;
+    };
+    # camera-streamer's hardware MJPEG decode + H.264 encode.
+    gpu_mem = {
+      enable = true;
+      value = 128;
+    };
+  };
 
   networking = {
     hostName = "octopi";
