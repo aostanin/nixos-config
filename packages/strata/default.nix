@@ -36,14 +36,13 @@
 in
   cudaPackages.backendStdenv.mkDerivation (finalAttrs: {
     pname = "strata";
-    version = "0.1.44.1";
+    version = "0.1.45";
 
-    # Upstream rewrites history, so pin the tag's commit rather than the tag.
     src = fetchFromGitHub {
       owner = "Niko1221";
       repo = "Strata";
-      rev = "296b59d2f73c8f04a805df29c2fa97655adace78";
-      hash = "sha256-Jfo2uldtyXW8Y/wQxA7WcYwtmzCGAOaXgnlMSo7K9LE=";
+      tag = "v${finalAttrs.version}";
+      hash = "sha256-YfCpJ+iSbs8hSGzWtTr/fNJYRjUjS+ed7U7TNiaDBJU=";
     };
 
     nativeBuildInputs = [

@@ -5,7 +5,6 @@
   cmake,
   cudaPackages_13_0,
   fetchFromGitHub,
-  fetchzip,
   makeWrapper,
   ninja,
   python3,
@@ -36,16 +35,15 @@
       regex
     ]);
 in
-  cudaPackages.backendStdenv.mkDerivation {
+  cudaPackages.backendStdenv.mkDerivation (finalAttrs: {
     pname = "polystrata";
-    version = "0.1.43.1-poly.2";
+    version = "0.1.45-poly.1";
 
-    # GitHub has hidden the author's account, so this is the release zip from
-    # the project's Hugging Face Space, pinned by the Space's commit.
-    src = fetchzip {
-      url = "https://huggingface.co/spaces/VecSzn/PolyStrata/resolve/3b11d983cc419749f67f400b188a75bc8b46edbb/PolyStrata-b0e3b57a.zip";
-      hash = "sha256-SToZfCOnnokNUADi87j7WKEHOBbfsXEhouRus9bub4I=";
-      stripRoot = false;
+    src = fetchFromGitHub {
+      owner = "VecSzn";
+      repo = "PolyStrata";
+      tag = "v${finalAttrs.version}";
+      hash = "sha256-2iocABBMPqerJi7ztn0WvjYwCHWYm/M+SMkrwQH61tw=";
     };
 
     nativeBuildInputs = [
@@ -96,9 +94,9 @@ in
 
     meta = {
       description = "Strata's engine for other MoE models: Qwen3.6, Ornith 1.5, Gemma 4 and GLM 5.3 Flash";
-      homepage = "https://huggingface.co/spaces/VecSzn/PolyStrata";
+      homepage = "https://github.com/VecSzn/PolyStrata";
       license = lib.licenses.mit;
       mainProgram = "polystrata-server";
       platforms = ["x86_64-linux"];
     };
-  }
+  })

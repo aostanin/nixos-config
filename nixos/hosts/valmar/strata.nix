@@ -38,7 +38,7 @@
 
   mayaLauncher = name: settings: let
     runConfig = pkgs.writeText "maya-${name}.json" (builtins.toJSON ({
-        exe = "${maya}/share/maya/engine/strata";
+        exe = "${maya}/share/maya/engine/maya";
         cwd = "/var/lib/maya";
         log = "/var/lib/maya/${name}.log";
         host = "127.0.0.1";
@@ -194,7 +194,7 @@ in {
         ];
         tokenizer = "${mayaDir}/Maya-S24/pack/tokenizer";
         vision = {
-          exe = "${maya}/share/maya/engine/strata-vision";
+          exe = "${maya}/share/maya/engine/maya-vision";
           mmproj = "${mayaDir}/vision/mmproj-GLM-5.3-Flash-F16.gguf";
           # Opened for its vocabulary only.
           model = "${mayaDir}/vision/GLM-5.3-Flash-vocab.gguf";

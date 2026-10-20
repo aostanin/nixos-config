@@ -37,16 +37,15 @@
       regex
     ]);
 in
-  cudaPackages.backendStdenv.mkDerivation {
+  cudaPackages.backendStdenv.mkDerivation (finalAttrs: {
     pname = "maya";
-    version = "1.1.12";
+    version = "1.1.16";
 
     src = fetchFromGitHub {
       owner = "mw00";
       repo = "project-maya";
-      # v1.1.12
-      rev = "7f96a3abd04257d39871a02d19adc19d7db4259e";
-      hash = "sha256-xML8sMlNhSMIL9218zcIBLr+/3y/YOh1zet95/kyGS4=";
+      tag = "v${finalAttrs.version}";
+      hash = "sha256-nmh7HDN6rerXMKD8PZfUITZz9vbEzUCxlo5s3nl7KvU=";
     };
 
     nativeBuildInputs = [
@@ -75,7 +74,7 @@ in
       (lib.cmakeFeature "CMAKE_CUDA_ARCHITECTURES" cudaPackages.flags.cmakeCudaArchitecturesString)
     ];
 
-    ninjaFlags = ["strata"];
+    ninjaFlags = ["maya"];
 
     # The image encoder is llama.cpp's mtmd with GLM-5.3-Flash's vision tower
     # patched into a copy of the tree.
@@ -85,7 +84,7 @@ in
       cmake -S $src/tools/vision -B vision -G Ninja -DCMAKE_BUILD_TYPE=Release \
         -DLLAMA_DIR=$PWD/llama-vision -DSTRATA_VISION_CUDA=ON \
         -DCMAKE_CUDA_ARCHITECTURES="$(sed -n 's/^CMAKE_CUDA_ARCHITECTURES:[A-Z]*=//p' CMakeCache.txt)"
-      ninja -C vision -j$NIX_BUILD_CORES strata-vision
+      ninja -C vision -j$NIX_BUILD_CORES maya-vision
     '';
 
     env.NIX_CFLAGS_COMPILE = lib.optionalString (cpuArch != null) "-march=${cpuArch}";
@@ -96,8 +95,7 @@ in
       runHook preInstall
       mkdir -p $out/share/maya $out/bin
       cp -r $src/{serve,tools,data,VERSION} $out/share/maya/
-      install -Dm755 strata $out/share/maya/engine/strata
-      install -Dm755 vision/bin/strata-vision $out/share/maya/engine/strata-vision
+      install -Dm755 -t $out/share/maya/engine maya vision/bin/maya-vision
       # The server loads libnvidia-ml (web UI telemetry) and libcuda through
       # ctypes. Its updater would git-pull the store path.
       makeWrapper ${python.interpreter} $out/bin/maya-server \
@@ -120,4 +118,4 @@ in
       mainProgram = "maya-server";
       platforms = ["x86_64-linux"];
     };
-  }
+  })
