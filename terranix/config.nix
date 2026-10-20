@@ -183,7 +183,6 @@ in {
     elena.accountId = accountId;
     every-router.accountId = accountId;
     pikvm.accountId = accountId;
-    roan.accountId = accountId;
     vps-oci1.accountId = accountId;
     vps-oci2.accountId = accountId;
     vps-oci-arm1.accountId = accountId;
@@ -195,7 +194,6 @@ in {
         elena.tunnel_token = config.output.tunnel_token_elena.value;
         every-router.tunnel_token = config.output.tunnel_token_every-router.value;
         pikvm.tunnel_token = config.output.tunnel_token_pikvm.value;
-        roan.tunnel_token = config.output.tunnel_token_roan.value;
         vps-oci2.tunnel_token = config.output.tunnel_token_vps-oci2.value;
         vps-oci1.tunnel_token = config.output.tunnel_token_vps-oci1.value;
         vps-oci-arm1.tunnel_token = config.output.tunnel_token_vps-oci-arm1.value;
