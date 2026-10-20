@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  inputs,
   ...
 }: {
   fileSystems."/" = {
@@ -16,10 +15,8 @@
   };
 
   boot.loader.raspberry-pi = {
-    # nixpkgs' firmware rather than nixos-raspberrypi's newer one: camera-streamer's
-    # hardware decoder was tested with it.
     firmwarePackage = pkgs.runCommand "raspberrypifw-rpi3-only" {} ''
-      src=${inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.raspberrypifw}/share/raspberrypi/boot
+      src=${pkgs.raspberrypifw}/share/raspberrypi/boot
       dst=$out/share/raspberrypi/boot
       mkdir -p $dst
       cp $src/bcm2710-rpi-3-b.dtb $src/start.elf $src/fixup.dat $src/bootcode.bin $dst/
