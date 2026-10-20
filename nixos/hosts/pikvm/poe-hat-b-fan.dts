@@ -1,0 +1,57 @@
+// Waveshare PoE HAT (B): the fan hangs off P0 (active low) of a PCF8574 at
+// 0x20 on i2c_arm. Expose it as a gpio-fan cooling device on cpu_thermal.
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2711";
+
+	fragment@0 {
+		target = <&i2c_arm>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+
+			poe_hat_gpio: gpio@20 {
+				compatible = "nxp,pcf8574";
+				reg = <0x20>;
+				gpio-controller;
+				#gpio-cells = <2>;
+			};
+		};
+	};
+
+	fragment@1 {
+		target-path = "/";
+		__overlay__ {
+			poe_hat_fan: poe-hat-fan {
+				compatible = "gpio-fan";
+				gpios = <&poe_hat_gpio 0 1>;
+				gpio-fan,speed-map = <0 0>, <5000 1>;
+				#cooling-cells = <2>;
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&thermal_trips>;
+		__overlay__ {
+			poe_hat_fan_trip: poe-hat-fan {
+				temperature = <60000>;
+				hysteresis = <10000>;
+				type = "active";
+			};
+		};
+	};
+
+	fragment@3 {
+		target = <&cooling_maps>;
+		__overlay__ {
+			poe-hat-fan {
+				trip = <&poe_hat_fan_trip>;
+				cooling-device = <&poe_hat_fan 1 1>;
+			};
+		};
+	};
+};

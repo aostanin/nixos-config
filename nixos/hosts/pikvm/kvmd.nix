@@ -35,6 +35,7 @@
   services.kvmd = {
     enable = true;
     janus.enable = true;
+    oled.enable = true;
 
     htpasswdFile = config.sops.secrets."pikvm/htpasswd".path;
 
