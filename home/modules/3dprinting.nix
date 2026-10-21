@@ -20,6 +20,7 @@ in {
       meshlab
       openscad-unstable
       orca-slicer
+      snapmaker-orca
     ]);
   };
 }
