@@ -22,20 +22,19 @@
         inherit lib;
         pkgs = mkPkgs system;
       };
-      theme = import ../theme {
-        inherit inputs;
-        pkgs = mkPkgs system;
-      };
     in
       lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs nixpkgsConfig secrets sopsFiles localLib theme self;
+          inherit inputs nixpkgsConfig secrets sopsFiles localLib self;
         };
         modules =
           [
             ./modules
             ./roles
+            ({pkgs, ...}: {
+              _module.args.theme = import ../theme {inherit pkgs;};
+            })
             {
               nixpkgs = mkPkgs system;
               system.stateVersion = "26.05";

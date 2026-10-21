@@ -47,7 +47,7 @@
         extraSpecialArgs = {
           inherit inputs nixpkgsConfig secrets sopsFiles;
           localLib = import ../lib {inherit lib pkgs;};
-          theme = import ../theme {inherit inputs pkgs;};
+          theme = import ../theme {inherit pkgs;};
         };
       };
   in {

@@ -578,22 +578,6 @@
         "type": "github"
       }
     },
-    "nixos-artwork": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1751141820,
-        "narHash": "sha256-//4BiRF1W5W2rEbw6MupiyDOjvcveqGtYjJ1mZfck9U=",
-        "owner": "NixOS",
-        "repo": "nixos-artwork",
-        "rev": "9d2cdedd73d64a068214482902adea3d02783ba8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixos-artwork",
-        "type": "github"
-      }
-    },
     "nixos-hardware": {
       "inputs": {
         "nixpkgs": "nixpkgs_6"
@@ -1086,7 +1070,6 @@
         "microvm": "microvm",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
-        "nixos-artwork": "nixos-artwork",
         "nixos-hardware": "nixos-hardware",
         "nixos-sbc": "nixos-sbc",
         "nixpkgs": "nixpkgs_8",

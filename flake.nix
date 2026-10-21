@@ -47,10 +47,6 @@
       inputs.flake-parts.follows = "flake-parts";
     };
     impermanence.url = "github:nix-community/impermanence";
-    nixos-artwork = {
-      url = "github:NixOS/nixos-artwork";
-      flake = false;
-    };
     nixvim.url = "github:nix-community/nixvim/nixos-26.05";
     noctalia.url = "github:noctalia-dev/noctalia-shell";
     noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
