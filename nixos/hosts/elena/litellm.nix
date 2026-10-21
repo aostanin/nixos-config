@@ -103,6 +103,7 @@ in {
       (mkValmarModel "ornith-1.5-35b-a3b" "polystrata-ornith")
       (mkValmarModel "gemma-4-26b-a4b" "polystrata-gemma")
       (mkValmarModel "qwen3.8-flash-next" "strata")
+      (mkValmarModel "glm-5.3-flash" "maya-glm")
       {
         model_name = "ha-assist";
         litellm_params = {
