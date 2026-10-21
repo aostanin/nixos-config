@@ -131,6 +131,15 @@ in {
         sleep 10
 
         ${drivePower} off
+
+        # Home Assistant reports success even when the plug never receives the
+        # command, and drives left on asleep fail the next run's import
+        for _ in $(seq 60); do
+            ${lib.concatStringsSep " && " (map (drive: "[ ! -b ${drive} ]") drives)} && exit 0
+            sleep 1
+        done
+        echo "Drives still present after powering off" >&2
+        exit 1
       '';
     };
   };
