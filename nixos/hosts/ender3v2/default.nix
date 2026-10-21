@@ -26,14 +26,14 @@
   };
 
   networking = {
-    hostName = "octopi";
+    hostName = "ender3v2";
     useDHCP = true;
   };
 
   localModules = {
     traefik.enable = true;
 
-    ingress.fluidd.port = 8081;
+    ingress.ender3v2.port = 8081;
 
     common = {
       enable = true;

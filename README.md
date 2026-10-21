@@ -17,9 +17,9 @@
 | ------------------- | ---------------------- |
 | andreis-macbook-pro | MacBook Pro M4 Pro     |
 | elena               | Home Desktop           |
+| ender3v2            | Raspberry Pi 3         |
 | every-router        | BananaPi R3 Mini       |
 | mac-vm              | macOS VM on elena      |
-| octopi              | Raspberry Pi 3         |
 | pikvm               | Raspberry Pi 4 4 GB    |
 | roan                | ThinkPad X250          |
 | skye                | ThinkPad X13 Gen 4 AMD |
