@@ -19,6 +19,7 @@
     ./llama-cpp.nix
     ./whisper-cpp.nix
     ./kokoro-fastapi.nix
+    ./redlib.nix
     ./microvm.nix
     ./power-management.nix
     ./fan2go.nix
@@ -235,10 +236,6 @@
           ttsModels = ["kokoro"];
           ttsVoices = ["af_heart" "bf_isabella" "jf_alpha"];
           languages = ["en" "ja"];
-        };
-        redlib = {
-          inherit (secrets.redlib) subscriptions;
-          enable = true;
         };
         searxng.enable = true;
         tasmoadmin.enable = true;

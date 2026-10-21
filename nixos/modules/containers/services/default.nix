@@ -45,7 +45,6 @@
     ./prowlarr.nix
     ./qbittorrent.nix
     ./radarr.nix
-    ./redlib.nix
     ./scrutiny.nix
     ./searxng.nix
     ./sonarr.nix
