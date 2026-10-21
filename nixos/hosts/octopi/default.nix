@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  inputs,
   ...
 }: {
   imports = [
@@ -9,20 +8,20 @@
     ./hardware-configuration.nix
   ];
 
-  # nixos-hardware's kernel, not nixos-raspberrypi's: the USB and serial testing
-  # was done on it.
-  boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage "${inputs.nixos-hardware}/raspberry-pi/common/kernel.nix" {rpiVersion = 3;});
-
-  hardware.raspberry-pi.config.pi3.options = {
-    # Otherwise the serial output will be garbled.
-    core_freq = {
-      enable = true;
-      value = 250;
-    };
+  hardware.raspberry-pi.config.pi3 = {
     # camera-streamer's hardware MJPEG decode + H.264 encode.
-    gpu_mem = {
+    options.gpu_mem = {
       enable = true;
       value = 128;
+    };
+    # dwc_otg, the vendor default, causes serial retransmits to the printer on
+    # arm64, where its FIQ is only simulated.
+    dt-overlays.dwc2 = {
+      enable = true;
+      params.dr_mode = {
+        enable = true;
+        value = "host";
+      };
     };
   };
 
@@ -136,38 +135,4 @@
   environment.systemPackages = with pkgs; [
     libraspberrypi
   ];
-
-  hardware.deviceTree = {
-    filter = "bcm2837-rpi-*.dtb";
-    overlays = [
-      # dwc2 is more stable, except for usb webcam..
-      {
-        name = "dwc2-overlay";
-        dtsText = ''
-          /dts-v1/;
-          /plugin/;
-
-          / {
-            compatible = "brcm,bcm2837";
-
-            fragment@0 {
-              target = <&usb>;
-              #address-cells = <0x01>;
-              #size-cells = <0x01>;
-
-              __overlay__ {
-                compatible = "brcm,bcm2835-usb";
-                dr_mode = "host";
-                g-np-tx-fifo-size = <0x20>;
-                g-rx-fifo-size = <0x22e>;
-                g-tx-fifo-size = <0x200 0x200 0x200 0x200 0x200 0x100 0x100>;
-                status = "okay";
-                phandle = <0x01>;
-              };
-            };
-          };
-        '';
-      }
-    ];
-  };
 }

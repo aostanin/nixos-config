@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXOS_SD";
     fsType = "ext4";
@@ -18,12 +14,10 @@
     firmwarePackage = pkgs.runCommand "raspberrypifw-rpi3-only" {} ''
       src=${pkgs.raspberrypifw}/share/raspberrypi/boot
       dst=$out/share/raspberrypi/boot
-      mkdir -p $dst
+      mkdir -p $dst/overlays
       cp $src/bcm2710-rpi-3-b.dtb $src/start.elf $src/fixup.dat $src/bootcode.bin $dst/
+      cp $src/overlays/dwc2.dtbo $dst/overlays/
     '';
     ubootPackage = pkgs.ubootRaspberryPi3_64bit;
   };
-  # U-Boot boots with the vendor DTB, but the kernel must get the generation's,
-  # which carries the dwc2 overlay.
-  boot.loader.generic-extlinux-compatible.useGenerationDeviceTree = lib.mkForce true;
 }
