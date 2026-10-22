@@ -116,6 +116,10 @@ in {
         rtk
       ]
       ++ lib.optional config.localModules.desktop.enable
-      inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.desktop;
+      # --ignore-scripts skips the patch-package postinstall, leaving components
+      # undefined (React #130): https://github.com/getpaseo/paseo/issues/7673
+      (inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.desktop.overrideAttrs (old: {
+        preBuild = (old.preBuild or "") + "npm run postinstall\n";
+      }));
   };
 }
