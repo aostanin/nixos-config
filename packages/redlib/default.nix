@@ -7,24 +7,21 @@
   rustPlatform,
 }:
 # nixpkgs' redlib predates the wreq switch (TLS fingerprint spoofing).
+# Since 2026-10-22 Reddit 403s every anonymous comments API path, encoded or
+# not; this fork falls back to scraping the shreddit HTML. Go back to
+# redlib-org once upstream handles the block.
 rustPlatform.buildRustPackage {
   pname = "redlib";
-  version = "0.36.0-unstable-2026-04-24";
+  version = "0.36.0-unstable-2026-10-20";
 
   src = fetchFromGitHub {
-    owner = "redlib-org";
+    owner = "polak14";
     repo = "redlib";
-    rev = "a4d36e954cf1bd64f209cd8868c5a29edc81b374";
-    hash = "sha256-siyD6A12UALQIV7BMd7zu1TaojleTEYtpxPszuhx1/Y=";
+    rev = "4055fda1a5355f1507b23108795d827a16794b58";
+    hash = "sha256-7VRaXfYDPhwqgUCSCYCmO36XKdNQ5zEPrpP/E/BQh5g=";
   };
 
-  cargoHash = "sha256-eO3c7rlFna3DuO31etJ6S4c7NmcvgvIWZ1KVkNIuUqQ=";
-
-  patches = [
-    # Since 2026-10-20 Reddit 403s every post page. Drop once upstream merges
-    # https://github.com/redlib-org/redlib/pull/592.
-    ./encode-comments-slash.patch
-  ];
+  cargoHash = "sha256-An6ai9CWrskjfPqmUN/z9rqZYsZp0Tjhp1ODvUnPAuw=";
 
   # boring-sys2 builds BoringSSL with cmake and applies its patches with git.
   nativeBuildInputs = [cmake git perl rustPlatform.bindgenHook];
@@ -42,7 +39,7 @@ rustPlatform.buildRustPackage {
 
   meta = {
     description = "Private front-end for Reddit";
-    homepage = "https://github.com/redlib-org/redlib";
+    homepage = "https://github.com/polak14/redlib";
     license = lib.licenses.agpl3Only;
     mainProgram = "redlib";
   };
