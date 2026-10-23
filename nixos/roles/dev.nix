@@ -41,24 +41,8 @@ in {
 
     services.paseo = {
       enable = true;
-      package = inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.paseo.overrideAttrs (old: {
-        # --ignore-scripts skips the patch-package postinstall, leaving web UI
-        # components undefined (React #130): https://github.com/getpaseo/paseo/issues/7673
-        preBuild = (old.preBuild or "") + "npm run postinstall\n";
-        # Upstream's install copies node_modules/node-pty/prebuilds/, but node-pty
-        # lives under packages/server/node_modules, so terminals can't load pty.node.
-        postInstall =
-          (old.postInstall or "")
-          + ''
-            plat=$(node -p 'process.platform + "-" + process.arch')
-            for pty in $(find . -path ./node_modules/.cache -prune -o -type d -name node-pty -print); do
-              if [ -d "$pty/prebuilds/$plat" ] && [ -d "$out/lib/paseo/$pty" ]; then
-                mkdir -p "$out/lib/paseo/$pty/prebuilds"
-                cp -a "$pty/prebuilds/$plat" "$out/lib/paseo/$pty/prebuilds/"
-              fi
-            done
-          '';
-      });
+      # Upstream's module defaults to its own flake package, bypassing the overlay.
+      package = pkgs.paseo;
       user = secrets.user.username;
       group = "users";
       # Clients connect over the tailnet; the password guards the LAN side.

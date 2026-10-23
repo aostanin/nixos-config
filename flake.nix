@@ -145,6 +145,8 @@
         inputs.llm-agents.overlays.shared-nixpkgs
         (final: prev: {
           maki = inputs.maki.packages.${system}.default;
+          inherit (inputs.paseo.packages.${system}) paseo;
+          paseo-desktop = inputs.paseo.packages.${system}.desktop;
           unstable = import nixpkgs-unstable {
             inherit config system;
           };
