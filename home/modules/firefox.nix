@@ -26,8 +26,7 @@
           "full-screen-api.ignore-widgets" = true;
           "sidebar.verticalTabs" = true;
 
-          "browser.ml.chat.enabled" = true;
-          "browser.ml.chat.provider" = "https://claude.ai/new";
+          "browser.ml.chat.enabled" = false;
 
           # Needed for dark mode for simple-tab-groups
           "svg.context-properties.content.enabled" = true;
