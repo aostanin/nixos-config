@@ -12,6 +12,8 @@
     privateNetwork = true;
     hostBridge = "br0";
     enableTun = true;
+    # nspawn's seccomp filter only allows the @memlock syscalls with this.
+    additionalCapabilities = ["CAP_IPC_LOCK"];
     bindMounts."/home/${secrets.user.username}/dev" = {
       hostPath = "/home/${secrets.user.username}/dev";
       isReadOnly = false;
