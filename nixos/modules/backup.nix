@@ -55,6 +55,8 @@ in {
       extraBackupArgs = [
         "--retry-lock=2h"
         "--exclude-caches"
+        # Keeps stray mounts (e.g. a chroot's /proc) out of backups.
+        "--one-file-system"
       ];
       pruneOpts = lib.optionals cfg.prune [
         "--retry-lock=2h"
