@@ -146,12 +146,10 @@
 
     fwupd.enable = true;
 
-    logind.settings.Login = let
-      mode = "suspend";
-    in {
-      HandleLidSwitch = mode;
-      HandleLidSwitchDocked = mode;
-      HandlePowerKey = mode;
+    logind.settings.Login = {
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchDocked = "ignore";
+      HandlePowerKey = "suspend";
     };
 
     tlp = {
