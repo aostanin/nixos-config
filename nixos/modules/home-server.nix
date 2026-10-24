@@ -45,7 +45,7 @@ in {
   config = lib.mkIf cfg.enable {
     networking = {
       useNetworkd = true;
-      nameservers = lib.mkDefault secrets.network.home.nameserversAdguard;
+      nameservers = lib.mkDefault [secrets.network.home.nameserver];
     };
 
     systemd.network = {
@@ -83,6 +83,10 @@ in {
           IPv6AcceptRA = true;
           IPv6PrivacyExtensions = "kernel";
           Address = "${cfg.address}/24";
+          # Per-link so it survives the tailscale module's global
+          # 100.100.100.100, which is dead (and blocks re-auth) while
+          # tailscale is logged out.
+          DNS = secrets.network.home.nameserver;
           VLAN = lib.optional cfg.iotNetwork.enable "vlan40";
         };
         routes = [

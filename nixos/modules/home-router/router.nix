@@ -9,7 +9,7 @@
 }: let
   wan = config.localModules.home-router.wanInterface;
   inherit (secrets.network.networks) lan guest iot;
-  adguard = lib.head secrets.network.home.nameserversAdguard;
+  adguard = secrets.network.home.nameserver;
 
   # The IoT gateway VIP is the MQTT broker address for everything, devices and
   # LAN services alike; DNAT it to wherever the broker runs, so it follows the
