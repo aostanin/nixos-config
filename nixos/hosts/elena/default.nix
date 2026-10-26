@@ -111,6 +111,11 @@
           inherit uid gid;
           volumes = ["/storage/media/books:/books"];
         };
+        manyfold = {
+          enable = true;
+          inherit uid gid;
+          volumes = ["/storage/personal/files/3D Printer/things:/models"];
+        };
         komga = {
           enable = true;
           inherit uid gid;

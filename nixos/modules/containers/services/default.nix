@@ -27,6 +27,7 @@
     ./lnbits.nix
     ./martin.nix
     ./matrix.nix
+    ./manyfold.nix
     ./mealie.nix
     ./miniflux.nix
     ./mosquitto.nix
