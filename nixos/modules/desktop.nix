@@ -125,6 +125,7 @@ in {
       settings = {
         session.default = "niri";
         output.scale = 1.0;
+        idle.timeout = 300;
         appearance = {
           scheme = "Synced";
           theme_mode = "dark";
