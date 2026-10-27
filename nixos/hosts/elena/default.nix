@@ -165,24 +165,6 @@ in {
         };
         miniflux.enable = true;
 
-        # Home automation
-        frigate = {
-          enable = true;
-          devices = [
-            "/dev/bus/usb"
-            "/dev/dri/renderD128"
-          ];
-        };
-        daikin-cleaner-mqtt.enable = true;
-        home-assistant.enable = true;
-        ir-mqtt-bridge.enable = true;
-        mosquitto.enable = true;
-        valetudopng.enable = true;
-        zigbee2mqtt = {
-          enable = true;
-          adapterPath = "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_5c9c4df6b1c9eb118d7d8b4f1d69213e-if00-port0";
-        };
-
         # Voice assistant
         openwakeword.enable = true;
         wyoming-openai = {
@@ -194,7 +176,6 @@ in {
           languages = ["en" "ja"];
         };
         searxng.enable = true;
-        tasmoadmin.enable = true;
         unifi.enable = true;
         vaultwarden.enable = true;
       };
@@ -241,6 +222,15 @@ in {
     movieDir = "/storage/media/videos/movies";
     tvDir = "/storage/media/videos/tv";
     musicDir = "/storage/media/music/auto";
+  };
+
+  roles.home-automation = {
+    enable = true;
+    zigbeeAdapter = "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_5c9c4df6b1c9eb118d7d8b4f1d69213e-if00-port0";
+    frigateDevices = [
+      "/dev/bus/usb"
+      "/dev/dri/renderD128"
+    ];
   };
 
   services = {
