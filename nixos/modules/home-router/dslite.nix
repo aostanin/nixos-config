@@ -26,10 +26,9 @@ in {
       wants = ["network-online.target"];
       wantedBy = ["multi-user.target"];
       path = [pkgs.iproute2 pkgs.gawk pkgs.coreutils];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-      };
+      # Not RemainAfterExit: the timer's OnUnitActiveSec only re-fires after the
+      # unit has gone inactive again.
+      serviceConfig.Type = "oneshot";
       # Reconcile (not just create-once): rebuild the tunnel only when the
       # WAN's global /64 changes, so a WAN bounce or ISP /64 rotation
       # self-heals on the next timer tick instead of leaving a stale tunnel.
@@ -58,7 +57,6 @@ in {
         fi
         ip route replace default dev ds-wan
       '';
-      preStop = "${pkgs.iproute2}/bin/ip link del ds-wan 2>/dev/null || true";
     };
 
     systemd.timers.dslite-tunnel = {
