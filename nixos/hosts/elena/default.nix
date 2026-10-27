@@ -5,7 +5,10 @@
   inputs,
   secrets,
   ...
-}: {
+}: let
+  uid = 1000;
+  gid = 100;
+in {
   imports = [
     "${inputs.nixos-hardware}/common/pc/ssd"
     ./hardware-configuration.nix
@@ -67,10 +70,7 @@
         bulk = "/storage/appdata/docker/bulk";
         temp = "/storage/appdata/temp";
       };
-      services = let
-        uid = 1000;
-        gid = 100;
-      in {
+      services = {
         open-webui = {
           enable = true;
           enableNvidia = false;
@@ -126,57 +126,6 @@
           enable = true;
           volumes = ["/storage/media/audiobooks:/audiobooks"];
         };
-
-        nzbget = {
-          enable = true;
-          inherit uid gid;
-          volumes = ["/storage/download/usenet:/downloads/usenet"];
-        };
-        qbittorrent = {
-          enable = true;
-          inherit uid gid;
-          volumes = ["/storage/download/torrent:/downloads/torrent"];
-        };
-        lidarr = {
-          enable = true;
-          inherit uid gid;
-          volumes = [
-            "/storage/download/torrent:/downloads/torrent:ro"
-            "/storage/download/usenet:/downloads/usenet"
-            "/storage/media/music/auto:/music"
-          ];
-        };
-        radarr = {
-          enable = true;
-          inherit uid gid;
-          volumes = [
-            "/storage/download/torrent:/downloads/torrent:ro"
-            "/storage/download/usenet:/downloads/usenet"
-            "/storage/media/videos/movies:/movies"
-          ];
-        };
-        sonarr = {
-          enable = true;
-          inherit uid gid;
-          volumes = [
-            "/storage/download/torrent:/downloads/torrent:ro"
-            "/storage/download/usenet:/downloads/usenet"
-            "/storage/media/videos/tv:/tv"
-          ];
-        };
-        prowlarr = {
-          enable = true;
-          inherit uid gid;
-        };
-        bazarr = {
-          enable = true;
-          inherit uid gid;
-          volumes = [
-            "/storage/media/videos/movies:/movies"
-            "/storage/media/videos/tv:/tv"
-          ];
-        };
-        jellyseerr.enable = true;
 
         domi.enable = true;
         mymcp.enable = true;
@@ -283,6 +232,15 @@
     watchdog.enable = true;
 
     zfs.enable = true;
+  };
+
+  roles.downloads = {
+    enable = true;
+    inherit uid gid;
+    downloadDir = "/storage/download";
+    movieDir = "/storage/media/videos/movies";
+    tvDir = "/storage/media/videos/tv";
+    musicDir = "/storage/media/music/auto";
   };
 
   services = {

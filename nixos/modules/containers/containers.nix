@@ -216,6 +216,16 @@
           '';
         };
 
+        slice = lib.mkOption {
+          type = with lib.types; nullOr str;
+          default = null;
+          example = "example.slice";
+          description = ''
+            Slice for the container's unit. The container joins the unit's
+            cgroup (`--cgroups=split`), so the slice's limits cover it.
+          '';
+        };
+
         proxy = lib.mkOption {
           type = mkProxySubmodule name;
           default = {};
@@ -312,7 +322,10 @@ in {
                   extraOptions =
                     map (n: "--network=${n}") (mkNetworks opts)
                     ++ mkHealthOptions opts.healthcheck
-                    ++ lib.optional (opts.stopTimeout != null) "--stop-timeout=${toString opts.stopTimeout}";
+                    ++ lib.optional (opts.stopTimeout != null) "--stop-timeout=${toString opts.stopTimeout}"
+                    # Overrides oci-containers' --cgroups=enabled, which puts the
+                    # container in machine.slice outside the unit.
+                    ++ lib.optional (opts.slice != null) "--cgroups=split";
                   podman.sdnotify = lib.mkIf (opts.healthcheck.cmd != null) (lib.mkDefault "healthy");
                 }
               ]
@@ -358,6 +371,7 @@ in {
         lib.nameValuePair "podman-${name}" {
           after = map (n: "podman-${n}-network.service") (mkNetworks opts);
           requires = map (n: "podman-${n}-network.service") (mkNetworks opts);
+          serviceConfig.Slice = lib.mkIf (opts.slice != null) opts.slice;
         })
       cfg;
 
