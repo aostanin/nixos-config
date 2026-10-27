@@ -26,7 +26,6 @@ in {
   # Match PowerTOP
   services.udev.extraRules = ''
     SUBSYSTEM=="pci", ATTR{power/control}="auto"
-    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="auto"
   '';
 
   # 150W instead of 215W costs the 9B ~6% decode for ~60W less. Undervolt
