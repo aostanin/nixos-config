@@ -198,6 +198,7 @@
         archivebox.enable = true;
         authelia.enable = true;
         changedetection.enable = true;
+        endurain.enable = true;
         forgejo.enable = true;
         guacamole.enable = true;
         karakeep.enable = true;

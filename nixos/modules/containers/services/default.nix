@@ -10,6 +10,7 @@
     ./daikin-cleaner-mqtt.nix
     ./dawarich.nix
     ./domi.nix
+    ./endurain.nix
     ./forgejo.nix
     ./frigate.nix
     ./grist.nix
