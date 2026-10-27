@@ -39,6 +39,7 @@
     };
     tmp.useTmpfs = true;
     kernelParams = [
+      "zfs.zfs_arc_max=4294967296"
       "zfs.l2arc_noprefetch=0"
       "zfs.l2arc_write_max=536870912"
       "zfs.l2arc_write_boost=1073741824"

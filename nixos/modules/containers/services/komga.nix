@@ -30,6 +30,7 @@ in {
     localModules.containers.containers.${name} = {
       raw.image = "docker.io/gotson/komga:latest";
       raw.user = "${toString cfg.uid}:${toString cfg.gid}";
+      raw.environment.JAVA_TOOL_OPTIONS = "-Xmx256m";
       volumes.config = {
         destination = "/config";
         user = toString cfg.uid;

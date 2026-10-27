@@ -39,6 +39,7 @@ in {
       raw.environment = {
         PUID = toString cfg.uid;
         PGID = toString cfg.gid;
+        WEB_CONCURRENCY = "0";
       };
       raw.environmentFiles = [config.sops.templates."${name}.env".path];
       volumes.config = {

@@ -54,6 +54,7 @@ in {
       raw.environment = {
         PUID = toString cfg.uid;
         PGID = toString cfg.gid;
+        MEM_LIMIT = "512";
         MONGO_USER = "unifi";
         MONGO_HOST = "${name}-db";
         MONGO_PORT = "27017";

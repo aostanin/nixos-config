@@ -8,7 +8,7 @@
   microvm = {
     hypervisor = "qemu";
     vcpu = 2;
-    mem = 1024;
+    mem = 512;
     # The VM's only NIC: a trunk port on elena's br0, like the physical routers'.
     interfaces = [
       {
@@ -32,6 +32,11 @@
       ssh.enable = true;
     };
   };
+
+  # The conntrack table is otherwise sized from RAM, which is small here. An
+  # explicit hashsize sets nf_conntrack_max to 8x it (32768); a module option
+  # because a sysctl can run before nftables loads the module.
+  boot.extraModprobeConfig = "options nf_conntrack hashsize=4096";
 
   # Root is tmpfs; keep the identity on the /var volume, mounted early enough
   # for sops to decrypt with the host key during activation.
