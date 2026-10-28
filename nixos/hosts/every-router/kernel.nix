@@ -3,8 +3,8 @@
   lib,
   ...
 }: {
-  # nixos-sbc still ships 6.12. Since 6.14 pwm-fan no longer probes to
-  # MAX_PWM, which is off on this active-low header (ecf1cf1c58c1).
+  # Since 6.14 pwm-fan no longer probes to MAX_PWM, which is off on this
+  # active-low header (ecf1cf1c58c1).
   boot.kernelPackages = pkgs.linuxKernel.packagesFor (pkgs.linux_6_18.override {
     kernelPatches = [
       {

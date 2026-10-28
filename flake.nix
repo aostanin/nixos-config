@@ -50,7 +50,6 @@
     nixvim.url = "github:nix-community/nixvim/nixos-26.05";
     noctalia.url = "github:noctalia-dev/noctalia-shell";
     noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
-    nixos-sbc.url = "github:aostanin/nixos-sbc/r3-mini";
     kvmd.url = "github:aostanin/kvmd.nix";
     terranix.url = "github:terranix/terranix";
     llm-agents.url = "github:numtide/llm-agents.nix";
@@ -106,13 +105,7 @@
           {_module.args.nixos-raspberrypi = inputs.kvmd.inputs.nixos-raspberrypi;}
         ];
       };
-      every-router = {
-        system = "aarch64-linux";
-        additionalModules = [
-          inputs.nixos-sbc.nixosModules.default
-          inputs.nixos-sbc.nixosModules.boards.bananapi.bpir3mini
-        ];
-      };
+      every-router = {system = "aarch64-linux";};
       mac-vm = {system = "x86_64-darwin";};
       pikvm = {
         system = "aarch64-linux";
