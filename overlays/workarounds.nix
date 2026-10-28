@@ -82,4 +82,21 @@ in {
           cp $resources/browser/defaults/preferences/autoconfig.js $resources/defaults/pref/
         '';
     });
+
+  # llama-swap's sendLoadingState chunks omit choices[].index, and litellm
+  # 1.106 500s at the end of any stream containing one, losing the reply.
+  # Fixed on litellm main, not yet in a stable release.
+  # ref: https://github.com/BerriAI/litellm/issues/46047
+  unstable =
+    prev.unstable
+    // {
+      llama-swap = prev.unstable.llama-swap.overrideAttrs (old: {
+        postPatch =
+          (old.postPatch or "")
+          + ''
+            substituteInPlace internal/router/loading.go \
+              --replace-fail 'Delta Delta `json:"delta"`' 'Index int `json:"index"`; Delta Delta `json:"delta"`'
+          '';
+      });
+    };
 }
