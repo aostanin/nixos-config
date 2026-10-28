@@ -38,10 +38,7 @@
       minimal = true;
     };
 
-    tailscale = {
-      isServer = true;
-      advertiseExitNode = true;
-    };
+    tailscale.advertiseExitNode = true;
   };
 
   environment.systemPackages = with pkgs; [

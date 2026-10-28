@@ -4,6 +4,7 @@
   ...
 }: let
   cfg = config.localModules.tailscale;
+  advertises = cfg.advertiseExitNode || cfg.advertiseRoutes != [];
   # Always passed, even when empty: `tailscale set` only changes the flags it's
   # given, so leaving one out would keep a stale advertisement.
   advertiseFlags = [
@@ -19,14 +20,6 @@ in {
       type = lib.types.bool;
       description = ''
         Node is a client.
-      '';
-    };
-
-    isServer = lib.mkOption {
-      default = false;
-      type = lib.types.bool;
-      description = ''
-        Node is a server.
       '';
     };
 
@@ -68,11 +61,11 @@ in {
       extraUpFlags = advertiseFlags ++ cfg.extraFlags ++ ["--advertise-tags=${lib.concatStringsSep "," cfg.tags}"];
       extraSetFlags = advertiseFlags ++ cfg.extraFlags;
       useRoutingFeatures =
-        if (cfg.isClient && cfg.isServer)
+        if cfg.isClient && advertises
         then "both"
         else if cfg.isClient
         then "client"
-        else if cfg.isServer
+        else if advertises
         then "server"
         else "none";
     };

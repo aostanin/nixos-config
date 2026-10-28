@@ -63,8 +63,6 @@
       minimal = true;
     };
 
-    tailscale.isServer = true;
-
     traefik.enable = true;
   };
 

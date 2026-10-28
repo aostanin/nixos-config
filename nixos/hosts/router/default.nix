@@ -79,7 +79,6 @@
   # Also serves tailnet DNS from the router's coredns.
   localModules.tailscale = {
     enable = true;
-    isServer = true;
     advertiseExitNode = true;
     advertiseRoutes = ["${secrets.network.networks.iot.prefix}.0/24"];
   };
