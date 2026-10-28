@@ -64,6 +64,14 @@ in {
         protocol = "openai";
         base_url = "https://litellm.${secrets.domain}/v1";
         discover_models = true;
+        # litellm's /v1/models reports no context length, so maki assumes 200k.
+        # These mirror --max-context in nixos/hosts/valmar/strata.nix.
+        models = lib.mapAttrsToList (id: context_window: {inherit id context_window;}) {
+          "qwen3.8-flash-next" = 262144;
+          "glm-5.3-flash" = 131072;
+          "ornith-1.5-35b-a3b" = 131072;
+          "gemma-4-26b-a4b" = 131072;
+        };
       };
       # Over the tailnet so it also works offline on the Mac itself.
       mac = {
