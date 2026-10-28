@@ -63,9 +63,6 @@
       minimal = true;
     };
 
-    # FIXME: When cloudflared is enabled, all network traffic breaks when Starlink is disconnected
-    # cloudflared.enable = true;
-
     tailscale = {
       isServer = true;
       advertiseExitNode = true;

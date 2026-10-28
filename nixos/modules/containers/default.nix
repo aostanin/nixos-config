@@ -81,12 +81,6 @@ in {
 
   config = lib.mkIf cfg.enable {
     localModules = {
-      cloudflared.enable = let
-        allProxies = lib.flatten (lib.map (v: lib.attrValues v.proxies) (lib.attrValues config.localModules.containers.containers));
-        defaultNetworkAccessEnabled = lib.any (v: v.default.enable) allProxies;
-      in
-        lib.mkDefault defaultNetworkAccessEnabled;
-
       podman.enable = true;
 
       traefik.enable = true;

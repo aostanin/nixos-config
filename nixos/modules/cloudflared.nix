@@ -8,7 +8,15 @@
   cfg = config.localModules.cloudflared;
 in {
   options.localModules.cloudflared = {
-    enable = lib.mkEnableOption "cloudflared";
+    enable =
+      lib.mkEnableOption "cloudflared"
+      // {
+        default =
+          config.localModules.traefik.enable
+          && lib.any (e: e.enable && e.hosts != [] && e.default.enable)
+          (lib.attrValues config.localModules.ingress);
+        defaultText = lib.literalExpression "true if any ingress entry has default.enable";
+      };
   };
 
   config = lib.mkIf cfg.enable {

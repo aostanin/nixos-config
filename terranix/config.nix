@@ -9,6 +9,7 @@
 }: let
   domain = secrets.domain;
   ingressDnsNames = localLib.dnsNamesByHost domain self.nixosConfigurations;
+  tunnelHosts = lib.attrNames (lib.filterAttrs (_: node: node.config.localModules.cloudflared.enable or false) self.nixosConfigurations);
 
   tailscaleDevice = name: attribute:
     lib.tfRef "local.tailscale_devices.${name}.${attribute}";
@@ -31,7 +32,9 @@ in {
   };
 
   resource.cloudflare_dns_record = let
-    servers = lib.filterAttrs (n: v: v.tunnelId != null) secrets.terranix.servers;
+    servers = lib.genAttrs tunnelHosts (host: {
+      tunnelId = config.resource.cloudflare_zero_trust_tunnel_cloudflared.${host} "id";
+    });
     zoneId = "\${data.sops_file.secrets.data[\"cloudflare.zones.${domain}.zone_id\"]}";
   in
     lib.mkMerge ([
@@ -176,28 +179,17 @@ in {
     })
     secrets.terranix.tailscale.devices;
 
+  # TODO: Set up each service separately
   tunnels = let
     accountId = "\${data.sops_file.secrets.data[\"cloudflare.account_id\"]}";
-  in {
-    # TODO: Set up each service separately
-    elena.accountId = accountId;
-    every-router.accountId = accountId;
-    pikvm.accountId = accountId;
-    vps-oci1.accountId = accountId;
-    vps-oci2.accountId = accountId;
-    vps-oci-arm1.accountId = accountId;
-  };
+  in
+    lib.genAttrs tunnelHosts (_: {inherit accountId;});
 
   resource.local_sensitive_file.secrets-json = {
     content = builtins.toJSON {
-      cloudflare.tunnels = {
-        elena.tunnel_token = config.output.tunnel_token_elena.value;
-        every-router.tunnel_token = config.output.tunnel_token_every-router.value;
-        pikvm.tunnel_token = config.output.tunnel_token_pikvm.value;
-        vps-oci2.tunnel_token = config.output.tunnel_token_vps-oci2.value;
-        vps-oci1.tunnel_token = config.output.tunnel_token_vps-oci1.value;
-        vps-oci-arm1.tunnel_token = config.output.tunnel_token_vps-oci-arm1.value;
-      };
+      cloudflare.tunnels = lib.genAttrs tunnelHosts (host: {
+        tunnel_token = config.output."tunnel_token_${host}".value;
+      });
     };
     filename = "secrets/secrets.json";
     file_permission = "0640";

@@ -293,6 +293,8 @@ in {
                   ${proxyName} = {
                     host = config.localModules.containers.host;
                     hosts = proxy.hosts;
+                    trusted = {inherit (proxy.trusted) enable auth;};
+                    default = {inherit (proxy.default) enable auth;};
                     container = containerName;
                   };
                 }
