@@ -64,6 +64,11 @@ in {
         };
     };
 
-    systemd.services.paseo.serviceConfig.EnvironmentFile = config.sops.templates."paseo.env".path;
+    systemd.services.paseo = {
+      serviceConfig.EnvironmentFile = config.sops.templates."paseo.env".path;
+      # A switch would kill every agent in its cgroup, including one running
+      # the deploy, leaving the switch half-applied.
+      restartIfChanged = false;
+    };
   };
 }
