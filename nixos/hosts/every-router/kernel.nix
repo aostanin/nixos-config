@@ -244,8 +244,6 @@ in {
         COMMON_CLK_MT7986_ETHSYS = yes;
         # other
         MEDIATEK_WATCHDOG = yes;
-        # for the M.2 USB fixup
-        GPIO_SYSFS = yes;
       }
       // lib.genAttrs disabled (_: lib.mkForce lib.kernel.no);
   });

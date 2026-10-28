@@ -46,19 +46,33 @@ in {
       name = "bpi-r3-emmc";
       dtboFile = "${config.boot.kernelPackages.kernel}/dtbs/mediatek/mt7986a-bananapi-bpi-r3-emmc.dtbo";
     }
-  ];
+    # The DTS only sets pull-ups on the M.2 Key-B control pins. SPI1_CS
+    # (ngff-coex) is left in its SPI function, which makes the modem's USB
+    # enumeration unreliable; hogging it switches it to a GPIO input.
+    {
+      name = "bpi-r3-mini-ngff-coex";
+      dtsText = ''
+        /dts-v1/;
+        /plugin/;
 
-  # Fix unreliable M.2 USB device detection
-  boot.initrd.systemd.services.bpir3-usb-fixup = {
-    description = "Fix unreliable M.2 USB device detection";
-    wantedBy = ["initrd.target"];
-    before = ["sysroot.mount"];
-    unitConfig.DefaultDependencies = false;
-    serviceConfig.Type = "oneshot";
-    script = ''
-      echo 544 > /sys/class/gpio/export
-    '';
-  };
+        / {
+            compatible = "bananapi,bpi-r3mini";
+
+            fragment@0 {
+                target-path = "/soc/pinctrl@1001f000";
+                __overlay__ {
+                    ngff-coex-hog {
+                        gpio-hog;
+                        gpios = <32 0>;
+                        input;
+                        line-name = "ngff-coex";
+                    };
+                };
+            };
+        };
+      '';
+    }
+  ];
 
   zramSwap.enable = true;
   nix.settings.auto-optimise-store = true;
