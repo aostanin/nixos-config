@@ -53,7 +53,6 @@ in {
       proxy = {
         enable = true;
         names = ["auth"];
-        default.enable = true;
       };
     };
   };

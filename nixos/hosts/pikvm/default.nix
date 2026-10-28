@@ -14,7 +14,6 @@
 
   localModules = {
     traefik.enable = true;
-    cloudflared.enable = true;
 
     # Keepalived backup for the router VM (lower priority).
     home-router = {

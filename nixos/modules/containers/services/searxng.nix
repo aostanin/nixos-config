@@ -53,8 +53,6 @@ in {
       proxy = {
         enable = true;
         names = ["searx"];
-        default.enable = true;
-        default.auth = "authelia";
       };
     };
   };

@@ -27,10 +27,7 @@
       port = 8080;
     }
   ];
-  localModules.ingress.pikvm = {
-    port = 8080;
-    default.enable = true;
-  };
+  localModules.ingress.pikvm.port = 8080;
 
   services.kvmd = {
     enable = true;

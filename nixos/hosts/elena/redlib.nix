@@ -15,9 +15,5 @@ in {
     };
   };
 
-  localModules.ingress.libreddit = {
-    inherit port;
-    default.enable = true;
-    default.auth = "authelia";
-  };
+  localModules.ingress.libreddit.port = port;
 }
