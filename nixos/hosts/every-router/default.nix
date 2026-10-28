@@ -63,11 +63,7 @@
       minimal = true;
     };
 
-    tailscale = {
-      isServer = true;
-      advertiseExitNode = true;
-      advertiseRoutes = ["10.0.50.0/24"];
-    };
+    tailscale.isServer = true;
 
     traefik.enable = true;
   };

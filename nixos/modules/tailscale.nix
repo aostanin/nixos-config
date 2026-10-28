@@ -1,11 +1,9 @@
 {
   config,
   lib,
-  secrets,
   ...
 }: let
   cfg = config.localModules.tailscale;
-  device = secrets.terranix.tailscale.devices.${config.networking.hostName} or {};
   # Always passed, even when empty: `tailscale set` only changes the flags it's
   # given, so leaving one out would keep a stale advertisement.
   advertiseFlags = [
@@ -34,13 +32,11 @@ in {
 
     tags = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      # Match what terraform assigns, so a re-registration doesn't change them.
-      default =
-        if device.isServer or false
-        then ["tag:server"]
-        else ["tag:managed"];
+      default = ["tag:managed"];
       description = "Tags to register with; OAuth-registered nodes must be tagged.";
     };
+
+    mullvad = lib.mkEnableOption "the Mullvad add-on for this node";
 
     advertiseExitNode = lib.mkEnableOption "advertising this node as an exit node";
 

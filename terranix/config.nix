@@ -9,6 +9,28 @@
 }: let
   domain = secrets.domain;
   ingressDnsNames = localLib.dnsNamesByHost domain self.nixosConfigurations;
+  tailscaleDevices = let
+    nixDevices = lib.listToAttrs (map (node: let
+      ts = node.config.localModules.tailscale;
+    in
+      lib.nameValuePair node.config.networking.hostName {
+        inherit (ts) tags;
+        routes = ts.advertiseRoutes ++ lib.optionals ts.advertiseExitNode ["0.0.0.0/0" "::/0"];
+        enableMullvad = ts.mullvad;
+      }) (lib.filter (node: node.config.localModules.tailscale.enable or false) (lib.attrValues self.nixosConfigurations)));
+    otherDevices = lib.mapAttrs (_: device:
+      {
+        tags = [];
+        routes = [];
+        enableMullvad = false;
+      }
+      // device)
+    secrets.terranix.tailscale.devices;
+    duplicates = lib.attrNames (lib.intersectAttrs nixDevices otherDevices);
+  in
+    if duplicates != []
+    then throw "tailscale devices defined by NixOS and secrets: ${lib.concatStringsSep " " duplicates}"
+    else nixDevices // otherDevices;
   tunnelHosts = lib.attrNames (lib.filterAttrs (_: node: node.config.localModules.cloudflared.enable or false) self.nixosConfigurations);
 
   tailscaleDevice = name: attribute:
@@ -85,7 +107,6 @@ in {
     acl = builtins.toJSON {
       randomizeClientPort = true;
       tagOwners = {
-        "tag:server" = ["autogroup:admin"];
         "tag:managed" = ["autogroup:admin"];
         "tag:ephemeral" = ["autogroup:admin"];
         "tag:mullvad" = ["tag:managed" "tag:ephemeral"];
@@ -109,7 +130,7 @@ in {
         lib.mapAttrsToList (n: v: {
           target = [(tailscaleDevice n "address")];
           attr = ["mullvad"];
-        }) (lib.filterAttrs (n: v: v.enableMullvad) secrets.terranix.tailscale.devices)
+        }) (lib.filterAttrs (n: v: v.enableMullvad) tailscaleDevices)
         ++ [
           {
             target = ["tag:mullvad"];
@@ -161,15 +182,15 @@ in {
       device_id = tailscaleDevice n "id";
       key_expiry_disabled = true;
     })
-    secrets.terranix.tailscale.devices;
+    tailscaleDevices;
 
   resource.tailscale_device_tags =
     lib.mapAttrs (n: v: {
       count = lib.tfRef "contains(keys(local.tailscale_devices), \"${n}\") ? 1 : 0";
       device_id = tailscaleDevice n "id";
-      tags = lib.optional v.isServer "tag:server";
+      inherit (v) tags;
     })
-    secrets.terranix.tailscale.devices;
+    tailscaleDevices;
 
   resource.tailscale_device_subnet_routes =
     lib.mapAttrs (n: v: {
@@ -177,7 +198,7 @@ in {
       device_id = tailscaleDevice n "id";
       routes = v.routes;
     })
-    secrets.terranix.tailscale.devices;
+    tailscaleDevices;
 
   # TODO: Set up each service separately
   tunnels = let

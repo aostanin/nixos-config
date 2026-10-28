@@ -109,6 +109,7 @@
 
     tailscale = {
       isClient = true;
+      mullvad = true;
       extraFlags = [
         "--accept-routes"
         "--operator=${secrets.user.username}"
