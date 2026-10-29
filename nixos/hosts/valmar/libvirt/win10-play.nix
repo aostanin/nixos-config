@@ -157,6 +157,21 @@
         };
       }
       {
+        type = "block";
+        device = "disk";
+        driver = {
+          name = "qemu";
+          type = "raw";
+          cache = "none";
+          discard = "unmap";
+        };
+        source.dev = "/dev/disk/by-id/ata-Crucial_CT525MX300SSD1_164914EE8985";
+        target = {
+          dev = "vdc";
+          bus = "virtio";
+        };
+      }
+      {
         type = "file";
         device = "cdrom";
         driver = {
@@ -261,6 +276,7 @@
     video.model.type = "none";
 
     hostdev = [
+      # RTX 5060 Ti
       {
         mode = "subsystem";
         type = "pci";
@@ -272,6 +288,7 @@
           function = 0;
         };
       }
+      # RTX 5060 Ti HDMI audio
       {
         mode = "subsystem";
         type = "pci";
@@ -283,6 +300,7 @@
           function = 1;
         };
       }
+      # Renesas uPD720201 USB controller
       {
         mode = "subsystem";
         type = "pci";
