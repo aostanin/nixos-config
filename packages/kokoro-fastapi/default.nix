@@ -69,13 +69,13 @@
 in
   stdenvNoCC.mkDerivation (finalAttrs: {
     pname = "kokoro-fastapi";
-    version = "0.9.0";
+    version = "0.9.2";
 
     src = fetchFromGitHub {
       owner = "remsky";
       repo = "Kokoro-FastAPI";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-BqDWxVeJPEfliJQBVe6tZPzVdcNaZpxIfkjEepM4PdY=";
+      hash = "sha256-TEQTqzSI1/FO6AOkzXEHFnykY2dCndXVIi5sKnK+yOI=";
     };
 
     nativeBuildInputs = [makeWrapper];
