@@ -106,7 +106,6 @@
         ];
       };
       every-router = {system = "aarch64-linux";};
-      mac-vm = {system = "x86_64-darwin";};
       pikvm = {
         system = "aarch64-linux";
         additionalModules = [
