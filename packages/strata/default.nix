@@ -36,13 +36,13 @@
 in
   cudaPackages.backendStdenv.mkDerivation (finalAttrs: {
     pname = "strata";
-    version = "0.1.45";
+    version = "0.2.8";
 
     src = fetchFromGitHub {
       owner = "Niko1221";
       repo = "Strata";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-YfCpJ+iSbs8hSGzWtTr/fNJYRjUjS+ed7U7TNiaDBJU=";
+      hash = "sha256-+sF2dhxfVqshStCQoohzQVI5+GCT50ktNyL0ATf7zc8=";
     };
 
     nativeBuildInputs = [
@@ -84,7 +84,7 @@ in
     installPhase = ''
       runHook preInstall
       mkdir -p $out/share/strata $out/bin
-      cp -r $src/{serve,tools,data} $out/share/strata/
+      cp -r $src/{serve,tools,data,strata_control,strata_cli} $out/share/strata/
       install -Dm755 strata $out/share/strata/engine/strata
       # The K-quant prompt kernels, opened from beside the engine for the Unsloth files.
       install -Dm755 libstrata_kq.so $out/share/strata/engine/libstrata_kq.so
