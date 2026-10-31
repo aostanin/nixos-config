@@ -5,6 +5,7 @@
   cmake,
   cudaPackages_13_0,
   fetchFromGitHub,
+  git,
   makeWrapper,
   ninja,
   python3,
@@ -39,19 +40,20 @@
 in
   cudaPackages.backendStdenv.mkDerivation (finalAttrs: {
     pname = "maya";
-    version = "1.1.16";
+    version = "1.1.42";
 
     src = fetchFromGitHub {
       owner = "mw00";
       repo = "project-maya";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-nmh7HDN6rerXMKD8PZfUITZz9vbEzUCxlo5s3nl7KvU=";
+      hash = "sha256-osxFOXCFavQ9yx6p1ba5gp3kJMTvKISuDfNPpiGChfI=";
     };
 
     nativeBuildInputs = [
       autoAddDriverRunpath
       cmake
       cudaPackages.cuda_nvcc
+      git
       makeWrapper
       ninja
       python3
@@ -70,9 +72,16 @@ in
       (lib.cmakeBool "STRATA_NATIVE_EXPERTS" true)
       (lib.cmakeBool "STRATA_BUILD_TESTS" false)
       (lib.cmakeBool "STRATA_PORTABLE" true)
-      (lib.cmakeFeature "STRATA_GGML_DIR" "${llama-cpp-src}")
       (lib.cmakeFeature "CMAKE_CUDA_ARCHITECTURES" cudaPackages.flags.cmakeCudaArchitecturesString)
     ];
+
+    # The engine patches its MMQ kernels (third_party/ggml/mmq-fused-swiglu.patch)
+    # with git, in a copy of ggml-cuda that keeps the source's permissions: from
+    # the read-only store the patch is skipped with only a warning.
+    preConfigure = ''
+      cp -r --no-preserve=mode ${llama-cpp-src} llama.cpp
+      cmakeFlagsArray+=("-DSTRATA_GGML_DIR=$PWD/llama.cpp")
+    '';
 
     ninjaFlags = ["maya"];
 
