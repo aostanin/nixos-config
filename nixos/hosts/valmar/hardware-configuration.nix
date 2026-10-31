@@ -61,6 +61,41 @@
     SUBSYSTEM=="drm", KERNEL=="card*", DRIVERS=="i915", SYMLINK+="dri/igpu"
   '';
 
+  # The LG ultrawide sits on the NanoKVM Pro's loop-out. Once it sleeps, the
+  # NanoKVM flaps HPD with an unreadable EDID, so the connector stays
+  # disconnected and the screen never wakes. Serve its EDID from firmware and
+  # force the connector on. This is the LG's own EDID, read directly from the
+  # monitor; the NanoKVM's splitter otherwise serves a mangled merge of it.
+  hardware.display = {
+    edid.packages = [
+      (pkgs.runCommand "edid-lg-ultrawide" {} ''
+        mkdir -p $out/lib/firmware/edid
+        ${lib.getExe' pkgs.xxd "xxd"} -r -p > $out/lib/firmware/edid/lg-ultrawide.bin <<'EOF'
+        00FFFFFFFFFFFF001E6D2E77BBCD0200
+        081D010380502278EACA95A6554EA126
+        0F50542108007140818081C0A9C0B300
+        D1C081000101E77C70A0D0A029503020
+        3A00204F3100001A9D6770A0D0A02250
+        30203A00204F3100001A000000FD0038
+        3D1E5A20000A202020202020000000FC
+        004C472048445220575148440A2001A7
+        020340F1230907074E01030405101213
+        141F5D5E5F6061830100006D030C0010
+        00B83C20006001020367D85DC4017880
+        03E30F0030E305C000E6060501595256
+        9F3D70A0D0A0155030203A00204F3100
+        001A7E4800E0A0381F4040403A00204F
+        31000018000000FF003930384E544D58
+        35443733390A000000000000000000EE
+        EOF
+      '')
+    ];
+    outputs."HDMI-A-1" = {
+      edid = "lg-ultrawide.bin";
+      mode = "e";
+    };
+  };
+
   # Keep the greeter's wlroots compositor off the NVIDIA card: it otherwise opens
   # it for DRM and, through libglvnd, NVIDIA's EGL.
   services.greetd.settings.default_session.command = let
