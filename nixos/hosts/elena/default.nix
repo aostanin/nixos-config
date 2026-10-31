@@ -185,7 +185,7 @@ in {
 
     home-server = {
       enable = true;
-      interface = "enx${lib.replaceStrings [":"] [""] secrets.network.nics.elena.expansion10GbE0}";
+      uplinks = with secrets.network.nics.elena; [expansion10GbE0 integrated];
       inherit (secrets.network.home.hosts.elena) address macAddress;
     };
 

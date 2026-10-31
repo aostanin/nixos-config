@@ -38,7 +38,7 @@
       DefaultPVID = 1;
     };
     networks = {
-      ${config.localModules.home-server.interface}.bridgeVLANs = trunkVLANs;
+      bond0.bridgeVLANs = trunkVLANs;
       vm-router = {
         matchConfig.Name = "vm-router";
         networkConfig = {
