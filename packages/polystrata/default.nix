@@ -37,13 +37,13 @@
 in
   cudaPackages.backendStdenv.mkDerivation (finalAttrs: {
     pname = "polystrata";
-    version = "0.1.45-poly.1";
+    version = "0.1.45-poly.6";
 
     src = fetchFromGitHub {
       owner = "VecSzn";
       repo = "PolyStrata";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-2iocABBMPqerJi7ztn0WvjYwCHWYm/M+SMkrwQH61tw=";
+      hash = "sha256-OTb/mp4JcVzV2nICcYUm7PRBdStr7HomS0OyAeaJQjE=";
     };
 
     nativeBuildInputs = [
