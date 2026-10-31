@@ -66,6 +66,8 @@
   # disconnected and the screen never wakes. Serve its EDID from firmware and
   # force the connector on. This is the LG's own EDID, read directly from the
   # monitor; the NanoKVM's splitter otherwise serves a mangled merge of it.
+  # Its RGB deep color flags are cleared: the console would otherwise run at
+  # 12 bpc until the greeter caps it, and the NanoKVM can't capture that.
   hardware.display = {
     edid.packages = [
       (pkgs.runCommand "edid-lg-ultrawide" {} ''
@@ -81,12 +83,12 @@
         004C472048445220575148440A2001A7
         020340F1230907074E01030405101213
         141F5D5E5F6061830100006D030C0010
-        00B83C20006001020367D85DC4017880
+        00803C20006001020367D85DC4017880
         03E30F0030E305C000E6060501595256
         9F3D70A0D0A0155030203A00204F3100
         001A7E4800E0A0381F4040403A00204F
         31000018000000FF003930384E544D58
-        35443733390A000000000000000000EE
+        35443733390A00000000000000000026
         EOF
       '')
     ];
