@@ -70,6 +70,43 @@ in {
       })
     else prev.lib.warn "overlays/workarounds.nix: nixpkgs has podman ${prev.podman.version}, drop the podman override" prev.podman;
 
+  pythonPackagesExtensions =
+    prev.pythonPackagesExtensions
+    ++ [
+      (pyFinal: pyPrev: {
+        # anyio 4.15 makes fastmcp 3.2.3's stateful proxy tests fail with "exit
+        # a cancel scope that isn't the current task's"; Hydra has no build.
+        fastmcp =
+          if pyPrev.fastmcp.version == "3.2.3"
+          then
+            pyPrev.fastmcp.overridePythonAttrs (old: {
+              disabledTestPaths =
+                (old.disabledTestPaths or [])
+                ++ map (t: "tests/server/providers/proxy/test_stateful_proxy_client.py::TestStatefulProxyClient::${t}") [
+                  "test_concurrent_log_requests_no_mixing"
+                  "test_stateful_proxy"
+                  "test_multi_proxies_no_mixing"
+                ];
+            })
+          else prev.lib.warn "overlays/workarounds.nix: nixpkgs has fastmcp ${pyPrev.fastmcp.version}, check whether the fastmcp test skips are still needed" pyPrev.fastmcp;
+
+        # Pillow 13 rejects imageio 2.37.2's 16-bit PNG handling ("Invalid mode
+        # for data type"); Hydra has no build.
+        imageio =
+          if pyPrev.imageio.version == "2.37.2"
+          then
+            pyPrev.imageio.overridePythonAttrs (old: {
+              disabledTestPaths =
+                (old.disabledTestPaths or [])
+                ++ [
+                  "tests/test_pillow.py::test_png_16bit"
+                  "tests/test_pillow_legacy.py::test_png"
+                ];
+            })
+          else prev.lib.warn "overlays/workarounds.nix: nixpkgs has imageio ${pyPrev.imageio.version}, check whether the imageio test skips are still needed" pyPrev.imageio;
+      })
+    ];
+
   # The wrapper writes autoconfig.js where Firefox reads it on macOS;
   # Thunderbird only reads defaults/pref, so mozilla.cfg never runs.
   thunderbird = prev.thunderbird.overrideAttrs (old:
