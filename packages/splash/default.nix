@@ -30,13 +30,13 @@
 in
   stdenvNoCC.mkDerivation (finalAttrs: {
     pname = "splash";
-    version = "1.3.0";
+    version = "1.5.0";
 
     src = fetchFromGitHub {
       owner = "incoai";
       repo = "splash";
       tag = finalAttrs.version;
-      hash = "sha256-/WqVXw7/U1is+clndQCZgjSZSE1o0cRPwWVb78lG14Q=";
+      hash = "sha256-Q6JK3uy3tvptASg0ONYX9IDiUS3L1IR2SH1Txu4mGBQ=";
     };
 
     # The Metal 4 compiler only ships with Xcode plus its separately downloaded
