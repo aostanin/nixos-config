@@ -24,6 +24,7 @@ in {
           type = "stdio";
           command = lib.getExe pkgs.mcp-nixos;
         };
+        notion.url = "https://mcp.notion.com/mcp";
       };
     };
 
