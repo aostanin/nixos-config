@@ -9,6 +9,10 @@
     hypervisor = "qemu";
     vcpu = 2;
     mem = 512;
+    # The default microvm machine has no PCI, so the NIC is virtio-mmio: one
+    # queue on legacy interrupts, all on one vCPU. q35 gives it MSI-X and a
+    # queue per vCPU.
+    qemu.machine = "q35";
     # The VM's only NIC: a trunk port on elena's br0, like the physical routers'.
     interfaces = [
       {
