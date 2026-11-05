@@ -201,10 +201,36 @@ in {
           gpu = true;
         };
       });
+
+      # maya.py's single-GPU DeepSeek config. The engine learns into the pack's
+      # expert-profile.bin, seeded by hand from data/expert-profile-ds4.bin.
+      maya-deepseek = engineModel (mayaLauncher "deepseek" {
+        exe = "${maya}/share/maya/engine/maya-ds4";
+        args = [
+          "--pack"
+          "${mayaDir}/DeepSeek-V4.1-Flash-1017-GGUF/Maya-XS/maya-ds4"
+          "--max-context"
+          "65536"
+          "--tp"
+          "1"
+          "--threads"
+          "on"
+          "--vision"
+          "off"
+          "--dspark"
+          "none"
+        ];
+        tokenizer = "${mayaDir}/DeepSeek-V4.1-Flash-1017-GGUF/Maya-XS/maya-ds4/tokenizer";
+        model_name = "deepseek-v4.1-flash";
+        sampling = {
+          temperature = 1.0;
+          top_p = 1.0;
+        };
+      });
     };
 
     # Each engine fills the VRAM, so only one runs at a time.
-    routing.router.settings.groups = lib.genAttrs ["strata" "polystrata-ornith" "polystrata-gemma" "maya-glm"] (name: {
+    routing.router.settings.groups = lib.genAttrs ["strata" "polystrata-ornith" "polystrata-gemma" "maya-glm" "maya-deepseek"] (name: {
       exclusive = true;
       members = [name];
     });
