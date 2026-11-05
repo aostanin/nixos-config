@@ -234,7 +234,24 @@ in {
   locals.tailscale_json = "\${{ tailscale = { hosts = local.tailscale_devices } }}";
   resource.local_file.tailscale-json = {
     content = lib.tfRef "jsonencode(local.tailscale_json)";
-    filename = "../secrets/network/tailscale.json";
+    filename = "secrets/tailscale.json";
     file_permission = "0640";
+  };
+
+  # jsonencode can't pretty-print, and formatting local_file's own output makes
+  # it drift, so the committed copy is written from it instead.
+  resource.null_resource.format-tailscale-json = {
+    depends_on = ["local_file.tailscale-json"];
+
+    triggers = {
+      tailscale_json_updated = config.resource.local_file.tailscale-json "id";
+    };
+
+    provisioner.local-exec = {
+      command = ''
+        umask 027 && \
+        ${pkgs.jq}/bin/jq . secrets/tailscale.json > ../secrets/network/tailscale.json
+      '';
+    };
   };
 }
