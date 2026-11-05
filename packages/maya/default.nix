@@ -40,13 +40,13 @@
 in
   cudaPackages.backendStdenv.mkDerivation (finalAttrs: {
     pname = "maya";
-    version = "1.1.42";
+    version = "1.1.54";
 
     src = fetchFromGitHub {
       owner = "mw00";
       repo = "project-maya";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-osxFOXCFavQ9yx6p1ba5gp3kJMTvKISuDfNPpiGChfI=";
+      hash = "sha256-0SyAMi76P10In9FVYgDUSGFF28ikOjrVPShI0HKSY4o=";
     };
 
     nativeBuildInputs = [
@@ -73,6 +73,8 @@ in
       (lib.cmakeBool "STRATA_BUILD_TESTS" false)
       (lib.cmakeBool "STRATA_PORTABLE" true)
       (lib.cmakeFeature "CMAKE_CUDA_ARCHITECTURES" cudaPackages.flags.cmakeCudaArchitecturesString)
+      # `maya-ds4 --version` reads git otherwise.
+      (lib.cmakeFeature "MAYA_BUILD_ID" "v${finalAttrs.version}")
     ];
 
     # The engine patches its MMQ kernels (third_party/ggml/mmq-fused-swiglu.patch)
@@ -83,7 +85,7 @@ in
       cmakeFlagsArray+=("-DSTRATA_GGML_DIR=$PWD/llama.cpp")
     '';
 
-    ninjaFlags = ["maya"];
+    ninjaFlags = ["maya" "maya-ds4"];
 
     # The image encoder is llama.cpp's mtmd with GLM-5.3-Flash's vision tower
     # patched into a copy of the tree.
@@ -104,7 +106,7 @@ in
       runHook preInstall
       mkdir -p $out/share/maya $out/bin
       cp -r $src/{serve,tools,data,VERSION} $out/share/maya/
-      install -Dm755 -t $out/share/maya/engine maya vision/bin/maya-vision
+      install -Dm755 -t $out/share/maya/engine maya maya-ds4 vision/bin/maya-vision
       # The server loads libnvidia-ml (web UI telemetry) and libcuda through
       # ctypes. Its updater would git-pull the store path.
       makeWrapper ${python.interpreter} $out/bin/maya-server \
@@ -115,13 +117,16 @@ in
       makeWrapper ${python.interpreter} $out/bin/maya-pack \
         --set STRATA_GGUF_PY ${llama-cpp-src}/gguf-py \
         --add-flags $out/share/maya/tools/iq_pack.py
+      # The same for DeepSeek: indexes the shards in place, writes <model>/maya-ds4.
+      makeWrapper ${python.interpreter} $out/bin/maya-ds4-pack \
+        --add-flags $out/share/maya/tools/ds4/pack_gguf.py
       runHook postInstall
     '';
 
     passthru = {inherit python llama-cpp-src;};
 
     meta = {
-      description = "Runs GLM-5.3-Flash on consumer GPUs, with its experts tiered across VRAM, RAM and SSD";
+      description = "Runs GLM-5.3-Flash and DeepSeek-V4.1-Flash on consumer GPUs, with their experts tiered across VRAM, RAM and SSD";
       homepage = "https://github.com/mw00/project-maya";
       license = lib.licenses.mit;
       mainProgram = "maya-server";
