@@ -100,6 +100,8 @@ in {
 
         shell = {
           settings_show_advanced = false;
+          # Otherwise launched apps share noctalia's cgroup and die whenever it restarts.
+          launch_apps_as_systemd_services = true;
 
           screenshot = {
             annotate = true;
