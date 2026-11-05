@@ -36,6 +36,13 @@ in {
       };
     };
 
+    # The fcitx5 package's autostart entry races home-manager's fcitx5-daemon unit.
+    # https://github.com/nix-community/home-manager/issues/3898
+    xdg.configFile."autostart/org.fcitx.Fcitx5.desktop".text = ''
+      [Desktop Entry]
+      Hidden=true
+    '';
+
     xsession = {
       enable = true;
       preferStatusNotifierItems = true;
