@@ -182,7 +182,7 @@ in {
           "--glm-pack"
           "${mayaDir}/Maya-S24/pack"
           "--max-context"
-          "131072"
+          "262144"
           "--expert-cache"
           "auto"
           "--prefill"
