@@ -210,7 +210,7 @@ in {
           "--pack"
           "${mayaDir}/DeepSeek-V4.1-Flash-1017-GGUF/Maya-XS/maya-ds4"
           "--max-context"
-          "65536"
+          "262144"
           "--tp"
           "1"
           "--threads"
