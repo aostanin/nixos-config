@@ -215,8 +215,6 @@ in {
           "1"
           "--threads"
           "on"
-          "--vision"
-          "off"
           "--dspark"
           "none"
         ];
