@@ -38,6 +38,16 @@ in {
     nixpkgs.config = import nixpkgsConfig;
     xdg.configFile."nixpkgs/config.nix".source = nixpkgsConfig;
 
+    # A bare `substituters =` in the unmanaged user nix.conf replaces the
+    # system list (dropping attic) instead of extending it.
+    home.activation.checkUserNixConf = lib.hm.dag.entryBefore ["writeBoundary"] ''
+      conf="${config.xdg.configHome}/nix/nix.conf"
+      if [ -f "$conf" ] && grep -qE '^\s*(substituters|trusted-public-keys)\s*=' "$conf"; then
+        errorEcho "$conf overrides the system substituters; use extra-substituters/extra-trusted-public-keys"
+        exit 1
+      fi
+    '';
+
     home = {
       packages = localLib.filterAvailable (with pkgs;
         [
