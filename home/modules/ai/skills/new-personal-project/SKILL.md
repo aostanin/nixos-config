@@ -25,7 +25,8 @@ setup steps are its `welcomeText`, which `nix flake init` prints.
    first.
 5. Commit, then confirm with the user before creating the repo (private unless
    they say otherwise):
-   `fj repo create <name> --private --ssh --push -d "<description>"`.
+   `fj repo create <name> --private --ssh --remote origin -d "<description>"`,
+   then `git push -u origin main` (fj's own `--push` rejects the host key).
 6. Set the Actions secrets the welcomeText lists:
    `fj actions secrets create -r aostanin/<name> <NAME> "$(cat <file>)"`.
    Delete any key file it says to delete.
