@@ -292,4 +292,8 @@ in {
       };
     };
   };
+
+  # Headless, so without linger the user manager (and the home-manager
+  # vdirsyncer timer) only runs during a login session.
+  users.users.${secrets.user.username}.linger = true;
 }
